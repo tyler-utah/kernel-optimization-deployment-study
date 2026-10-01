@@ -1,0 +1,40 @@
+venue,measure,category,n,denominator,share,wilson95_low,wilson95_high
+MLSys 2025,kernel_style,no,43,61,0.7049,0.5811,0.8045
+MLSys 2025,kernel_style,yes,18,61,0.2951,0.1955,0.4189
+MLSys 2025,category,kernel,7,18,0.3889,0.203,0.6138
+MLSys 2025,category,scheduling_layout,4,18,0.2222,0.09,0.4522
+MLSys 2025,category,precision_format,4,18,0.2222,0.09,0.4522
+MLSys 2025,category,compiler_dsl,2,18,0.1111,0.031,0.328
+MLSys 2025,category,fusion_family,1,18,0.0556,0.0099,0.2576
+MLSys 2025,target_workload,llm_inference,10,18,0.5556,0.3372,0.7544
+MLSys 2025,target_workload,mixed,4,18,0.2222,0.09,0.4522
+MLSys 2025,target_workload,other_dnn,3,18,0.1667,0.0584,0.3922
+MLSys 2025,target_workload,llm_training,1,18,0.0556,0.0099,0.2576
+MLSys 2025,abstract_only,abstract_only,0,61,0.0,,
+ASPLOS 2025,kernel_style,no,137,160,0.8562,0.7935,0.9023
+ASPLOS 2025,kernel_style,yes,21,160,0.1313,0.0875,0.1923
+ASPLOS 2025,kernel_style,ambiguous,2,160,0.0125,0.0034,0.0444
+ASPLOS 2025,category,compiler_dsl,7,21,0.3333,0.1719,0.5463
+ASPLOS 2025,category,kernel,7,21,0.3333,0.1719,0.5463
+ASPLOS 2025,category,scheduling_layout,5,21,0.2381,0.1063,0.4509
+ASPLOS 2025,category,fusion_family,1,21,0.0476,0.0085,0.2267
+ASPLOS 2025,category,precision_format,1,21,0.0476,0.0085,0.2267
+ASPLOS 2025,target_workload,mixed,7,21,0.3333,0.1719,0.5463
+ASPLOS 2025,target_workload,non_ml,7,21,0.3333,0.1719,0.5463
+ASPLOS 2025,target_workload,other_dnn,5,21,0.2381,0.1063,0.4509
+ASPLOS 2025,target_workload,llm_inference,2,21,0.0952,0.0265,0.2891
+ASPLOS 2025,abstract_only,abstract_only,41,160,0.2562,,
+both,kernel_style,no,180,221,0.8145,0.758,0.8602
+both,kernel_style,yes,39,221,0.1765,0.1319,0.2321
+both,kernel_style,ambiguous,2,221,0.009,0.0025,0.0324
+both,category,kernel,14,39,0.359,0.2274,0.5158
+both,category,compiler_dsl,9,39,0.2308,0.1265,0.3834
+both,category,scheduling_layout,9,39,0.2308,0.1265,0.3834
+both,category,precision_format,5,39,0.1282,0.056,0.2671
+both,category,fusion_family,2,39,0.0513,0.0142,0.1689
+both,target_workload,llm_inference,12,39,0.3077,0.1857,0.4642
+both,target_workload,mixed,11,39,0.2821,0.1654,0.4378
+both,target_workload,other_dnn,8,39,0.2051,0.1078,0.3553
+both,target_workload,non_ml,7,39,0.1795,0.0898,0.3267
+both,target_workload,llm_training,1,39,0.0256,0.0045,0.1318
+both,abstract_only,abstract_only,41,221,0.1855,,

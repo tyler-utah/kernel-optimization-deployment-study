@@ -1,0 +1,1226 @@
+{
+  "lineage": "L3",
+  "moves": [
+    {
+      "move_id": "M-L3-paged-kv-block-table-layout",
+      "name": "Paged KV-cache block tables and write layouts",
+      "category": "layout_transformation",
+      "description": "KV cache entries are addressed through slot_mapping and logical block tables, so sequences need not occupy contiguous memory. The original CUDA write path stores keys as [num_blocks, heads, head/x, block, x], while reshape_and_cache_flash writes the NHD/FlashAttention-compatible layout.",
+      "problem_solved": "Dynamic batching and prefix growth without copying each sequence's KV cache into contiguous buffers.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "ffad4e1e031a9facda4cab5b9fff31b47157aebc",
+        "pr": null,
+        "date": "2023-02-16",
+        "artifact_id": "L3.cache.cuda_reshape",
+        "evidence": "key_cache // [num_blocks, num_heads, head_size/x, block_size, x]"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "0deacbce6e96a1af5885babc4e470ce2a0cecf95",
+          "pr": 3,
+          "date": "2023-03-01",
+          "artifact_id": "L3.paged.cuda.v1",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "block_tables // [num_seqs, max_num_blocks_per_seq]"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "22a58640b",
+          "pr": 43717,
+          "date": "2026-05-29",
+          "artifact_id": "L3.cache.cuda_reshape",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "moved_to:csrc/libtorch_stable/cache_kernels.cu"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "L3.cache.cuda_reshape",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "slot_idx = slot_mapping[token_idx]"
+        }
+      ],
+      "semantic_preconditions": [
+        "slot_mapping entries are either negative padding or valid cache slots",
+        "block tables cover every logical block in each active sequence",
+        "writers and attention backends agree on x-packed versus NHD/flash layout"
+      ],
+      "hardware_preconditions": [
+        "SIMT warp execution",
+        "x packing assumes 16-byte vector-compatible cache elements"
+      ],
+      "framework_preconditions": [
+        "KV allocator owns block tables and slot_mapping",
+        "FlashAttention backends receive block_table metadata for paged cache"
+      ],
+      "assumptions": [
+        {
+          "assumption": "slot_mapping is the token-to-cache write authority",
+          "status": "derived",
+          "source": "csrc/libtorch_stable/cache_kernels.cu:273-283",
+          "excerpt": "slot_idx = slot_mapping[token_idx]"
+        },
+        {
+          "assumption": "original key layout is x-packed by 16-byte vectors",
+          "status": "derived",
+          "source": "csrc/cache_kernels.cu at 0deacbce6:50",
+          "excerpt": "[num_blocks, num_heads, head_size/x, block_size, x]"
+        }
+      ],
+      "performance_evidence": "No isolated cache-write number read; mechanism enables PagedAttention and paged FA/FlashInfer paths.",
+      "correctness_evidence": "tests/kernels/attention/test_cache.py and historical tests/kernels/cache.py.",
+      "known_failures": [
+        {
+          "ref": "vllm PR #33269",
+          "what": "decoder KV-cache update path ran in encoder mode",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm PR #51081",
+          "what": "KV offload cudaHostRegister shape/alignment edge",
+          "scope": "adapter"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "csrc/cache_kernels.cu",
+          "csrc/libtorch_stable/cache_kernels.cu"
+        ],
+        "regex": "reshape_and_cache(_flash)?|slot_mapping\\[token_idx\\]|head_size/x, block_size, x",
+        "min_files": 1,
+        "validated_at": [
+          "v0.1.0 67d96c29 present",
+          "ffad4e1e0^ absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/commit/ffad4e1e031a9facda4cab5b9fff31b47157aebc",
+        "https://github.com/vllm-project/vllm/pull/3"
+      ]
+    },
+    {
+      "move_id": "M-L3-pagedattention-v1-single-cta",
+      "name": "PagedAttention V1 per-(sequence, head) CTA decode",
+      "category": "work_partitioning",
+      "description": "One CUDA thread block computes one sequence/head query. Warps stride through paged KV blocks, use warp-level QK reductions, stage FP32 logits in shared memory, then reduce and apply V.",
+      "problem_solved": "Low-latency single-token decode over non-contiguous paged KV without materializing contiguous K/V.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "0deacbce6e96a1af5885babc4e470ce2a0cecf95",
+        "pr": 3,
+        "date": "2023-03-01",
+        "artifact_id": "L3.paged.cuda.v1",
+        "evidence": "__global__ void single_query_cached_kv_attention_kernel"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "436e523bf",
+          "pr": 53,
+          "date": "2023-05-03",
+          "artifact_id": "L3.paged.cuda.v1",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "moved to csrc/attention/attention_kernels.cu"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "812c981fa",
+          "pr": 10091,
+          "date": "2024-11-11",
+          "artifact_id": "L3.paged.cuda.v1",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "split_to:csrc/attention/paged_attention_v1.cu"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "d715b3aa1",
+          "pr": 47361,
+          "date": "2026-07-02",
+          "artifact_id": "L3.paged.cuda.v1",
+          "relation": "removed",
+          "acknowledges_prior": "no",
+          "evidence": "CUDA PagedAttention decode ops deleted"
+        }
+      ],
+      "semantic_preconditions": [
+        "one query token per sequence in decode",
+        "HEAD_SIZE, BLOCK_SIZE and NUM_THREADS match template instantiation",
+        "block_tables cover context_len"
+      ],
+      "hardware_preconditions": [
+        "warp size 32",
+        "shared memory sufficient for logits/reduction scratch"
+      ],
+      "framework_preconditions": [
+        "torch custom op paged_attention_v1 available before PR #47361",
+        "PagedAttention wrapper supplies context_lens and block_tables"
+      ],
+      "assumptions": [
+        {
+          "assumption": "CTA grid maps head and sequence",
+          "status": "derived",
+          "source": "csrc/attention_kernels.cu at 0deacbce6:34-36",
+          "excerpt": "head_idx = blockIdx.x; seq_idx = blockIdx.y"
+        },
+        {
+          "assumption": "logits are staged as FP32 in shared memory",
+          "status": "derived",
+          "source": "csrc/attention_kernels.cu at 0deacbce6:68-69",
+          "excerpt": "We use FP32 logits and accumulation"
+        }
+      ],
+      "performance_evidence": "PR #3 lists A100 and OPT models but no comparative number.",
+      "correctness_evidence": "PR #3 added tests/kernels/attention.py; later tests/kernels/attention/test_attention.py.",
+      "known_failures": [],
+      "current_status": "removed",
+      "signature": {
+        "pathspec": [
+          "csrc/attention_kernels.cu",
+          "csrc/attention/attention_kernels.cu",
+          "csrc/attention/paged_attention_v1.cu",
+          "csrc/libtorch_stable/attention/paged_attention_v1.cu"
+        ],
+        "regex": "single_query_cached_kv_attention|qk_max|block_tables",
+        "min_files": 1,
+        "validated_at": [
+          "v0.1.0 67d96c29 present",
+          "v0.30.0 ced6857 absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/3",
+        "https://github.com/vllm-project/vllm/commit/0deacbce6e96a1af5885babc4e470ce2a0cecf95"
+      ]
+    },
+    {
+      "move_id": "M-L3-pagedattention-v2-split-kv-reduce",
+      "name": "PagedAttention V2 split-KV with max/exp reduction",
+      "category": "split_reduction",
+      "description": "Long contexts are split into fixed PARTITION_SIZE chunks. A first kernel writes partial outputs, max_logits and exp_sums; a reduce kernel merges partitions with log-sum-exp-style rescaling.",
+      "problem_solved": "Improves decode occupancy for small batches and long contexts where one CTA per sequence/head underutilizes the GPU.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "928de46888b9b257dfa491047a7d9cd199ca585b",
+        "pr": 1348,
+        "date": "2023-10-16",
+        "artifact_id": "L3.paged.cuda.v2_splitkv",
+        "evidence": "PARTITION_SIZE = 0 // Zero means no partitioning"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "928de46888b9b257dfa491047a7d9cd199ca585b",
+          "pr": 1348,
+          "date": "2023-10-16",
+          "artifact_id": "L3.paged.cuda.v2_splitkv",
+          "relation": "first",
+          "acknowledges_prior": "no",
+          "evidence": "exp_sums, max_logits, max_num_partitions"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "288cc6c234d0509e2caed574729b2829ed9921a1",
+          "pr": 12639,
+          "date": "2025-02-21",
+          "artifact_id": "L3.merge.triton_lse",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "merge_attn_states(prefix_lse, suffix_lse)"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "SGLang decode_attention",
+          "relation": "reimplemented",
+          "acknowledges_prior": "yes: LightLLM URLs in source",
+          "evidence": "gqa_flash_decoding_stage1.py / stage2.py"
+        }
+      ],
+      "semantic_preconditions": [
+        "partial reductions carry both max logit and exponential sum",
+        "partitions exactly span context_len",
+        "merge uses the same softmax scale as the partial kernels"
+      ],
+      "hardware_preconditions": [
+        "extra temporary memory for tmp_out, exp_sums and max_logits",
+        "enough CTAs to benefit from split-KV"
+      ],
+      "framework_preconditions": [
+        "metadata supplies max_num_partitions and scratch tensors",
+        "later merge_attn_states consumers pass LSE tensors"
+      ],
+      "assumptions": [
+        {
+          "assumption": "PARTITION_SIZE zero disables partitioning",
+          "status": "derived",
+          "source": "csrc/attention/attention_kernels.cu at 928de4688:76",
+          "excerpt": "Zero means no partitioning"
+        },
+        {
+          "assumption": "partial softmax state includes max and exp sum",
+          "status": "derived",
+          "source": "csrc/attention/attention_kernels.cu at 928de4688:78-79",
+          "excerpt": "exp_sums ... max_logits"
+        }
+      ],
+      "performance_evidence": "PR #1348 says V2 has huge speedup when batch size is small (e.g. <= 8).",
+      "correctness_evidence": "PR #1348 modifies tests/kernels/test_attention.py; merge kernels have tests/kernels/attention/test_merge_attn_states.py.",
+      "known_failures": [],
+      "current_status": "live_conceptual_only",
+      "signature": {
+        "pathspec": [
+          "csrc/attention/attention_kernels.cu",
+          "csrc/attention/paged_attention_v2.cu",
+          "csrc/libtorch_stable/attention/paged_attention_v2.cu",
+          "vllm/v1/attention/ops/triton_merge_attn_states.py",
+          "csrc/libtorch_stable/attention/merge_attn_states.cu"
+        ],
+        "regex": "PARTITION_SIZE|paged_attention_v2_reduce_kernel|merge_attn_states|exp_sums|max_logits",
+        "min_files": 1,
+        "validated_at": [
+          "v0.2.1 651c614a present",
+          "v0.2.0 e2fb71ec absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/1348",
+        "https://github.com/vllm-project/vllm/commit/928de46888b9b257dfa491047a7d9cd199ca585b"
+      ]
+    },
+    {
+      "move_id": "M-L3-flashattention-paged-online-softmax",
+      "name": "FlashAttention online-softmax backend over paged KV",
+      "category": "algebraic_rewrite",
+      "description": "vLLM routes attention to FlashAttention kernels that tile attention and maintain online softmax state rather than materializing full score matrices. The fork adds paged block_table support and later FA3 on Hopper plus FA4 CuTe DSL on Blackwell.",
+      "problem_solved": "Reduces HBM traffic while letting paged KV metadata feed high-performance FlashAttention kernels.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "2daf23ab0",
+        "pr": 3005,
+        "date": "2024-03-07",
+        "artifact_id": "L3.flash_attn.v0_backend",
+        "evidence": "from flash_attn import flash_attn_varlen_func"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "6c5af09b3969721da2e3a32d612a0fdd5cb077d6",
+          "pr": 9289,
+          "date": "2024-10-22",
+          "artifact_id": "L3.flash_attn.v1_backend",
+          "relation": "reimplemented",
+          "acknowledges_prior": "no",
+          "evidence": "block_table=attn_metadata.block_table"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "978b45f39970f81d2857fbb8aada5b44619d258c",
+          "pr": 12093,
+          "date": "2025-01-23",
+          "artifact_id": "L3.flash_attn.v1_backend",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "fa_version = 3 if is_fa_version_supported(3) else 2"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "8b5014d3dd343736ccf3e26cd44a0bb7700d205c",
+          "pr": 32974,
+          "date": "2026-03-01",
+          "artifact_id": "L3.flash_attn.fa4_cutedsl",
+          "relation": "ported",
+          "acknowledges_prior": "yes: Integrate upstream FA4",
+          "evidence": "_cute_interface_path ... cute/interface.py"
+        }
+      ],
+      "semantic_preconditions": [
+        "causal/window/alibi constraints supported by selected FA version",
+        "block_table describes paged KV when present",
+        "LSE is preserved when states are merged"
+      ],
+      "hardware_preconditions": [
+        "FA2 on supported CUDA GPUs",
+        "FA3 selected on SM90 when supported",
+        "FA4 compile-from-specs is CUDA-only"
+      ],
+      "framework_preconditions": [
+        "vllm-project/flash-attention fork is fetched/built or installed",
+        "get_flash_attn_version agrees with backend capability and env override"
+      ],
+      "assumptions": [
+        {
+          "assumption": "FA version is selected by device capability and support probe",
+          "status": "derived",
+          "source": "vllm/v1/attention/backends/fa_utils.py:99-102",
+          "excerpt": "major == 9 ... 3; major == 10 ... 4"
+        },
+        {
+          "assumption": "FA4 is unavailable on ROCm",
+          "status": "derived",
+          "source": "vllm/v1/attention/backends/fa_utils.py:41",
+          "excerpt": "FA4 compile-from-specs API is CUDA-only"
+        }
+      ],
+      "performance_evidence": "PR #32974 benchmark table shows FA4 faster for prefill/spec-decode; PR #16828 compares against FlashAttention backend.",
+      "correctness_evidence": "tests/kernels/attention/test_flash_attn.py; SGLang row #11182 adds FA4 assertion UT.",
+      "known_failures": [
+        {
+          "ref": "vllm PR #28702",
+          "what": "FA3 cascade full/piecewise cudagraph scheduler metadata mismatch",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm revert #33841 / reland #34043",
+          "what": "FA3 swizzle broke H100 distributed tests, later reapplied",
+          "scope": "implementation"
+        },
+        {
+          "ref": "sglang PR #20369",
+          "what": "FA3 sliding-window/speculative page_size > 1 precision issue",
+          "scope": "partial_domain"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "vllm/model_executor/layers/attention/backends/flash_attn.py",
+          "vllm/attention/backends/flash_attn.py",
+          "vllm/v1/attention/backends/flash_attn.py",
+          "vllm/v1/attention/backends/fa_utils.py",
+          "vllm/vllm_flash_attn/flash_attn_interface.py"
+        ],
+        "regex": "flash_attn_varlen_func|flash_attn_with_kvcache|block_table=|fa_version|FA4|cute/interface.py",
+        "min_files": 1,
+        "validated_at": [
+          "v0.4.0 51c31bc1 present",
+          "v0.3.3 82091b86 absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/3005",
+        "https://github.com/vllm-project/vllm/pull/32974"
+      ]
+    },
+    {
+      "move_id": "M-L3-flashinfer-plan-cascade",
+      "name": "FlashInfer plan/run wrappers with cascade/shared-prefix attention",
+      "category": "dispatch_plan",
+      "description": "FlashInfer separates metadata planning from execution through BatchPrefill/BatchDecode paged-KV wrappers. V1 reshuffles decode tokens ahead of prefill tokens, reuses wrappers/workspaces, and can route shared-prefix work through cascade attention.",
+      "problem_solved": "Avoids repeated page-metadata construction and exploits common prefixes while preserving graph-capture stability.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "43c413ec5",
+        "pr": 4353,
+        "date": "2024-05-03",
+        "artifact_id": "L3.flashinfer.v0_backend",
+        "evidence": "BatchDecodeWithPagedKVCacheWrapper"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "986537f1c3c8288635b1f00944409489ab1cf21b",
+          "pr": 16684,
+          "date": "2025-04-22",
+          "artifact_id": "L3.flashinfer.v1_backend",
+          "relation": "reimplemented",
+          "acknowledges_prior": "no",
+          "evidence": "BatchPrefillWithPagedKVCacheWrapper, BatchDecodeWithPagedKVCacheWrapper"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "db56a59970a84842da2adc3aa64e436f42448b48",
+          "pr": 28702,
+          "date": "2025-11-14",
+          "artifact_id": "L3.flash_attn.v1_backend",
+          "relation": "repaired",
+          "acknowledges_prior": "no",
+          "evidence": "get_scheduler_metadata doesn't match flash_attn_varlen_func"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "SGLang FlashInfer integration",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "flashinfer_python[cu13]==0.6.18"
+        }
+      ],
+      "semantic_preconditions": [
+        "paged-kv indptr/indices/last-page metadata matches batch pages",
+        "decode and prefill token spans are separable after reorder_batch",
+        "cascade metadata matches scheduler metadata"
+      ],
+      "hardware_preconditions": [
+        "FlashInfer wheel/JIT kernels support active CUDA architecture",
+        "workspace buffers allocated on device"
+      ],
+      "framework_preconditions": [
+        "plan calls occur consistently relative to graph capture",
+        "wrapper instances and workspaces persist across runs",
+        "FLASHINFER backend selected"
+      ],
+      "assumptions": [
+        {
+          "assumption": "V1 splits decode and prefill into contiguous chunks",
+          "status": "derived",
+          "source": "PR #16684 body",
+          "excerpt": "all decode tokens are at the front"
+        },
+        {
+          "assumption": "cascade graph replay requires scheduler metadata equality",
+          "status": "derived",
+          "source": "PR #28702 body",
+          "excerpt": "get_scheduler_metadata doesn't match"
+        }
+      ],
+      "performance_evidence": "PR #16684 reports V1 FlashInfer throughput 25.09 req/s versus old 15.51 req/s for 8B 1024/128.",
+      "correctness_evidence": "tests/v1/e2e/test_cascade_attention.py, tests/kernels/attention/test_flashinfer.py, GSM8K evaluations in PR #16684.",
+      "known_failures": [
+        {
+          "ref": "vllm PR #25924",
+          "what": "mixed hyperparameter models failed FlashInfer checks before TRTLLM selection",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm PR #28702",
+          "what": "cascade full-cudagraph num_splits metadata mismatch",
+          "scope": "adapter"
+        },
+        {
+          "ref": "sglang PR #10135",
+          "what": "FlashInfer version caused too many resources requested for launch",
+          "scope": "implementation"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "vllm/attention/backends/flashinfer.py",
+          "vllm/v1/attention/backends/flashinfer.py"
+        ],
+        "regex": "Batch(Prefill|Decode)WithPagedKVCacheWrapper|\\.plan\\(|\\.run\\(|use_cascade_attention",
+        "min_files": 1,
+        "validated_at": [
+          "v0.9.0 58738772 present",
+          "v0.8.3 296c6572 absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/16684",
+        "https://github.com/vllm-project/vllm/pull/28702"
+      ]
+    },
+    {
+      "move_id": "M-L3-flashinfer-trtllm-xqa-decode",
+      "name": "FlashInfer TRT-LLM-gen and XQA decode dispatch",
+      "category": "specialization",
+      "description": "FlashInfer decode dispatch specializes Blackwell-class workloads to TensorRT-LLM generated kernels and Hopper/SM12x workloads to XQA decode. The backend tracks phase, dtype, KV layout and GQA geometry so prefill can remain native when only decode is safe.",
+      "problem_solved": "Improves FP8/GQA decode throughput on hardware paths not best served by generic FlashInfer wrappers.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "7bd4c37ae7c6f2223c1a031bbdd2e3435d53da94",
+        "pr": 19825,
+        "date": "2025-07-11",
+        "artifact_id": "L3.flashinfer.trtllm_gen",
+        "evidence": "trtllm_batch_decode_with_kv_cache"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "83156c7b8",
+          "pr": 22095,
+          "date": "2025-08-05",
+          "artifact_id": "L3.flashinfer.trtllm_gen",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "TRTLLM prefill added; env generalized"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "d29125c0852eb61efef060d55675010d1abf51fe",
+          "pr": 43232,
+          "date": "2026-07-02",
+          "artifact_id": "L3.flashinfer.trtllm_xqa_decode",
+          "relation": "reimplemented",
+          "acknowledges_prior": "no",
+          "evidence": "XQA = \"xqa\"; TRTLLM_GEN = \"trtllm-gen\""
+        }
+      ],
+      "semantic_preconditions": [
+        "GQA geometry and num_kv_heads are supported",
+        "XQA SM90 path uses BF16/FP16 query tensors with FP8 KV cache",
+        "TRTLLM support is phase-aware"
+      ],
+      "hardware_preconditions": [
+        "TRTLLM_GEN for SM100+",
+        "XQA for SM90/SM12x where FlashInfer exposes it",
+        "required FlashInfer version installed"
+      ],
+      "framework_preconditions": [
+        "attention config/env enables TRTLLM attention",
+        "KV layout matches FlashInfer requirements",
+        "native FlashInfer fallback remains available"
+      ],
+      "assumptions": [
+        {
+          "assumption": "TRTLLM integration switches from wrapper to generated API",
+          "status": "derived",
+          "source": "PR #19825 body",
+          "excerpt": "switching between flashinfer ... wrapper and ... trtllm_batch_decode"
+        },
+        {
+          "assumption": "XQA decode can be used while prefill remains native",
+          "status": "derived",
+          "source": "PR #43232 body",
+          "excerpt": "decode can use ... XQA path while prefill can remain"
+        }
+      ],
+      "performance_evidence": "PR #19825 reports Llama 3.3 70B FP8 V1 throughput 5.20 to 5.58 req/s.",
+      "correctness_evidence": "tests/kernels/attention/test_flashinfer_trtllm_attention.py, test_trtllm_kvfp8_dequant.py, and PR #43232 SM90 test list.",
+      "known_failures": [
+        {
+          "ref": "vllm revert #31617",
+          "what": "fallback change caused attention-sinks NotImplementedError",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm revert #34832",
+          "what": "workaround introduced FP8 query dtype mismatch",
+          "scope": "partial_domain"
+        },
+        {
+          "ref": "vllm PR #33738",
+          "what": "DeepEP HT All2All plus FlashInfer TRTLLM backend selection failed",
+          "scope": "adapter"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "vllm/v1/attention/backends/flashinfer.py",
+          "vllm/utils/flashinfer.py",
+          "vllm/envs.py"
+        ],
+        "regex": "trtllm_batch_decode_with_kv_cache|FlashInferDecodeKernel|XQA|TRTLLM_GEN|VLLM_USE_TRTLLM",
+        "min_files": 1,
+        "validated_at": [
+          "v0.10.0 6d8d0a24 TRTLLM present; v0.25.0 702f4814 XQA present",
+          "v0.9.1 b6553be1 / v0.23.0 0fc695fc absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/19825",
+        "https://github.com/vllm-project/vllm/pull/43232"
+      ]
+    },
+    {
+      "move_id": "M-L3-triton-unified-paged-attention",
+      "name": "Triton paged decode, chunked prefill and unified attention",
+      "category": "fusion",
+      "description": "The Triton path ports paged decode, adds chunked-prefill/paged-decode handling, then introduces a unified kernel for arbitrary query lengths. It reads block_tables inside the Triton kernel and packs GQA along the query dimension for tensor-core utilization.",
+      "problem_solved": "Portable CUDA/ROCm/XPU fallback that can avoid separate prefill/decode backend switches over paged KV.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "cabaf4eff3c7df30d785769d5a0a1fa1a1c48a8a",
+        "pr": 12528,
+        "date": "2025-01-30",
+        "artifact_id": "L3.triton.decode_attention",
+        "evidence": "Shout-out to sglang for the triton decode attention kernel"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "6bd1dd9d2",
+          "pr": 14152,
+          "date": "2025-03-06",
+          "artifact_id": "L3.triton.chunked_prefill_paged_decode",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "unclear",
+          "evidence": "chunked_prefill_paged_decode"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "2f925e5777cce9d574292bb6c91ff9f92de3fe62",
+          "pr": 16828,
+          "date": "2025-05-06",
+          "artifact_id": "L3.triton.unified_attention",
+          "relation": "reimplemented",
+          "acknowledges_prior": "no",
+          "evidence": "kernel_unified_attention_2d(... block_tables_ptr)"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "SGLang decode_attention",
+          "relation": "first",
+          "acknowledges_prior": "yes: LightLLM URLs in source",
+          "evidence": "Adapted from ... lightllm ... gqa_flash_decoding_stage1.py"
+        }
+      ],
+      "semantic_preconditions": [
+        "block_tables and sequence lengths identify all KV pages",
+        "metadata supplies page and token offsets for variable query length",
+        "GQA heads can be packed along query dimension"
+      ],
+      "hardware_preconditions": [
+        "Triton backend available for target CUDA/ROCm/XPU stack",
+        "supported dtype/head shapes for tensor-core utilization"
+      ],
+      "framework_preconditions": [
+        "V1 TritonAttentionBackend dispatches to the selected op",
+        "jit cache assumptions about constant head counts are controlled"
+      ],
+      "assumptions": [
+        {
+          "assumption": "unified kernel handles arbitrary query length",
+          "status": "derived",
+          "source": "PR #16828 body",
+          "excerpt": "can handle arbitrary query length"
+        },
+        {
+          "assumption": "vLLM decode kernel acknowledges SGLang origin",
+          "status": "derived",
+          "source": "PR #12528 body",
+          "excerpt": "Shout-out to sglang"
+        }
+      ],
+      "performance_evidence": "PR #16828 says Triton outperforms FlashAttention on H100 and improves MI300x high-QPS performance.",
+      "correctness_evidence": "tests/kernels/test_triton_decode_attention.py and tests/kernels/test_triton_unified_attention.py.",
+      "known_failures": [
+        {
+          "ref": "vllm PR #23692",
+          "what": "Triton prefix-prefill offset integer overflow caused GPU segfault",
+          "scope": "implementation"
+        },
+        {
+          "ref": "vllm PR #47144",
+          "what": "TritonMLA over-advertised cudagraph support under speculative decode",
+          "scope": "adapter"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "vllm/attention/ops/triton_decode_attention.py",
+          "vllm/v1/attention/ops/triton_decode_attention.py",
+          "vllm/attention/ops/chunked_prefill_paged_decode.py",
+          "vllm/v1/attention/ops/chunked_prefill_paged_decode.py",
+          "vllm/attention/ops/triton_unified_attention.py",
+          "vllm/v1/attention/ops/triton_unified_attention.py"
+        ],
+        "regex": "decode_attention_fwd|chunked_prefill_paged_decode|kernel_unified_attention_2d|block_tables_ptr",
+        "min_files": 1,
+        "validated_at": [
+          "v0.9.0 58738772 present",
+          "v0.8.5 ba41cc90 absent for unified"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/12528",
+        "https://github.com/vllm-project/vllm/pull/16828"
+      ]
+    },
+    {
+      "move_id": "M-L3-rocm-mfma-paged-attention",
+      "name": "ROCm custom paged attention with MFMA variants and AITER successors",
+      "category": "specialization",
+      "description": "The ROCm custom kernel reimplements paged attention using AMD MFMA intrinsics, including mfma4/mfma16 and later FP8 variants. AITER backends later provide ROCm FlashAttention/unified/MLA alternatives selected by platform priority logic.",
+      "problem_solved": "AMD-native attention when CUDA kernels or generic upstream FA paths are unavailable or slower.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "1ef0d2efd07f93bc7b0cfb597d8947b49e2fdaac",
+        "pr": 8310,
+        "date": "2024-09-13",
+        "artifact_id": "L3.rocm.custom_paged",
+        "evidence": "Custom paged attention kernel for rocm"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "ba59b78a9",
+          "pr": 12790,
+          "date": "2025-02-13",
+          "artifact_id": "L3.rocm.v1_rocm_attn",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "RocmAttentionBackend wraps ROCM_ATTN"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "8b6e1d639",
+          "pr": 18596,
+          "date": "2025-06-18",
+          "artifact_id": "L3.rocm.aiter_fa",
+          "relation": "ported",
+          "acknowledges_prior": "unclear",
+          "evidence": "integrate aiter chunked prefill into vllm"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "f231e5bc2",
+          "pr": 25507,
+          "date": "2025-10-06",
+          "artifact_id": "L3.rocm.aiter_unified",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "Split AITER unified attention into its own backend"
+        }
+      ],
+      "semantic_preconditions": [
+        "ROCm backend accepts the model's block size and KV layout",
+        "dtype/head-size combination has an instantiated MFMA variant",
+        "AITER probes select compatible kernels only"
+      ],
+      "hardware_preconditions": [
+        "AMD hardware with required MFMA instructions",
+        "gfx942/gfx950 FP8 encoding differences handled"
+      ],
+      "framework_preconditions": [
+        "vllm._rocm_C extension built",
+        "ROCm platform selection orders ROCM_ATTN/AITER/Triton correctly"
+      ],
+      "assumptions": [
+        {
+          "assumption": "MFMA variant is part of kernel dispatch",
+          "status": "derived",
+          "source": "csrc/rocm/attention.cu:56 and :360",
+          "excerpt": "enum class MFMAType ... mfma16_kernel"
+        },
+        {
+          "assumption": "block tables remain the paging interface",
+          "status": "derived",
+          "source": "csrc/rocm/attention.cu:366",
+          "excerpt": "block_tables // [num_seqs, max_num_blocks_per_seq]"
+        }
+      ],
+      "performance_evidence": "PR #32336 dataset notes massive degradation when dispatch missed optimized non-standard block sizes.",
+      "correctness_evidence": "ROCm rows in kernel-correctness-cases.csv; platform tests guard backend selection.",
+      "known_failures": [
+        {
+          "ref": "vllm revert #17022",
+          "what": "ROCm custom paged-attention env flag check ignored user flag",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm PR #32336",
+          "what": "block size 544 caused massive throughput degradation",
+          "scope": "partial_domain"
+        },
+        {
+          "ref": "vllm PR #45681",
+          "what": "gfx942 FP8/FNUZ sparse MLA functional failures",
+          "scope": "implementation"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "csrc/rocm/attention.cu",
+          "vllm/v1/attention/backends/rocm_attn.py",
+          "vllm/v1/attention/backends/rocm_aiter_fa.py",
+          "vllm/v1/attention/backends/rocm_aiter_unified_attn.py"
+        ],
+        "regex": "MFMAType|GCN_MFMA_INSTR|paged_attention_ll4mi_QKV_mfma16_kernel|ROCM_AITER_(FA|UNIFIED_ATTN)",
+        "min_files": 1,
+        "validated_at": [
+          "v0.30.0 ced6857 present",
+          "v0.6.1.post2 9ba0817 absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/8310",
+        "https://github.com/vllm-project/vllm/pull/18596"
+      ]
+    },
+    {
+      "move_id": "M-L3-mla-weight-absorption-schedulers",
+      "name": "MLA weight absorption plus FlashMLA/CUTLASS scheduler metadata",
+      "category": "algebraic_rewrite",
+      "description": "MLA decode rewrites MHA into MQA over latent vectors by absorbing projection weights into query/cache terms. FlashMLA and CUTLASS SM100 implementations add tile-scheduler metadata, TMA loads and warp-specialized scheduling for Hopper/Blackwell.",
+      "problem_solved": "Reduces KV bandwidth and adapts DeepSeek-style MLA to accelerator-specific scheduling.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "cabaf4eff3c7df30d785769d5a0a1fa1a1c48a8a",
+        "pr": 12528,
+        "date": "2025-01-30",
+        "artifact_id": "L3.mla.triton_v0",
+        "evidence": "computing MQA using latent vectors instead of MHA"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "f95903909f07999ef77a9ce81290ad6b848fa08c",
+          "pr": 13747,
+          "date": "2025-02-27",
+          "artifact_id": "L3.mla.flashmla_v0_adapter",
+          "relation": "integrates",
+          "acknowledges_prior": "yes: Integrate deepseek-ai/FlashMLA",
+          "evidence": "FlashMLA currently requires block_size=64"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "ed7a29d9f8b48978e3bbf43599d21b4de65387e0",
+          "pr": 16032,
+          "date": "2025-04-27",
+          "artifact_id": "L3.mla.cutlass_kernels",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "Support Cutlass MLA for Blackwell GPUs"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "SGLang FlashMLA",
+          "relation": "ported",
+          "acknowledges_prior": "yes: SGLang fork (sgl-project/FlashMLA)",
+          "evidence": "FlashMLA kernels only work on hopper"
+        }
+      ],
+      "semantic_preconditions": [
+        "model exposes MLA latent/RoPE dimensions and absorbable projections",
+        "FlashMLA dense block_size constraints satisfied",
+        "sparse MLA top-k/mask metadata bounds match token batches"
+      ],
+      "hardware_preconditions": [
+        "FlashMLA dense on Hopper",
+        "CUTLASS SM100 path on Blackwell with TMA/warp specialization",
+        "AITER MLA on AMD MI300/MI350"
+      ],
+      "framework_preconditions": [
+        "MLACommonMetadataBuilder supplies backend-specific metadata",
+        "selected backend has external project or in-tree CUTLASS sources built"
+      ],
+      "assumptions": [
+        {
+          "assumption": "MLA decode uses latent-vector MQA rewrite",
+          "status": "derived",
+          "source": "PR #12528 body",
+          "excerpt": "computing MQA using latent vectors instead of MHA"
+        },
+        {
+          "assumption": "FlashMLA dense has block size/hardware constraints",
+          "status": "derived",
+          "source": "PR #13747 body and ops/flashmla.py",
+          "excerpt": "currently requires ... block_size=64"
+        }
+      ],
+      "performance_evidence": "PR #12528 is an optimization; PR #13747 integrates FlashMLA; CUTLASS path targets Blackwell.",
+      "correctness_evidence": "tests/kernels/test_flashmla.py and MLA backend tests; datasets include import/metadata fixes.",
+      "known_failures": [
+        {
+          "ref": "vllm PR #15280",
+          "what": "V1 MLA FlashAttention import path prevented initialization",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm revert #32484",
+          "what": "FlashInfer MLA default reverted due to FI prefill correctness",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm PR #48642",
+          "what": "sparse MLA req_id_per_token OOB and FP8 metadata bugs",
+          "scope": "implementation"
+        },
+        {
+          "ref": "vllm revert #31197",
+          "what": "SM100 FP8 prefill MLA reverted pending prerequisite",
+          "scope": "partial_domain"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "vllm/attention/backends/triton_mla.py",
+          "vllm/v1/attention/backends/mla/flashmla.py",
+          "vllm/v1/attention/ops/flashmla.py",
+          "csrc/libtorch_stable/attention/mla/cutlass_sm100_mla/device/sm100_mla.hpp",
+          "csrc/libtorch_stable/attention/mla/cutlass_sm100_mla/kernel/sm100_fmha_mla_tma_warpspecialized.hpp"
+        ],
+        "regex": "TritonMLA|FlashMLASchedMeta|flash_mla_with_kvcache|sm100_fmha_mla_tma_warpspecialized|TileScheduler",
+        "min_files": 1,
+        "validated_at": [
+          "v0.7.1 4f4d427a present",
+          "v0.7.0 5204ff5c absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/12528",
+        "https://github.com/vllm-project/vllm/pull/13747",
+        "https://github.com/vllm-project/vllm/pull/16032"
+      ]
+    },
+    {
+      "move_id": "M-L3-fp8-kv-cache-scales",
+      "name": "FP8 KV cache with in-kernel dequantization scales",
+      "category": "quantization_scaling",
+      "description": "Attention backends accept FP8 KV tensors and propagate per-tensor K/V scales into decode or prefill kernels. FlashInfer TRTLLM prefill uses a Triton helper that loads k_scale/v_scale and multiplies FP8 cache values before use.",
+      "problem_solved": "Reduces KV-cache memory bandwidth while preserving scale information for attention math.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "598b6d7b070149aae5884aa8b17a0c91c93172f5",
+        "pr": 9861,
+        "date": "2024-11-01",
+        "artifact_id": "L3.flashinfer.v0_backend",
+        "evidence": "removes the k_scale/v_scale assertion"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "7bd4c37ae7c6f2223c1a031bbdd2e3435d53da94",
+          "pr": 19825,
+          "date": "2025-07-11",
+          "artifact_id": "L3.flashinfer.trtllm_gen",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "Q=FP8 and KV=FP8 support"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "d29125c0852eb61efef060d55675010d1abf51fe",
+          "pr": 43232,
+          "date": "2026-07-02",
+          "artifact_id": "L3.flashinfer.trtllm_xqa_decode",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "SM90 XQA decode requires ... FP8 KV cache"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "L3.flashinfer.v1_backend",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "k_scale_val = tl.load(k_scale_ptr)"
+        }
+      ],
+      "semantic_preconditions": [
+        "cache_dtype is fp8/fp8_e4m3 or platform FP8 dtype",
+        "per-tensor scales match KV cache encoding",
+        "query dtype restrictions satisfied for XQA/TRTLLM paths"
+      ],
+      "hardware_preconditions": [
+        "hardware/backend supports FP8 loads or explicit dequantization",
+        "ROCm gfx942 FNUZ encoding differences handled"
+      ],
+      "framework_preconditions": [
+        "cache_config supplies k_scale/v_scale",
+        "automatic KV dtype loading avoids unsupported backend paths"
+      ],
+      "assumptions": [
+        {
+          "assumption": "TRTLLM prefill helper dequantizes with per-tensor scales",
+          "status": "derived",
+          "source": "vllm/v1/attention/backends/flashinfer.py:190-209",
+          "excerpt": "fp8_k ... * k_scale_val"
+        },
+        {
+          "assumption": "XQA requires FP8 KV cache on SM90 path",
+          "status": "derived",
+          "source": "PR #43232 body",
+          "excerpt": "SM90 XQA decode requires ... FP8 KV cache"
+        }
+      ],
+      "performance_evidence": "FP8 reduces KV memory traffic; PR #19825 reports FP8 model throughput gains.",
+      "correctness_evidence": "tests/kernels/attention/test_trtllm_kvfp8_dequant.py and test_flashinfer_trtllm_attention.py.",
+      "known_failures": [
+        {
+          "ref": "vllm PR #9861",
+          "what": "FlashInfer FP8 model with FP8 KV cache errored on scale assertions",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm revert #30653 / reland #30785",
+          "what": "automatic KV cache dtype loading broke CI, then reimplemented",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm PR #45681",
+          "what": "ROCm gfx942 FP8 arithmetic/encoding functional failures",
+          "scope": "implementation"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "vllm/v1/attention/backends/flashinfer.py",
+          "vllm/v1/attention/backends/flash_attn.py",
+          "vllm/v1/attention/backends/mla"
+        ],
+        "regex": "_trtllm_prefill_attn_kvfp8_dequant|k_scale_val|v_scale_val|kv_cache_dtype.*fp8|uses_fp8_kv",
+        "min_files": 1,
+        "validated_at": [
+          "cutoff c68eb98b present",
+          "v0.8.3 296c6572 absent for TRTLLM dequant"
+        ]
+      },
+      "confidence": "medium",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/9861",
+        "https://github.com/vllm-project/vllm/pull/43232"
+      ]
+    },
+    {
+      "move_id": "M-L3-cudagraph-static-metadata",
+      "name": "CUDA-graph attention adaptation with static/persistent metadata",
+      "category": "graph_compile_adaptation",
+      "description": "Attention backends encode full, piecewise or no CUDA graph support and pin scheduler/page metadata so replay sees the same arguments as capture. This recurs in FlashAttention, FlashInfer, TritonMLA and FlashMLA configuration paths.",
+      "problem_solved": "Low-overhead graph replay without stale or shape-mismatched attention metadata.",
+      "first_observed": {
+        "repo": "vllm-project/vllm",
+        "sha": "6c5af09b3969721da2e3a32d612a0fdd5cb077d6",
+        "pr": 9289,
+        "date": "2024-10-22",
+        "artifact_id": "L3.flash_attn.v1_backend",
+        "evidence": "V1 FlashAttention backend metadata built for cudagraph"
+      },
+      "occurrences": [
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "db56a59970a84842da2adc3aa64e436f42448b48",
+          "pr": 28702,
+          "date": "2025-11-14",
+          "artifact_id": "L3.flash_attn.v1_backend",
+          "relation": "repaired",
+          "acknowledges_prior": "no",
+          "evidence": "force num_splits to VLLM_FLASH_ATTN_MAX_NUM_SPLITS_FOR_CUDA_GRAPH"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "L3.flash_attn.v1_backend",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "Supports full cudagraphs for all cases"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "57eec0bfbce964e347ef2affb999e03416f22325",
+          "pr": 4691,
+          "date": "2025-03-24",
+          "artifact_id": "SGLang FlashMLA",
+          "relation": "repaired",
+          "acknowledges_prior": "no",
+          "evidence": "fix FlashMLA cudagraph config"
+        }
+      ],
+      "semantic_preconditions": [
+        "capture and replay use identical scheduler metadata and tensor shapes",
+        "padding metadata is initialized, not stale",
+        "backend reports support level accurately"
+      ],
+      "hardware_preconditions": [
+        "CUDA graph support in driver/runtime",
+        "kernels perform no pageable host copies during capture"
+      ],
+      "framework_preconditions": [
+        "persistent metadata buffers survive capture and replay",
+        "full versus piecewise capture mode reaches backend builders"
+      ],
+      "assumptions": [
+        {
+          "assumption": "FlashAttention advertises graph support explicitly",
+          "status": "derived",
+          "source": "vllm/v1/attention/backends/flash_attn.py:603-620",
+          "excerpt": "Supports full cudagraphs ... FULL_AND_PIECEWISE"
+        },
+        {
+          "assumption": "cascade attention must receive captured num_splits",
+          "status": "derived",
+          "source": "PR #28702 body",
+          "excerpt": "matches what the cudagraph was captured with"
+        }
+      ],
+      "performance_evidence": "CUDA graph replay is a framework performance optimization; no isolated per-move benchmark read.",
+      "correctness_evidence": "test_cascade_flash_attn.py modified by PR #28702; dataset rows #28702 and #47144 confirm metadata repairs.",
+      "known_failures": [
+        {
+          "ref": "vllm PR #28702",
+          "what": "FA3 cascade full/piecewise graph metadata mismatch",
+          "scope": "adapter"
+        },
+        {
+          "ref": "vllm PR #47144",
+          "what": "TritonMLA full decode cudagraph captured unsupported speculative shape",
+          "scope": "adapter"
+        },
+        {
+          "ref": "sglang PR #1782",
+          "what": "uninitialized req_to_token padding caused OOB during capture",
+          "scope": "adapter"
+        },
+        {
+          "ref": "sglang PR #32246",
+          "what": "pageable scale copy illegal during CUDA graph capture",
+          "scope": "adapter"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "vllm/v1/attention/backends/flash_attn.py",
+          "vllm/v1/attention/backends/flashinfer.py",
+          "vllm/v1/attention/backends/mla",
+          "vllm/v1/attention/backend.py"
+        ],
+        "regex": "FULL_AND_PIECEWISE|full cudagraphs|piecewise|cudagraph|persistent",
+        "min_files": 1,
+        "validated_at": [
+          "cutoff c68eb98b present",
+          "v0.8.3 296c6572 absent"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/vllm-project/vllm/pull/28702",
+        "https://github.com/vllm-project/vllm/pull/47144"
+      ]
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "xFormers memory-efficient attention fallback",
+      "why": "Alternate upstream backend; no lineage-specific optimization move beyond using the dependency was verified."
+    },
+    {
+      "name": "FlexAttention/tree/blocksparse peripherals",
+      "why": "Registry marks these peripheral or out-of-scope; shared paged-attention mechanism not established."
+    },
+    {
+      "name": "FlashAttention delivery mechanism only",
+      "why": "Wheel/FetchContent changes deliver kernels but are build/dispatch events, not optimization moves."
+    }
+  ],
+  "notes": "History bounded by vLLM cutoff c68eb98b and SGLang cutoff 89e1316e. Signatures were validated with git grep against listed releases/SHAs; upstream recurrences are marked unclear where local evidence only proves adapter integration."
+}

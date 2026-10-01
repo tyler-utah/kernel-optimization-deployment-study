@@ -1,0 +1,16 @@
+{
+  "captured_at_utc": "2026-10-01T21:41:29.428255Z",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "python": "3.13.14 (tags/v3.13.14:fd17997, Jun 10 2026, 13:03:48) [MSC v.1944 64 bit (AMD64)]",
+  "tools": {
+    "git": "git version 2.55.0.windows.5",
+    "gh": "gh version 2.97.0 (2026-07-31)",
+    "copilot": "GitHub Copilot CLI 1.0.90-1."
+  },
+  "packages": {
+    "beautifulsoup4": "4.15.0",
+    "matplotlib": "3.11.1",
+    "numpy": "2.4.4",
+    "requests": null
+  }
+}

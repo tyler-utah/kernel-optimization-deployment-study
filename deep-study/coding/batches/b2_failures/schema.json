@@ -1,0 +1,91 @@
+{
+ "case_status": [
+  "confirmed_kernel_correctness",
+  "not_kernel_correctness",
+  "insufficient_information"
+ ],
+ "failure_class": [
+  "numerical_precision",
+  "nondeterminism_race_sync",
+  "warp_subgroup_mask",
+  "shape_alignment_edge",
+  "memory_safety_oob",
+  "hardware_compiler_specific",
+  "integration_backend_cudagraph",
+  "perf_regression_as_correctness",
+  "other",
+  "na"
+ ],
+ "secondary_classes": null,
+ "symptom": [
+  "wrong_output_or_accuracy",
+  "nan_inf",
+  "crash_or_exception",
+  "illegal_memory_access",
+  "hang_deadlock",
+  "nondeterministic_output",
+  "compile_or_build_failure",
+  "performance_or_availability",
+  "other",
+  "na"
+ ],
+ "affected_hardware": null,
+ "affected_kernel": null,
+ "hardware_specific": [
+  "yes",
+  "no",
+  "unknown",
+  "na"
+ ],
+ "introducing_ref": null,
+ "introducing_evidence": null,
+ "regression_test_added": [
+  "yes",
+  "no",
+  "unknown",
+  "na"
+ ],
+ "detected_by": [
+  "user_issue",
+  "ci_or_nightly",
+  "developer_or_reviewer",
+  "downstream_or_partner",
+  "unknown",
+  "na"
+ ],
+ "escaped_ci": [
+  "yes",
+  "no",
+  "unknown",
+  "na"
+ ],
+ "consequence": [
+  "revert",
+  "disablement",
+  "fallback",
+  "fix_forward",
+  "unknown",
+  "na"
+ ],
+ "evidence_snippet": null,
+ "rationale": null,
+ "confidence": [
+  "high",
+  "medium",
+  "low"
+ ],
+ "counterfactual_primary": [
+  "randomized_edge_tests",
+  "hidden_input_distributions",
+  "sanitizer_memcheck",
+  "determinism_schedule_perturbation",
+  "formal_equivalence",
+  "warp_race_static_analysis",
+  "e2e_serving_tests_only",
+  "hardware_matrix_ci",
+  "not_enough_information",
+  "na"
+ ],
+ "counterfactual_all": null,
+ "counterfactual_rationale": null
+}

@@ -1,0 +1,6012 @@
+[
+ {
+  "event_id": "L1-E-09de730dee",
+  "relation": {
+   "target": "c7f2cf2b7f67",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "diff header cites vLLM fused_moe.py blob"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-be0124bda0",
+  "relation": {
+   "target": "a6221a144af7",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "new file header says adapted from vLLM fused_moe"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-3d32e4a32c",
+  "relation": {
+   "target": "PR#2203",
+   "repo": "sgl-project/sglang",
+   "relation": "relands",
+   "evidence": "PR body: Resubmit the PR for MoE-EP"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-148254d4db",
+  "relation": {
+   "target": "PR#9384",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "same customized moe_sum replacement described in vLLM ancestry"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-1c96fa86cf",
+  "relation": {
+   "target": "PR#3137/PR#2970",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "PR body says adaptation and follow up of moe-align-with-multiple-blocks-execution"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-0beea4503f",
+  "relation": {
+   "target": "CUDA moe_align_kernel.cu",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "new .hip file is hipify-generated copy of moe_align_kernel"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-61e4433caf",
+  "relation": {
+   "target": "vLLM topk_softmax v0.7.3",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "file header says Adapt from vLLM topk_softmax_kernels.cu"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-45dcfc2e76",
+  "relation": {
+   "target": "PR#3191",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says adapted and improved from #3191; exact ancestry not checked"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-924ca7c92c",
+  "relation": {
+   "target": "vllm-project/vllm#15502",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says idea mainly from vLLM PR#15502"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-afb752bcbe",
+  "relation": {
+   "target": "PR#3702",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says issue introduced by PR#3702"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-a086a11305",
+  "relation": {
+   "target": "PR#4396",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says Based on #4396 use sgl_per_token_group_quant_int8."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-cc4a80caf6",
+  "relation": {
+   "target": "deepseek-ai/DeepEP#134",
+   "repo": "deepseek-ai/DeepEP",
+   "relation": "repairs",
+   "evidence": "PR body says Fix https://github.com/deepseek-ai/DeepEP/issues/134."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-c471d39eb9",
+  "relation": {
+   "target": "PR#4957",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says subtract diff from #4957."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L1-E-e98afbe042",
+  "relation": {
+   "target": "PR#4957",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says subtract diff from #4957."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L1-E-55444ed667",
+  "relation": {
+   "target": "Triton pre_reorder_triton_kernel",
+   "repo": "sgl-project/sglang",
+   "relation": "reimplementation_of",
+   "evidence": "PR body says current moe_pre_reorder uses Triton and introduces CUDA implementation."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-43baba649e",
+  "relation": {
+   "target": "Triton post_reorder_triton_kernel",
+   "repo": "sgl-project/sglang",
+   "relation": "reimplementation_of",
+   "evidence": "PR body says current moe_post_reorder uses Triton and introduces CUDA implementation."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-a979daac3b",
+  "relation": {
+   "target": "PR#5955",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says Followup of #5955"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L1-E-b04df75acd",
+  "relation": {
+   "target": "DeepEP#193",
+   "repo": "deepseek-ai/DeepEP",
+   "relation": "repairs",
+   "evidence": "PR body says use with DeepEP PR 193"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-5962e70d8d",
+  "relation": {
+   "target": "FlashInfer cutlass_fused_moe",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "diff imports flashinfer.fused_moe cutlass_fused_moe"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-506c4928f5",
+  "relation": {
+   "target": "PR#5805",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says builds upon work from pr5805"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-15f3401343",
+  "relation": {
+   "target": "Issue#7365",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body links issue 7365"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-e984d5073b",
+  "relation": {
+   "target": "AITER biased_grouped_topk",
+   "repo": "ROCm/aiter",
+   "relation": "wraps",
+   "evidence": "diff enables aiter_biased_grouped_topk kernel"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-7248272ccc",
+  "relation": {
+   "target": "TensorRT-LLM dsv3RouterGemm.cu",
+   "repo": "NVIDIA/TensorRT-LLM",
+   "relation": "ported_from",
+   "evidence": "PR body and source comment cite TensorRT-LLM dsv3RouterGemm.cu"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-8e03b641ba",
+  "relation": {
+   "target": "PR#5639",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says sgl-kernel part of #5639"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-1dce6c480f",
+  "relation": {
+   "target": "PR#6549",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says #6549 needs to land first"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-da3890e82a",
+  "relation": {
+   "target": "TensorRT-LLM#5027",
+   "repo": "NVIDIA/TensorRT-LLM",
+   "relation": "ported_from",
+   "evidence": "PR body says cutlass_extensions adapted from TensorRT-LLM PR 5027"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-8fc910db03",
+  "relation": {
+   "target": "future TBO PR",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says TBO integration will be future"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-253454de9b",
+  "relation": {
+   "target": "vLLM PR#18595",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "diff header: Adapted from https://github.com/vllm-project/vllm/pull/18595/files"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-659907e32b",
+  "relation": {
+   "target": "L1-E-659907e32b",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "Stage1 cross-reference says an already-coded repair event cites this same change."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-85486b6f6f",
+  "relation": {
+   "target": "FlashInfer fused_moe",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "diff imports flashinfer.fused_moe and defines FlashInferEPMoE"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-9effeb5bdd",
+  "relation": {
+   "target": "Issue#8398",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says Fix #8398"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-aa4c66b564",
+  "relation": {
+   "target": "FlashInfer fused_moe",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "FlashInferFusedMoE calls quant_method.apply_with_router_logits"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-c8d3a402c1",
+  "relation": {
+   "target": "Issue#8402",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body references issue #8402 accuracy regression"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-f642524fd9",
+  "relation": {
+   "target": "TensorRT-LLM noAuxTcKernels",
+   "repo": "NVIDIA/TensorRT-LLM",
+   "relation": "ported_from",
+   "evidence": "PR body says following example of TRT-LLM"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-915140fd18",
+  "relation": {
+   "target": "FlashInfer trtllm_fp4_block_scale_moe",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "diff imports flashinfer.fused_moe.trtllm_fp4_block_scale_moe"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-4373df5525",
+  "relation": {
+   "target": "FlashInfer MXFP4 MoE",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "diff adds FlashInfer MXFP4 MoE backend env vars and FlashInfer weight shuffling"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-5190ba7f42",
+  "relation": {
+   "target": "flashinfer#1445",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says Flashinfer side is ready in flashinfer#1445"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-1bc183c6de",
+  "relation": {
+   "target": "flashinfer#1412",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says utility function is integrated to FI #1412 and now utilized in SGL"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-de4990a5b2",
+  "relation": {
+   "target": "CUTLASS#2294",
+   "repo": "NVIDIA/cutlass",
+   "relation": "ported_from",
+   "evidence": "PR body says fix is adapted from NVIDIA CUTLASS v4.0.0"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-de4990a5b2",
+  "relation": {
+   "target": "TensorRT-LLM#7072",
+   "repo": "NVIDIA/TensorRT-LLM",
+   "relation": "ported_from",
+   "evidence": "PR body says fix has also been merged into TensorRT-LLM"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-79e6a8a6ac",
+  "relation": {
+   "target": "Issue#9490",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body names #9490 as motivation"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-aa3eba8eb4",
+  "relation": {
+   "target": "PR#9167",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says it depends on #9167"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-74dd4249ac",
+  "relation": {
+   "target": "PR#9399",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body cites initial NPUGraph support"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-74dd4249ac",
+  "relation": {
+   "target": "PR#8030",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body cites initial NPUGraph support"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-3fa62da78c",
+  "relation": {
+   "target": "PR#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says new MoE framework introduced in #8715"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-5f1eb20484",
+  "relation": {
+   "target": "Issue#9944",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says unused kernels causing accuracy issues in issue #9944"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-5a7e10fe4c",
+  "relation": {
+   "target": "Issue#10138",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says fix #10138"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-ee0b3c5bad",
+  "relation": {
+   "target": "PR#9918",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body points to accuracy tests in PR#9918"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-3df05f4d6a",
+  "relation": {
+   "target": "FlashInfer grouped_gemm_nt_masked",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "PR body links FlashInfer grouped_gemm_nt_masked and diff imports it"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-3df05f4d6a",
+  "relation": {
+   "target": "PR#9200",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says Depends on #9200"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-e07b21ceaf",
+  "relation": {
+   "target": "DeepEP#403",
+   "repo": "deepseek-ai/DeepEP",
+   "relation": "integrates",
+   "evidence": "PR body cites DeepEP pull 403 for 512-expert support"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-4039c626e2",
+  "relation": {
+   "target": "DeepEP#181",
+   "repo": "deepseek-ai/DeepEP",
+   "relation": "repairs",
+   "evidence": "PR body links DeepEP PR 181 for assert"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-1237aa19ce",
+  "relation": {
+   "target": "d078e69d",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says sync changes from commit d078e69d"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-0b9dfba787",
+  "relation": {
+   "target": "PR#10120",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body names previous PR #10120"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-8fdcd98efe",
+  "relation": {
+   "target": "c85be1f6dd3e20d9b42cd68ff54b328ffeb6cb4b",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body: Adapted from vLLM gguf tree at that commit."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-c7867b6702",
+  "relation": {
+   "target": "PR#10915",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body: issue caused by #10915."
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L1-E-a40229f6f8",
+  "relation": {
+   "target": "Issue#8961",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR says it lays foundation for fault-tolerant distributed MoE inference (#8961)."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-7e6191c098",
+  "relation": {
+   "target": "kvcache-ai/ktransformers",
+   "repo": "kvcache-ai/ktransformers",
+   "relation": "integrates",
+   "evidence": "PR body: Add dependency of kt_kernel (https://github.com/kvcache-ai/ktransformers)."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-eec9e471ca",
+  "relation": {
+   "target": "flashinfer PR#1882",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body links flashinfer kernel benchmark PR#1882."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-8612811d85",
+  "relation": {
+   "target": "1fd57b0",
+   "repo": "fzyzcjy/DeepEP",
+   "relation": "integrates",
+   "evidence": "PR body says new branch is same codebase used in Blog Post 2 benchmarks."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-62eff37ba1",
+  "relation": {
+   "target": "Issue#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says integration is per issue #8715 plan."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-13bf565d60",
+  "relation": {
+   "target": "PR#8311",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says Based on #8311."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-7a21d8b276",
+  "relation": {
+   "target": "PR#9358",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says apply some changes from #9358."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-dbcf85b7f0",
+  "relation": {
+   "target": "Issue#9441",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body: Fixes issue #9441."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-2340798353",
+  "relation": {
+   "target": "PR#9358",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body calls this a rebase version of #9358."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-1fa788ec14",
+  "relation": {
+   "target": "PR#12695",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says fixed illegal memory access issue in #12695."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-7aa443903d",
+  "relation": {
+   "target": "PR#12866",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says Part of #12866 and root cause scale map."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L1-E-6664083522",
+  "relation": {
+   "target": "FlashInfer PR#1927",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "replaces",
+   "evidence": "PR body says Flashinfer introduced equivalent nvfp4 quantization APIs."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-e7e89349c9",
+  "relation": {
+   "target": "flashinfer-python >= 0.5.0",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR Dependency says Require flashinfer-python >= 0.5.0."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-0d116b9a0b",
+  "relation": {
+   "target": "FlashInfer PR#2086",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body links FlashInfer #2086 and says tile_tokens_dim no longer accepted."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-e72cf13693",
+  "relation": {
+   "target": "vLLM v0.7.3 topk_softmax",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "Diff header says Adapt from vLLM topk_softmax_kernels.cu."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-b0a26ba624",
+  "relation": {
+   "target": "flashinfer.fused_moe.cutlass_fused_moe",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "Diff imports cutlass_fused_moe as flashinfer_cutlass_fused_moe."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-7ab548ef64",
+  "relation": {
+   "target": "#13680",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says missing requantization caused #13680 accuracy drop."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-7ab548ef64",
+  "relation": {
+   "target": "PR#13601",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "I1 reconciliation: Body says \u201cFollowing #13601\u201d and \u201cClose #13680\u201d; it fixes missing DeepGEMM requantization from that sequence, so the repair edge is the explicit predecessor."
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L1-E-20aad5b5ab",
+  "relation": {
+   "target": "deepseek-ai/DeepEP#483",
+   "repo": "deepseek-ai/DeepEP",
+   "relation": "integrates",
+   "evidence": "PR body points to DeepEP branch implementing overlap."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-20aad5b5ab",
+  "relation": {
+   "target": "sgl-project/DeepGEMM#14",
+   "repo": "sgl-project/DeepGEMM",
+   "relation": "integrates",
+   "evidence": "PR body points to DeepGEMM branch implementing overlap."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-8642dbe416",
+  "relation": {
+   "target": "#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says Marlin MoE runner integration follows issue #8715."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-8fe3e37468",
+  "relation": {
+   "target": "#11490",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body links issue #11490."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-24b30f7757",
+  "relation": {
+   "target": "#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says refactor is part of issue #8715"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-34cd32fe30",
+  "relation": {
+   "target": "PR#23671",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says this generalizes dense NVFP4 fusion from vLLM PR#23671."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-9f5cd80a8d",
+  "relation": {
+   "target": "PR#12969",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says unit test was temporarily disabled in #12969 because Mooncake EP was incompatible with torch 2.9"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L1-E-5af84c8af5",
+  "relation": {
+   "target": "PR#6238",
+   "repo": "sgl-project/sglang",
+   "relation": "replaces",
+   "evidence": "PR body: this PR supersedes #6238"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-424a380077",
+  "relation": {
+   "target": "issue#14424",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says refactor is related to issue #14424 and follows #13664"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-454676811e",
+  "relation": {
+   "target": "issue#18499",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body: This PR fix #18499"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-fbb6098487",
+  "relation": {
+   "target": "PR#19161",
+   "repo": "sgl-project/sglang",
+   "relation": "reverts",
+   "evidence": "Deep-study record says this PR was reverted by PR 19161."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L1-E-d7a03c7ebf",
+  "relation": {
+   "target": "#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says refactor is according to issue #8715"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-beabaa8d37",
+  "relation": {
+   "target": "Issue#17865",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says See issue 17865 for JIT migration context."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-6822941514",
+  "relation": {
+   "target": "flashinfer PR#2398",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body lists CuteDSL FP4 MoE for DeepSeek-R1 Performance."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-6822941514",
+  "relation": {
+   "target": "flashinfer PR#2505",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body lists TRTLLM-Gen MxFP8 MoE Integration."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-9305f0e58d",
+  "relation": {
+   "target": "PR#16975",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says written by #16975, rebased and tested."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-2bdd89a6cd",
+  "relation": {
+   "target": "Issue#17865",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body cites #17865 as migration motivation."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-61de303f0a",
+  "relation": {
+   "target": "flashinfer PR#2617",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says depends on FlashInfer fix #2617."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-76ee4bb98c",
+  "relation": {
+   "target": "FlashInfer 0.6.4",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR title/body say FlashInfer v0.6.4 and add flashinfer fused_moe calls."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-af2807e146",
+  "relation": {
+   "target": "vLLM moe_align_sum_kernels.cu",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "Diff comment says temporarily adapted from vLLM moe_align_sum_kernels.cu."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-af2807e146",
+  "relation": {
+   "target": "PR#14105",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says split this PR #14105 into 3 parts."
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L1-E-ce0541404f",
+  "relation": {
+   "target": "flashinfer PR#2594",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body lists FlashInfer trtllm_bf16_routed_moe dependency."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-ca3ba05a7a",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#2726",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says this version includes flashinfer pull 2726"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-8950d129bd",
+  "relation": {
+   "target": "issue#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body links MoE refactor issue and routes through FusedMoE"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-991f3aa5b3",
+  "relation": {
+   "target": "vLLM",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body says vLLM already supports this via Marlin fallback"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-f407461ec8",
+  "relation": {
+   "target": "flashinfer fe053931",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "repairs",
+   "evidence": "PR body links FlashInfer launcher line requiring float32 router_logits"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-c554dc5c64",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#2398",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says integrates the Wrapper API exposed there"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-c554dc5c64",
+  "relation": {
+   "target": "issue#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says aligns with MoE refactor roadmap #8715"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-74c2e5bacd",
+  "relation": {
+   "target": "issue#16565",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says ongoing effort tracked in #16565"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-6d03861476",
+  "relation": {
+   "target": "vLLM grouped_topk_kernels.cu",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "diff comment says adapted from vLLM grouped_topk_kernels.cu"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-c7878dbb6d",
+  "relation": {
+   "target": "act_and_mul_triton",
+   "repo": "sgl-project/sglang",
+   "relation": "replaces",
+   "evidence": "PR body says JIT kernels replace deleted Triton act_and_mul_triton kernel"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-10fd0faccd",
+  "relation": {
+   "target": "PR#12531",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says depends on previous CPU mrope kernel support #12531"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-4a279d9c36",
+  "relation": {
+   "target": "issue#24514",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #24514."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-ecb786c8d7",
+  "relation": {
+   "target": "PR#20745",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body lists #20745 as reference but not exact ancestry."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-f4b7e73699",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#2803",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR says after FlashInfer PR #2803 BF16 supports DSV3 routing."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-4b23f6bdc5",
+  "relation": {
+   "target": "PyTorch 2.11/Triton 3.6.0 upgrade",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR says PyTorch 2.11 uses Triton 3.6.0 without tuned config."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-1d80a1a9fe",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#2904",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR says perf optimizations in FlashInfer PR #2904 enable this."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-d5f3254ed1",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer@v0.6.10",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR lists releases v0.6.10 and v0.6.9 as commits of interest."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-72b49bfac6",
+  "relation": {
+   "target": "deepseek-ai/DeepEP@hybrid-ep",
+   "repo": "deepseek-ai/DeepEP",
+   "relation": "integrates",
+   "evidence": "PR says move GB build path onto upstream deepseek-ai/DeepEP@hybrid-ep."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-28758d37dd",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#3084",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR says FlashInfer PR #3084 ports TensorRT-LLM PR #12451."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-b7f856df70",
+  "relation": {
+   "target": "PR#24444",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says it is #24444 rebased on main branch."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-b7f856df70",
+  "relation": {
+   "target": "sgl-project/DeepGEMM#31",
+   "repo": "sgl-project/DeepGEMM",
+   "relation": "integrates",
+   "evidence": "PR body says requires new sgl-deep-gemm release after DeepGEMM PR #31."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-9e00b7ca95",
+  "relation": {
+   "target": "Ascend/memfabric_hybrid",
+   "repo": "Ascend/memfabric_hybrid",
+   "relation": "integrates",
+   "evidence": "PR says ZBAL is based on memfabric_hybrid."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-22dfcdaa04",
+  "relation": {
+   "target": "PR#25129",
+   "repo": "sgl-project/sglang",
+   "relation": "reverts",
+   "evidence": "PR body says Reverts #24452 and #25129."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L1-E-ce2506e1c6",
+  "relation": {
+   "target": "PR#22809",
+   "repo": "sgl-project/sglang",
+   "relation": "reverts",
+   "evidence": "PR body says Reverts #22809."
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L1-E-7158a255eb",
+  "relation": {
+   "target": "PR#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says part of MoE refactor roadmap #8715."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-6f892047ec",
+  "relation": {
+   "target": "issue#25491",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body references #25491 and says feature will be supported later."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-b79e4b1e68",
+  "relation": {
+   "target": "vllm-project/vllm#40082",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body references vLLM issue comment for latest cutedsl package error."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-78cb38ed5e",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#3027",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body links FlashInfer PR #3027."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-044649c23a",
+  "relation": {
+   "target": "PR#3021",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says it depends on FlashInfer PR 3021 for topk=10."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-9f2bc24b35",
+  "relation": {
+   "target": "issue#25767",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says Closes #25767 and initializes HashTopK.tid2eid."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-8fa56a0ab1",
+  "relation": {
+   "target": "9b4258cdc",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body lists original commit 9b4258cdc."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-b765faee30",
+  "relation": {
+   "target": "PR#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says it continues the MoE refactor roadmap #8715."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-6c8128650e",
+  "relation": {
+   "target": "issue#21307",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says the bug was discovered while investigating performance characteristics reported in #21307."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-3ecf2c76ad",
+  "relation": {
+   "target": "PR#12537",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says BF16 MoE kernel with bias/SwiGLU support was ported from #12537."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-376635c1e3",
+  "relation": {
+   "target": "PR#23999",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says originally part of #23999 but split out."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-524ba10eda",
+  "relation": {
+   "target": "PR#24047",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says this is a rebase of #24047 and all SM120 kernel code is identical."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-951fa05a09",
+  "relation": {
+   "target": "PR#37",
+   "repo": "sgl-project/DeepGEMM",
+   "relation": "integrates",
+   "evidence": "PR body names DeepGEMM PR 37 as related BF16 masked grouped GEMM support."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-4cfebbb95f",
+  "relation": {
+   "target": "PR#3264",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body lists FlashInfer PR #3264 as parent."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-e76d36214b",
+  "relation": {
+   "target": "PR#3152",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body cites FlashInfer #3152 for SwapAB + tileN performance."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-e76d36214b",
+  "relation": {
+   "target": "issue#19637",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body Motivation links issue #19637."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-c9f582a272",
+  "relation": {
+   "target": "TRT-LLM fused MoE",
+   "repo": "NVIDIA/TensorRT-LLM",
+   "relation": "wraps",
+   "evidence": "PR body says LoRA deltas are applied inside the fused MoE kernels."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-dc24a26821",
+  "relation": {
+   "target": "PR#27063",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says regression from #27063."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L1-E-2495c02c2c",
+  "relation": {
+   "target": "Issue#23004",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR motivation links https://github.com/sgl-project/sglang/issues/23004."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-82eedd5bd0",
+  "relation": {
+   "target": "Issue#26196",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR motivation: Fix https://github.com/sgl-project/sglang/issues/26196."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-7c23d2255a",
+  "relation": {
+   "target": "vllm-project/vllm v0.7.3 topk_softmax_kernels.cu",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "Diff comment: Adapt from vLLM topk_softmax_kernels.cu."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-f82addd4a8",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#3387",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body cites FlashInfer PR for Cute-DSL quantizer/perf basis."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-212c30d008",
+  "relation": {
+   "target": "Issue#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body: Part of #8715."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-a2d7eb303e",
+  "relation": {
+   "target": "#26771",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR says it is part of fused MoE gate/topk kernel consolidation #26771."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-1da7d3a50b",
+  "relation": {
+   "target": "#26771",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "Follow-up to MoE gate/topk consolidation #26771."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-87992eeec4",
+  "relation": {
+   "target": "#30025",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says same stream explosion mechanism fixed for DSA indexer in #30025."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-2cf2920d07",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#3448",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body: FlashInfer support PR #3448."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-423b8485fb",
+  "relation": {
+   "target": "vllm-project/vllm#34556",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body links vLLM supports PR #34556 but does not show code ancestry."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-9756f768a6",
+  "relation": {
+   "target": "#28663",
+   "repo": "sgl-project/sglang",
+   "relation": "replaces",
+   "evidence": "PR body: Fix #28663 deprecate and delete cutlass/dense FP4 GEMM/FP4 quantization."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-8ed82afcc8",
+  "relation": {
+   "target": "#8715",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body: aligns with MoE Runner pattern defined in #8715."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-37a830b667",
+  "relation": {
+   "target": "TensorRT-LLM DWDP implementation",
+   "repo": "NVIDIA/TensorRT-LLM",
+   "relation": "ported_from",
+   "evidence": "PR body says ported from TensorRT-LLM's implementation."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-e4eea7ce2f",
+  "relation": {
+   "target": "HPC-Ops gemm_bf16xfp32",
+   "repo": "Tencent/hpc-ops",
+   "relation": "wraps",
+   "evidence": "PR says it consumes hpc.gemm_bf16xfp32 directly."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-03342e7732",
+  "relation": {
+   "target": "JIT dsv3_router_gemm/dsv3_fused_a_gemm",
+   "repo": "sgl-project/sglang",
+   "relation": "replaces",
+   "evidence": "PR body says since migrated already; diff removes AOT and leaves JIT runtime-compiled kernels."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-0c29c8fece",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#4045",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says post1 includes fused-MoE runner cache fix."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-3d91a569ce",
+  "relation": {
+   "target": "HPC-Ops FP8 MoE kernels",
+   "repo": "Tencent/hpc-ops",
+   "relation": "wraps",
+   "evidence": "PR title/body and new hpc_ops runner import upstream hpc kernels."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-169fc1e20c",
+  "relation": {
+   "target": "topk refactor",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "Title says introduced by topk refactor."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-f05c92fb6d",
+  "relation": {
+   "target": "PR#22352",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR says it reuses merged dense MXFP8 infrastructure from #22352."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-f05c92fb6d",
+  "relation": {
+   "target": "PR#23795",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR says dense W4A4 had landed and this is MoE MXFP8 delta."
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L1-E-a55e1764a2",
+  "relation": {
+   "target": "flashinfer CUTLASS fused_moe",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "Diff selects cutlass_sm120 and calls FlashInfer CUTLASS preparation."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-fc007e1f00",
+  "relation": {
+   "target": "DeepGEMM fp8_mega_moe",
+   "repo": "deepseek-ai/DeepGEMM",
+   "relation": "wraps",
+   "evidence": "Diff imports deep_gemm and calls mega_moe_pre_dispatch_sm90/fp8_mega_moe."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-a1c30701aa",
+  "relation": {
+   "target": "pplx_kernels AllToAll",
+   "repo": "pplx-kernels",
+   "relation": "wraps",
+   "evidence": "Diff imports pplx_kernels AllToAll and nvshmem_init."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-beabc5949b",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#3644",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says #3644 fixes upstream expert_weights allocation."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-4c0a8940fa",
+  "relation": {
+   "target": "issue#29630",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says completes unification discussed in #29630."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-4020bc95a7",
+  "relation": {
+   "target": "vLLM behavior",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says this mirrors vLLM's behavior"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-a58fa0388e",
+  "relation": {
+   "target": "Issue#33660",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #33660"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-d82a1d4802",
+  "relation": {
+   "target": "sgl-kernel-xpu#187",
+   "repo": "sgl-project/sgl-kernel-xpu",
+   "relation": "integrates",
+   "evidence": "PR body says apply kernel side changes in sgl-kernel-xpu#187"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-197832bcf5",
+  "relation": {
+   "target": "sgl-kernel-npu#658",
+   "repo": "sgl-project/sgl-kernel-npu",
+   "relation": "integrates",
+   "evidence": "PR body says extracted Ascend Triton kernels are proposed separately in sgl-kernel-npu#658"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-3f6ef01322",
+  "relation": {
+   "target": "Issue#26439",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says optimize MiniMax-M2.7 on CPU #issue 26439"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-9d34c2809f",
+  "relation": {
+   "target": "flashinfer#3645",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body lists FlashInfer per-token NVFP4 API"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-d8399af70c",
+  "relation": {
+   "target": "PR#27139",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body cites constructor-time weight-cache lifecycle documented in #27139"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L1-E-7769f54feb",
+  "relation": {
+   "target": "DeepGEMM#78",
+   "repo": "sgl-project/DeepGEMM",
+   "relation": "integrates",
+   "evidence": "PR body says requires sgl-deep-gemm 0.1.5.post3 including DeepGEMM#78"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-d216737e47",
+  "relation": {
+   "target": "d7c54c96f5",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body lists Original commits d7c54c96f5"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-1ef7882a5b",
+  "relation": {
+   "target": "ai-dynamo/nixl#1751",
+   "repo": "ai-dynamo/nixl",
+   "relation": "integrates",
+   "evidence": "PR body says nixl#1751 changes default top-k index type"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-27c36368b6",
+  "relation": {
+   "target": "#36264",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #36264"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-d12b313b93",
+  "relation": {
+   "target": "PR#15298",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says #15298 changed get_hf_config spelling but missed this file"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L1-E-30e7a3072d",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#4352",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "Needs flashinfer#4352 shipped in flashinfer 0.6.18"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-1b77f498a0",
+  "relation": {
+   "target": "djns99/sglang:mega_moe_flashinfer",
+   "repo": "djns99/sglang",
+   "relation": "forked_from",
+   "evidence": "Fork from djns99/sglang mega_moe_flashinfer"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-2fca6d69aa",
+  "relation": {
+   "target": "PR#39275",
+   "repo": "sgl-project/sglang",
+   "relation": "relands",
+   "evidence": "Recreates #39275 after branch deletion"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-f920be4b09",
+  "relation": {
+   "target": "PR#38476",
+   "repo": "sgl-project/sglang",
+   "relation": "relands",
+   "evidence": "Re-submission of #38476"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-aebae58b8c",
+  "relation": {
+   "target": "issue#39797",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "fixes #39797"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-826d5170ae",
+  "relation": {
+   "target": "issue#38773",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "Fixes #38773"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-42875bcd2a",
+  "relation": {
+   "target": "issue#38795",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "Fixes #38795"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-56fee88e23",
+  "relation": {
+   "target": "issue#34192",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "Fixes issue #34192"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L1-E-b44e248682",
+  "relation": {
+   "target": "PR#37629",
+   "repo": "sgl-project/sglang",
+   "relation": "relands",
+   "evidence": "reapplies reviewed change after revert"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L1-E-32290dda2c",
+  "relation": {
+   "target": "AITER fused_moe",
+   "repo": "ROCm/aiter",
+   "relation": "reimplementation_of",
+   "evidence": "PR says above 40 tokens AITER is still used and this consumes AITER weight/scale layouts."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-3177d10ca6",
+  "relation": {
+   "target": "python/sglang/srt/layers/moe/qwen35_flashinfer_fusion.py",
+   "repo": "sgl-project/sglang",
+   "relation": "replaces",
+   "evidence": "Diff deletes qwen35_flashinfer_fusion.py and adds shared cutedsl_ar_fusion.py."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L1-E-515f5be77e",
+  "relation": {
+   "target": "AITER MegaMoEv2",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "Title and body describe integrating Aiter MegaMoEv2 for DeepSeek-V4."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-effb752188",
+  "relation": {
+   "target": "AITER topk_gating_kernel_opt",
+   "repo": "ROCm/aiter",
+   "relation": "reimplementation_of",
+   "evidence": "File docstring says the kernel is bitwise AITER's topk_gating_kernel_opt."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L1-E-fa443412c5",
+  "relation": {
+   "target": "ROCm/aiter#5735",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body says required gfx950 tuning dependency is merged in ROCm/aiter#5735."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-df191254ab",
+  "relation": {
+   "target": "PR#1649",
+   "repo": "InternLM/lmdeploy",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body: Inspired by lmdeploy PR 1649"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-76524b70d1",
+  "relation": {
+   "target": "issue#1372",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body: Fix issue #1372"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-c5f865013e",
+  "relation": {
+   "target": "discussion#1935",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body names discussion #1935"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-ec52464dde",
+  "relation": {
+   "target": "PR#2203",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "PR body refs #2203 for prior MLA prefill work"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-4a63c181f1",
+  "relation": {
+   "target": "issue#2336",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body links issue #2336"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-7dc66fcb40",
+  "relation": {
+   "target": "LightLLM",
+   "repo": "ModelTC/lightllm",
+   "relation": "ported_from",
+   "evidence": "PR body: adapted the flash decoding implementation from lightllm"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-2f9bd0fafd",
+  "relation": {
+   "target": "issue#2465",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body names issue #2465"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-c5210dfa38",
+  "relation": {
+   "target": "PR#2637",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body: Together with core changes from #2637"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L2-E-51caee740f",
+  "relation": {
+   "target": "PR#2693",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says breakdown PR of hierarchical caching proposal #2693"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L2-E-70f894b810",
+  "relation": {
+   "target": "FlashInfer v0.2.1",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body refs flashinfer releases/tag/v0.2.1"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-a53fe428f9",
+  "relation": {
+   "target": "FlashMLA",
+   "repo": "flashmla/flashmla",
+   "relation": "wraps",
+   "evidence": "PR body says FlashMLABackend uses flashmla for decoding"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-90532b7627",
+  "relation": {
+   "target": "issue#4536",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body names bug #4536"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-20c90be23d",
+  "relation": {
+   "target": "FlashAttention benchmark_mla_decode.py",
+   "repo": "Dao-AILab/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body cites official FA3 MLA example"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-a42736bbb8",
+  "relation": {
+   "target": "vllm/v1/attention/backends/mla/common.py",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body says inspired by vLLM MLA common.py and FlashInfer recursive attention"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-2ed96c7a8a",
+  "relation": {
+   "target": "Issue#5154",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body links issue #5154"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-799789afed",
+  "relation": {
+   "target": "PR#5538",
+   "repo": "sgl-project/sglang",
+   "relation": "reimplementation_of",
+   "evidence": "body says modification on basis of #5538"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-f6f96b0521",
+  "relation": {
+   "target": "PR#5686",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "body says after #5686 symbol error occurs"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L2-E-0ab3f437ab",
+  "relation": {
+   "target": "NVIDIA/cutlass#2274",
+   "repo": "NVIDIA/cutlass",
+   "relation": "repairs",
+   "evidence": "body names upstream CUTLASS bug"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-a2cb5913a0",
+  "relation": {
+   "target": "PR#6606",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "body says follow-up of #6606"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L2-E-2810338401",
+  "relation": {
+   "target": "PR#6151",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says follow up on #6151"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-4b04998d38",
+  "relation": {
+   "target": "PR#7938",
+   "repo": "sgl-project/sglang",
+   "relation": "relands",
+   "evidence": "PR body says commit history is the same"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-4dbf43601d",
+  "relation": {
+   "target": "flashinfer PR#1463",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "repairs",
+   "evidence": "PR body says crash introduced by this flashinfer update"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-918e3d4c27",
+  "relation": {
+   "target": "issue #7692",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body links issue for accuracy"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-90dfe3de4c",
+  "relation": {
+   "target": "issue #9806",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says workaround for accuracy issue #9806"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-36acd2ff16",
+  "relation": {
+   "target": "issue #9806",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says to address issue #9806"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-124097fc5b",
+  "relation": {
+   "target": "issue #9806",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says finalize accuracy in #9806"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-b17e67df36",
+  "relation": {
+   "target": "239b2577",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says sync changes from commit 239b2577"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-2b7417bf6a",
+  "relation": {
+   "target": "issue #10381",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says Closes #10381"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-d27a6f7092",
+  "relation": {
+   "target": "sgl-kernel-npu PR#51",
+   "repo": "sgl-project/sgl-kernel-npu",
+   "relation": "integrates",
+   "evidence": "PR body links open-sourced op code"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-73d4a5f879",
+  "relation": {
+   "target": "PR#9334",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says merge #9334 into main"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-73d4a5f879",
+  "relation": {
+   "target": "PR#10715",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says Depends on #10715"
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L2-E-666da3d59f",
+  "relation": {
+   "target": "PR#9755",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says error occurs on #9755"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L2-E-efa473348b",
+  "relation": {
+   "target": "PR#11109",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body says Based on #11109"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-2966367a31",
+  "relation": {
+   "target": "sgl-project/FlashMLA#1",
+   "repo": "sgl-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says Stack PR: FlashMLA/pull/1"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-5a8adca900",
+  "relation": {
+   "target": "ROCm/aiter#1445",
+   "repo": "ROCm/aiter",
+   "relation": "repairs",
+   "evidence": "body says MLA issue fixed upstream"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-930705863f",
+  "relation": {
+   "target": "FlashMLA b1860dc4949e94241eb38503abd7b62eb62d36f6",
+   "repo": "sgl-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "cmake GIT_TAG changes to b1860dc"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-dbe871efdd",
+  "relation": {
+   "target": "previous FlashMLA/default change",
+   "repo": "sgl-project/sglang",
+   "relation": "reverts",
+   "evidence": "## Motivation Temporarily avoid #21291 ## Modifications ## Accuracy Tests ## Benchmarking and Profiling ## Checklist ## Review"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-8cb337c8ea",
+  "relation": {
+   "target": "issue #21904",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "Fixes #21904"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-5a35316417",
+  "relation": {
+   "target": "THUDM/IndexCache",
+   "repo": "THUDM/IndexCache",
+   "relation": "ported_from",
+   "evidence": "Port https://github.com/THUDM/IndexCache"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-6af34b95b6",
+  "relation": {
+   "target": "vLLM PR reference",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "## Summary Call `get_scheduler_metadata` once per batch in decode metadata init (including CUDA graph capture/replay paths) and pass the result"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-bd448e51bd",
+  "relation": {
+   "target": "vLLM PR reference",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "Follows up #23530. ## Summary - Split the ambiguous `accept_length` into two explicit fields on `EagleDraftInput` / `NgramVerifyInput`: `num_accepted_drafts` (strict"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-3fe8bc987e",
+  "relation": {
+   "target": "vLLM PR reference",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "Inspire by https://github.com/sgl-project/sglang/pull/18882 Recently some users of SM120 need this feature for FP8 KV cache (currently, Flashinfer will be slower"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-3ffb37789a",
+  "relation": {
+   "target": "ROCm/aiter#2958",
+   "repo": "ROCm/aiter",
+   "relation": "repairs",
+   "evidence": "PR says aiter#2958 renamed fused_qk_rmsnorm API"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-50e0b3b77f",
+  "relation": {
+   "target": "flashinfer PR#2805",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body lists FlashInfer reference PRs"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-0ef39784ef",
+  "relation": {
+   "target": "PR#268415",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR. --- ### CI States Latest PR Test (Base): :white_check_mark: [Run #26841516075](https://github.com/sgl-project/sglang/actions/runs/26841516075) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-0ef39784ef",
+  "relation": {
+   "target": "PR#268510",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "ect/sglang/actions/runs/26841516075) Latest PR Test (Extra): :x: [Run #26851017754](https://github.com/sgl-project/sglang/actions/runs/26851017754)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-bd47869ba4",
+  "relation": {
+   "target": "PR#269903",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR. --- ### CI States Latest PR Test (Base): :white_check_mark: [Run #26990397908](https://github.com/sgl-project/sglang/actions/runs/26990397908) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-00fefef16b",
+  "relation": {
+   "target": "PR#269572",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR. --- ### CI States Latest PR Test (Base): :white_check_mark: [Run #26957264825](https://github.com/sgl-project/sglang/actions/runs/26957264825) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-2c2a4f243a",
+  "relation": {
+   "target": "#26340",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says addresses flashinfer topk>1 draft coredump tracked in #26340."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-5160f7914e",
+  "relation": {
+   "target": "PR#270768",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "pro _(added below)_ --- ### CI States Latest PR Test (Base): :x: [Run #27076835594](https://github.com/sgl-project/sglang/actions/runs/27076835594) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-303757ccd8",
+  "relation": {
+   "target": "PR#270885",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "writes. --- ### CI States Latest PR Test (Base): :no_entry_sign: [Run #27088565410](https://github.com/sgl-project/sglang/actions/runs/27088565410) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-303757ccd8",
+  "relation": {
+   "target": "PR#271088",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "ons/runs/27088565410) Latest PR Test (Extra): :white_check_mark: [Run #27108887129](https://github.com/sgl-project/sglang/actions/runs/27108887129)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-42322947aa",
+  "relation": {
+   "target": "PR#271891",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "-- ### CI States Latest PR Test (Base): :hourglass_flowing_sand: [Run #27189178937](https://github.com/sgl-project/sglang/actions/runs/27189178937) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-53a4b51f8c",
+  "relation": {
+   "target": "PR#272413",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "aft KV. --- ### CI States Latest PR Test (Base): :no_entry_sign: [Run #27241392114](https://github.com/sgl-project/sglang/actions/runs/27241392114) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-3c1b0fb226",
+  "relation": {
+   "target": "PR#27252",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "Part of #27252. This PR splits out the first roadmap item: simplify the prefill context parallel server args"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-3c1b0fb226",
+  "relation": {
+   "target": "PR#272598",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "ndencies installed. --- ### CI States Latest PR Test (Base): :x: [Run #27259892340](https://github.com/sgl-project/sglang/actions/runs/27259892340) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-f4f30d7d23",
+  "relation": {
+   "target": "PR#27549",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "hub.com/sgl-project/sglang/actions/runs/27113115257/job/80014685310). #27549 worked around it with a `device == \"cuda\"` gate on the three eager call sites, which fixed th"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L2-E-1a6b5561db",
+  "relation": {
+   "target": "PR#272080",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "ead. --- ### CI States Latest PR Test (Base): :white_check_mark: [Run #27208009546](https://github.com/sgl-project/sglang/actions/runs/27208009546) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-1a6b5561db",
+  "relation": {
+   "target": "PR#273197",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "ons/runs/27208009546) Latest PR Test (Extra): :white_check_mark: [Run #27319703154](https://github.com/sgl-project/sglang/actions/runs/27319703154)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-21a95333d4",
+  "relation": {
+   "target": "PR#275390",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "on to merge the PR. --- ### CI States Latest PR Test (Base): :x: [Run #27539088143](https://github.com/sgl-project/sglang/actions/runs/27539088143) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-21a95333d4",
+  "relation": {
+   "target": "PR#3041",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "e param in `forward_mla.py`, causing GLM-5.1 accuracy issue. aiter [PR#3041](https://github.com/ROCm/aiter/pull/3041) (merged) adds `transpose_scale` support to `fused_fl"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-9b8c41171a",
+  "relation": {
+   "target": "PR#21631",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "## Motivation After #21631 changed the default `hicache_mem_layout` from `layer_first` to `page_first`, AMD/ROCm HiCache"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L2-E-fa71064147",
+  "relation": {
+   "target": "PR#277280",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "kend()) --- ### CI States Latest PR Test (Base): :no_entry_sign: [Run #27728036970](https://github.com/sgl-project/sglang/actions/runs/27728036970) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-fa71064147",
+  "relation": {
+   "target": "PR#28528",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "## Summary Fix #28528 ## Root cause ### The bug `ModelRunner._get_attention_backend()` wrote its resolved backend i"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-24d15dd92e",
+  "relation": {
+   "target": "PR#277036",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "-- ### CI States Latest PR Test (Base): :hourglass_flowing_sand: [Run #27703693924](https://github.com/sgl-project/sglang/actions/runs/27703693924) Latest PR Test (Extra)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-04d952ea10",
+  "relation": {
+   "target": "PR#279438",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "on to merge the PR. --- ### CI States Latest PR Test (Base): :x: [Run #27943813111](https://github.com/sgl-project/sglang/action \u2026[truncated]"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-04d952ea10",
+  "relation": {
+   "target": "PR#28866",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "ook after this PR is merged.** ## Motivation As raised in SA's issue [#28866](https://github.com/sgl-project/sglang/issues/28866), the AMD DeepSeek-V4 Pro recipe requires"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-20b2817bdf",
+  "relation": {
+   "target": "PR#27650",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "Depends on #27811 (restore AMD PCG, merged) and #27650 (aiter fused all-reduce+RMSNorm capture-safe). On top of those, this enables breakable"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-30ea4c0f4b",
+  "relation": {
+   "target": "FlashMLA#9",
+   "repo": "sgl-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says pin pulls in FlashMLA#9"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-abaee4664e",
+  "relation": {
+   "target": "PR#28106",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "PR body says trtllm_mha solved this in #28106 and this PR reuses that pattern."
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L2-E-abaee4664e",
+  "relation": {
+   "target": "PR#29232",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "PR body says #29232 unified dflash seq_lens CPU-value relay."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L2-E-bc8b3ab1f5",
+  "relation": {
+   "target": "issue#25746",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says roadmap tracked in #25746; source implementation not named"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-81a472efcc",
+  "relation": {
+   "target": "4bb8f00bcb291bec8243f013dabb9482c1eedbc6",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR says the SGLang fix was cherry-picked onto this branch"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-a6ee64d237",
+  "relation": {
+   "target": "issue#23602",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says related to #23602 but does not name ancestry"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-81735ecf80",
+  "relation": {
+   "target": "ROCm/ATOM",
+   "repo": "ROCm/ATOM",
+   "relation": "ported_from",
+   "evidence": "PR body says motivation from TBO design of rocm/ATOM"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-8d2b66fd90",
+  "relation": {
+   "target": "ROCm/rocm-libraries#8639",
+   "repo": "ROCm/rocm-libraries",
+   "relation": "repairs",
+   "evidence": "PR body says intended to pair with CK-side bpreshuffle kernel fix"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-8d0fd34150",
+  "relation": {
+   "target": "issue#28704",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says related to issue #28704"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-a3194d3585",
+  "relation": {
+   "target": "PR#28534",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "PR body says follow-up to #28534 enabled ROCm JIT staged write-back"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L2-E-2f4f2362fb",
+  "relation": {
+   "target": "sgl-kernel bmm_fp8",
+   "repo": "sgl-project/sglang",
+   "relation": "replaces",
+   "evidence": "deleted sgl-kernel bmm_fp8 and uses flashinfer.bmm_fp8"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-f5dcbe8f14",
+  "relation": {
+   "target": "PR#31813-PR#31817",
+   "repo": "sgl-project/sglang",
+   "relation": "reverts",
+   "evidence": "PR body names reverted units"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L2-E-82fe0f041a",
+  "relation": {
+   "target": "PR#32239",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "body says follow-up to #32239 and removes mis-scoped mitigation"
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L2-E-ef6c07008b",
+  "relation": {
+   "target": "PR#205",
+   "repo": "unknown",
+   "relation": "ported_from",
+   "evidence": "PR body says co-author trailers from PR #205"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-425349b799",
+  "relation": {
+   "target": "deepseek-ai/FlashMLA#196",
+   "repo": "deepseek-ai/FlashMLA",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says mechanism analyzed there"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-5c6635d8f3",
+  "relation": {
+   "target": "issue#32050",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #32050"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-1496bfee93",
+  "relation": {
+   "target": "kimi-k3 branch",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "body says port from kimi-k3 branch"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-fb207b72b0",
+  "relation": {
+   "target": "Kimi K3 Day0 work",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "body says port standalone kernels from Kimi K3 Day0 work"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-1685d29f21",
+  "relation": {
+   "target": "#31490",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #31490 accuracy regression."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-1a3bea77f2",
+  "relation": {
+   "target": "kimi-k3 branch",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "title says ported from kimi-k3"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L2-E-1e64fc1563",
+  "relation": {
+   "target": "issue#33064",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #33064"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L2-E-971932d661",
+  "relation": {
+   "target": "flashinfer#3309/#3664",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "body says fold_sq added in #3309, gated-fixed in #3664"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-8a22b8305d",
+  "relation": {
+   "target": "flashinfer 0.6.15.post1 runtime patch",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "body says installs seven-file FlashInfer runtime patch"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-4f883636a2",
+  "relation": {
+   "target": "PR#28854",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "I1 reconciliation: Body explicitly says its fast_mla_prefill_plan is analogous to merged fast_prefill_plan in #28854 and takes the same sync-free planning approach."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L2-E-b501311fa1",
+  "relation": {
+   "target": "PR#33521",
+   "repo": "sgl-project/sglang",
+   "relation": "reimplementation_of",
+   "evidence": "PR body says replaces #33521, closed when base branch was deleted."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-e2b50930b9",
+  "relation": {
+   "target": "sgl-kernel-npu PR#689/#708/#699",
+   "repo": "sgl-project/sgl-kernel-npu",
+   "relation": "integrates",
+   "evidence": "body table lists compressor, sparse_attn_sharedkv, sparse_attn_sharedkv_metadata_host PRs"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-3ce243da3f",
+  "relation": {
+   "target": "FlashMLA 15f13e5030374295491c5ce31b02d7e63a7772c6",
+   "repo": "sgl-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "body says bumps flashmla commit in sgl-kernel to include that commit"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-d9848b9ecd",
+  "relation": {
+   "target": "PR#37511",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "PR body says depends on or did not carry over from #37511"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L2-E-b5766336d4",
+  "relation": {
+   "target": "PR#37511",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "PR body says depends on or did not carry over from #37511"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L2-E-a66451c058",
+  "relation": {
+   "target": "PR#38071",
+   "repo": "sgl-project/sglang",
+   "relation": "relands",
+   "evidence": "PR body says restore fusion removed by #38071"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-2c37b90ad6",
+  "relation": {
+   "target": "#38645",
+   "repo": "sgl-project/sglang",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #38645."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-59dd2fc734",
+  "relation": {
+   "target": "#38776",
+   "repo": "sgl-project/sglang",
+   "relation": "optimized_from",
+   "evidence": "PR body says builds on #38776 and final commit is fusion change."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-de123f38bb",
+  "relation": {
+   "target": "#30553",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says follows PR #30553."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L2-E-a89f849158",
+  "relation": {
+   "target": "ROCm/aiter#5195",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body says aiter ships fused_fp8_bmm_rope_cat_and_cache_mla at pinned commit."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-f4b90382a2",
+  "relation": {
+   "target": "sglang-miles#32718/#33479",
+   "repo": "sgl-project/sglang",
+   "relation": "integrates",
+   "evidence": "PR body says squash of those changes."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L2-E-1446e24d13",
+  "relation": {
+   "target": "ROCm/aiter#5195",
+   "repo": "ROCm/aiter",
+   "relation": "ported_from",
+   "evidence": "PR says disassembled aiter PR#5195 .co and added masks."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L2-E-e581520c67",
+  "relation": {
+   "target": "#39606",
+   "repo": "sgl-project/sglang",
+   "relation": "reimplementation_of",
+   "evidence": "PR body says mirror of staged write-back added in #39606."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-c9d5b6d4a8",
+  "relation": {
+   "target": "PR#4",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says replaces FlashAttention with xformers"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-bf87484efa",
+  "relation": {
+   "target": "Issue#641",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body: Fixes #641"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-928de46888",
+  "relation": {
+   "target": "PR#3",
+   "repo": "vllm-project/vllm",
+   "relation": "reimplementation_of",
+   "evidence": "same paged attention slot adds V2 selected beside V1"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-6ccc0bfffb",
+  "relation": {
+   "target": "PR#1313",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body says incorporates work from Port most vLLM kernels to ROCm #1313"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-0580aab02f",
+  "relation": {
+   "target": "L3.flash_attn.upstream_pip",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says used vllm reference implementation instead"
+  },
+  "resolution": "artifact_ref"
+ },
+ {
+  "event_id": "L3-E-43c413ec57",
+  "relation": {
+   "target": "FlashInfer BatchDecodeWithPagedKVCacheWrapper",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "wraps",
+   "evidence": "diff imports BatchDecodeWithPagedKVCacheWrapper"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-89579a201f",
+  "relation": {
+   "target": "flash-attn==2.5.6",
+   "repo": "Dao-AILab/flash-attention",
+   "relation": "replaces",
+   "evidence": "PR body says instead of original flash-attn"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-99eff67ba9",
+  "relation": {
+   "target": "PR#4886",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says previous #4886 caused lora-test failing"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-9aaf14c62e",
+  "relation": {
+   "target": "issue #8821",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says one step of #8821"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-3cb07a36a2",
+  "relation": {
+   "target": "PR#23",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says requires changes to flash attn PR #23"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-9a8bff0285",
+  "relation": {
+   "target": "PR#28",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says update takes advantage of upstream PR #28"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-8c1e77fb58",
+  "relation": {
+   "target": "PR#30",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says upgrades to upstream PR #30"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-073a4bd1c0",
+  "relation": {
+   "target": "PR#32",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says out argument possible by upstream PR #32"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-a4c4daf364",
+  "relation": {
+   "target": "PR#9740",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says replace #9740 because it is very old"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-0f8cafe2d1",
+  "relation": {
+   "target": "issue #9098",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says helps achieve #9098"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-cabaf4eff3",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#551",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body names FlashInfer PR as handy reference"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-cabaf4eff3",
+  "relation": {
+   "target": "sgl-project/sglang",
+   "repo": "sgl-project/sglang",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body shouts out SGLang for Triton decode attention kernel"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-ef533d25fb",
+  "relation": {
+   "target": "vllm-project/flash-attention#42",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says flash-attention PR #42 should resolve linked issues"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-f95903909f",
+  "relation": {
+   "target": "deepseek-ai/FlashMLA",
+   "repo": "deepseek-ai/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body explicitly says Integrate deepseek-ai/FlashMLA"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-848a6438ae",
+  "relation": {
+   "target": "ROCm/vllm#372",
+   "repo": "ROCm/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body says feature is from ROCm/vllm pull/372"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-183dad7a85",
+  "relation": {
+   "target": "FlashAttention-3 upstream tag 0a721da",
+   "repo": "Dao-AILab/flash-attention",
+   "relation": "ported_from",
+   "evidence": "I1 reconciliation: cmake/external_projects changes vllm_flash_attn GIT_TAG to 0a721da and PR title says update latest FA3 code."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-30bc3e0f66",
+  "relation": {
+   "target": "ROCm/aiter@86256916",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body links AITER flash_attn_varlen_func and mla_decode_fwd"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-41ca7eb491",
+  "relation": {
+   "target": "vllm-project/flash-attention#63",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says vLLM side of flash-attention pull/63"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-950751a987",
+  "relation": {
+   "target": "PR#16101",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says split from #16101"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-60f7624334",
+  "relation": {
+   "target": "vllm-project/flash-attention#33",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says requires sparse attention kernel from vllm-flash-attention PR #33"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-4f8b373225",
+  "relation": {
+   "target": "939f741fc37f46694e48c32c7164f49eae2584c4",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body says API changes introduced by that AITER commit"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-e60f550b38",
+  "relation": {
+   "target": "PR#16101",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says work was split from #16101; exact ancestry not checked."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-01c22335ba",
+  "relation": {
+   "target": "triton-lang/triton#5512",
+   "repo": "triton-lang/triton",
+   "relation": "repairs",
+   "evidence": "PR body identifies Triton PR #5512 as regression source"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-dcfe95234c",
+  "relation": {
+   "target": "e00e8cedbfcb220f328fd36aa8f529f869b01e6b",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body updates to latest flashinfer main commit"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-8b6e1d639c",
+  "relation": {
+   "target": "AITER",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "new rocm_aiter_fa.py imports aiter"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-a045b7e89a",
+  "relation": {
+   "target": "vllm-project/flash-attention#70",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "associated vllm-flash-attn PR #70"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-94a55c7681",
+  "relation": {
+   "target": "PR#19796",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "after #19796 build was failing on AMD Radeon GPU"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-5b032352cc",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#1198",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "dependent on FlashInfer FIX #1198"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-30800b01c2",
+  "relation": {
+   "target": "9157d0514fc251178e98877b4595c701ee8fb482",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body lists FlashInfer dependency commit"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-30800b01c2",
+  "relation": {
+   "target": "9157d0514fc251178e98877b4595c701ee8fb482",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "I1 reconciliation: PR body explicitly lists the FlashInfer dependency commit; the vLLM diff wires that API behind VLLM_USE_CUDNN_PREFILL."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-2dec7c1a5d",
+  "relation": {
+   "target": "PR#21302",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says previous PR #21302 put method under NonNvmlCudaPlatform only"
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L3-E-1cd6eaba54",
+  "relation": {
+   "target": "PR#19988",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says it combines elements of PRs #21088 and #19988"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-01c753ed98",
+  "relation": {
+   "target": "flashinfer PR#1332",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says #1332 needed to make building work on GH200 and GB200"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-ad510309ee",
+  "relation": {
+   "target": "PR#19719",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says change supports YOCO prefill skip for cross-decoder layers in #19719"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-f81c1bb055",
+  "relation": {
+   "target": "flashinfer issue#1352",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "repairs",
+   "evidence": "PR body cites FlashInfer limitation for AOT wheel cubin downloads"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-0edaf752d7",
+  "relation": {
+   "target": "PR#20448",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says splitting is prerequisite for Dual Batch Overlap #20448"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-2cb6ef8996",
+  "relation": {
+   "target": "vllm-project/flash-attention PR#75",
+   "repo": "vllm-project/flash-attention",
+   "relation": "repairs",
+   "evidence": "PR body says RuntimeError introduced in flash-attention PR #75"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-e8961e963a",
+  "relation": {
+   "target": "flashinfer PR#1389",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says needed for FlashInfer PR #1389"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-cd9b9de1fb",
+  "relation": {
+   "target": "vllm-project/FlashMLA PR#3",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says merge FlashMLA PR #3 first"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-cd9b9de1fb",
+  "relation": {
+   "target": "PR#17027",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says updates FlashMLA changes made on top of #17027"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-bd875d2eb7",
+  "relation": {
+   "target": "vllm-project/flash-attention PR#79",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says vLLM side of flash-attention PR #79"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-dc5e4a653c",
+  "relation": {
+   "target": "flashinfer PR#1403",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says includes fix from FlashInfer PR #1403"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-dc5e4a653c",
+  "relation": {
+   "target": "flashinfer PR#1410",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says includes fix from FlashInfer PR #1410"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-d94e3026de",
+  "relation": {
+   "target": "PR#22664",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "new test from this PR failed before the fix"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-177e55e3bd",
+  "relation": {
+   "target": "vllm-project/flash-attention#78",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "vLLM side of upstream performance PR"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-1723ef1aae",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#1463",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "FlashInfer v0.2.11.post3 update"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-000cceca8c",
+  "relation": {
+   "target": "Issue#23013",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says FIX #23013"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-292084e72a",
+  "relation": {
+   "target": "vllm-project/flash-attention#80",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "vLLM side of upstream IMA fix"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-292084e72a",
+  "relation": {
+   "target": "Issue#19483",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR says may help H100 IMA issues"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-3b11b26b50",
+  "relation": {
+   "target": "1ee5ead5f8f1c3c77b73effcb230ee02952fbe1f",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body names hardcoded rocm_aiter_fa loading commit"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-5c4b6e66fe",
+  "relation": {
+   "target": "Issue#23073",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #23073"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-402759d472",
+  "relation": {
+   "target": "vllm-project/flash-attention fork tag",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "uses latest FlashAttention code for MLA"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-86173ad593",
+  "relation": {
+   "target": "PR#22789",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body credits #22789, but source/ancestry not established"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-15de5ff9ea",
+  "relation": {
+   "target": "Issue#24513",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixing #24513"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-dc625ea6b8",
+  "relation": {
+   "target": "pytorch/pytorch#160256",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says upstream PyTorch change causes perf regression"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-dcb28a332b",
+  "relation": {
+   "target": "FlashInfer TRTLLM-gen MLA",
+   "repo": "vllm-project/vllm",
+   "relation": "wraps",
+   "evidence": "backend name and PR body identify TRTLLM-gen via FlashInfer"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-b1a63d1b3b",
+  "relation": {
+   "target": "Issue#23569",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says blocking H2D memcpys break overlap scheduler #23569"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-8945b001db",
+  "relation": {
+   "target": "pytorch/pytorch#162207",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says depends on PyTorch #162207"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-418d111f8c",
+  "relation": {
+   "target": "PR#94",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says bump FA to pick up flash-attention PR #94/#91/#87"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-3b736e1c38",
+  "relation": {
+   "target": "PR#93",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says combined with flash-attention PR #93; vLLM passes cp world size/rank"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-44f633dba1",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#1758",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says require flashinfer v0.4.0rc4 and links upstream sinks support."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-7d8975de84",
+  "relation": {
+   "target": "PR#26136",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body: This PR replaces #26136 with a far more rigorous set of tests and implementation choices."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-314fa8abbf",
+  "relation": {
+   "target": "PR#26835",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says experiments used tools introduced in #26835."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-5afd3276df",
+  "relation": {
+   "target": "issue#26817",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says FIX: #26817."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-950cf9e58e",
+  "relation": {
+   "target": "issue#27057",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body: FIX #27057."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-9f020f4f31",
+  "relation": {
+   "target": "vllm-project/flash-attention#102",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body: vLLM side of flash-attention PR #102."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-250fb1b8ea",
+  "relation": {
+   "target": "vllm-project/FlashMLA#7",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body: Require the flashmla patch #7 to be landed first."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-b4fda58a2d",
+  "relation": {
+   "target": "vllm-project/FlashMLA#10",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says FlashMLA PR #10 fixed flash_mla_combine_kernel."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-b4fda58a2d",
+  "relation": {
+   "target": "issue#27043",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says FIX #27043."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-084a9dae80",
+  "relation": {
+   "target": "PR#27329",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says disable it to unblock #27329."
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-dbfbf9f324",
+  "relation": {
+   "target": "PR#26835",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says uses the benchmarks in #26835."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-284cc92275",
+  "relation": {
+   "target": "issue#20283",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body: Part of CompilationConfig improvements (#20283)."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-a8c02fb5bf",
+  "relation": {
+   "target": "issue#26537",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body: Fixes #26537 by correcting KV-cache layout handling and MLA config setup."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-3933f18a5e",
+  "relation": {
+   "target": "issue#27724",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body: Fix #27724."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-18961c5ea6",
+  "relation": {
+   "target": "issue#26936",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says solves #26936."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-18961c5ea6",
+  "relation": {
+   "target": "issue#27264",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says solves #27264."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-c765f0b443",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#1993",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says FlashInfer issue #1993 reports this combination is not correct."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-c765f0b443",
+  "relation": {
+   "target": "PR#27704",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body thanks exploration in #27704; exact fix lineage not established."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-faedbb4d4f",
+  "relation": {
+   "target": "pytorch/pytorch#166735",
+   "repo": "pytorch/pytorch",
+   "relation": "integrates",
+   "evidence": "PR body cites PyTorch 2.10 containing batch invariant CUDA overrides."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-f080a83511",
+  "relation": {
+   "target": "issue#21504",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says _aiter_ops introduced as proposed in RFC #21504."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-f080a83511",
+  "relation": {
+   "target": "ROCm/aiter@5ee37dce",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body says this PR uses 5ee37dce commit from aiter repo."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-9c84ca8293",
+  "relation": {
+   "target": "vllm-project/flash-attention#104",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says vLLM side of upstream flash-attention PR #104."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-cc079763c5",
+  "relation": {
+   "target": "PR#27026",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says it follows approach suggested in #27026 issue comment."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-39029d5192",
+  "relation": {
+   "target": "issue#28400",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says FIX: https://github.com/vllm-project/vllm/issues/28400."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-684f254585",
+  "relation": {
+   "target": "PR#26835",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says based on benchmarking in #26835."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-304419576a",
+  "relation": {
+   "target": "PR#26937",
+   "repo": "vllm-project/vllm",
+   "relation": "relands",
+   "evidence": "PR body says revised implementation of #26937."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-8cc40f8992",
+  "relation": {
+   "target": "vllm-project/flash-attention#107",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says vLLM-side PR for flash-attention #107."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-4c23690f43",
+  "relation": {
+   "target": "vllm-project/flash-attention#109",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says paired with upstream PR #109 enabling ViT head sizes."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-2fd893b4ce",
+  "relation": {
+   "target": "RFC#25749",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says refer to RFC #25749 for implementation details."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-2fd893b4ce",
+  "relation": {
+   "target": "PR#26864",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body says split from full PR #26864."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-ac10fd3c69",
+  "relation": {
+   "target": "AITER Triton MHA",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "Diff imports from aiter.ops.triton.mha flash_attn_varlen_func."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-1607e664f0",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#2107",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "repairs",
+   "evidence": "PR body links FlashInfer issue #2107 for broken batch invariant support."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-c68c7b403d",
+  "relation": {
+   "target": "vllm-project/flash-attention#111",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says vLLM side of flash-attention #111."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-56539cddac",
+  "relation": {
+   "target": "Issue#23789",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says FIX #23789."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-a5345bf49d",
+  "relation": {
+   "target": "FlashInfer 0.5.3",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body names latest FlashInfer 0.5.3 plan API change."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-9fec0e13d5",
+  "relation": {
+   "target": "PR#29444",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says scaled back/generalization of #29444."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-6482e3895b",
+  "relation": {
+   "target": "PR#26487",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says follow-up to #26487 accidental parameter order change."
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L3-E-de71747655",
+  "relation": {
+   "target": "PR#26498",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says Alternative fix to https://github.com/vllm-project/vllm/pull/26498."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-b10f41c894",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#2047",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says Depends on https://github.com/flashinfer-ai/flashinfer/pull/2047/."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-62def07d67",
+  "relation": {
+   "target": "issue#31377",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Close: #31377 and names the illegal memory access."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-6aa5b18e1d",
+  "relation": {
+   "target": "sglang 97cb762 prefill_attention.py",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "Diff comment: Adapted from https://github.com/sgl-project/sglang/.../prefill_attention.py."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-6aa5b18e1d",
+  "relation": {
+   "target": "ModelTC/LightLLM f2a54f0",
+   "repo": "ModelTC/LightLLM",
+   "relation": "ported_from",
+   "evidence": "Diff comment: Adapted from https://github.com/ModelTC/lightllm/.../context_flashattention_nopad.py."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-41cfa50632",
+  "relation": {
+   "target": "PR#31465",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body: This #31465 PR changed arguments name into wrong one."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-1a19e9cd87",
+  "relation": {
+   "target": "issue#26473",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #26473."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-1c46dea001",
+  "relation": {
+   "target": "issue#30919",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Detail please see bug https://github.com/vllm-project/vllm/issues/30919."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-e15a5ff07b",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#2232",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body links https://github.com/flashinfer-ai/flashinfer/issues/2232."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-2e7c89e708",
+  "relation": {
+   "target": "issue#27684",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says FI prefill backend has correctness issues (https://github.com/vllm-project/vllm/issues/27684)."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-8cc26acd8b",
+  "relation": {
+   "target": "ModelTC/LightLLM 2fbd2b8",
+   "repo": "ModelTC/LightLLM",
+   "relation": "ported_from",
+   "evidence": "PR body says refine prefill attention kernel with FA2 implementation based on LightLLM URL."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-6101a26dc9",
+  "relation": {
+   "target": "issue#32353",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "Title/body: Fixes issue #32353 with degenerate strides in query tensors."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-4a5299c93f",
+  "relation": {
+   "target": "PR#20459",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says non-greedy rejection sampling is being addressed by PR #20459."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-1a1fc3bbc0",
+  "relation": {
+   "target": "PR#32529",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says That failure was fixed by #32529."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-4ca62a0dbd",
+  "relation": {
+   "target": "issue#23786",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says First implementation of RFC https://github.com/vllm-project/vllm/issues/23786."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-b4f64e5b02",
+  "relation": {
+   "target": "vllm-project/FlashMLA#12",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says vLLM side of https://github.com/vllm-project/FlashMLA/pull/12."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-da5e7b12be",
+  "relation": {
+   "target": "#32055",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "Dossier links Copy Ops in FP8 MLA issue; implementation ancestry not established."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-22ad649501",
+  "relation": {
+   "target": "#32335",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says backends support #32335; no earlier event row target established."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-2267cb1cfd",
+  "relation": {
+   "target": "flash-attention#82",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says vLLM side of flash-attention pull/82."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-45f8fd6f97",
+  "relation": {
+   "target": "#27433",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body names related parent issue #27433; no specific prior event linked."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-59a5cb387a",
+  "relation": {
+   "target": "FlashInfer concat_mla_k",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says Integrate Flashinfer concat_mla_k kernel; diff calls torch.ops.vllm.flashinfer_concat_mla_k."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-81e217fe6b",
+  "relation": {
+   "target": "PR#34009",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body says Mirror of #34009 because original PR could not be edited."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-afdce12c89",
+  "relation": {
+   "target": "PR#11194",
+   "repo": "sgl-project/sglang",
+   "relation": "ported_from",
+   "evidence": "PR body and source comment say implementation adapted from TileLang / SGLang PR #11194."
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-64f570ab56",
+  "relation": {
+   "target": "#32335",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says Supporting #32335; exact prior event not named."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-f2c47886fd",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#2138",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says FlashInfer supports sparse MLA as of flashinfer-ai/flashinfer#2138."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-bb85929aa6",
+  "relation": {
+   "target": "692917b1cda61b93ac9ee2d846ec54e75afe87b1",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says Pickup FlashMLA commit 692917b."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-6d4f9d3ad5",
+  "relation": {
+   "target": "issue#35057",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Fix #35057"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-8b5014d3dd",
+  "relation": {
+   "target": "upstream FA4",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body: Integrate upstream FA4"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-d9c7730877",
+  "relation": {
+   "target": "PR#33658",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "body: adapts some elements of #33658"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-c5362c739f",
+  "relation": {
+   "target": "PR#35246",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "body: #35246 refactored ROCm attention backend selection logic"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-c174d54f86",
+  "relation": {
+   "target": "PR#35246",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "body: introduced by the move to validation-based backend selection in #35246"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-9c34e9d24f",
+  "relation": {
+   "target": "M-L3-flashinfer-plan-cascade",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "default disables cascade attention unless user opts in"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-eac2dc2b41",
+  "relation": {
+   "target": "flashinfer.py",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "body: uses the same triton kernel as flashinfer.py"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-428bc718bd",
+  "relation": {
+   "target": "PR#35246",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "body: refactor (#35246) introduced validate_configuration calls"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-77d2a5f17b",
+  "relation": {
+   "target": "PR#125",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "Purpose says run CI for upstream PR #125"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-e5ed6c6c13",
+  "relation": {
+   "target": "PR#2607",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body aligns vLLM gating with FlashInfer support"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-2bf5b70ae8",
+  "relation": {
+   "target": "PR#2903",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says proper fix should be upstream"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-2c734ed0e0",
+  "relation": {
+   "target": "issue#36763",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says FIX: #36763"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-93b3ec1585",
+  "relation": {
+   "target": "issue#32335",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says part of issue #32335"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-7d65463528",
+  "relation": {
+   "target": "PR#31915",
+   "repo": "vllm-project/vllm",
+   "relation": "reverts",
+   "evidence": "PR body includes Revert: #31915"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-c49497726b",
+  "relation": {
+   "target": "PR#1821",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body says paged_attention_common from aiter PR #1821"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-6183cae1bd",
+  "relation": {
+   "target": "issue#2939",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says FlashInfer fix ongoing"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-4a06e1246e",
+  "relation": {
+   "target": "PR#38216",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says supersedes #38216 rebased clean."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-e24e0a43a4",
+  "relation": {
+   "target": "vllm-project/flash-attention PR#130",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body names vLLM Flash Attention dependency PR #130"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-f150107efd",
+  "relation": {
+   "target": "ROCm/aiter@bc5ea32c19",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR cites upstream AITER unified_attention implementation for correct slicing"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-fb5635d3f9",
+  "relation": {
+   "target": "ROCm/aiter PR#2442",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body: Requires AITer PR #2442"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-6d85b36a9f",
+  "relation": {
+   "target": "PR#38791",
+   "repo": "vllm-project/vllm",
+   "relation": "reverts",
+   "evidence": "PR body: Revert #38730 and connected #38791"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-fe9c3d6c5f",
+  "relation": {
+   "target": "issue#40069",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body: Resolves part of issue #40069"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-4d51588e23",
+  "relation": {
+   "target": "PR#40760",
+   "repo": "vllm-project/vllm",
+   "relation": "relands",
+   "evidence": "PR body says Rebased version of #40760"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-2cc008e7b4",
+  "relation": {
+   "target": "PR#40655",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says builds on shared-decode-buffer PR #40655"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-fd74c90d9c",
+  "relation": {
+   "target": "VLLM_ATTENTION_BACKEND target setting",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR behavior matrix says drafter becomes auto-select when only target attention-backend is passed"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-c51df43005",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#3197",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "repairs",
+   "evidence": "PR body says correctness bugs seen in flashinfer issue #3197"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-22a3cbe152",
+  "relation": {
+   "target": "ROCm/aiter#2360",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body says after aiter PR adds native q_scale support"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-989c176c0a",
+  "relation": {
+   "target": "PR#40561",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says syncs were found via #40561"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-b1728c1e66",
+  "relation": {
+   "target": "TREE_ATTN registry entry",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "diff deletes TREE_ATTN and tree_attn.py"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-7863fff6e5",
+  "relation": {
+   "target": "torch reference implementation",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says replaces ROCm torch reference implementation"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-a51376b3f0",
+  "relation": {
+   "target": "PR#35245",
+   "repo": "vllm-project/vllm",
+   "relation": "relands",
+   "evidence": "PR body says Reland updated version of #35245 #35879 #38646"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-a51376b3f0",
+  "relation": {
+   "target": "PR#35879",
+   "repo": "vllm-project/vllm",
+   "relation": "relands",
+   "evidence": "PR body says Reland updated version of #35245 #35879 #38646"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-a51376b3f0",
+  "relation": {
+   "target": "PR#38646",
+   "repo": "vllm-project/vllm",
+   "relation": "relands",
+   "evidence": "PR body says Reland updated version of #35245 #35879 #38646"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-dcacdf9a88",
+  "relation": {
+   "target": "vllm-project/flash-attention#134",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says Partner of flash-attention PR #134"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-3c413a5481",
+  "relation": {
+   "target": "PR#40631",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says rides on top of 2D/3D kernel unification in #40631"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-599e75f432",
+  "relation": {
+   "target": "PR#41263",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says functionality broken after #41263."
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-8c296de63b",
+  "relation": {
+   "target": "flashinfer PR#3227",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "repairs",
+   "evidence": "PR body says previous correctness issues are now fixed by flashinfer#3227."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-552bbe6f4e",
+  "relation": {
+   "target": "PR#2959",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says companion PR enables head_dim=512 cubin support."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-7e33081cee",
+  "relation": {
+   "target": "PR#41657",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says FIX #41657 and progress toward #42082."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-22a58640b4",
+  "relation": {
+   "target": "PR#38871",
+   "repo": "vllm-project/vllm",
+   "relation": "reimplementation_of",
+   "evidence": "PR body says continuation of PR #38871 and notes differences."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-ea0d045a05",
+  "relation": {
+   "target": "PR#141",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body names corresponding upstream PR #141."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-e9e08c49b9",
+  "relation": {
+   "target": "PR#42784",
+   "repo": "vllm-project/vllm",
+   "relation": "reimplementation_of",
+   "evidence": "PR body contrasts preserving mask with #42784 disabling it entirely."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-ceb0111a90",
+  "relation": {
+   "target": "PR#41745",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body says Gemma4 MTP was added to MRV1 in this PR."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-b5235fca2e",
+  "relation": {
+   "target": "PR#42316",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says this is a rebase of #42316 plus materially new pieces."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-c9c1540e61",
+  "relation": {
+   "target": "PR#43458",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says failure happened ever since #43458 enabled MRV2 for Llama."
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-eb04c769d3",
+  "relation": {
+   "target": "Issue#35792",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says Completes FlashAttn x Static FP8 in issue #35792."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-4c62663315",
+  "relation": {
+   "target": "PR#45680",
+   "repo": "vllm-project/vllm",
+   "relation": "relands",
+   "evidence": "PR body says Reland of #45680 after M3 is merged."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-efd15e192a",
+  "relation": {
+   "target": "Issue#45562",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #45562."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-0a7bacdcac",
+  "relation": {
+   "target": "Issue#45861",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says Part of issue #45861 and rebuilds same metadata every layer."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-79ca54d221",
+  "relation": {
+   "target": "Issue#39137",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Closes #39137."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-4583630b56",
+  "relation": {
+   "target": "Issue#41257",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #41257."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-db32b53e30",
+  "relation": {
+   "target": "PR#39995",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says this PR is split out from #39995."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-aa4990a9a2",
+  "relation": {
+   "target": "PR#37032",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body identifies #37032 GLM-4.7-Flash garbage output as original symptom."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-183b5f27ea",
+  "relation": {
+   "target": "PR#40798",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says Supersedes #40798."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-3c8e49596c",
+  "relation": {
+   "target": "PR#36887",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Follow-up to #36887."
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-b3a688cb9e",
+  "relation": {
+   "target": "PR#46180",
+   "repo": "vllm-project/vllm",
+   "relation": "reverts",
+   "evidence": "PR body says #46180 was reverted as part of this fix"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-c63cd4906c",
+  "relation": {
+   "target": "PR#46035",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says it extends #46035 gfx942 work to gfx950"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-d0f800811b",
+  "relation": {
+   "target": "flash-attention PR#152",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body references upstream PR #152 for the pointed commit"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-5ecae3266c",
+  "relation": {
+   "target": "ROCm/aiter",
+   "repo": "ROCm/aiter",
+   "relation": "wraps",
+   "evidence": "PR body says it calls aiter.flash_attn_varlen_func directly"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-a309d4fe60",
+  "relation": {
+   "target": "flashinfer PR#3116",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body cites FlashInfer MLA LSE support"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-8fc1b2d046",
+  "relation": {
+   "target": "flash-attention PR#154",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says depends on flash-attention PR #154"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-248d1fbb71",
+  "relation": {
+   "target": "flash-attention PR#150",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says depends on flash-attention PR #150"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-8cf7c4d8ad",
+  "relation": {
+   "target": "Tencent/hpc-ops",
+   "repo": "Tencent/hpc-ops",
+   "relation": "wraps",
+   "evidence": "PR body links HPC-Ops operator library and backend flag"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-4aceabf8c1",
+  "relation": {
+   "target": "issue#47042",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes sparse-MLA persistent-metadata cache collision behind #47042."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-80eb01e93d",
+  "relation": {
+   "target": "PR#47895",
+   "repo": "vllm-project/vllm",
+   "relation": "ported_from",
+   "evidence": "PR body says remapping is adopted from #47895."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-f05603fa28",
+  "relation": {
+   "target": "issue#47800",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #47800."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-95d6d6f4bb",
+  "relation": {
+   "target": "issue#46646",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says crashing every DeepSeek MLA test on Blackwell (#46646)."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-bbb0f945ff",
+  "relation": {
+   "target": "issue#47196",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes issue #47196."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-735def4fcf",
+  "relation": {
+   "target": "vllm-project/FlashMLA#14",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says vllm-project/FlashMLA#14 clamps num_sm_parts to >= 1."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-9c18e90f6c",
+  "relation": {
+   "target": "issue#47054",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #47054."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-bec0a4ede6",
+  "relation": {
+   "target": "vllm-project/flash-attention#152",
+   "repo": "vllm-project/flash-attention",
+   "relation": "reverts",
+   "evidence": "PR body says upstream #160 reverts #152 after it broke FLASH_ATTN_MLA_SPARSE."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-51878e5b6e",
+  "relation": {
+   "target": "PR#42374",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says PR #42374 was split into four PRs and this is part 2."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-51878e5b6e",
+  "relation": {
+   "target": "PR#44454",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says stacked on top of #44454."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-ee5a89f4d7",
+  "relation": {
+   "target": "PR#47269",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says combines with #47269 index-topk reuse for long-context fast path."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L3-E-7fc97042c3",
+  "relation": {
+   "target": "PR#47915",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says builds off of #47915 changes."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-c4f5cd60da",
+  "relation": {
+   "target": "PR#34744",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says split up from #34744 and precursor to masked MHA implementation."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-50ac1c7bab",
+  "relation": {
+   "target": "PR#42545",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says TD-adoption RFC #42545 extends TD across Triton kernels."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-37aa52821d",
+  "relation": {
+   "target": "vllm-project/FlashMLA#15",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says moving pin past FlashMLA PR #15."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-37aa52821d",
+  "relation": {
+   "target": "vllm-project/FlashMLA#16",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says moving pin past FlashMLA PR #16."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-6570c9800c",
+  "relation": {
+   "target": "vllm-project/tml-fa4@13374f0c",
+   "repo": "vllm-project/tml-fa4",
+   "relation": "integrates",
+   "evidence": "PR body says tml-fa4 pinned to commit 13374f0c."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-7cd1d57b74",
+  "relation": {
+   "target": "NVIDIA/cutlass#3259",
+   "repo": "NVIDIA/cutlass",
+   "relation": "repairs",
+   "evidence": "PR body says cutlass-dsl wheel path bug reported in NVIDIA/cutlass#3259 was resolved in 4.6.0."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-7cd1d57b74",
+  "relation": {
+   "target": "PR#43427",
+   "repo": "vllm-project/vllm",
+   "relation": "reverts",
+   "evidence": "PR body says drop temporary workarounds from #43427 and #45204."
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L3-E-2cab53ddee",
+  "relation": {
+   "target": "PR#39527",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says split original optimize-qwen30b branch PR #39527 into reviewable PRs."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-c7ce03bcbd",
+  "relation": {
+   "target": "vllm-project/tml-fa4#3",
+   "repo": "vllm-project/tml-fa4",
+   "relation": "integrates",
+   "evidence": "PR body says includes the cutlass-dsl 4.6 CuTe API migration in tml-fa4#3."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-bd091079cb",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "integrates flash-attention#166 long-context accuracy fix."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-6e96891ba0",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "integrates ROCm/aiter commit 72eedddd921d0fb8f274e7b9291dd04306d089ef."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-7bb49be4d1",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "repairs PR#47451 warmup infrastructure edge case."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-060b5f61dc",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "repairs issue #49334; reuses LSE merge move."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-c79ff5f918",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "integrates vllm-project/flash-attention#168."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-8c13ee5735",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PyTorch #190654."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-213f681f81",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "reverts PR#48597."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-a89015c6df",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "partial fix for #48650."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-bf2b45b5d6",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "integrates PR#41052 and Dao-AILab/flash-attention#2412."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-28158b2fc3",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "repairs #47327 metadata refactor regression."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-ba702e978e",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "optimized_from #47327."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-aeeb36b1f1",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "integrates flashinfer #4178 MLA and #4180 SITU trtllmgen dependency."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-b49eaf205a",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "integrates flashinfer#3545 and version bump #47669."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-82ae4164ee",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "optimized_from #47327; integrates flash-attention#155."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-eb6453d95b",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "part of #26946 and integrates flash-attention#175."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-77469c9057",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "repairs code merged in #50000."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-0055b8bfa3",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "integrates vllm-project/MSA#10."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-199644d410",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "repairs masked-MHA path introduced by #48770."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-cd930c8e78",
+  "relation": {
+   "target": "see notes",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "fixes #38658."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-789c4f905e",
+  "relation": {
+   "target": "#51286",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #51286."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-79c865b838",
+  "relation": {
+   "target": "earlier reverted DeepSeek V4 region change",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says an earlier region-narrowing change was reverted after output corruption."
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-d40c3e3c00",
+  "relation": {
+   "target": "#50615",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body: Fixes #50615."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-87668ab69b",
+  "relation": {
+   "target": "PR#51750",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says this is an alternative to #51750, not a duplicate."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-1d2d83a07f",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#4137",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says required upstream support from #4137 and #4199."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-61874f9842",
+  "relation": {
+   "target": "PR#44458",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says extracted from KV-layout standardization #44458/RFC #42082."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-827a2af806",
+  "relation": {
+   "target": "vllm-project/flash-attention#164",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says wires path from upstream #164."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-97388c44f9",
+  "relation": {
+   "target": "PR#51042",
+   "repo": "vllm-project/vllm",
+   "relation": "reimplementation_of",
+   "evidence": "PR body says it consolidates #51042."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-97388c44f9",
+  "relation": {
+   "target": "#51593",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says commits 6-7 fix MTP hang filed as #51593."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-6914d60b1e",
+  "relation": {
+   "target": "ROCm/aiter#3913",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR title/body names ROCm/aiter#3913."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-b09bd69b5b",
+  "relation": {
+   "target": "PR#49790",
+   "repo": "vllm-project/vllm",
+   "relation": "reimplementation_of",
+   "evidence": "PR body says this supersedes #49790"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-fe76112ff2",
+  "relation": {
+   "target": "PR#46172",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says superseding alternative to #46172, #50470, and decode top-k portion of #52878"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-fe76112ff2",
+  "relation": {
+   "target": "PR#50470",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says superseding alternative"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-fe76112ff2",
+  "relation": {
+   "target": "PR#52878",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says superseding alternative"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-8bdc70ec7b",
+  "relation": {
+   "target": "PR#44458",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says Replaces #44458 (same content, restacked)"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-b2db227a7c",
+  "relation": {
+   "target": "PR#50721",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says regression from 42ab184ea7 (#50721)"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-f620499ee3",
+  "relation": {
+   "target": "commit e1ae59cfef91",
+   "repo": "vllm-project/vllm",
+   "relation": "relands",
+   "evidence": "PR body says #53002 was reverted by commit e1ae59cfef91 inside #51718"
+  },
+  "resolution": "unparseable"
+ },
+ {
+  "event_id": "L3-E-7156c63bef",
+  "relation": {
+   "target": "vllm-project/flash-attention#180",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says upstream PR #180 adds forward seqused support"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-1a085dadf2",
+  "relation": {
+   "target": "ROCm/aiter#4452",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body lists ROCm/aiter#4452 dependency for 64-bit paged-KV offsets"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-2dc53bae17",
+  "relation": {
+   "target": "PR#43107",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says #43107 added GPU<->CPU transfer checks and enabled VLLM_GPU_SYNC_CHECK=error"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-75dea9b4ae",
+  "relation": {
+   "target": "vllm-project/FlashMLA#19",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says integrating FlashMLA fix from vllm-project/FlashMLA#19"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-75dea9b4ae",
+  "relation": {
+   "target": "Issue#53413",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #53413 GLM-5.2 sparse_decode_fwd OOM"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-de9250ac9e",
+  "relation": {
+   "target": "vllm-project/flash-attention#179",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says depends on upstream PR #179 for head-dim-256 mask_mod support"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-43196f2458",
+  "relation": {
+   "target": "PR#53491",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says same class of stall #53491 adds a stricter check."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-6c18a54648",
+  "relation": {
+   "target": "PR#53491",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says instances were exposed by https://github.com/vllm-project/vllm/pull/53491."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-7f4793eaa3",
+  "relation": {
+   "target": "PR#38433",
+   "repo": "vllm-project/vllm",
+   "relation": "reimplementation_of",
+   "evidence": "PR body says Alternative to https://github.com/vllm-project/vllm/pull/38433."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-2cf82bcdd1",
+  "relation": {
+   "target": "issue#50095",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #50095."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-e16b5e518d",
+  "relation": {
+   "target": "PR#49627",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body points to parent draft PR #49627 and tracking issue #49349."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-9509fc8ae6",
+  "relation": {
+   "target": "PR#53526",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says #53526 moves the trigger for num_tokens == 1 on the same kernel."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-19c018ec05",
+  "relation": {
+   "target": "issue#54907",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says Fixes #54907."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-3ff4f02dfe",
+  "relation": {
+   "target": "PR#52215",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says Supersedes the shared-mla.py approach in #52215."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-3ff4f02dfe",
+  "relation": {
+   "target": "PR#52190",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says Supersedes ... compiler pass approach in #52190."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-5093e4844a",
+  "relation": {
+   "target": "PR#39516",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says #39516 diagnosed same scan but closed with different fix."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-4ee2595512",
+  "relation": {
+   "target": "vllm-project/flash-attention#188",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says sync pinned FlashAttention revision with landed #188."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-385ba6b5b0",
+  "relation": {
+   "target": "issue#54556",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says quant-method fix discussed on #54556 / #52263 / #47972."
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-7fbd44cbe0",
+  "relation": {
+   "target": "PR#54955",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says reproduced on top of in-flight batch-invariant work #54955."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-e476556189",
+  "relation": {
+   "target": "PR#54405",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says reusable support required by model enablement in #54405."
+  },
+  "resolution": "merged_pr_not_candidate"
+ },
+ {
+  "event_id": "L3-E-1713b9866a",
+  "relation": {
+   "target": "PR#49627",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says see parent draft PR #49627."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-42801b3a6b",
+  "relation": {
+   "target": "PR#49627",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says see parent draft PR #49627."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-6ddbab03de",
+  "relation": {
+   "target": "PR#49627",
+   "repo": "vllm-project/vllm",
+   "relation": "integrates",
+   "evidence": "PR body says see parent PR #49627."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-dcd544486b",
+  "relation": {
+   "target": "PR#54917",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says git bisect identified PR #54917 as the regression."
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-83252ea899",
+  "relation": {
+   "target": "ROCm/aiter#4787",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body says dependent on https://github.com/ROCm/aiter/pull/4787."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-8c87c333b8",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#4928",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "repairs",
+   "evidence": "PR body says regression described in flashinfer issue #4928."
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-8c87c333b8",
+  "relation": {
+   "target": "PR#55408",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "Benchmark compares against PR #55408 CPU lens."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-fbf51c7026",
+  "relation": {
+   "target": "PR#54917",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says #54917 omitted K/V exposed FlashInfer slicing regression"
+  },
+  "resolution": "candidate_not_event:related_context_only"
+ },
+ {
+  "event_id": "L3-E-b4da4d17ae",
+  "relation": {
+   "target": "PR#51692",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says #51692 added AiterPreshuffledFp8BlockScaledMMKernel first, causing incorrect results."
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L3-E-d43bb2f37f",
+  "relation": {
+   "target": "PR#46326",
+   "repo": "vllm-project/vllm",
+   "relation": "reimplementation_of",
+   "evidence": "PR body compares against original always-host-resident design"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-1257512305",
+  "relation": {
+   "target": "DeepGEMM#432",
+   "repo": "deepseek-ai/DeepGEMM",
+   "relation": "integrates",
+   "evidence": "PR body: DeepGEMM 2.8 ships sparse MQA-logits kernels"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-d6a1677d55",
+  "relation": {
+   "target": "PR#56344",
+   "repo": "vllm-project/vllm",
+   "relation": "reimplementation_of",
+   "evidence": "PR body: Supersedes #56344"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-9f9e1dac26",
+  "relation": {
+   "target": "DeepSeek-V4.1 reference",
+   "repo": "deepseek-ai/DeepSeek-V4.1-Flash",
+   "relation": "repairs",
+   "evidence": "PR body compares to official V4.1 reference implementation"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-bc0f47cd03",
+  "relation": {
+   "target": "PR#51692",
+   "repo": "vllm-project/vllm",
+   "relation": "reverts",
+   "evidence": "PR body says reverting #56433 + #51692 restores accuracy"
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L3-E-ff6b5808c4",
+  "relation": {
+   "target": "PR#46172",
+   "repo": "vllm-project/vllm",
+   "relation": "optimized_from",
+   "evidence": "PR body says #46172 introduced FP8_DTYPE but left five call sites"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-e0050f287a",
+  "relation": {
+   "target": "issue#57248",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes first boot regression in #57248"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-32636580a6",
+  "relation": {
+   "target": "issue#51848",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #51848"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-62af3df734",
+  "relation": {
+   "target": "issue#57449",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says addresses #57449"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-38537331d3",
+  "relation": {
+   "target": "PR#57643",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says extracted from #57643 at author's request"
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L3-E-b8cf275382",
+  "relation": {
+   "target": "ROCm/aiter#5143",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body depends on AITER fused QK-norm ROCm/aiter#5143"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-91d7324cb1",
+  "relation": {
+   "target": "vllm-project/flash-attention#172",
+   "repo": "vllm-project/flash-attention",
+   "relation": "integrates",
+   "evidence": "PR body says pin includes FA3 OnlyQv forward"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-91d7324cb1",
+  "relation": {
+   "target": "vllm-project/FlashMLA#17",
+   "repo": "vllm-project/FlashMLA",
+   "relation": "integrates",
+   "evidence": "PR body says existing FlashMLA pin supports dense 512 decode"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-066ee91197",
+  "relation": {
+   "target": "issue#56578",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #56578"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-c843f0cab7",
+  "relation": {
+   "target": "flashinfer#4802",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says FlashInfer native GLM53_NOPE support #4802 merged"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-1904ed9402",
+  "relation": {
+   "target": "issue#58060",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says addresses #58060"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-b715699df4",
+  "relation": {
+   "target": "ROCm/aiter#4531",
+   "repo": "ROCm/aiter",
+   "relation": "integrates",
+   "evidence": "PR body requires AITER strided KV-cache fix from #4531"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-b5ea0c7107",
+  "relation": {
+   "target": "ROCm/aiter#3606",
+   "repo": "ROCm/aiter",
+   "relation": "repairs",
+   "evidence": "PR body says AITER bump picked up #3606 causing changed workspace sizing"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-b5ea0c7107",
+  "relation": {
+   "target": "ROCm/aiter#5759",
+   "repo": "ROCm/aiter",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body names long-term upstream fix"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-6632ed559e",
+  "relation": {
+   "target": "PR#54790",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says #54790 includes same scalar fix in larger sparse MLA work"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-e26547adfb",
+  "relation": {
+   "target": "issue#48286",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says fixes #48286"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-e9f167129c",
+  "relation": {
+   "target": "ROCm/aiter#4490",
+   "repo": "ROCm/aiter",
+   "relation": "repairs",
+   "evidence": "PR body reports unmasked global_load fault upstream as AITER #4490"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-e78e367c6e",
+  "relation": {
+   "target": "PR#50519",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says CI group added by #50519 fails all tests"
+  },
+  "resolution": "candidate_not_event:?"
+ },
+ {
+  "event_id": "L3-E-e6dc16cebd",
+  "relation": {
+   "target": "PR#54131",
+   "repo": "vllm-project/vllm",
+   "relation": "relands",
+   "evidence": "PR body says continues #54131 with original authorship preserved"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-e6dc16cebd",
+  "relation": {
+   "target": "PR#49246",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says supersedes earlier approach #49246"
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-5ff3bbfb08",
+  "relation": {
+   "target": "flashinfer-ai/flashinfer#4918",
+   "repo": "flashinfer-ai/flashinfer",
+   "relation": "integrates",
+   "evidence": "PR body says FlashInfer #4918 ships RopeQuant epilogue"
+  },
+  "resolution": "upstream_external"
+ },
+ {
+  "event_id": "L3-E-609731e8f5",
+  "relation": {
+   "target": "PR#53793",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says #53793 rename stranded this gate"
+  },
+  "resolution": "candidate_not_event:out_of_scope"
+ },
+ {
+  "event_id": "L3-E-2edbb32e58",
+  "relation": {
+   "target": "issue#56868",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says partial fix for #56868"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-2edbb32e58",
+  "relation": {
+   "target": "issue#56605",
+   "repo": "vllm-project/vllm",
+   "relation": "repairs",
+   "evidence": "PR body says partial fix for #56605"
+  },
+  "resolution": "issue"
+ },
+ {
+  "event_id": "L3-E-a4eb3f25d6",
+  "relation": {
+   "target": "PR#51871",
+   "repo": "vllm-project/vllm",
+   "relation": "historical_connection_uncertain",
+   "evidence": "PR body says the change is building on #52157 (#51871); exact lineage role not coded here."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ },
+ {
+  "event_id": "L3-E-927c87b347",
+  "relation": {
+   "target": "PR#56737",
+   "repo": "vllm-project/vllm",
+   "relation": "replaces",
+   "evidence": "PR body says Supersedes #56737."
+  },
+  "resolution": "pr_not_on_main_or_issue"
+ }
+]

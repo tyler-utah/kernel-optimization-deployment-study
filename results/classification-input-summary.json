@@ -1,0 +1,33 @@
+{
+  "study_cutoff_date": "2026-09-28",
+  "headline_start_date": "2025-09-29",
+  "repositories": {
+    "vllm-project/vllm": {
+      "records": 22096,
+      "first_date": "2023-02-09",
+      "last_date": "2026-09-28",
+      "signal_counts": {
+        "title": 7186,
+        "tag": 11213,
+        "title+path": 1208,
+        "fallback": 892,
+        "path": 1597
+      },
+      "kernel_implementation_touches": 4630
+    },
+    "sgl-project/sglang": {
+      "records": 19035,
+      "first_date": "2023-10-09",
+      "last_date": "2026-09-28",
+      "signal_counts": {
+        "tag": 6295,
+        "title": 8360,
+        "path": 1915,
+        "title+path": 1218,
+        "fallback": 1247
+      },
+      "kernel_implementation_touches": 5508
+    }
+  },
+  "classifier_version": "4.0"
+}

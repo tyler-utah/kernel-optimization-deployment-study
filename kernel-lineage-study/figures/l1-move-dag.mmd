@@ -1,0 +1,63 @@
+graph LR
+  M_L1_align_block_padding_0["M-L1-align-block-padding<br/>vllm-project/vllm 2024-01-29<br/>first"]
+  M_L1_align_block_padding_1["M-L1-align-block-padding<br/>sgl-project/sglang 2024-05-27<br/>ported/reimplemented"]
+  M_L1_align_block_padding_0 -->|ported/reimplemented| M_L1_align_block_padding_1
+  M_L1_align_block_padding_2["M-L1-align-block-padding<br/>sgl-project/sglang 2024-12-26<br/>reimplemented"]
+  M_L1_align_block_padding_1 -->|reimplemented| M_L1_align_block_padding_2
+  M_L1_align_block_padding_3["M-L1-align-block-padding<br/>vllm-project/vllm 2025-02-03<br/>ported"]
+  M_L1_align_block_padding_2 -->|ported| M_L1_align_block_padding_3
+  M_L1_align_block_padding_4["M-L1-align-block-padding<br/>sgl-project/sglang 2026-08-08<br/>same_artifact_modified"]
+  M_L1_align_block_padding_3 -->|same_artifact_modified| M_L1_align_block_padding_4
+  M_L1_align_two_phase_shared_cumsum_0["M-L1-align-two-phase-shared-cumsum<br/>sgl-project/sglang 2025-02-07<br/>first"]
+  M_L1_align_two_phase_shared_cumsum_1["M-L1-align-two-phase-shared-cumsum<br/>sgl-project/sglang 2025-02-28<br/>same_artifact_modified"]
+  M_L1_align_two_phase_shared_cumsum_0 -->|same_artifact_modified| M_L1_align_two_phase_shared_cumsum_1
+  M_L1_align_two_phase_shared_cumsum_2["M-L1-align-two-phase-shared-cumsum<br/>sgl-project/sglang 2025-03-01<br/>removed"]
+  M_L1_align_two_phase_shared_cumsum_1 -->|removed| M_L1_align_two_phase_shared_cumsum_2
+  M_L1_align_two_phase_shared_cumsum_3["M-L1-align-two-phase-shared-cumsum<br/>vllm-project/vllm 2025-06-17<br/>ported"]
+  M_L1_align_two_phase_shared_cumsum_2 -->|ported| M_L1_align_two_phase_shared_cumsum_3
+  M_L1_align_two_phase_shared_cumsum_4["M-L1-align-two-phase-shared-cumsum<br/>sgl-project/sglang 2026-09-28<br/>same_artifact_modified"]
+  M_L1_align_two_phase_shared_cumsum_3 -->|same_artifact_modified| M_L1_align_two_phase_shared_cumsum_4
+  M_L1_align_decode_fastpaths_0["M-L1-align-decode-fastpaths<br/>sgl-project/sglang 2026-08-04<br/>first"]
+  M_L1_align_decode_fastpaths_1["M-L1-align-decode-fastpaths<br/>sgl-project/sglang 2026-08-08<br/>reimplemented"]
+  M_L1_align_decode_fastpaths_0 -->|reimplemented| M_L1_align_decode_fastpaths_1
+  M_L1_align_decode_fastpaths_2["M-L1-align-decode-fastpaths<br/>sgl-project/sglang 2026-09-28<br/>same_artifact_modified"]
+  M_L1_align_decode_fastpaths_1 -->|same_artifact_modified| M_L1_align_decode_fastpaths_2
+  M_L1_routing_fused_gate_topk_0["M-L1-routing-fused-gate-topk<br/>vllm-project/vllm 2024-02-05<br/>first"]
+  M_L1_routing_fused_gate_topk_1["M-L1-routing-fused-gate-topk<br/>sgl-project/sglang 2025-03-14<br/>ported"]
+  M_L1_routing_fused_gate_topk_0 -->|ported| M_L1_routing_fused_gate_topk_1
+  M_L1_routing_fused_gate_topk_2["M-L1-routing-fused-gate-topk<br/>sgl-project/sglang 2025-03-29<br/>reimplemented"]
+  M_L1_routing_fused_gate_topk_1 -->|reimplemented| M_L1_routing_fused_gate_topk_2
+  M_L1_routing_fused_gate_topk_3["M-L1-routing-fused-gate-topk<br/>sgl-project/sglang 2026-07-23<br/>same_artifact_modified"]
+  M_L1_routing_fused_gate_topk_2 -->|same_artifact_modified| M_L1_routing_fused_gate_topk_3
+  M_L1_routing_fused_gate_topk_4["M-L1-routing-fused-gate-topk<br/>sgl-project/sglang 2026-07-22<br/>same_artifact_modified"]
+  M_L1_routing_fused_gate_topk_3 -->|same_artifact_modified| M_L1_routing_fused_gate_topk_4
+  M_L1_routing_scale_fusion_0["M-L1-routing-scale-fusion<br/>sgl-project/sglang 2025-06-07<br/>first"]
+  M_L1_routing_scale_fusion_1["M-L1-routing-scale-fusion<br/>sgl-project/sglang 2025-06-08<br/>removed"]
+  M_L1_routing_scale_fusion_0 -->|removed| M_L1_routing_scale_fusion_1
+  M_L1_routing_scale_fusion_2["M-L1-routing-scale-fusion<br/>sgl-project/sglang 2025-08-09<br/>same_artifact_modified"]
+  M_L1_routing_scale_fusion_1 -->|same_artifact_modified| M_L1_routing_scale_fusion_2
+  M_L1_routing_scale_fusion_3["M-L1-routing-scale-fusion<br/>sgl-project/sglang 2025-08-11<br/>removed"]
+  M_L1_routing_scale_fusion_2 -->|removed| M_L1_routing_scale_fusion_3
+  M_L1_routing_scale_fusion_4["M-L1-routing-scale-fusion<br/>sgl-project/sglang 2025-09-19<br/>reimplemented"]
+  M_L1_routing_scale_fusion_3 -->|reimplemented| M_L1_routing_scale_fusion_4
+  M_L1_reduce_topk_sum_fusion_0["M-L1-reduce-topk-sum-fusion<br/>vllm-project/vllm 2024-10-24<br/>first"]
+  M_L1_reduce_topk_sum_fusion_1["M-L1-reduce-topk-sum-fusion<br/>sgl-project/sglang 2025-09-19<br/>reimplemented"]
+  M_L1_reduce_topk_sum_fusion_0 -->|reimplemented| M_L1_reduce_topk_sum_fusion_1
+  M_L1_reduce_topk_sum_fusion_2["M-L1-reduce-topk-sum-fusion<br/>sgl-project/sglang 2025-10-11<br/>ported"]
+  M_L1_reduce_topk_sum_fusion_1 -->|ported| M_L1_reduce_topk_sum_fusion_2
+  M_L1_reduce_topk_sum_fusion_3["M-L1-reduce-topk-sum-fusion<br/>sgl-project/sglang 2026-08-01<br/>reimplemented"]
+  M_L1_reduce_topk_sum_fusion_2 -->|reimplemented| M_L1_reduce_topk_sum_fusion_3
+  M_L1_fused_moe_triton_tiled_pipeline_0["M-L1-fused-moe-triton-tiled-pipeline<br/>sgl-project/sglang 2024-05-27<br/>first"]
+  M_L1_fused_moe_triton_tiled_pipeline_1["M-L1-fused-moe-triton-tiled-pipeline<br/>vllm-project/vllm 2024-02-26<br/>first"]
+  M_L1_fused_moe_triton_tiled_pipeline_0 -->|first| M_L1_fused_moe_triton_tiled_pipeline_1
+  M_L1_fused_moe_triton_tiled_pipeline_2["M-L1-fused-moe-triton-tiled-pipeline<br/>sgl-project/sglang 2025-09-02<br/>same_artifact_modified"]
+  M_L1_fused_moe_triton_tiled_pipeline_1 -->|same_artifact_modified| M_L1_fused_moe_triton_tiled_pipeline_2
+  M_L1_fused_moe_triton_tiled_pipeline_3["M-L1-fused-moe-triton-tiled-pipeline<br/>sgl-project/sglang 2026-09-28<br/>same_artifact_modified"]
+  M_L1_fused_moe_triton_tiled_pipeline_2 -->|same_artifact_modified| M_L1_fused_moe_triton_tiled_pipeline_3
+  M_L1_ep_deepep_reorder_layout_0["M-L1-ep-deepep-reorder-layout<br/>sgl-project/sglang 2024-12-24<br/>first"]
+  M_L1_ep_deepep_reorder_layout_1["M-L1-ep-deepep-reorder-layout<br/>sgl-project/sglang 2025-03-22<br/>same_artifact_modified"]
+  M_L1_ep_deepep_reorder_layout_0 -->|same_artifact_modified| M_L1_ep_deepep_reorder_layout_1
+  M_L1_ep_deepep_reorder_layout_2["M-L1-ep-deepep-reorder-layout<br/>sgl-project/sglang 2026-04-10<br/>repaired"]
+  M_L1_ep_deepep_reorder_layout_1 -->|repaired| M_L1_ep_deepep_reorder_layout_2
+  M_L1_ep_deepep_reorder_layout_3["M-L1-ep-deepep-reorder-layout<br/>vllm-project/vllm 2026-08-20<br/>repaired"]
+  M_L1_ep_deepep_reorder_layout_2 -->|repaired| M_L1_ep_deepep_reorder_layout_3

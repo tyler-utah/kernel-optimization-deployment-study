@@ -1,0 +1,4 @@
+repo,field,n,percent_agreement,cohen_kappa,comparison
+vllm,classification,150,0.96,0.9201,first adjudication vs independent second pass on 150 random adjudication records per repo (model-model; not human IRR)
+sglang,classification,150,0.98,0.9584,first adjudication vs independent second pass on 150 random adjudication records per repo (model-model; not human IRR)
+both,classification,300,0.97,0.9392,first adjudication vs independent second pass on 150 random adjudication records per repo (model-model; not human IRR)

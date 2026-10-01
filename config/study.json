@@ -1,0 +1,42 @@
+{
+  "artifact_version": 1,
+  "repositories": {
+    "vllm": {
+      "slug": "vllm-project/vllm",
+      "clone_url": "https://github.com/vllm-project/vllm.git"
+    },
+    "sglang": {
+      "slug": "sgl-project/sglang",
+      "clone_url": "https://github.com/sgl-project/sglang.git"
+    }
+  },
+  "studies": {
+    "preliminary": {
+      "start": "2025-09-29T00:00:00Z",
+      "cutoff": "2026-09-28T23:59:59Z",
+      "seed": 20260928,
+      "heads": {
+        "vllm": "7230dfea501b232ce92d057f1c5ee9cb009c4cb4",
+        "sglang": "79cafec013d0a01c782d7a4bc902ef32a8941ba8"
+      }
+    },
+    "deep": {
+      "pr_start": "2025-09-29T00:00:00Z",
+      "failure_start": "2024-09-29T00:00:00Z",
+      "cutoff": "2026-09-28T23:59:59Z",
+      "seed": 20260929,
+      "heads": {
+        "vllm": "7230dfea501b232ce92d057f1c5ee9cb009c4cb4",
+        "sglang": "79cafec013d0a01c782d7a4bc902ef32a8941ba8"
+      }
+    },
+    "lineage": {
+      "start": "2024-09-29T00:00:00Z",
+      "cutoff": "2026-09-28T23:59:59Z",
+      "heads": {
+        "vllm": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+        "sglang": "89e1316eae9aae634c174c040415289fe4484aee"
+      }
+    }
+  }
+}

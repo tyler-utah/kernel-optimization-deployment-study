@@ -1,0 +1,9 @@
+field,n,percent_agreement,cohen_kappa,partial
+event_type,36,0.7222,0.669,
+primary_cause,36,0.6389,0.524,
+ancestry,36,0.7222,,0
+moves,36,0.6944,,0
+artifacts,36,0.5278,,16
+event_type[L1],12,0.6667,0.613,
+event_type[L2],12,0.75,0.676,
+event_type[L3],12,0.75,0.697,

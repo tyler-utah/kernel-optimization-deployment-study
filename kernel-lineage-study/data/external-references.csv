@@ -1,0 +1,620 @@
+event_id,lineage,relation,target_repo,target,resolution,resolved_event_id,evidence
+L1-E-09de730dee,L1,ported_from,vllm-project/vllm,c7f2cf2b7f67,unparseable,,diff header cites vLLM fused_moe.py blob
+L1-E-be0124bda0,L1,ported_from,vllm-project/vllm,a6221a144af7,unparseable,,new file header says adapted from vLLM fused_moe
+L1-E-3d32e4a32c,L1,relands,sgl-project/sglang,PR#2203,pr_not_on_main_or_issue,,PR body: Resubmit the PR for MoE-EP
+L1-E-148254d4db,L1,integrates,vllm-project/vllm,PR#9384,merged_pr_not_candidate,,same customized moe_sum replacement described in vLLM ancestry
+L1-E-1c96fa86cf,L1,optimized_from,sgl-project/sglang,PR#3137/PR#2970,pr_not_on_main_or_issue,,PR body says adaptation and follow up of moe-align-with-multiple-blocks-execution
+L1-E-0beea4503f,L1,ported_from,sgl-project/sglang,CUDA moe_align_kernel.cu,unparseable,,new .hip file is hipify-generated copy of moe_align_kernel
+L1-E-61e4433caf,L1,ported_from,vllm-project/vllm,vLLM topk_softmax v0.7.3,unparseable,,file header says Adapt from vLLM topk_softmax_kernels.cu
+L1-E-45dcfc2e76,L1,historical_connection_uncertain,sgl-project/sglang,PR#3191,pr_not_on_main_or_issue,,PR body says adapted and improved from #3191; exact ancestry not checked
+L1-E-924ca7c92c,L1,historical_connection_uncertain,vllm-project/vllm,vllm-project/vllm#15502,pr_not_on_main_or_issue,,PR body says idea mainly from vLLM PR#15502
+L1-E-afb752bcbe,L1,repairs,sgl-project/sglang,PR#3702,pr_not_on_main_or_issue,,PR body says issue introduced by PR#3702
+L1-E-a086a11305,L1,integrates,sgl-project/sglang,PR#4396,merged_pr_not_candidate,,PR body says Based on #4396 use sgl_per_token_group_quant_int8.
+L1-E-cc4a80caf6,L1,repairs,deepseek-ai/DeepEP,deepseek-ai/DeepEP#134,upstream_external,,PR body says Fix https://github.com/deepseek-ai/DeepEP/issues/134.
+L1-E-c471d39eb9,L1,ported_from,sgl-project/sglang,PR#4957,candidate_not_event:related_context_only,,PR body says subtract diff from #4957.
+L1-E-e98afbe042,L1,ported_from,sgl-project/sglang,PR#4957,candidate_not_event:related_context_only,,PR body says subtract diff from #4957.
+L1-E-55444ed667,L1,reimplementation_of,sgl-project/sglang,Triton pre_reorder_triton_kernel,unparseable,,PR body says current moe_pre_reorder uses Triton and introduces CUDA implementation.
+L1-E-43baba649e,L1,reimplementation_of,sgl-project/sglang,Triton post_reorder_triton_kernel,unparseable,,PR body says current moe_post_reorder uses Triton and introduces CUDA implementation.
+L1-E-a979daac3b,L1,historical_connection_uncertain,sgl-project/sglang,PR#5955,candidate_not_event:related_context_only,,PR body says Followup of #5955
+L1-E-b04df75acd,L1,repairs,deepseek-ai/DeepEP,DeepEP#193,upstream_external,,PR body says use with DeepEP PR 193
+L1-E-5962e70d8d,L1,wraps,flashinfer-ai/flashinfer,FlashInfer cutlass_fused_moe,upstream_external,,diff imports flashinfer.fused_moe cutlass_fused_moe
+L1-E-506c4928f5,L1,integrates,sgl-project/sglang,PR#5805,pr_not_on_main_or_issue,,PR body says builds upon work from pr5805
+L1-E-15f3401343,L1,repairs,sgl-project/sglang,Issue#7365,issue,,PR body links issue 7365
+L1-E-e984d5073b,L1,wraps,ROCm/aiter,AITER biased_grouped_topk,upstream_external,,diff enables aiter_biased_grouped_topk kernel
+L1-E-7248272ccc,L1,ported_from,NVIDIA/TensorRT-LLM,TensorRT-LLM dsv3RouterGemm.cu,upstream_external,,PR body and source comment cite TensorRT-LLM dsv3RouterGemm.cu
+L1-E-8e03b641ba,L1,integrates,sgl-project/sglang,PR#5639,pr_not_on_main_or_issue,,PR body says sgl-kernel part of #5639
+L1-E-1dce6c480f,L1,integrates,sgl-project/sglang,PR#6549,merged_pr_not_candidate,,PR body says #6549 needs to land first
+L1-E-da3890e82a,L1,ported_from,NVIDIA/TensorRT-LLM,TensorRT-LLM#5027,upstream_external,,PR body says cutlass_extensions adapted from TensorRT-LLM PR 5027
+L1-E-8fc910db03,L1,historical_connection_uncertain,sgl-project/sglang,future TBO PR,unparseable,,PR body says TBO integration will be future
+L1-E-253454de9b,L1,ported_from,vllm-project/vllm,vLLM PR#18595,pr_not_on_main_or_issue,,diff header: Adapted from https://github.com/vllm-project/vllm/pull/18595/files
+L1-E-659907e32b,L1,repairs,sgl-project/sglang,L1-E-659907e32b,unparseable,,Stage1 cross-reference says an already-coded repair event cites this same change.
+L1-E-85486b6f6f,L1,wraps,flashinfer-ai/flashinfer,FlashInfer fused_moe,upstream_external,,diff imports flashinfer.fused_moe and defines FlashInferEPMoE
+L1-E-9effeb5bdd,L1,repairs,sgl-project/sglang,Issue#8398,issue,,PR body says Fix #8398
+L1-E-aa4c66b564,L1,wraps,flashinfer-ai/flashinfer,FlashInfer fused_moe,upstream_external,,FlashInferFusedMoE calls quant_method.apply_with_router_logits
+L1-E-c8d3a402c1,L1,repairs,sgl-project/sglang,Issue#8402,issue,,PR body references issue #8402 accuracy regression
+L1-E-f642524fd9,L1,ported_from,NVIDIA/TensorRT-LLM,TensorRT-LLM noAuxTcKernels,upstream_external,,PR body says following example of TRT-LLM
+L1-E-915140fd18,L1,wraps,flashinfer-ai/flashinfer,FlashInfer trtllm_fp4_block_scale_moe,upstream_external,,diff imports flashinfer.fused_moe.trtllm_fp4_block_scale_moe
+L1-E-4373df5525,L1,wraps,flashinfer-ai/flashinfer,FlashInfer MXFP4 MoE,upstream_external,,diff adds FlashInfer MXFP4 MoE backend env vars and FlashInfer weight shuffling
+L1-E-5190ba7f42,L1,integrates,flashinfer-ai/flashinfer,flashinfer#1445,upstream_external,,PR body says Flashinfer side is ready in flashinfer#1445
+L1-E-1bc183c6de,L1,integrates,flashinfer-ai/flashinfer,flashinfer#1412,upstream_external,,PR body says utility function is integrated to FI #1412 and now utilized in SGL
+L1-E-de4990a5b2,L1,ported_from,NVIDIA/cutlass,CUTLASS#2294,upstream_external,,PR body says fix is adapted from NVIDIA CUTLASS v4.0.0
+L1-E-de4990a5b2,L1,ported_from,NVIDIA/TensorRT-LLM,TensorRT-LLM#7072,upstream_external,,PR body says fix has also been merged into TensorRT-LLM
+L1-E-79e6a8a6ac,L1,integrates,sgl-project/sglang,Issue#9490,issue,,PR body names #9490 as motivation
+L1-E-aa3eba8eb4,L1,integrates,sgl-project/sglang,PR#9167,pr_not_on_main_or_issue,,PR body says it depends on #9167
+L1-E-74dd4249ac,L1,integrates,sgl-project/sglang,PR#9399,merged_pr_not_candidate,,PR body cites initial NPUGraph support
+L1-E-74dd4249ac,L1,integrates,sgl-project/sglang,PR#8030,pr_not_on_main_or_issue,,PR body cites initial NPUGraph support
+L1-E-3fa62da78c,L1,integrates,sgl-project/sglang,PR#8715,pr_not_on_main_or_issue,,PR body says new MoE framework introduced in #8715
+L1-E-5f1eb20484,L1,repairs,sgl-project/sglang,Issue#9944,issue,,PR body says unused kernels causing accuracy issues in issue #9944
+L1-E-5a7e10fe4c,L1,repairs,sgl-project/sglang,Issue#10138,issue,,PR body says fix #10138
+L1-E-ee0b3c5bad,L1,repairs,sgl-project/sglang,PR#9918,pr_not_on_main_or_issue,,PR body points to accuracy tests in PR#9918
+L1-E-3df05f4d6a,L1,wraps,flashinfer-ai/flashinfer,FlashInfer grouped_gemm_nt_masked,upstream_external,,PR body links FlashInfer grouped_gemm_nt_masked and diff imports it
+L1-E-3df05f4d6a,L1,integrates,sgl-project/sglang,PR#9200,merged_pr_not_candidate,,PR body says Depends on #9200
+L1-E-e07b21ceaf,L1,integrates,deepseek-ai/DeepEP,DeepEP#403,upstream_external,,PR body cites DeepEP pull 403 for 512-expert support
+L1-E-4039c626e2,L1,repairs,deepseek-ai/DeepEP,DeepEP#181,upstream_external,,PR body links DeepEP PR 181 for assert
+L1-E-1237aa19ce,L1,integrates,sgl-project/sglang,d078e69d,unparseable,,PR body says sync changes from commit d078e69d
+L1-E-0b9dfba787,L1,integrates,sgl-project/sglang,PR#10120,pr_not_on_main_or_issue,,PR body names previous PR #10120
+L1-E-8fdcd98efe,L1,ported_from,vllm-project/vllm,c85be1f6dd3e20d9b42cd68ff54b328ffeb6cb4b,unparseable,,PR body: Adapted from vLLM gguf tree at that commit.
+L1-E-a2b3d9b90b,L1,replaces,sgl-project/sglang,L1.triton.fused_moe,artifact_ref,L1-E-1bdd010291,PR body says replacing triton current default.
+L1-E-c7867b6702,L1,repairs,sgl-project/sglang,PR#10915,candidate_not_event:?,,PR body: issue caused by #10915.
+L1-E-a40229f6f8,L1,historical_connection_uncertain,sgl-project/sglang,Issue#8961,issue,,PR says it lays foundation for fault-tolerant distributed MoE inference (#8961).
+L1-E-7e6191c098,L1,integrates,kvcache-ai/ktransformers,kvcache-ai/ktransformers,upstream_external,,PR body: Add dependency of kt_kernel (https://github.com/kvcache-ai/ktransformers).
+L1-E-eec9e471ca,L1,integrates,flashinfer-ai/flashinfer,flashinfer PR#1882,upstream_external,,PR body links flashinfer kernel benchmark PR#1882.
+L1-E-8612811d85,L1,integrates,fzyzcjy/DeepEP,1fd57b0,upstream_external,,PR body says new branch is same codebase used in Blog Post 2 benchmarks.
+L1-E-62eff37ba1,L1,historical_connection_uncertain,sgl-project/sglang,Issue#8715,issue,,PR body says integration is per issue #8715 plan.
+L1-E-f80371ff8c,L1,replaces,sgl-project/sglang,L1.triton.fused_moe,artifact_ref,L1-E-e028af6998,PR body says use flashinfer_trtllm replacing triton current default.
+L1-E-13bf565d60,L1,historical_connection_uncertain,sgl-project/sglang,PR#8311,pr_not_on_main_or_issue,,PR body says Based on #8311.
+L1-E-7a21d8b276,L1,ported_from,sgl-project/sglang,PR#9358,pr_not_on_main_or_issue,,PR body says apply some changes from #9358.
+L1-E-dbcf85b7f0,L1,repairs,sgl-project/sglang,Issue#9441,issue,,PR body: Fixes issue #9441.
+L1-E-2340798353,L1,historical_connection_uncertain,sgl-project/sglang,PR#9358,pr_not_on_main_or_issue,,PR body calls this a rebase version of #9358.
+L1-E-1fa788ec14,L1,repairs,sgl-project/sglang,PR#12695,pr_not_on_main_or_issue,,PR body says fixed illegal memory access issue in #12695.
+L1-E-7aa443903d,L1,repairs,sgl-project/sglang,PR#12866,candidate_not_event:related_context_only,,PR body says Part of #12866 and root cause scale map.
+L1-E-6664083522,L1,replaces,flashinfer-ai/flashinfer,FlashInfer PR#1927,upstream_external,,PR body says Flashinfer introduced equivalent nvfp4 quantization APIs.
+L1-E-e7e89349c9,L1,integrates,flashinfer-ai/flashinfer,flashinfer-python >= 0.5.0,upstream_external,,PR Dependency says Require flashinfer-python >= 0.5.0.
+L1-E-0d116b9a0b,L1,integrates,flashinfer-ai/flashinfer,FlashInfer PR#2086,upstream_external,,PR body links FlashInfer #2086 and says tile_tokens_dim no longer accepted.
+L1-E-e72cf13693,L1,ported_from,vllm-project/vllm,vLLM v0.7.3 topk_softmax,unparseable,,Diff header says Adapt from vLLM topk_softmax_kernels.cu.
+L1-E-b0a26ba624,L1,wraps,flashinfer-ai/flashinfer,flashinfer.fused_moe.cutlass_fused_moe,upstream_external,,Diff imports cutlass_fused_moe as flashinfer_cutlass_fused_moe.
+L1-E-7ab548ef64,L1,repairs,sgl-project/sglang,#13680,pr_not_on_main_or_issue,,PR body says missing requantization caused #13680 accuracy drop.
+L1-E-7ab548ef64,L1,repairs,sgl-project/sglang,PR#13601,candidate_not_event:out_of_scope,,"I1 reconciliation: Body says “Following #13601” and “Close #13680”; it fixes missing DeepGEMM requantization from that sequence, so the repair edge is the explicit predecessor."
+L1-E-20aad5b5ab,L1,integrates,deepseek-ai/DeepEP,deepseek-ai/DeepEP#483,upstream_external,,PR body points to DeepEP branch implementing overlap.
+L1-E-20aad5b5ab,L1,integrates,sgl-project/DeepGEMM,sgl-project/DeepGEMM#14,upstream_external,,PR body points to DeepGEMM branch implementing overlap.
+L1-E-8642dbe416,L1,integrates,sgl-project/sglang,#8715,pr_not_on_main_or_issue,,PR body says Marlin MoE runner integration follows issue #8715.
+L1-E-8fe3e37468,L1,repairs,sgl-project/sglang,#11490,pr_not_on_main_or_issue,,PR body links issue #11490.
+L1-E-24b30f7757,L1,historical_connection_uncertain,sgl-project/sglang,#8715,pr_not_on_main_or_issue,,PR body says refactor is part of issue #8715
+L1-E-34cd32fe30,L1,optimized_from,vllm-project/vllm,PR#23671,merged_pr_not_candidate,,PR body says this generalizes dense NVFP4 fusion from vLLM PR#23671.
+L1-E-9f5cd80a8d,L1,repairs,sgl-project/sglang,PR#12969,candidate_not_event:related_context_only,,PR body says unit test was temporarily disabled in #12969 because Mooncake EP was incompatible with torch 2.9
+L1-E-5af84c8af5,L1,replaces,sgl-project/sglang,PR#6238,pr_not_on_main_or_issue,,PR body: this PR supersedes #6238
+L1-E-424a380077,L1,historical_connection_uncertain,sgl-project/sglang,issue#14424,issue,,PR body says refactor is related to issue #14424 and follows #13664
+L1-E-84c8390514,L1,replaces,sgl-project/sglang,L1.routing.fused_gate,artifact_ref,L1-E-56d12b4aea,PR title says use fused_topk_deepseek instead of moe_fused_gate
+L1-E-2c2c4e446b,L1,integrates,sgl-project/sglang,L1.upstream.flashinfer_moe,artifact_ref,L1-E-a04675892e,diff imports flashinfer.comm MoeAlltoAll and uses its dispatch/combine APIs
+L1-E-1953efb60e,L1,replaces,sgl-project/sglang,L1.runner.marlin,artifact_ref,L1-E-f6f7af4068,stage-1 says ROCm W4A16 routes to Triton instead of NVIDIA-only Marlin
+L1-E-454676811e,L1,repairs,sgl-project/sglang,issue#18499,issue,,PR body: This PR fix #18499
+L1-E-fbb6098487,L1,reverts,sgl-project/sglang,PR#19161,candidate_not_event:related_context_only,,Deep-study record says this PR was reverted by PR 19161.
+L1-E-d7a03c7ebf,L1,historical_connection_uncertain,sgl-project/sglang,#8715,pr_not_on_main_or_issue,,PR body says refactor is according to issue #8715
+L1-E-beabaa8d37,L1,historical_connection_uncertain,sgl-project/sglang,Issue#17865,issue,,PR body says See issue 17865 for JIT migration context.
+L1-E-6822941514,L1,integrates,flashinfer-ai/flashinfer,flashinfer PR#2398,upstream_external,,PR body lists CuteDSL FP4 MoE for DeepSeek-R1 Performance.
+L1-E-6822941514,L1,integrates,flashinfer-ai/flashinfer,flashinfer PR#2505,upstream_external,,PR body lists TRTLLM-Gen MxFP8 MoE Integration.
+L1-E-9305f0e58d,L1,ported_from,sgl-project/sglang,PR#16975,pr_not_on_main_or_issue,,"PR body says written by #16975, rebased and tested."
+L1-E-2bdd89a6cd,L1,historical_connection_uncertain,sgl-project/sglang,Issue#17865,issue,,PR body cites #17865 as migration motivation.
+L1-E-61de303f0a,L1,integrates,flashinfer-ai/flashinfer,flashinfer PR#2617,upstream_external,,PR body says depends on FlashInfer fix #2617.
+L1-E-76ee4bb98c,L1,integrates,flashinfer-ai/flashinfer,FlashInfer 0.6.4,upstream_external,,PR title/body say FlashInfer v0.6.4 and add flashinfer fused_moe calls.
+L1-E-af2807e146,L1,ported_from,vllm-project/vllm,vLLM moe_align_sum_kernels.cu,unparseable,,Diff comment says temporarily adapted from vLLM moe_align_sum_kernels.cu.
+L1-E-af2807e146,L1,historical_connection_uncertain,sgl-project/sglang,PR#14105,candidate_not_event:out_of_scope,,PR body says split this PR #14105 into 3 parts.
+L1-E-ce0541404f,L1,integrates,flashinfer-ai/flashinfer,flashinfer PR#2594,upstream_external,,PR body lists FlashInfer trtllm_bf16_routed_moe dependency.
+L1-E-f60f2ccc10,L1,replaces,sgl-project/sglang,L1.runner.openai_triton_kernels,artifact_ref,L1-E-759700c808,falls back to triton MOE backend instead of triton_kernel
+L1-E-ca3ba05a7a,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#2726,upstream_external,,PR body says this version includes flashinfer pull 2726
+L1-E-8950d129bd,L1,integrates,sgl-project/sglang,issue#8715,issue,,PR body links MoE refactor issue and routes through FusedMoE
+L1-E-991f3aa5b3,L1,ported_from,vllm-project/vllm,vLLM,unparseable,,PR body says vLLM already supports this via Marlin fallback
+L1-E-f407461ec8,L1,repairs,flashinfer-ai/flashinfer,flashinfer fe053931,upstream_external,,PR body links FlashInfer launcher line requiring float32 router_logits
+L1-E-c554dc5c64,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#2398,upstream_external,,PR body says integrates the Wrapper API exposed there
+L1-E-c554dc5c64,L1,integrates,sgl-project/sglang,issue#8715,issue,,PR body says aligns with MoE refactor roadmap #8715
+L1-E-74c2e5bacd,L1,historical_connection_uncertain,sgl-project/sglang,issue#16565,issue,,PR body says ongoing effort tracked in #16565
+L1-E-6d03861476,L1,ported_from,vllm-project/vllm,vLLM grouped_topk_kernels.cu,unparseable,,diff comment says adapted from vLLM grouped_topk_kernels.cu
+L1-E-fb272d27db,L1,replaces,sgl-project/sglang,L1.routing.topk_sigmoid,artifact_ref,L1-E-3dabd609fb,PR body says use aiter.biased_grouped_topk instead of sgl_kernel.topk_sigmoid on AMD GPUs
+L1-E-c7878dbb6d,L1,replaces,sgl-project/sglang,act_and_mul_triton,unparseable,,PR body says JIT kernels replace deleted Triton act_and_mul_triton kernel
+L1-E-10fd0faccd,L1,historical_connection_uncertain,sgl-project/sglang,PR#12531,merged_pr_not_candidate,,PR body says depends on previous CPU mrope kernel support #12531
+L1-E-8327270c72,L1,replaces,sgl-project/sglang,L1.runner.flashinfer_cutlass,artifact_ref,L1-E-4e480d5785,PR body benchmarks flashinfer_trtllm against flashinfer_cutlass for Nemotron workloads
+L1-E-4a279d9c36,L1,repairs,sgl-project/sglang,issue#24514,issue,,PR body says Fixes #24514.
+L1-E-ecb786c8d7,L1,historical_connection_uncertain,sgl-project/sglang,PR#20745,pr_not_on_main_or_issue,,PR body lists #20745 as reference but not exact ancestry.
+L1-E-f4b7e73699,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#2803,upstream_external,,PR says after FlashInfer PR #2803 BF16 supports DSV3 routing.
+L1-E-4b23f6bdc5,L1,repairs,sgl-project/sglang,PyTorch 2.11/Triton 3.6.0 upgrade,unparseable,,PR says PyTorch 2.11 uses Triton 3.6.0 without tuned config.
+L1-E-1d80a1a9fe,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#2904,upstream_external,,PR says perf optimizations in FlashInfer PR #2904 enable this.
+L1-E-d5f3254ed1,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer@v0.6.10,upstream_external,,PR lists releases v0.6.10 and v0.6.9 as commits of interest.
+L1-E-22012ba1bc,L1,optimized_from,sgl-project/sglang,L1.runner.deep_gemm,artifact_ref,L1-E-82254bd9c5,PR says same computational paradigm as FP8 with DeepGEMM grouped BF16 GEMM kernels.
+L1-E-72b49bfac6,L1,integrates,deepseek-ai/DeepEP,deepseek-ai/DeepEP@hybrid-ep,upstream_external,,PR says move GB build path onto upstream deepseek-ai/DeepEP@hybrid-ep.
+L1-E-28758d37dd,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#3084,upstream_external,,PR says FlashInfer PR #3084 ports TensorRT-LLM PR #12451.
+L1-E-b7f856df70,L1,ported_from,sgl-project/sglang,PR#24444,pr_not_on_main_or_issue,,PR body says it is #24444 rebased on main branch.
+L1-E-b7f856df70,L1,integrates,sgl-project/DeepGEMM,sgl-project/DeepGEMM#31,upstream_external,,PR body says requires new sgl-deep-gemm release after DeepGEMM PR #31.
+L1-E-9e00b7ca95,L1,integrates,Ascend/memfabric_hybrid,Ascend/memfabric_hybrid,upstream_external,,PR says ZBAL is based on memfabric_hybrid.
+L1-E-22dfcdaa04,L1,reverts,sgl-project/sglang,PR#25129,candidate_not_event:related_context_only,,PR body says Reverts #24452 and #25129.
+L1-E-ce2506e1c6,L1,reverts,sgl-project/sglang,PR#22809,candidate_not_event:out_of_scope,,PR body says Reverts #22809.
+L1-E-7158a255eb,L1,historical_connection_uncertain,sgl-project/sglang,PR#8715,pr_not_on_main_or_issue,,PR body says part of MoE refactor roadmap #8715.
+L1-E-6f892047ec,L1,repairs,sgl-project/sglang,issue#25491,issue,,PR body references #25491 and says feature will be supported later.
+L1-E-b79e4b1e68,L1,historical_connection_uncertain,vllm-project/vllm,vllm-project/vllm#40082,merged_pr_not_candidate,,PR body references vLLM issue comment for latest cutedsl package error.
+L1-E-78cb38ed5e,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#3027,upstream_external,,PR body links FlashInfer PR #3027.
+L1-E-044649c23a,L1,integrates,flashinfer-ai/flashinfer,PR#3021,upstream_external,,PR body says it depends on FlashInfer PR 3021 for topk=10.
+L1-E-9f2bc24b35,L1,repairs,sgl-project/sglang,issue#25767,issue,,PR body says Closes #25767 and initializes HashTopK.tid2eid.
+L1-E-8fa56a0ab1,L1,repairs,sgl-project/sglang,9b4258cdc,unparseable,,PR body lists original commit 9b4258cdc.
+L1-E-b765faee30,L1,historical_connection_uncertain,sgl-project/sglang,PR#8715,pr_not_on_main_or_issue,,PR body says it continues the MoE refactor roadmap #8715.
+L1-E-6c8128650e,L1,historical_connection_uncertain,sgl-project/sglang,issue#21307,issue,,PR body says the bug was discovered while investigating performance characteristics reported in #21307.
+L1-E-3ecf2c76ad,L1,ported_from,sgl-project/sglang,PR#12537,pr_not_on_main_or_issue,,PR body says BF16 MoE kernel with bias/SwiGLU support was ported from #12537.
+L1-E-376635c1e3,L1,historical_connection_uncertain,sgl-project/sglang,PR#23999,pr_not_on_main_or_issue,,PR body says originally part of #23999 but split out.
+L1-E-524ba10eda,L1,ported_from,sgl-project/sglang,PR#24047,pr_not_on_main_or_issue,,PR body says this is a rebase of #24047 and all SM120 kernel code is identical.
+L1-E-951fa05a09,L1,integrates,sgl-project/DeepGEMM,PR#37,upstream_external,,PR body names DeepGEMM PR 37 as related BF16 masked grouped GEMM support.
+L1-E-4cfebbb95f,L1,integrates,flashinfer-ai/flashinfer,PR#3264,upstream_external,,PR body lists FlashInfer PR #3264 as parent.
+L1-E-e76d36214b,L1,integrates,flashinfer-ai/flashinfer,PR#3152,upstream_external,,PR body cites FlashInfer #3152 for SwapAB + tileN performance.
+L1-E-e76d36214b,L1,historical_connection_uncertain,sgl-project/sglang,issue#19637,issue,,PR body Motivation links issue #19637.
+L1-E-c9f582a272,L1,wraps,NVIDIA/TensorRT-LLM,TRT-LLM fused MoE,upstream_external,,PR body says LoRA deltas are applied inside the fused MoE kernels.
+L1-E-dc24a26821,L1,repairs,sgl-project/sglang,PR#27063,candidate_not_event:related_context_only,,PR body says regression from #27063.
+L1-E-2495c02c2c,L1,integrates,sgl-project/sglang,Issue#23004,issue,,PR motivation links https://github.com/sgl-project/sglang/issues/23004.
+L1-E-82eedd5bd0,L1,repairs,sgl-project/sglang,Issue#26196,issue,,PR motivation: Fix https://github.com/sgl-project/sglang/issues/26196.
+L1-E-9c53853ea3,L1,ported_from,sgl-project/sglang,L1.runner.flashinfer_mxfp4,artifact_ref,L1-E-6ac9f66596,PR body says use fused triton kernel from flashinfer_mxfp4.
+L1-E-c7397de571,L1,replaces,sgl-project/sglang,L1.triton.fused_moe,artifact_ref,L1-E-f06e2d3d1f,PR body says no longer reason to keep SM120-specific GPT-OSS triton_kernel path.
+L1-E-7c23d2255a,L1,ported_from,vllm-project/vllm,vllm-project/vllm v0.7.3 topk_softmax_kernels.cu,unparseable,,Diff comment: Adapt from vLLM topk_softmax_kernels.cu.
+L1-E-f82addd4a8,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#3387,upstream_external,,PR body cites FlashInfer PR for Cute-DSL quantizer/perf basis.
+L1-E-212c30d008,L1,integrates,sgl-project/sglang,Issue#8715,issue,,PR body: Part of #8715.
+L1-E-a2d7eb303e,L1,historical_connection_uncertain,sgl-project/sglang,#26771,pr_not_on_main_or_issue,,PR says it is part of fused MoE gate/topk kernel consolidation #26771.
+L1-E-1da7d3a50b,L1,historical_connection_uncertain,sgl-project/sglang,#26771,pr_not_on_main_or_issue,,Follow-up to MoE gate/topk consolidation #26771.
+L1-E-87992eeec4,L1,historical_connection_uncertain,sgl-project/sglang,#30025,merged_pr_not_candidate,,PR body says same stream explosion mechanism fixed for DSA indexer in #30025.
+L1-E-2cf2920d07,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#3448,upstream_external,,PR body: FlashInfer support PR #3448.
+L1-E-423b8485fb,L1,historical_connection_uncertain,vllm-project/vllm,vllm-project/vllm#34556,merged_pr_not_candidate,,PR body links vLLM supports PR #34556 but does not show code ancestry.
+L1-E-9756f768a6,L1,replaces,sgl-project/sglang,#28663,pr_not_on_main_or_issue,,PR body: Fix #28663 deprecate and delete cutlass/dense FP4 GEMM/FP4 quantization.
+L1-E-8ed82afcc8,L1,integrates,sgl-project/sglang,#8715,pr_not_on_main_or_issue,,PR body: aligns with MoE Runner pattern defined in #8715.
+L1-E-37a830b667,L1,ported_from,NVIDIA/TensorRT-LLM,TensorRT-LLM DWDP implementation,upstream_external,,PR body says ported from TensorRT-LLM's implementation.
+L1-E-e4eea7ce2f,L1,wraps,Tencent/hpc-ops,HPC-Ops gemm_bf16xfp32,upstream_external,,PR says it consumes hpc.gemm_bf16xfp32 directly.
+L1-E-03342e7732,L1,replaces,sgl-project/sglang,JIT dsv3_router_gemm/dsv3_fused_a_gemm,unparseable,,PR body says since migrated already; diff removes AOT and leaves JIT runtime-compiled kernels.
+L1-E-0c29c8fece,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#4045,upstream_external,,PR body says post1 includes fused-MoE runner cache fix.
+L1-E-3d91a569ce,L1,wraps,Tencent/hpc-ops,HPC-Ops FP8 MoE kernels,upstream_external,,PR title/body and new hpc_ops runner import upstream hpc kernels.
+L1-E-169fc1e20c,L1,repairs,sgl-project/sglang,topk refactor,unparseable,,Title says introduced by topk refactor.
+L1-E-f05c92fb6d,L1,integrates,sgl-project/sglang,PR#22352,merged_pr_not_candidate,,PR says it reuses merged dense MXFP8 infrastructure from #22352.
+L1-E-f05c92fb6d,L1,integrates,sgl-project/sglang,PR#23795,candidate_not_event:out_of_scope,,PR says dense W4A4 had landed and this is MoE MXFP8 delta.
+L1-E-a55e1764a2,L1,wraps,flashinfer-ai/flashinfer,flashinfer CUTLASS fused_moe,upstream_external,,Diff selects cutlass_sm120 and calls FlashInfer CUTLASS preparation.
+L1-E-fc007e1f00,L1,wraps,deepseek-ai/DeepGEMM,DeepGEMM fp8_mega_moe,upstream_external,,Diff imports deep_gemm and calls mega_moe_pre_dispatch_sm90/fp8_mega_moe.
+L1-E-a1c30701aa,L1,wraps,pplx-kernels,pplx_kernels AllToAll,upstream_external,,Diff imports pplx_kernels AllToAll and nvshmem_init.
+L1-E-beabc5949b,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#3644,upstream_external,,PR body says #3644 fixes upstream expert_weights allocation.
+L1-E-4c0a8940fa,L1,integrates,sgl-project/sglang,issue#29630,issue,,PR body says completes unification discussed in #29630.
+L1-E-4020bc95a7,L1,historical_connection_uncertain,vllm-project/vllm,vLLM behavior,unparseable,,PR body says this mirrors vLLM's behavior
+L1-E-a58fa0388e,L1,repairs,sgl-project/sglang,Issue#33660,issue,,PR body says Fixes #33660
+L1-E-d82a1d4802,L1,integrates,sgl-project/sgl-kernel-xpu,sgl-kernel-xpu#187,upstream_external,,PR body says apply kernel side changes in sgl-kernel-xpu#187
+L1-E-197832bcf5,L1,integrates,sgl-project/sgl-kernel-npu,sgl-kernel-npu#658,upstream_external,,PR body says extracted Ascend Triton kernels are proposed separately in sgl-kernel-npu#658
+L1-E-3f6ef01322,L1,integrates,sgl-project/sglang,Issue#26439,issue,,PR body says optimize MiniMax-M2.7 on CPU #issue 26439
+L1-E-9d34c2809f,L1,integrates,flashinfer-ai/flashinfer,flashinfer#3645,upstream_external,,PR body lists FlashInfer per-token NVFP4 API
+L1-E-d8399af70c,L1,integrates,sgl-project/sglang,PR#27139,merged_pr_not_candidate,,PR body cites constructor-time weight-cache lifecycle documented in #27139
+L1-E-7769f54feb,L1,integrates,sgl-project/DeepGEMM,DeepGEMM#78,upstream_external,,PR body says requires sgl-deep-gemm 0.1.5.post3 including DeepGEMM#78
+L1-E-d216737e47,L1,ported_from,sgl-project/sglang,d7c54c96f5,unparseable,,PR body lists Original commits d7c54c96f5
+L1-E-1ef7882a5b,L1,integrates,ai-dynamo/nixl,ai-dynamo/nixl#1751,upstream_external,,PR body says nixl#1751 changes default top-k index type
+L1-E-27c36368b6,L1,repairs,sgl-project/sglang,#36264,pr_not_on_main_or_issue,,PR body says Fixes #36264
+L1-E-d12b313b93,L1,repairs,sgl-project/sglang,PR#15298,candidate_not_event:?,,PR body says #15298 changed get_hf_config spelling but missed this file
+L1-E-30e7a3072d,L1,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#4352,upstream_external,,Needs flashinfer#4352 shipped in flashinfer 0.6.18
+L1-E-1b77f498a0,L1,forked_from,djns99/sglang,djns99/sglang:mega_moe_flashinfer,upstream_external,,Fork from djns99/sglang mega_moe_flashinfer
+L1-E-2fca6d69aa,L1,relands,sgl-project/sglang,PR#39275,pr_not_on_main_or_issue,,Recreates #39275 after branch deletion
+L1-E-f920be4b09,L1,relands,sgl-project/sglang,PR#38476,pr_not_on_main_or_issue,,Re-submission of #38476
+L1-E-aebae58b8c,L1,repairs,sgl-project/sglang,issue#39797,issue,,fixes #39797
+L1-E-826d5170ae,L1,repairs,sgl-project/sglang,issue#38773,issue,,Fixes #38773
+L1-E-42875bcd2a,L1,repairs,sgl-project/sglang,issue#38795,issue,,Fixes #38795
+L1-E-56fee88e23,L1,repairs,sgl-project/sglang,issue#34192,issue,,Fixes issue #34192
+L1-E-b44e248682,L1,relands,sgl-project/sglang,PR#37629,pr_not_on_main_or_issue,,reapplies reviewed change after revert
+L1-E-32290dda2c,L1,reimplementation_of,ROCm/aiter,AITER fused_moe,upstream_external,,PR says above 40 tokens AITER is still used and this consumes AITER weight/scale layouts.
+L1-E-3177d10ca6,L1,replaces,sgl-project/sglang,python/sglang/srt/layers/moe/qwen35_flashinfer_fusion.py,unparseable,,Diff deletes qwen35_flashinfer_fusion.py and adds shared cutedsl_ar_fusion.py.
+L1-E-515f5be77e,L1,integrates,ROCm/aiter,AITER MegaMoEv2,upstream_external,,Title and body describe integrating Aiter MegaMoEv2 for DeepSeek-V4.
+L1-E-effb752188,L1,reimplementation_of,ROCm/aiter,AITER topk_gating_kernel_opt,upstream_external,,File docstring says the kernel is bitwise AITER's topk_gating_kernel_opt.
+L1-E-fa443412c5,L1,integrates,ROCm/aiter,ROCm/aiter#5735,upstream_external,,PR body says required gfx950 tuning dependency is merged in ROCm/aiter#5735.
+L2-E-df191254ab,L2,historical_connection_uncertain,InternLM/lmdeploy,PR#1649,upstream_external,,PR body: Inspired by lmdeploy PR 1649
+L2-E-76524b70d1,L2,repairs,sgl-project/sglang,issue#1372,issue,,PR body: Fix issue #1372
+L2-E-c5f865013e,L2,repairs,sgl-project/sglang,discussion#1935,issue,,PR body names discussion #1935
+L2-E-ec52464dde,L2,optimized_from,sgl-project/sglang,PR#2203,pr_not_on_main_or_issue,,PR body refs #2203 for prior MLA prefill work
+L2-E-4a63c181f1,L2,repairs,sgl-project/sglang,issue#2336,issue,,PR body links issue #2336
+L2-E-7dc66fcb40,L2,ported_from,ModelTC/lightllm,LightLLM,upstream_external,,PR body: adapted the flash decoding implementation from lightllm
+L2-E-2f9bd0fafd,L2,repairs,sgl-project/sglang,issue#2465,issue,,PR body names issue #2465
+L2-E-c5210dfa38,L2,integrates,sgl-project/sglang,PR#2637,merged_pr_not_candidate,,PR body: Together with core changes from #2637
+L2-E-51caee740f,L2,integrates,sgl-project/sglang,PR#2693,merged_pr_not_candidate,,PR body says breakdown PR of hierarchical caching proposal #2693
+L2-E-70f894b810,L2,integrates,flashinfer-ai/flashinfer,FlashInfer v0.2.1,upstream_external,,PR body refs flashinfer releases/tag/v0.2.1
+L2-E-a53fe428f9,L2,wraps,flashmla/flashmla,FlashMLA,upstream_external,,PR body says FlashMLABackend uses flashmla for decoding
+L2-E-90532b7627,L2,repairs,sgl-project/sglang,issue#4536,issue,,PR body names bug #4536
+L2-E-20c90be23d,L2,integrates,Dao-AILab/flash-attention,FlashAttention benchmark_mla_decode.py,upstream_external,,PR body cites official FA3 MLA example
+L2-E-a42736bbb8,L2,ported_from,vllm-project/vllm,vllm/v1/attention/backends/mla/common.py,unparseable,,PR body says inspired by vLLM MLA common.py and FlashInfer recursive attention
+L2-E-2ed96c7a8a,L2,repairs,sgl-project/sglang,Issue#5154,issue,,PR body links issue #5154
+L2-E-799789afed,L2,reimplementation_of,sgl-project/sglang,PR#5538,pr_not_on_main_or_issue,,body says modification on basis of #5538
+L2-E-f6f96b0521,L2,repairs,sgl-project/sglang,PR#5686,candidate_not_event:?,,body says after #5686 symbol error occurs
+L2-E-0ab3f437ab,L2,repairs,NVIDIA/cutlass,NVIDIA/cutlass#2274,upstream_external,,body names upstream CUTLASS bug
+L2-E-a2cb5913a0,L2,integrates,sgl-project/sglang,PR#6606,merged_pr_not_candidate,,body says follow-up of #6606
+L2-E-6716b41786,L2,replaces,sgl-project/sglang,L2.kernel.cutlass_mla,artifact_ref,L2-E-18efb5e8e0,SM100 default selection chooses FlashInfer path
+L2-E-2810338401,L2,integrates,sgl-project/sglang,PR#6151,pr_not_on_main_or_issue,,PR body says follow up on #6151
+L2-E-4b04998d38,L2,relands,sgl-project/sglang,PR#7938,pr_not_on_main_or_issue,,PR body says commit history is the same
+L2-E-4dbf43601d,L2,repairs,flashinfer-ai/flashinfer,flashinfer PR#1463,upstream_external,,PR body says crash introduced by this flashinfer update
+L2-E-918e3d4c27,L2,repairs,sgl-project/sglang,issue #7692,issue,,PR body links issue for accuracy
+L2-E-90dfe3de4c,L2,repairs,sgl-project/sglang,issue #9806,issue,,PR body says workaround for accuracy issue #9806
+L2-E-36acd2ff16,L2,repairs,sgl-project/sglang,issue #9806,issue,,PR body says to address issue #9806
+L2-E-124097fc5b,L2,repairs,sgl-project/sglang,issue #9806,issue,,PR body says finalize accuracy in #9806
+L2-E-b17e67df36,L2,ported_from,sgl-project/sglang,239b2577,unparseable,,PR body says sync changes from commit 239b2577
+L2-E-2b7417bf6a,L2,repairs,sgl-project/sglang,issue #10381,issue,,PR body says Closes #10381
+L2-E-d27a6f7092,L2,integrates,sgl-project/sgl-kernel-npu,sgl-kernel-npu PR#51,upstream_external,,PR body links open-sourced op code
+L2-E-73d4a5f879,L2,integrates,sgl-project/sglang,PR#9334,pr_not_on_main_or_issue,,PR body says merge #9334 into main
+L2-E-73d4a5f879,L2,integrates,sgl-project/sglang,PR#10715,merged_pr_not_candidate,,PR body says Depends on #10715
+L2-E-666da3d59f,L2,repairs,sgl-project/sglang,PR#9755,candidate_not_event:?,,PR body says error occurs on #9755
+L2-E-efa473348b,L2,ported_from,sgl-project/sglang,PR#11109,pr_not_on_main_or_issue,,PR body says Based on #11109
+L2-E-2966367a31,L2,integrates,sgl-project/FlashMLA,sgl-project/FlashMLA#1,upstream_external,,PR body says Stack PR: FlashMLA/pull/1
+L2-E-5a8adca900,L2,repairs,ROCm/aiter,ROCm/aiter#1445,upstream_external,,body says MLA issue fixed upstream
+L2-E-930705863f,L2,integrates,sgl-project/FlashMLA,FlashMLA b1860dc4949e94241eb38503abd7b62eb62d36f6,upstream_external,,cmake GIT_TAG changes to b1860dc
+L2-E-dbe871efdd,L2,reverts,sgl-project/sglang,previous FlashMLA/default change,unparseable,,## Motivation Temporarily avoid #21291 ## Modifications ## Accuracy Tests ## Benchmarking and Profiling ## Checklist ## Review
+L2-E-8cb337c8ea,L2,repairs,sgl-project/sglang,issue #21904,issue,,Fixes #21904
+L2-E-5a35316417,L2,ported_from,THUDM/IndexCache,THUDM/IndexCache,upstream_external,,Port https://github.com/THUDM/IndexCache
+L2-E-6af34b95b6,L2,ported_from,vllm-project/vllm,vLLM PR reference,unparseable,,## Summary Call `get_scheduler_metadata` once per batch in decode metadata init (including CUDA graph capture/replay paths) and pass the result
+L2-E-bd448e51bd,L2,ported_from,vllm-project/vllm,vLLM PR reference,unparseable,,Follows up #23530. ## Summary - Split the ambiguous `accept_length` into two explicit fields on `EagleDraftInput` / `NgramVerifyInput`: `num_accepted_drafts` (strict
+L2-E-3fe8bc987e,L2,ported_from,vllm-project/vllm,vLLM PR reference,unparseable,,"Inspire by https://github.com/sgl-project/sglang/pull/18882 Recently some users of SM120 need this feature for FP8 KV cache (currently, Flashinfer will be slower"
+L2-E-3ffb37789a,L2,repairs,ROCm/aiter,ROCm/aiter#2958,upstream_external,,PR says aiter#2958 renamed fused_qk_rmsnorm API
+L2-E-50e0b3b77f,L2,integrates,sgl-project/sglang,flashinfer PR#2805,pr_not_on_main_or_issue,,PR body lists FlashInfer reference PRs
+L2-E-0ef39784ef,L2,repairs,sgl-project/sglang,PR#268415,pr_not_on_main_or_issue,,PR. --- ### CI States Latest PR Test (Base): :white_check_mark: [Run #26841516075](https://github.com/sgl-project/sglang/actions/runs/26841516075) Latest PR Test (Extra)
+L2-E-0ef39784ef,L2,repairs,sgl-project/sglang,PR#268510,pr_not_on_main_or_issue,,ect/sglang/actions/runs/26841516075) Latest PR Test (Extra): :x: [Run #26851017754](https://github.com/sgl-project/sglang/actions/runs/26851017754)
+L2-E-bd47869ba4,L2,integrates,sgl-project/sglang,PR#269903,pr_not_on_main_or_issue,,PR. --- ### CI States Latest PR Test (Base): :white_check_mark: [Run #26990397908](https://github.com/sgl-project/sglang/actions/runs/26990397908) Latest PR Test (Extra)
+L2-E-00fefef16b,L2,integrates,sgl-project/sglang,PR#269572,pr_not_on_main_or_issue,,PR. --- ### CI States Latest PR Test (Base): :white_check_mark: [Run #26957264825](https://github.com/sgl-project/sglang/actions/runs/26957264825) Latest PR Test (Extra)
+L2-E-2c2a4f243a,L2,repairs,sgl-project/sglang,#26340,pr_not_on_main_or_issue,,PR body says addresses flashinfer topk>1 draft coredump tracked in #26340.
+L2-E-5160f7914e,L2,repairs,sgl-project/sglang,PR#270768,pr_not_on_main_or_issue,,pro _(added below)_ --- ### CI States Latest PR Test (Base): :x: [Run #27076835594](https://github.com/sgl-project/sglang/actions/runs/27076835594) Latest PR Test (Extra)
+L2-E-303757ccd8,L2,repairs,sgl-project/sglang,PR#270885,pr_not_on_main_or_issue,,writes. --- ### CI States Latest PR Test (Base): :no_entry_sign: [Run #27088565410](https://github.com/sgl-project/sglang/actions/runs/27088565410) Latest PR Test (Extra)
+L2-E-303757ccd8,L2,repairs,sgl-project/sglang,PR#271088,pr_not_on_main_or_issue,,ons/runs/27088565410) Latest PR Test (Extra): :white_check_mark: [Run #27108887129](https://github.com/sgl-project/sglang/actions/runs/27108887129)
+L2-E-42322947aa,L2,repairs,sgl-project/sglang,PR#271891,pr_not_on_main_or_issue,,-- ### CI States Latest PR Test (Base): :hourglass_flowing_sand: [Run #27189178937](https://github.com/sgl-project/sglang/actions/runs/27189178937) Latest PR Test (Extra)
+L2-E-53a4b51f8c,L2,integrates,sgl-project/sglang,PR#272413,pr_not_on_main_or_issue,,aft KV. --- ### CI States Latest PR Test (Base): :no_entry_sign: [Run #27241392114](https://github.com/sgl-project/sglang/actions/runs/27241392114) Latest PR Test (Extra)
+L2-E-3c1b0fb226,L2,integrates,sgl-project/sglang,PR#27252,pr_not_on_main_or_issue,,Part of #27252. This PR splits out the first roadmap item: simplify the prefill context parallel server args
+L2-E-3c1b0fb226,L2,integrates,sgl-project/sglang,PR#272598,pr_not_on_main_or_issue,,ndencies installed. --- ### CI States Latest PR Test (Base): :x: [Run #27259892340](https://github.com/sgl-project/sglang/actions/runs/27259892340) Latest PR Test (Extra)
+L2-E-f4f30d7d23,L2,repairs,sgl-project/sglang,PR#27549,candidate_not_event:?,,"hub.com/sgl-project/sglang/actions/runs/27113115257/job/80014685310). #27549 worked around it with a `device == ""cuda""` gate on the three eager call sites, which fixed th"
+L2-E-1a6b5561db,L2,repairs,sgl-project/sglang,PR#272080,pr_not_on_main_or_issue,,ead. --- ### CI States Latest PR Test (Base): :white_check_mark: [Run #27208009546](https://github.com/sgl-project/sglang/actions/runs/27208009546) Latest PR Test (Extra)
+L2-E-1a6b5561db,L2,repairs,sgl-project/sglang,PR#273197,pr_not_on_main_or_issue,,ons/runs/27208009546) Latest PR Test (Extra): :white_check_mark: [Run #27319703154](https://github.com/sgl-project/sglang/actions/runs/27319703154)
+L2-E-21a95333d4,L2,integrates,sgl-project/sglang,PR#275390,pr_not_on_main_or_issue,,on to merge the PR. --- ### CI States Latest PR Test (Base): :x: [Run #27539088143](https://github.com/sgl-project/sglang/actions/runs/27539088143) Latest PR Test (Extra)
+L2-E-21a95333d4,L2,integrates,sgl-project/sglang,PR#3041,pr_not_on_main_or_issue,,"e param in `forward_mla.py`, causing GLM-5.1 accuracy issue. aiter [PR#3041](https://github.com/ROCm/aiter/pull/3041) (merged) adds `transpose_scale` support to `fused_fl"
+L2-E-9b8c41171a,L2,integrates,sgl-project/sglang,PR#21631,candidate_not_event:related_context_only,,"## Motivation After #21631 changed the default `hicache_mem_layout` from `layer_first` to `page_first`, AMD/ROCm HiCache"
+L2-E-fa71064147,L2,repairs,sgl-project/sglang,PR#277280,pr_not_on_main_or_issue,,kend()) --- ### CI States Latest PR Test (Base): :no_entry_sign: [Run #27728036970](https://github.com/sgl-project/sglang/actions/runs/27728036970) Latest PR Test (Extra)
+L2-E-fa71064147,L2,repairs,sgl-project/sglang,PR#28528,pr_not_on_main_or_issue,,## Summary Fix #28528 ## Root cause ### The bug `ModelRunner._get_attention_backend()` wrote its resolved backend i
+L2-E-24d15dd92e,L2,integrates,sgl-project/sglang,PR#277036,pr_not_on_main_or_issue,,-- ### CI States Latest PR Test (Base): :hourglass_flowing_sand: [Run #27703693924](https://github.com/sgl-project/sglang/actions/runs/27703693924) Latest PR Test (Extra)
+L2-E-04d952ea10,L2,integrates,sgl-project/sglang,PR#279438,pr_not_on_main_or_issue,,on to merge the PR. --- ### CI States Latest PR Test (Base): :x: [Run #27943813111](https://github.com/sgl-project/sglang/action …[truncated]
+L2-E-04d952ea10,L2,integrates,sgl-project/sglang,PR#28866,pr_not_on_main_or_issue,,"ook after this PR is merged.** ## Motivation As raised in SA's issue [#28866](https://github.com/sgl-project/sglang/issues/28866), the AMD DeepSeek-V4 Pro recipe requires"
+L2-E-20b2817bdf,L2,repairs,sgl-project/sglang,PR#27650,pr_not_on_main_or_issue,,"Depends on #27811 (restore AMD PCG, merged) and #27650 (aiter fused all-reduce+RMSNorm capture-safe). On top of those, this enables breakable"
+L2-E-30ea4c0f4b,L2,integrates,sgl-project/FlashMLA,FlashMLA#9,upstream_external,,PR body says pin pulls in FlashMLA#9
+L2-E-abaee4664e,L2,optimized_from,sgl-project/sglang,PR#28106,candidate_not_event:out_of_scope,,PR body says trtllm_mha solved this in #28106 and this PR reuses that pattern.
+L2-E-abaee4664e,L2,optimized_from,sgl-project/sglang,PR#29232,merged_pr_not_candidate,,PR body says #29232 unified dflash seq_lens CPU-value relay.
+L2-E-bc8b3ab1f5,L2,historical_connection_uncertain,sgl-project/sglang,issue#25746,issue,,PR body says roadmap tracked in #25746; source implementation not named
+L2-E-81a472efcc,L2,ported_from,sgl-project/sglang,4bb8f00bcb291bec8243f013dabb9482c1eedbc6,unparseable,,PR says the SGLang fix was cherry-picked onto this branch
+L2-E-a6ee64d237,L2,historical_connection_uncertain,sgl-project/sglang,issue#23602,issue,,PR body says related to #23602 but does not name ancestry
+L2-E-81735ecf80,L2,ported_from,ROCm/ATOM,ROCm/ATOM,upstream_external,,PR body says motivation from TBO design of rocm/ATOM
+L2-E-8d2b66fd90,L2,repairs,ROCm/rocm-libraries,ROCm/rocm-libraries#8639,upstream_external,,PR body says intended to pair with CK-side bpreshuffle kernel fix
+L2-E-8d0fd34150,L2,historical_connection_uncertain,sgl-project/sglang,issue#28704,issue,,PR body says related to issue #28704
+L2-E-a3194d3585,L2,optimized_from,sgl-project/sglang,PR#28534,candidate_not_event:related_context_only,,PR body says follow-up to #28534 enabled ROCm JIT staged write-back
+L2-E-2f4f2362fb,L2,replaces,sgl-project/sglang,sgl-kernel bmm_fp8,unparseable,,deleted sgl-kernel bmm_fp8 and uses flashinfer.bmm_fp8
+L2-E-f5dcbe8f14,L2,reverts,sgl-project/sglang,PR#31813-PR#31817,candidate_not_event:?,,PR body names reverted units
+L2-E-82fe0f041a,L2,repairs,sgl-project/sglang,PR#32239,candidate_not_event:out_of_scope,,body says follow-up to #32239 and removes mis-scoped mitigation
+L2-E-ef6c07008b,L2,ported_from,unknown,PR#205,upstream_external,,PR body says co-author trailers from PR #205
+L2-E-425349b799,L2,historical_connection_uncertain,deepseek-ai/FlashMLA,deepseek-ai/FlashMLA#196,upstream_external,,PR body says mechanism analyzed there
+L2-E-5c6635d8f3,L2,repairs,sgl-project/sglang,issue#32050,issue,,PR body says fixes #32050
+L2-E-1496bfee93,L2,ported_from,sgl-project/sglang,kimi-k3 branch,unparseable,,body says port from kimi-k3 branch
+L2-E-fb207b72b0,L2,ported_from,sgl-project/sglang,Kimi K3 Day0 work,unparseable,,body says port standalone kernels from Kimi K3 Day0 work
+L2-E-1685d29f21,L2,repairs,sgl-project/sglang,#31490,pr_not_on_main_or_issue,,PR body says fixes #31490 accuracy regression.
+L2-E-1a3bea77f2,L2,ported_from,sgl-project/sglang,kimi-k3 branch,unparseable,,title says ported from kimi-k3
+L2-E-1e64fc1563,L2,repairs,sgl-project/sglang,issue#33064,issue,,PR body says fixes #33064
+L2-E-971932d661,L2,integrates,flashinfer-ai/flashinfer,flashinfer#3309/#3664,upstream_external,,"body says fold_sq added in #3309, gated-fixed in #3664"
+L2-E-8a22b8305d,L2,integrates,flashinfer-ai/flashinfer,flashinfer 0.6.15.post1 runtime patch,upstream_external,,body says installs seven-file FlashInfer runtime patch
+L2-E-4f883636a2,L2,optimized_from,sgl-project/sglang,PR#28854,merged_pr_not_candidate,,I1 reconciliation: Body explicitly says its fast_mla_prefill_plan is analogous to merged fast_prefill_plan in #28854 and takes the same sync-free planning approach.
+L2-E-b501311fa1,L2,reimplementation_of,sgl-project/sglang,PR#33521,pr_not_on_main_or_issue,,"PR body says replaces #33521, closed when base branch was deleted."
+L2-E-e2b50930b9,L2,integrates,sgl-project/sgl-kernel-npu,sgl-kernel-npu PR#689/#708/#699,upstream_external,,"body table lists compressor, sparse_attn_sharedkv, sparse_attn_sharedkv_metadata_host PRs"
+L2-E-3ce243da3f,L2,integrates,sgl-project/FlashMLA,FlashMLA 15f13e5030374295491c5ce31b02d7e63a7772c6,upstream_external,,body says bumps flashmla commit in sgl-kernel to include that commit
+L2-E-d9848b9ecd,L2,optimized_from,sgl-project/sglang,PR#37511,candidate_not_event:related_context_only,,PR body says depends on or did not carry over from #37511
+L2-E-b5766336d4,L2,optimized_from,sgl-project/sglang,PR#37511,candidate_not_event:related_context_only,,PR body says depends on or did not carry over from #37511
+L2-E-c0b790cf7f,L2,replaces,sgl-project/sglang,L2.backend.flashinfer_mla,artifact_ref,L2-E-1ad3eb09a9,PR body says cutlass_mla falls through to FlashInferMLABackend
+L2-E-a66451c058,L2,relands,sgl-project/sglang,PR#38071,pr_not_on_main_or_issue,,PR body says restore fusion removed by #38071
+L2-E-2c37b90ad6,L2,repairs,sgl-project/sglang,#38645,pr_not_on_main_or_issue,,PR body says Fixes #38645.
+L2-E-59dd2fc734,L2,optimized_from,sgl-project/sglang,#38776,pr_not_on_main_or_issue,,PR body says builds on #38776 and final commit is fusion change.
+L2-E-de123f38bb,L2,integrates,sgl-project/sglang,#30553,merged_pr_not_candidate,,PR body says follows PR #30553.
+L2-E-a89f849158,L2,integrates,ROCm/aiter,ROCm/aiter#5195,upstream_external,,PR body says aiter ships fused_fp8_bmm_rope_cat_and_cache_mla at pinned commit.
+L2-E-f4b90382a2,L2,integrates,sgl-project/sglang,sglang-miles#32718/#33479,pr_not_on_main_or_issue,,PR body says squash of those changes.
+L2-E-1446e24d13,L2,ported_from,ROCm/aiter,ROCm/aiter#5195,upstream_external,,PR says disassembled aiter PR#5195 .co and added masks.
+L2-E-e581520c67,L2,reimplementation_of,sgl-project/sglang,#39606,pr_not_on_main_or_issue,,PR body says mirror of staged write-back added in #39606.
+L3-E-c9d5b6d4a8,L3,replaces,vllm-project/vllm,PR#4,unparseable,,PR body says replaces FlashAttention with xformers
+L3-E-bf87484efa,L3,repairs,vllm-project/vllm,Issue#641,issue,,PR body: Fixes #641
+L3-E-928de46888,L3,reimplementation_of,vllm-project/vllm,PR#3,unparseable,,same paged attention slot adds V2 selected beside V1
+L3-E-6ccc0bfffb,L3,ported_from,vllm-project/vllm,PR#1313,pr_not_on_main_or_issue,,PR body says incorporates work from Port most vLLM kernels to ROCm #1313
+L3-E-0580aab02f,L3,replaces,vllm-project/vllm,L3.flash_attn.upstream_pip,artifact_ref,,PR body says used vllm reference implementation instead
+L3-E-43c413ec57,L3,wraps,flashinfer-ai/flashinfer,FlashInfer BatchDecodeWithPagedKVCacheWrapper,upstream_external,,diff imports BatchDecodeWithPagedKVCacheWrapper
+L3-E-89579a201f,L3,replaces,Dao-AILab/flash-attention,flash-attn==2.5.6,upstream_external,,PR body says instead of original flash-attn
+L3-E-99eff67ba9,L3,repairs,vllm-project/vllm,PR#4886,candidate_not_event:?,,PR body says previous #4886 caused lora-test failing
+L3-E-9aaf14c62e,L3,historical_connection_uncertain,vllm-project/vllm,issue #8821,issue,,PR body says one step of #8821
+L3-E-4fa3e33349,L3,replaces,vllm-project/vllm,L3.xformers.v0_backend,artifact_ref,L3-E-343f8e0905,selector removed sliding-window fallback to XFormers
+L3-E-3cb07a36a2,L3,integrates,vllm-project/flash-attention,PR#23,upstream_external,,PR body says requires changes to flash attn PR #23
+L3-E-a78dd3303e,L3,replaces,vllm-project/vllm,L3.xformers.v0_backend,artifact_ref,L3-E-6c0b7f548d,PR body says default backend choice is now FlashAttention instead of XFormers
+L3-E-9a8bff0285,L3,integrates,vllm-project/flash-attention,PR#28,upstream_external,,PR body says update takes advantage of upstream PR #28
+L3-E-8c1e77fb58,L3,integrates,vllm-project/flash-attention,PR#30,upstream_external,,PR body says upgrades to upstream PR #30
+L3-E-073a4bd1c0,L3,integrates,vllm-project/flash-attention,PR#32,upstream_external,,PR body says out argument possible by upstream PR #32
+L3-E-a4c4daf364,L3,replaces,vllm-project/vllm,PR#9740,pr_not_on_main_or_issue,,PR body says replace #9740 because it is very old
+L3-E-0f8cafe2d1,L3,integrates,vllm-project/vllm,issue #9098,issue,,PR body says helps achieve #9098
+L3-E-cabaf4eff3,L3,historical_connection_uncertain,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#551,upstream_external,,PR body names FlashInfer PR as handy reference
+L3-E-cabaf4eff3,L3,historical_connection_uncertain,sgl-project/sglang,sgl-project/sglang,unparseable,,PR body shouts out SGLang for Triton decode attention kernel
+L3-E-ef533d25fb,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#42,upstream_external,,PR body says flash-attention PR #42 should resolve linked issues
+L3-E-f95903909f,L3,integrates,deepseek-ai/FlashMLA,deepseek-ai/FlashMLA,upstream_external,,PR body explicitly says Integrate deepseek-ai/FlashMLA
+L3-E-848a6438ae,L3,ported_from,ROCm/vllm,ROCm/vllm#372,upstream_external,,PR body says feature is from ROCm/vllm pull/372
+L3-E-183dad7a85,L3,ported_from,Dao-AILab/flash-attention,FlashAttention-3 upstream tag 0a721da,upstream_external,,I1 reconciliation: cmake/external_projects changes vllm_flash_attn GIT_TAG to 0a721da and PR title says update latest FA3 code.
+L3-E-30bc3e0f66,L3,integrates,ROCm/aiter,ROCm/aiter@86256916,upstream_external,,PR body links AITER flash_attn_varlen_func and mla_decode_fwd
+L3-E-41ca7eb491,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#63,upstream_external,,PR body says vLLM side of flash-attention pull/63
+L3-E-950751a987,L3,historical_connection_uncertain,vllm-project/vllm,PR#16101,pr_not_on_main_or_issue,,PR body says split from #16101
+L3-E-60f7624334,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#33,upstream_external,,PR body says requires sparse attention kernel from vllm-flash-attention PR #33
+L3-E-4f8b373225,L3,integrates,ROCm/aiter,939f741fc37f46694e48c32c7164f49eae2584c4,upstream_external,,PR body says API changes introduced by that AITER commit
+L3-E-e60f550b38,L3,historical_connection_uncertain,vllm-project/vllm,PR#16101,pr_not_on_main_or_issue,,PR body says work was split from #16101; exact ancestry not checked.
+L3-E-01c22335ba,L3,repairs,triton-lang/triton,triton-lang/triton#5512,upstream_external,,PR body identifies Triton PR #5512 as regression source
+L3-E-dcfe95234c,L3,integrates,flashinfer-ai/flashinfer,e00e8cedbfcb220f328fd36aa8f529f869b01e6b,upstream_external,,PR body updates to latest flashinfer main commit
+L3-E-8b6e1d639c,L3,integrates,ROCm/aiter,AITER,upstream_external,,new rocm_aiter_fa.py imports aiter
+L3-E-a045b7e89a,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#70,upstream_external,,associated vllm-flash-attn PR #70
+L3-E-94a55c7681,L3,repairs,vllm-project/vllm,PR#19796,candidate_not_event:?,,after #19796 build was failing on AMD Radeon GPU
+L3-E-5b032352cc,L3,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#1198,upstream_external,,dependent on FlashInfer FIX #1198
+L3-E-30800b01c2,L3,integrates,flashinfer-ai/flashinfer,9157d0514fc251178e98877b4595c701ee8fb482,upstream_external,,PR body lists FlashInfer dependency commit
+L3-E-30800b01c2,L3,integrates,flashinfer-ai/flashinfer,9157d0514fc251178e98877b4595c701ee8fb482,upstream_external,,I1 reconciliation: PR body explicitly lists the FlashInfer dependency commit; the vLLM diff wires that API behind VLLM_USE_CUDNN_PREFILL.
+L3-E-2dec7c1a5d,L3,repairs,vllm-project/vllm,PR#21302,candidate_not_event:out_of_scope,,PR body says previous PR #21302 put method under NonNvmlCudaPlatform only
+L3-E-1cd6eaba54,L3,historical_connection_uncertain,vllm-project/vllm,PR#19988,pr_not_on_main_or_issue,,PR body says it combines elements of PRs #21088 and #19988
+L3-E-8f605ee309,L3,replaces,vllm-project/vllm,L3.mla.flashmla_v1_adapter,artifact_ref,L3-E-3597b06a4f,diff changes unset MLA default from FlashMLA to CutlassMLA on Blackwell
+L3-E-01c753ed98,L3,integrates,flashinfer-ai/flashinfer,flashinfer PR#1332,upstream_external,,PR body says #1332 needed to make building work on GH200 and GB200
+L3-E-ad510309ee,L3,integrates,vllm-project/vllm,PR#19719,pr_not_on_main_or_issue,,PR body says change supports YOCO prefill skip for cross-decoder layers in #19719
+L3-E-f81c1bb055,L3,repairs,flashinfer-ai/flashinfer,flashinfer issue#1352,issue,,PR body cites FlashInfer limitation for AOT wheel cubin downloads
+L3-E-0edaf752d7,L3,integrates,vllm-project/vllm,PR#20448,pr_not_on_main_or_issue,,PR body says splitting is prerequisite for Dual Batch Overlap #20448
+L3-E-469b3ffaaa,L3,reimplementation_of,vllm-project/vllm,L3.xformers.v0_backend,artifact_ref,L3-E-5782581acf,PR title/body says port xformers backend to v1
+L3-E-2cb6ef8996,L3,repairs,vllm-project/flash-attention,vllm-project/flash-attention PR#75,upstream_external,,PR body says RuntimeError introduced in flash-attention PR #75
+L3-E-e8961e963a,L3,integrates,flashinfer-ai/flashinfer,flashinfer PR#1389,upstream_external,,PR body says needed for FlashInfer PR #1389
+L3-E-cd9b9de1fb,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA PR#3,upstream_external,,PR body says merge FlashMLA PR #3 first
+L3-E-cd9b9de1fb,L3,integrates,vllm-project/vllm,PR#17027,pr_not_on_main_or_issue,,PR body says updates FlashMLA changes made on top of #17027
+L3-E-bd875d2eb7,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention PR#79,upstream_external,,PR body says vLLM side of flash-attention PR #79
+L3-E-dc5e4a653c,L3,integrates,flashinfer-ai/flashinfer,flashinfer PR#1403,upstream_external,,PR body says includes fix from FlashInfer PR #1403
+L3-E-dc5e4a653c,L3,integrates,flashinfer-ai/flashinfer,flashinfer PR#1410,upstream_external,,PR body says includes fix from FlashInfer PR #1410
+L3-E-d94e3026de,L3,repairs,vllm-project/vllm,PR#22664,candidate_not_event:?,,new test from this PR failed before the fix
+L3-E-177e55e3bd,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#78,upstream_external,,vLLM side of upstream performance PR
+L3-E-1723ef1aae,L3,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#1463,upstream_external,,FlashInfer v0.2.11.post3 update
+L3-E-000cceca8c,L3,repairs,vllm-project/vllm,Issue#23013,issue,,PR body says FIX #23013
+L3-E-292084e72a,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#80,upstream_external,,vLLM side of upstream IMA fix
+L3-E-292084e72a,L3,repairs,vllm-project/vllm,Issue#19483,issue,,PR says may help H100 IMA issues
+L3-E-3b11b26b50,L3,repairs,vllm-project/vllm,1ee5ead5f8f1c3c77b73effcb230ee02952fbe1f,unparseable,,PR body names hardcoded rocm_aiter_fa loading commit
+L3-E-5c4b6e66fe,L3,repairs,vllm-project/vllm,Issue#23073,issue,,PR body says Fixes #23073
+L3-E-402759d472,L3,integrates,vllm-project/vllm,vllm-project/flash-attention fork tag,unparseable,,uses latest FlashAttention code for MLA
+L3-E-86173ad593,L3,historical_connection_uncertain,vllm-project/vllm,PR#22789,pr_not_on_main_or_issue,,"PR body credits #22789, but source/ancestry not established"
+L3-E-15de5ff9ea,L3,repairs,vllm-project/vllm,Issue#24513,issue,,PR body says fixing #24513
+L3-E-dc625ea6b8,L3,repairs,vllm-project/vllm,pytorch/pytorch#160256,pr_not_on_main_or_issue,,PR body says upstream PyTorch change causes perf regression
+L3-E-dcb28a332b,L3,wraps,vllm-project/vllm,FlashInfer TRTLLM-gen MLA,unparseable,,backend name and PR body identify TRTLLM-gen via FlashInfer
+L3-E-b1a63d1b3b,L3,repairs,vllm-project/vllm,Issue#23569,issue,,PR body says blocking H2D memcpys break overlap scheduler #23569
+L3-E-8945b001db,L3,integrates,vllm-project/vllm,pytorch/pytorch#162207,pr_not_on_main_or_issue,,PR body says depends on PyTorch #162207
+L3-E-418d111f8c,L3,integrates,vllm-project/flash-attention,PR#94,upstream_external,,PR body says bump FA to pick up flash-attention PR #94/#91/#87
+L3-E-3b736e1c38,L3,integrates,vllm-project/flash-attention,PR#93,upstream_external,,PR body says combined with flash-attention PR #93; vLLM passes cp world size/rank
+L3-E-44f633dba1,L3,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#1758,upstream_external,,PR body says require flashinfer v0.4.0rc4 and links upstream sinks support.
+L3-E-7d8975de84,L3,replaces,vllm-project/vllm,PR#26136,pr_not_on_main_or_issue,,PR body: This PR replaces #26136 with a far more rigorous set of tests and implementation choices.
+L3-E-314fa8abbf,L3,optimized_from,vllm-project/vllm,PR#26835,candidate_not_event:related_context_only,,PR body says experiments used tools introduced in #26835.
+L3-E-5afd3276df,L3,repairs,vllm-project/vllm,issue#26817,issue,,PR body says FIX: #26817.
+L3-E-950cf9e58e,L3,repairs,vllm-project/vllm,issue#27057,issue,,PR body: FIX #27057.
+L3-E-9f020f4f31,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#102,upstream_external,,PR body: vLLM side of flash-attention PR #102.
+L3-E-250fb1b8ea,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA#7,upstream_external,,PR body: Require the flashmla patch #7 to be landed first.
+L3-E-b4fda58a2d,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA#10,upstream_external,,PR body says FlashMLA PR #10 fixed flash_mla_combine_kernel.
+L3-E-b4fda58a2d,L3,repairs,vllm-project/vllm,issue#27043,issue,,PR body says FIX #27043.
+L3-E-084a9dae80,L3,repairs,vllm-project/vllm,PR#27329,candidate_not_event:?,,PR body says disable it to unblock #27329.
+L3-E-dbfbf9f324,L3,optimized_from,vllm-project/vllm,PR#26835,candidate_not_event:related_context_only,,PR body says uses the benchmarks in #26835.
+L3-E-284cc92275,L3,integrates,vllm-project/vllm,issue#20283,issue,,PR body: Part of CompilationConfig improvements (#20283).
+L3-E-a8c02fb5bf,L3,repairs,vllm-project/vllm,issue#26537,issue,,PR body: Fixes #26537 by correcting KV-cache layout handling and MLA config setup.
+L3-E-3933f18a5e,L3,repairs,vllm-project/vllm,issue#27724,issue,,PR body: Fix #27724.
+L3-E-18961c5ea6,L3,repairs,vllm-project/vllm,issue#26936,issue,,PR body says solves #26936.
+L3-E-18961c5ea6,L3,repairs,vllm-project/vllm,issue#27264,issue,,PR body says solves #27264.
+L3-E-c765f0b443,L3,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#1993,upstream_external,,PR body says FlashInfer issue #1993 reports this combination is not correct.
+L3-E-c765f0b443,L3,historical_connection_uncertain,vllm-project/vllm,PR#27704,pr_not_on_main_or_issue,,PR body thanks exploration in #27704; exact fix lineage not established.
+L3-E-faedbb4d4f,L3,integrates,pytorch/pytorch,pytorch/pytorch#166735,upstream_external,,PR body cites PyTorch 2.10 containing batch invariant CUDA overrides.
+L3-E-f080a83511,L3,integrates,vllm-project/vllm,issue#21504,issue,,PR body says _aiter_ops introduced as proposed in RFC #21504.
+L3-E-f080a83511,L3,integrates,ROCm/aiter,ROCm/aiter@5ee37dce,upstream_external,,PR body says this PR uses 5ee37dce commit from aiter repo.
+L3-E-9c84ca8293,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#104,upstream_external,,PR body says vLLM side of upstream flash-attention PR #104.
+L3-E-cc079763c5,L3,historical_connection_uncertain,vllm-project/vllm,PR#27026,pr_not_on_main_or_issue,,PR body says it follows approach suggested in #27026 issue comment.
+L3-E-39029d5192,L3,repairs,vllm-project/vllm,issue#28400,issue,,PR body says FIX: https://github.com/vllm-project/vllm/issues/28400.
+L3-E-684f254585,L3,optimized_from,vllm-project/vllm,PR#26835,candidate_not_event:related_context_only,,PR body says based on benchmarking in #26835.
+L3-E-304419576a,L3,relands,vllm-project/vllm,PR#26937,pr_not_on_main_or_issue,,PR body says revised implementation of #26937.
+L3-E-8cc40f8992,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#107,upstream_external,,PR body says vLLM-side PR for flash-attention #107.
+L3-E-4c23690f43,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#109,upstream_external,,PR body says paired with upstream PR #109 enabling ViT head sizes.
+L3-E-2fd893b4ce,L3,historical_connection_uncertain,vllm-project/vllm,RFC#25749,pr_not_on_main_or_issue,,PR body says refer to RFC #25749 for implementation details.
+L3-E-2fd893b4ce,L3,ported_from,vllm-project/vllm,PR#26864,pr_not_on_main_or_issue,,PR body says split from full PR #26864.
+L3-E-ac10fd3c69,L3,integrates,ROCm/aiter,AITER Triton MHA,upstream_external,,Diff imports from aiter.ops.triton.mha flash_attn_varlen_func.
+L3-E-1607e664f0,L3,repairs,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#2107,upstream_external,,PR body links FlashInfer issue #2107 for broken batch invariant support.
+L3-E-c68c7b403d,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#111,upstream_external,,PR body says vLLM side of flash-attention #111.
+L3-E-56539cddac,L3,repairs,vllm-project/vllm,Issue#23789,issue,,PR body says FIX #23789.
+L3-E-a5345bf49d,L3,integrates,flashinfer-ai/flashinfer,FlashInfer 0.5.3,upstream_external,,PR body names latest FlashInfer 0.5.3 plan API change.
+L3-E-9fec0e13d5,L3,optimized_from,vllm-project/vllm,PR#29444,pr_not_on_main_or_issue,,PR body says scaled back/generalization of #29444.
+L3-E-6482e3895b,L3,repairs,vllm-project/vllm,PR#26487,candidate_not_event:out_of_scope,,PR body says follow-up to #26487 accidental parameter order change.
+L3-E-de71747655,L3,historical_connection_uncertain,vllm-project/vllm,PR#26498,pr_not_on_main_or_issue,,PR body says Alternative fix to https://github.com/vllm-project/vllm/pull/26498.
+L3-E-b10f41c894,L3,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#2047,upstream_external,,PR body says Depends on https://github.com/flashinfer-ai/flashinfer/pull/2047/.
+L3-E-62def07d67,L3,repairs,vllm-project/vllm,issue#31377,issue,,PR body says Close: #31377 and names the illegal memory access.
+L3-E-6aa5b18e1d,L3,ported_from,sgl-project/sglang,sglang 97cb762 prefill_attention.py,unparseable,,Diff comment: Adapted from https://github.com/sgl-project/sglang/.../prefill_attention.py.
+L3-E-6aa5b18e1d,L3,ported_from,ModelTC/LightLLM,ModelTC/LightLLM f2a54f0,upstream_external,,Diff comment: Adapted from https://github.com/ModelTC/lightllm/.../context_flashattention_nopad.py.
+L3-E-41cfa50632,L3,repairs,vllm-project/vllm,PR#31465,candidate_not_event:related_context_only,,PR body: This #31465 PR changed arguments name into wrong one.
+L3-E-1a19e9cd87,L3,repairs,vllm-project/vllm,issue#26473,issue,,PR body says Fixes #26473.
+L3-E-1c46dea001,L3,repairs,vllm-project/vllm,issue#30919,issue,,PR body says Detail please see bug https://github.com/vllm-project/vllm/issues/30919.
+L3-E-e15a5ff07b,L3,historical_connection_uncertain,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#2232,upstream_external,,PR body links https://github.com/flashinfer-ai/flashinfer/issues/2232.
+L3-E-2e7c89e708,L3,repairs,vllm-project/vllm,issue#27684,issue,,PR body says FI prefill backend has correctness issues (https://github.com/vllm-project/vllm/issues/27684).
+L3-E-8cc26acd8b,L3,ported_from,ModelTC/LightLLM,ModelTC/LightLLM 2fbd2b8,upstream_external,,PR body says refine prefill attention kernel with FA2 implementation based on LightLLM URL.
+L3-E-6101a26dc9,L3,repairs,vllm-project/vllm,issue#32353,issue,,Title/body: Fixes issue #32353 with degenerate strides in query tensors.
+L3-E-4a5299c93f,L3,historical_connection_uncertain,vllm-project/vllm,PR#20459,pr_not_on_main_or_issue,,PR body says non-greedy rejection sampling is being addressed by PR #20459.
+L3-E-1a1fc3bbc0,L3,repairs,vllm-project/vllm,PR#32529,candidate_not_event:related_context_only,,PR body says That failure was fixed by #32529.
+L3-E-4ca62a0dbd,L3,integrates,vllm-project/vllm,issue#23786,issue,,PR body says First implementation of RFC https://github.com/vllm-project/vllm/issues/23786.
+L3-E-b4f64e5b02,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA#12,upstream_external,,PR body says vLLM side of https://github.com/vllm-project/FlashMLA/pull/12.
+L3-E-da5e7b12be,L3,historical_connection_uncertain,vllm-project/vllm,#32055,pr_not_on_main_or_issue,,Dossier links Copy Ops in FP8 MLA issue; implementation ancestry not established.
+L3-E-22ad649501,L3,historical_connection_uncertain,vllm-project/vllm,#32335,pr_not_on_main_or_issue,,PR body says backends support #32335; no earlier event row target established.
+L3-E-2267cb1cfd,L3,integrates,vllm-project/flash-attention,flash-attention#82,upstream_external,,PR body says vLLM side of flash-attention pull/82.
+L3-E-45f8fd6f97,L3,historical_connection_uncertain,vllm-project/vllm,#27433,pr_not_on_main_or_issue,,PR body names related parent issue #27433; no specific prior event linked.
+L3-E-59a5cb387a,L3,integrates,flashinfer-ai/flashinfer,FlashInfer concat_mla_k,upstream_external,,PR body says Integrate Flashinfer concat_mla_k kernel; diff calls torch.ops.vllm.flashinfer_concat_mla_k.
+L3-E-81e217fe6b,L3,ported_from,vllm-project/vllm,PR#34009,pr_not_on_main_or_issue,,PR body says Mirror of #34009 because original PR could not be edited.
+L3-E-afdce12c89,L3,ported_from,sgl-project/sglang,PR#11194,candidate_not_event:?,,PR body and source comment say implementation adapted from TileLang / SGLang PR #11194.
+L3-E-64f570ab56,L3,historical_connection_uncertain,vllm-project/vllm,#32335,pr_not_on_main_or_issue,,PR body says Supporting #32335; exact prior event not named.
+L3-E-9ea1f598ce,L3,replaces,vllm-project/vllm,L3.triton.unified_attention,artifact_ref,L3-E-45f8fd6f97,PR body says Replace unified_attention (Triton) with paged_attention_v1 for sliding window decode path.
+L3-E-f2c47886fd,L3,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#2138,upstream_external,,PR body says FlashInfer supports sparse MLA as of flashinfer-ai/flashinfer#2138.
+L3-E-bb85929aa6,L3,integrates,vllm-project/FlashMLA,692917b1cda61b93ac9ee2d846ec54e75afe87b1,upstream_external,,PR body says Pickup FlashMLA commit 692917b.
+L3-E-6d4f9d3ad5,L3,repairs,vllm-project/vllm,issue#35057,issue,,PR body says Fix #35057
+L3-E-8b5014d3dd,L3,integrates,vllm-project/flash-attention,upstream FA4,upstream_external,,PR body: Integrate upstream FA4
+L3-E-d9c7730877,L3,historical_connection_uncertain,vllm-project/vllm,PR#33658,pr_not_on_main_or_issue,,body: adapts some elements of #33658
+L3-E-c5362c739f,L3,repairs,vllm-project/vllm,PR#35246,candidate_not_event:related_context_only,,body: #35246 refactored ROCm attention backend selection logic
+L3-E-c174d54f86,L3,repairs,vllm-project/vllm,PR#35246,candidate_not_event:related_context_only,,body: introduced by the move to validation-based backend selection in #35246
+L3-E-9c34e9d24f,L3,replaces,vllm-project/vllm,M-L3-flashinfer-plan-cascade,unparseable,,default disables cascade attention unless user opts in
+L3-E-eac2dc2b41,L3,ported_from,vllm-project/vllm,flashinfer.py,unparseable,,body: uses the same triton kernel as flashinfer.py
+L3-E-428bc718bd,L3,repairs,vllm-project/vllm,PR#35246,candidate_not_event:related_context_only,,body: refactor (#35246) introduced validate_configuration calls
+L3-E-77d2a5f17b,L3,integrates,vllm-project/flash-attention,PR#125,upstream_external,,Purpose says run CI for upstream PR #125
+L3-E-e5ed6c6c13,L3,integrates,flashinfer-ai/flashinfer,PR#2607,upstream_external,,PR body aligns vLLM gating with FlashInfer support
+L3-E-2bf5b70ae8,L3,historical_connection_uncertain,flashinfer-ai/flashinfer,PR#2903,upstream_external,,PR body says proper fix should be upstream
+L3-E-2c734ed0e0,L3,repairs,vllm-project/vllm,issue#36763,issue,,PR body says FIX: #36763
+L3-E-93b3ec1585,L3,historical_connection_uncertain,vllm-project/vllm,issue#32335,issue,,PR body says part of issue #32335
+L3-E-7d65463528,L3,reverts,vllm-project/vllm,PR#31915,candidate_not_event:?,,PR body includes Revert: #31915
+L3-E-c49497726b,L3,integrates,ROCm/aiter,PR#1821,upstream_external,,PR body says paged_attention_common from aiter PR #1821
+L3-E-6183cae1bd,L3,historical_connection_uncertain,flashinfer-ai/flashinfer,issue#2939,issue,,PR body says FlashInfer fix ongoing
+L3-E-4a06e1246e,L3,optimized_from,vllm-project/vllm,PR#38216,pr_not_on_main_or_issue,,PR body says supersedes #38216 rebased clean.
+L3-E-e24e0a43a4,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention PR#130,upstream_external,,PR body names vLLM Flash Attention dependency PR #130
+L3-E-f150107efd,L3,integrates,ROCm/aiter,ROCm/aiter@bc5ea32c19,upstream_external,,PR cites upstream AITER unified_attention implementation for correct slicing
+L3-E-fb5635d3f9,L3,integrates,ROCm/aiter,ROCm/aiter PR#2442,upstream_external,,PR body: Requires AITer PR #2442
+L3-E-6d85b36a9f,L3,reverts,vllm-project/vllm,PR#38791,candidate_not_event:related_context_only,,PR body: Revert #38730 and connected #38791
+L3-E-fe9c3d6c5f,L3,repairs,vllm-project/vllm,issue#40069,issue,,PR body: Resolves part of issue #40069
+L3-E-4d51588e23,L3,relands,vllm-project/vllm,PR#40760,pr_not_on_main_or_issue,,PR body says Rebased version of #40760
+L3-E-2cc008e7b4,L3,optimized_from,vllm-project/vllm,PR#40655,pr_not_on_main_or_issue,,PR body says builds on shared-decode-buffer PR #40655
+L3-E-fd74c90d9c,L3,replaces,vllm-project/vllm,VLLM_ATTENTION_BACKEND target setting,unparseable,,PR behavior matrix says drafter becomes auto-select when only target attention-backend is passed
+L3-E-c51df43005,L3,repairs,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#3197,upstream_external,,PR body says correctness bugs seen in flashinfer issue #3197
+L3-E-22a3cbe152,L3,integrates,ROCm/aiter,ROCm/aiter#2360,upstream_external,,PR body says after aiter PR adds native q_scale support
+L3-E-989c176c0a,L3,optimized_from,vllm-project/vllm,PR#40561,pr_not_on_main_or_issue,,PR body says syncs were found via #40561
+L3-E-b1728c1e66,L3,replaces,vllm-project/vllm,TREE_ATTN registry entry,unparseable,,diff deletes TREE_ATTN and tree_attn.py
+L3-E-7863fff6e5,L3,replaces,vllm-project/vllm,torch reference implementation,unparseable,,PR body says replaces ROCm torch reference implementation
+L3-E-a51376b3f0,L3,relands,vllm-project/vllm,PR#35245,pr_not_on_main_or_issue,,PR body says Reland updated version of #35245 #35879 #38646
+L3-E-a51376b3f0,L3,relands,vllm-project/vllm,PR#35879,pr_not_on_main_or_issue,,PR body says Reland updated version of #35245 #35879 #38646
+L3-E-a51376b3f0,L3,relands,vllm-project/vllm,PR#38646,pr_not_on_main_or_issue,,PR body says Reland updated version of #35245 #35879 #38646
+L3-E-dcacdf9a88,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#134,upstream_external,,PR body says Partner of flash-attention PR #134
+L3-E-3c413a5481,L3,optimized_from,vllm-project/vllm,PR#40631,candidate_not_event:related_context_only,,PR body says rides on top of 2D/3D kernel unification in #40631
+L3-E-599e75f432,L3,repairs,vllm-project/vllm,PR#41263,candidate_not_event:?,,PR body says functionality broken after #41263.
+L3-E-8c296de63b,L3,repairs,flashinfer-ai/flashinfer,flashinfer PR#3227,upstream_external,,PR body says previous correctness issues are now fixed by flashinfer#3227.
+L3-E-552bbe6f4e,L3,integrates,flashinfer-ai/flashinfer,PR#2959,upstream_external,,PR body says companion PR enables head_dim=512 cubin support.
+L3-E-7e33081cee,L3,repairs,vllm-project/vllm,PR#41657,pr_not_on_main_or_issue,,PR body says FIX #41657 and progress toward #42082.
+L3-E-22a58640b4,L3,reimplementation_of,vllm-project/vllm,PR#38871,pr_not_on_main_or_issue,,PR body says continuation of PR #38871 and notes differences.
+L3-E-ea0d045a05,L3,integrates,vllm-project/flash-attention,PR#141,upstream_external,,PR body names corresponding upstream PR #141.
+L3-E-e9e08c49b9,L3,reimplementation_of,vllm-project/vllm,PR#42784,pr_not_on_main_or_issue,,PR body contrasts preserving mask with #42784 disabling it entirely.
+L3-E-ceb0111a90,L3,ported_from,vllm-project/vllm,PR#41745,candidate_not_event:related_context_only,,PR body says Gemma4 MTP was added to MRV1 in this PR.
+L3-E-b5235fca2e,L3,historical_connection_uncertain,vllm-project/vllm,PR#42316,pr_not_on_main_or_issue,,PR body says this is a rebase of #42316 plus materially new pieces.
+L3-E-c9c1540e61,L3,repairs,vllm-project/vllm,PR#43458,candidate_not_event:?,,PR body says failure happened ever since #43458 enabled MRV2 for Llama.
+L3-E-eb04c769d3,L3,integrates,vllm-project/vllm,Issue#35792,issue,,PR body says Completes FlashAttn x Static FP8 in issue #35792.
+L3-E-4c62663315,L3,relands,vllm-project/vllm,PR#45680,pr_not_on_main_or_issue,,PR body says Reland of #45680 after M3 is merged.
+L3-E-efd15e192a,L3,repairs,vllm-project/vllm,Issue#45562,issue,,PR body says Fixes #45562.
+L3-E-0a7bacdcac,L3,optimized_from,vllm-project/vllm,Issue#45861,issue,,PR body says Part of issue #45861 and rebuilds same metadata every layer.
+L3-E-79ca54d221,L3,repairs,vllm-project/vllm,Issue#39137,issue,,PR body says Closes #39137.
+L3-E-4583630b56,L3,repairs,vllm-project/vllm,Issue#41257,issue,,PR body says Fixes #41257.
+L3-E-db32b53e30,L3,integrates,vllm-project/vllm,PR#39995,pr_not_on_main_or_issue,,PR body says this PR is split out from #39995.
+L3-E-aa4990a9a2,L3,repairs,vllm-project/vllm,PR#37032,pr_not_on_main_or_issue,,PR body identifies #37032 GLM-4.7-Flash garbage output as original symptom.
+L3-E-183b5f27ea,L3,historical_connection_uncertain,vllm-project/vllm,PR#40798,pr_not_on_main_or_issue,,PR body says Supersedes #40798.
+L3-E-3c8e49596c,L3,repairs,vllm-project/vllm,PR#36887,candidate_not_event:?,,PR body says Follow-up to #36887.
+L3-E-b3a688cb9e,L3,reverts,vllm-project/vllm,PR#46180,candidate_not_event:related_context_only,,PR body says #46180 was reverted as part of this fix
+L3-E-c63cd4906c,L3,optimized_from,vllm-project/vllm,PR#46035,pr_not_on_main_or_issue,,PR body says it extends #46035 gfx942 work to gfx950
+L3-E-d0f800811b,L3,integrates,vllm-project/flash-attention,flash-attention PR#152,upstream_external,,PR body references upstream PR #152 for the pointed commit
+L3-E-5ecae3266c,L3,wraps,ROCm/aiter,ROCm/aiter,upstream_external,,PR body says it calls aiter.flash_attn_varlen_func directly
+L3-E-a309d4fe60,L3,integrates,flashinfer-ai/flashinfer,flashinfer PR#3116,upstream_external,,PR body cites FlashInfer MLA LSE support
+L3-E-8fc1b2d046,L3,integrates,vllm-project/flash-attention,flash-attention PR#154,upstream_external,,PR body says depends on flash-attention PR #154
+L3-E-248d1fbb71,L3,integrates,vllm-project/flash-attention,flash-attention PR#150,upstream_external,,PR body says depends on flash-attention PR #150
+L3-E-8cf7c4d8ad,L3,wraps,Tencent/hpc-ops,Tencent/hpc-ops,upstream_external,,PR body links HPC-Ops operator library and backend flag
+L3-E-4aceabf8c1,L3,repairs,vllm-project/vllm,issue#47042,issue,,PR body says fixes sparse-MLA persistent-metadata cache collision behind #47042.
+L3-E-80eb01e93d,L3,ported_from,vllm-project/vllm,PR#47895,pr_not_on_main_or_issue,,PR body says remapping is adopted from #47895.
+L3-E-f05603fa28,L3,repairs,vllm-project/vllm,issue#47800,issue,,PR body says fixes #47800.
+L3-E-95d6d6f4bb,L3,repairs,vllm-project/vllm,issue#46646,issue,,PR body says crashing every DeepSeek MLA test on Blackwell (#46646).
+L3-E-bbb0f945ff,L3,repairs,vllm-project/vllm,issue#47196,issue,,PR body says fixes issue #47196.
+L3-E-735def4fcf,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA#14,upstream_external,,PR body says vllm-project/FlashMLA#14 clamps num_sm_parts to >= 1.
+L3-E-9c18e90f6c,L3,repairs,vllm-project/vllm,issue#47054,issue,,PR body says fixes #47054.
+L3-E-bec0a4ede6,L3,reverts,vllm-project/flash-attention,vllm-project/flash-attention#152,upstream_external,,PR body says upstream #160 reverts #152 after it broke FLASH_ATTN_MLA_SPARSE.
+L3-E-51878e5b6e,L3,integrates,vllm-project/vllm,PR#42374,pr_not_on_main_or_issue,,PR body says PR #42374 was split into four PRs and this is part 2.
+L3-E-51878e5b6e,L3,integrates,vllm-project/vllm,PR#44454,candidate_not_event:related_context_only,,PR body says stacked on top of #44454.
+L3-E-ee5a89f4d7,L3,integrates,vllm-project/vllm,PR#47269,merged_pr_not_candidate,,PR body says combines with #47269 index-topk reuse for long-context fast path.
+L3-E-7fc97042c3,L3,integrates,vllm-project/vllm,PR#47915,pr_not_on_main_or_issue,,PR body says builds off of #47915 changes.
+L3-E-c4f5cd60da,L3,integrates,vllm-project/vllm,PR#34744,pr_not_on_main_or_issue,,PR body says split up from #34744 and precursor to masked MHA implementation.
+L3-E-50ac1c7bab,L3,integrates,vllm-project/vllm,PR#42545,pr_not_on_main_or_issue,,PR body says TD-adoption RFC #42545 extends TD across Triton kernels.
+L3-E-37aa52821d,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA#15,upstream_external,,PR body says moving pin past FlashMLA PR #15.
+L3-E-37aa52821d,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA#16,upstream_external,,PR body says moving pin past FlashMLA PR #16.
+L3-E-6570c9800c,L3,integrates,vllm-project/tml-fa4,vllm-project/tml-fa4@13374f0c,upstream_external,,PR body says tml-fa4 pinned to commit 13374f0c.
+L3-E-7cd1d57b74,L3,repairs,NVIDIA/cutlass,NVIDIA/cutlass#3259,upstream_external,,PR body says cutlass-dsl wheel path bug reported in NVIDIA/cutlass#3259 was resolved in 4.6.0.
+L3-E-7cd1d57b74,L3,reverts,vllm-project/vllm,PR#43427,candidate_not_event:out_of_scope,,PR body says drop temporary workarounds from #43427 and #45204.
+L3-E-2cab53ddee,L3,integrates,vllm-project/vllm,PR#39527,pr_not_on_main_or_issue,,PR body says split original optimize-qwen30b branch PR #39527 into reviewable PRs.
+L3-E-c7ce03bcbd,L3,integrates,vllm-project/tml-fa4,vllm-project/tml-fa4#3,upstream_external,,PR body says includes the cutlass-dsl 4.6 CuTe API migration in tml-fa4#3.
+L3-E-bd091079cb,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,integrates flash-attention#166 long-context accuracy fix.
+L3-E-6e96891ba0,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,integrates ROCm/aiter commit 72eedddd921d0fb8f274e7b9291dd04306d089ef.
+L3-E-7bb49be4d1,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,repairs PR#47451 warmup infrastructure edge case.
+L3-E-060b5f61dc,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,repairs issue #49334; reuses LSE merge move.
+L3-E-c79ff5f918,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,integrates vllm-project/flash-attention#168.
+L3-E-8c13ee5735,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,PyTorch #190654.
+L3-E-213f681f81,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,reverts PR#48597.
+L3-E-a89015c6df,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,partial fix for #48650.
+L3-E-bf2b45b5d6,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,integrates PR#41052 and Dao-AILab/flash-attention#2412.
+L3-E-28158b2fc3,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,repairs #47327 metadata refactor regression.
+L3-E-ba702e978e,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,optimized_from #47327.
+L3-E-aeeb36b1f1,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,integrates flashinfer #4178 MLA and #4180 SITU trtllmgen dependency.
+L3-E-b49eaf205a,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,integrates flashinfer#3545 and version bump #47669.
+L3-E-82ae4164ee,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,optimized_from #47327; integrates flash-attention#155.
+L3-E-eb6453d95b,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,part of #26946 and integrates flash-attention#175.
+L3-E-77469c9057,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,repairs code merged in #50000.
+L3-E-0055b8bfa3,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,integrates vllm-project/MSA#10.
+L3-E-199644d410,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,repairs masked-MHA path introduced by #48770.
+L3-E-cd930c8e78,L3,historical_connection_uncertain,vllm-project/vllm,see notes,unparseable,,fixes #38658.
+L3-E-789c4f905e,L3,repairs,vllm-project/vllm,#51286,pr_not_on_main_or_issue,,PR body says Fixes #51286.
+L3-E-79c865b838,L3,historical_connection_uncertain,vllm-project/vllm,earlier reverted DeepSeek V4 region change,unparseable,,PR body says an earlier region-narrowing change was reverted after output corruption.
+L3-E-d40c3e3c00,L3,repairs,vllm-project/vllm,#50615,pr_not_on_main_or_issue,,PR body: Fixes #50615.
+L3-E-87668ab69b,L3,replaces,vllm-project/vllm,PR#51750,pr_not_on_main_or_issue,,"PR body says this is an alternative to #51750, not a duplicate."
+L3-E-1d2d83a07f,L3,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#4137,upstream_external,,PR body says required upstream support from #4137 and #4199.
+L3-E-61874f9842,L3,historical_connection_uncertain,vllm-project/vllm,PR#44458,pr_not_on_main_or_issue,,PR body says extracted from KV-layout standardization #44458/RFC #42082.
+L3-E-827a2af806,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#164,upstream_external,,PR body says wires path from upstream #164.
+L3-E-97388c44f9,L3,reimplementation_of,vllm-project/vllm,PR#51042,pr_not_on_main_or_issue,,PR body says it consolidates #51042.
+L3-E-97388c44f9,L3,repairs,vllm-project/vllm,#51593,pr_not_on_main_or_issue,,PR body says commits 6-7 fix MTP hang filed as #51593.
+L3-E-6914d60b1e,L3,integrates,ROCm/aiter,ROCm/aiter#3913,upstream_external,,PR title/body names ROCm/aiter#3913.
+L3-E-b09bd69b5b,L3,reimplementation_of,vllm-project/vllm,PR#49790,pr_not_on_main_or_issue,,PR body says this supersedes #49790
+L3-E-fe76112ff2,L3,replaces,vllm-project/vllm,PR#46172,pr_not_on_main_or_issue,,"PR body says superseding alternative to #46172, #50470, and decode top-k portion of #52878"
+L3-E-fe76112ff2,L3,replaces,vllm-project/vllm,PR#50470,pr_not_on_main_or_issue,,PR body says superseding alternative
+L3-E-fe76112ff2,L3,replaces,vllm-project/vllm,PR#52878,pr_not_on_main_or_issue,,PR body says superseding alternative
+L3-E-8bdc70ec7b,L3,replaces,vllm-project/vllm,PR#44458,pr_not_on_main_or_issue,,"PR body says Replaces #44458 (same content, restacked)"
+L3-E-b2db227a7c,L3,repairs,vllm-project/vllm,PR#50721,candidate_not_event:?,,PR body says regression from 42ab184ea7 (#50721)
+L3-E-f620499ee3,L3,relands,vllm-project/vllm,commit e1ae59cfef91,unparseable,,PR body says #53002 was reverted by commit e1ae59cfef91 inside #51718
+L3-E-7156c63bef,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#180,upstream_external,,PR body says upstream PR #180 adds forward seqused support
+L3-E-1a085dadf2,L3,integrates,ROCm/aiter,ROCm/aiter#4452,upstream_external,,PR body lists ROCm/aiter#4452 dependency for 64-bit paged-KV offsets
+L3-E-2dc53bae17,L3,repairs,vllm-project/vllm,PR#43107,candidate_not_event:related_context_only,,PR body says #43107 added GPU<->CPU transfer checks and enabled VLLM_GPU_SYNC_CHECK=error
+L3-E-75dea9b4ae,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA#19,upstream_external,,PR body says integrating FlashMLA fix from vllm-project/FlashMLA#19
+L3-E-75dea9b4ae,L3,repairs,vllm-project/vllm,Issue#53413,issue,,PR body says fixes #53413 GLM-5.2 sparse_decode_fwd OOM
+L3-E-de9250ac9e,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#179,upstream_external,,PR body says depends on upstream PR #179 for head-dim-256 mask_mod support
+L3-E-43196f2458,L3,repairs,vllm-project/vllm,PR#53491,candidate_not_event:related_context_only,,PR body says same class of stall #53491 adds a stricter check.
+L3-E-6c18a54648,L3,repairs,vllm-project/vllm,PR#53491,candidate_not_event:related_context_only,,PR body says instances were exposed by https://github.com/vllm-project/vllm/pull/53491.
+L3-E-7f4793eaa3,L3,reimplementation_of,vllm-project/vllm,PR#38433,pr_not_on_main_or_issue,,PR body says Alternative to https://github.com/vllm-project/vllm/pull/38433.
+L3-E-2cf82bcdd1,L3,repairs,vllm-project/vllm,issue#50095,issue,,PR body says Fixes #50095.
+L3-E-e16b5e518d,L3,integrates,vllm-project/vllm,PR#49627,pr_not_on_main_or_issue,,PR body points to parent draft PR #49627 and tracking issue #49349.
+L3-E-9509fc8ae6,L3,optimized_from,vllm-project/vllm,PR#53526,pr_not_on_main_or_issue,,PR body says #53526 moves the trigger for num_tokens == 1 on the same kernel.
+L3-E-19c018ec05,L3,repairs,vllm-project/vllm,issue#54907,issue,,PR body says Fixes #54907.
+L3-E-3ff4f02dfe,L3,replaces,vllm-project/vllm,PR#52215,pr_not_on_main_or_issue,,PR body says Supersedes the shared-mla.py approach in #52215.
+L3-E-3ff4f02dfe,L3,replaces,vllm-project/vllm,PR#52190,pr_not_on_main_or_issue,,PR body says Supersedes ... compiler pass approach in #52190.
+L3-E-5093e4844a,L3,historical_connection_uncertain,vllm-project/vllm,PR#39516,pr_not_on_main_or_issue,,PR body says #39516 diagnosed same scan but closed with different fix.
+L3-E-4ee2595512,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#188,upstream_external,,PR body says sync pinned FlashAttention revision with landed #188.
+L3-E-385ba6b5b0,L3,repairs,vllm-project/vllm,issue#54556,issue,,PR body says quant-method fix discussed on #54556 / #52263 / #47972.
+L3-E-7fbd44cbe0,L3,repairs,vllm-project/vllm,PR#54955,pr_not_on_main_or_issue,,PR body says reproduced on top of in-flight batch-invariant work #54955.
+L3-E-e476556189,L3,integrates,vllm-project/vllm,PR#54405,merged_pr_not_candidate,,PR body says reusable support required by model enablement in #54405.
+L3-E-1713b9866a,L3,integrates,vllm-project/vllm,PR#49627,pr_not_on_main_or_issue,,PR body says see parent draft PR #49627.
+L3-E-42801b3a6b,L3,integrates,vllm-project/vllm,PR#49627,pr_not_on_main_or_issue,,PR body says see parent draft PR #49627.
+L3-E-6ddbab03de,L3,integrates,vllm-project/vllm,PR#49627,pr_not_on_main_or_issue,,PR body says see parent PR #49627.
+L3-E-dcd544486b,L3,repairs,vllm-project/vllm,PR#54917,candidate_not_event:related_context_only,,PR body says git bisect identified PR #54917 as the regression.
+L3-E-83252ea899,L3,integrates,ROCm/aiter,ROCm/aiter#4787,upstream_external,,PR body says dependent on https://github.com/ROCm/aiter/pull/4787.
+L3-E-8c87c333b8,L3,repairs,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#4928,upstream_external,,PR body says regression described in flashinfer issue #4928.
+L3-E-8c87c333b8,L3,optimized_from,vllm-project/vllm,PR#55408,pr_not_on_main_or_issue,,Benchmark compares against PR #55408 CPU lens.
+L3-E-fbf51c7026,L3,repairs,vllm-project/vllm,PR#54917,candidate_not_event:related_context_only,,PR body says #54917 omitted K/V exposed FlashInfer slicing regression
+L3-E-b4da4d17ae,L3,repairs,vllm-project/vllm,PR#51692,candidate_not_event:out_of_scope,,"PR body says #51692 added AiterPreshuffledFp8BlockScaledMMKernel first, causing incorrect results."
+L3-E-d43bb2f37f,L3,reimplementation_of,vllm-project/vllm,PR#46326,pr_not_on_main_or_issue,,PR body compares against original always-host-resident design
+L3-E-1257512305,L3,integrates,deepseek-ai/DeepGEMM,DeepGEMM#432,upstream_external,,PR body: DeepGEMM 2.8 ships sparse MQA-logits kernels
+L3-E-d6a1677d55,L3,reimplementation_of,vllm-project/vllm,PR#56344,pr_not_on_main_or_issue,,PR body: Supersedes #56344
+L3-E-9f9e1dac26,L3,repairs,deepseek-ai/DeepSeek-V4.1-Flash,DeepSeek-V4.1 reference,upstream_external,,PR body compares to official V4.1 reference implementation
+L3-E-bc0f47cd03,L3,reverts,vllm-project/vllm,PR#51692,candidate_not_event:out_of_scope,,PR body says reverting #56433 + #51692 restores accuracy
+L3-E-ff6b5808c4,L3,optimized_from,vllm-project/vllm,PR#46172,pr_not_on_main_or_issue,,PR body says #46172 introduced FP8_DTYPE but left five call sites
+L3-E-e0050f287a,L3,repairs,vllm-project/vllm,issue#57248,issue,,PR body says fixes first boot regression in #57248
+L3-E-32636580a6,L3,repairs,vllm-project/vllm,issue#51848,issue,,PR body says fixes #51848
+L3-E-62af3df734,L3,repairs,vllm-project/vllm,issue#57449,issue,,PR body says addresses #57449
+L3-E-38537331d3,L3,historical_connection_uncertain,vllm-project/vllm,PR#57643,candidate_not_event:out_of_scope,,PR body says extracted from #57643 at author's request
+L3-E-b8cf275382,L3,integrates,ROCm/aiter,ROCm/aiter#5143,upstream_external,,PR body depends on AITER fused QK-norm ROCm/aiter#5143
+L3-E-91d7324cb1,L3,integrates,vllm-project/flash-attention,vllm-project/flash-attention#172,upstream_external,,PR body says pin includes FA3 OnlyQv forward
+L3-E-91d7324cb1,L3,integrates,vllm-project/FlashMLA,vllm-project/FlashMLA#17,upstream_external,,PR body says existing FlashMLA pin supports dense 512 decode
+L3-E-066ee91197,L3,repairs,vllm-project/vllm,issue#56578,issue,,PR body says fixes #56578
+L3-E-c843f0cab7,L3,integrates,flashinfer-ai/flashinfer,flashinfer#4802,upstream_external,,PR body says FlashInfer native GLM53_NOPE support #4802 merged
+L3-E-1904ed9402,L3,repairs,vllm-project/vllm,issue#58060,issue,,PR body says addresses #58060
+L3-E-b715699df4,L3,integrates,ROCm/aiter,ROCm/aiter#4531,upstream_external,,PR body requires AITER strided KV-cache fix from #4531
+L3-E-b5ea0c7107,L3,repairs,ROCm/aiter,ROCm/aiter#3606,upstream_external,,PR body says AITER bump picked up #3606 causing changed workspace sizing
+L3-E-b5ea0c7107,L3,historical_connection_uncertain,ROCm/aiter,ROCm/aiter#5759,upstream_external,,PR body names long-term upstream fix
+L3-E-6632ed559e,L3,historical_connection_uncertain,vllm-project/vllm,PR#54790,pr_not_on_main_or_issue,,PR body says #54790 includes same scalar fix in larger sparse MLA work
+L3-E-e26547adfb,L3,repairs,vllm-project/vllm,issue#48286,issue,,PR body says fixes #48286
+L3-E-e9f167129c,L3,repairs,ROCm/aiter,ROCm/aiter#4490,upstream_external,,PR body reports unmasked global_load fault upstream as AITER #4490
+L3-E-e78e367c6e,L3,repairs,vllm-project/vllm,PR#50519,candidate_not_event:?,,PR body says CI group added by #50519 fails all tests
+L3-E-e6dc16cebd,L3,relands,vllm-project/vllm,PR#54131,pr_not_on_main_or_issue,,PR body says continues #54131 with original authorship preserved
+L3-E-e6dc16cebd,L3,replaces,vllm-project/vllm,PR#49246,pr_not_on_main_or_issue,,PR body says supersedes earlier approach #49246
+L3-E-5ff3bbfb08,L3,integrates,flashinfer-ai/flashinfer,flashinfer-ai/flashinfer#4918,upstream_external,,PR body says FlashInfer #4918 ships RopeQuant epilogue
+L3-E-609731e8f5,L3,repairs,vllm-project/vllm,PR#53793,candidate_not_event:out_of_scope,,PR body says #53793 rename stranded this gate
+L3-E-2edbb32e58,L3,repairs,vllm-project/vllm,issue#56868,issue,,PR body says partial fix for #56868
+L3-E-2edbb32e58,L3,repairs,vllm-project/vllm,issue#56605,issue,,PR body says partial fix for #56605
+L3-E-a4eb3f25d6,L3,historical_connection_uncertain,vllm-project/vllm,PR#51871,pr_not_on_main_or_issue,,PR body says the change is building on #52157 (#51871); exact lineage role not coded here.
+L3-E-927c87b347,L3,replaces,vllm-project/vllm,PR#56737,pr_not_on_main_or_issue,,PR body says Supersedes #56737.

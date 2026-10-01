@@ -1,0 +1,37 @@
+repo,slot,slot_index,rank,number,title,state,duration_days,substantive_review_rounds,n_human_reviewers,reverted,superseded_signal,url,pool_size
+vllm,fast,0,0,58051,[Perf][MoE] Skip top-k slots routed to non-local experts in TritonExp…,merged,1.4568,1,2,0,0,https://github.com/vllm-project/vllm/pull/58051,19
+vllm,fast,0,1,26961,[Perf] Exploit out-of-band buffers in shm_broadcast,merged,1.1186,2,1,0,0,https://github.com/vllm-project/vllm/pull/26961,19
+vllm,fast,0,2,46393,[Kernel] Add FlashInferCutedslMxfp8LinearKernel (cute-dsl mm_mxfp8),merged,1.0753,1,1,0,0,https://github.com/vllm-project/vllm/pull/46393,19
+vllm,fast,1,0,56743,[ROCm][Perf] Optimize DSV4.1 K=512 decode top-k on gfx950,merged,1.6713,1,2,0,0,https://github.com/vllm-project/vllm/pull/56743,19
+vllm,fast,1,1,26680,remove attn output view kernel,merged,1.7643,2,4,0,0,https://github.com/vllm-project/vllm/pull/26680,19
+vllm,fast,1,2,51862,[ROCm][Perf] Kimi-K3 Remove prefill pipeline stall in chunk KDA,merged,1.5908,2,2,0,0,https://github.com/vllm-project/vllm/pull/51862,19
+vllm,slow,0,0,43232,Xqa decode kernels,merged,43.0731,8,5,0,0,https://github.com/vllm-project/vllm/pull/43232,20
+vllm,slow,0,1,30647,[Perf] Eliminate padding and slicing op for GPT-OSS with Flashinfer MXFP4 MXFP8 MoE,merged,94.0565,8,5,0,0,https://github.com/vllm-project/vllm/pull/30647,20
+vllm,slow,0,2,36205,[mla] Support fused FP8/NVFP4 output quantization in MLA attention (#35792),merged,27.8973,8,2,0,0,https://github.com/vllm-project/vllm/pull/36205,20
+vllm,slow,1,0,32996,Feature/silu block quant fusion v1,merged,67.5097,9,4,0,0,https://github.com/vllm-project/vllm/pull/32996,20
+vllm,slow,1,1,28672,[torch.compile] Sequence Parallelism threshold compile ranges,merged,104.4344,7,1,0,0,https://github.com/vllm-project/vllm/pull/28672,20
+vllm,slow,1,2,31246,[Kernel] Add topk_sigmoid kernel,merged,28.9754,8,4,0,0,https://github.com/vllm-project/vllm/pull/31246,20
+vllm,reverted,0,0,48223,[Perf][ROCm] Dual-stream decode with hipgraphs,merged,32.7403,7,6,1,0,https://github.com/vllm-project/vllm/pull/48223,5
+vllm,reverted,0,1,44173,[Kernel] Speed up silu_and_mul_per_block_quant with warp-shuffle reduction + vectorized I/O,merged,8.4581,2,3,1,0,https://github.com/vllm-project/vllm/pull/44173,5
+vllm,reverted,0,2,48666,[Kernel] Gemma-4 FA4 FP8 Kernel,merged,30.0509,2,2,1,0,https://github.com/vllm-project/vllm/pull/48666,5
+vllm,superseded_or_abandoned,0,0,42294,[ROCm][MLA] FP8 ASM prefill on gfx950 for AITER MLA backend,closed,2.032,2,2,0,1,https://github.com/vllm-project/vllm/pull/42294,10
+vllm,superseded_or_abandoned,0,1,37789,[Perf] Fuse prefill conv output split into Q/K/V to reduce rearrange overhead,closed,5.9613,1,2,0,1,https://github.com/vllm-project/vllm/pull/37789,10
+vllm,superseded_or_abandoned,0,2,38216,[Perf] Batch KV cache swap copies via cuMemcpyBatchAsync,closed,2.9912,1,1,0,1,https://github.com/vllm-project/vllm/pull/38216,10
+sglang,fast,0,0,18073,[Diffsuion & JIT_kernel] QKNorm cross heads kernel,merged,1.4373,1,1,0,0,https://github.com/sgl-project/sglang/pull/18073,15
+sglang,fast,0,1,15812,[Diffusion] Improve qwen image edit performace to align with LightX2V,merged,1.2846,2,2,0,0,https://github.com/sgl-project/sglang/pull/15812,15
+sglang,fast,0,2,28975,[AMD] [GLM5] Add opt-in Triton fp8 sparse-MLA prefill kernel for gfx950,merged,1.0042,2,2,0,0,https://github.com/sgl-project/sglang/pull/28975,15
+sglang,fast,1,0,20395,[Diffusion] Opt qwen-image-edit with fuse_residual_layernorm_scale_shift_gate_select01_kernel,merged,1.1562,1,1,0,0,https://github.com/sgl-project/sglang/pull/20395,15
+sglang,fast,1,1,36758,[AMD] Qwen3.5 ASM FMHA chunked-prefill context attention,merged,0.2378,1,2,0,0,https://github.com/sgl-project/sglang/pull/36758,15
+sglang,fast,1,2,19434,[Qwen3-Next] Support gdn fused_rms_norm_gated,merged,0.9873,1,1,0,0,https://github.com/sgl-project/sglang/pull/19434,15
+sglang,slow,0,0,14717,"[diffusion] kernel fusion: gated residual layernorm scale shift and layernorm scale shift kernel fusion for Qwen-Image, WAN and HunyuanVideo",merged,56.8689,10,8,0,0,https://github.com/sgl-project/sglang/pull/14717,15
+sglang,slow,0,1,12921,[perf]optimize w4afp8 kernel on deepseek-v3-0324,merged,38.8264,8,5,0,0,https://github.com/sgl-project/sglang/pull/12921,15
+sglang,slow,0,2,25820,[NVIDIA] Support NVFP4 MoE for DeepSeek-V4,merged,33.1432,12,6,0,0,https://github.com/sgl-project/sglang/pull/25820,15
+sglang,slow,1,0,24651,[AMD] Add fused all-reduce RMSNorm per-group quant for Qwen3.5 FP8,merged,75.4633,10,4,0,0,https://github.com/sgl-project/sglang/pull/24651,15
+sglang,slow,1,1,25855,perf(jit_kernel/deepseek_v4): optimize paged_mqa_metadata,merged,85.796,6,3,0,0,https://github.com/sgl-project/sglang/pull/25855,15
+sglang,slow,1,2,29421,[Feat][GLM5.2] Add DSA Cache Layer Split under Prefill CP,merged,12.9644,12,8,0,0,https://github.com/sgl-project/sglang/pull/29421,15
+sglang,reverted,0,0,13453,[Feature] Introduce JIT Kernel in sglang (with hicache JIT kernel),merged,2.5199,2,2,1,0,https://github.com/sgl-project/sglang/pull/13453,7
+sglang,reverted,0,1,30315,[AMD][DSV4] Fix unified-KV pool sizing and SWA ring accounting,merged,60.9197,5,4,1,0,https://github.com/sgl-project/sglang/pull/30315,7
+sglang,reverted,0,2,12787,[Nvidia] Add trtllm mnnvl allreduce with unified flashinfer allreduce fusion api,merged,130.89,8,6,1,0,https://github.com/sgl-project/sglang/pull/12787,7
+sglang,superseded_or_abandoned,0,0,15546,[Feature] support dpsk v32 flashinfer decode,closed,30.6011,2,1,0,1,https://github.com/sgl-project/sglang/pull/15546,9
+sglang,superseded_or_abandoned,0,1,15559,Add MTP speculative decoding support for Triton attention backend for Mimo-v2-Flash,closed,171.9902,3,3,0,1,https://github.com/sgl-project/sglang/pull/15559,9
+sglang,superseded_or_abandoned,0,2,15208,[Feature] Xiaomi `MiMo-V2-Flash` Optimization,closed,177.293,2,2,0,1,https://github.com/sgl-project/sglang/pull/15208,9

@@ -1,0 +1,287 @@
+{
+ "lineage": "L3",
+ "census": {
+  "linked_failures": 76,
+  "with_introducing_change": 44,
+  "reverts": 35,
+  "relands": 19,
+  "notes": "L3 failure-links has 76 rows: 46 kernel-correctness cases and 30 confirmed-reverts rows. 44 rows name an introducing PR/ref and 38 map that introduction to a lineage event. Edge census adds 160 repairs, 35 reverts, and 19 relands between L3 lineage events; confirmed-reverts rows include 26 non-reland revert/rollback rows and 4 reland rows."
+ },
+ "histories": [
+  {
+   "history_id": "F-L3-01",
+   "title": "DSA+MTP cache gather treated CPU upper-bound tokens as real rows",
+   "failed_what": "The #40654 attention metadata optimization avoided a sequence-length GPU-to-CPU sync, but the `cp_gather_indexer_k_quant_cache_kernel` DSA/MTP cache gather path still assumed `num_tokens` described only valid rows.",
+   "move_ids": [
+    "M-L3-paged-kv-block-table-layout"
+   ],
+   "artifact_ids": [
+    "L3.cache.cuda_reshape",
+    "L3.mla.common_v1",
+    "L3.mla.flashmla_sparse",
+    "L3.dispatch.abstract_interface"
+   ],
+   "mechanism": "`num_tokens` could be an allocation upper bound after #40654. Rows not covered by exact device-side `cu_seq_lens` left `batch_idx` unset, so cache gather indexed the block table with an undefined batch and hit illegal memory access.",
+   "invalidation_scope": "partial_domain",
+   "durable_encoding": [
+    "guard",
+    "comment"
+   ],
+   "durable_encoding_evidence": "#40772 initializes `batch_idx[threadIdx.y] = -1`, returns when `batch < 0`, and comments that `num_tokens may be an allocation upper bound when Python avoids a D2H sync`; no regression test was added.",
+   "repeat_assumption": "Later repair #43991 shows the same upper-bound/exact-length assumption survived in another attention path: handing `max_model_len` to FlashInfer TRTLLM made attention walk past valid block-table entries, so MRV2/MTP metadata switched to actual batch max_seq_len except graph capture.",
+   "move_returned": "The CPU-sync-avoidance move stayed in the lineage, but successors encoded exact-vs-upper-bound metadata explicitly: #40772 guarded uncovered rows and #43991 used actual batch max_seq_len for attention metadata.",
+   "timeline": [
+    {
+     "date": "2026-04-24",
+     "repo": "vllm-project/vllm",
+     "pr": 40654,
+     "sha": "fe85a92e86211d066b07aba2a2a86640f70458d7",
+     "event_id": "L3-E-fe85a92e86",
+     "role": "introduce"
+    },
+    {
+     "date": "2026-04-24",
+     "repo": "vllm-project/vllm",
+     "pr": 40772,
+     "sha": "7d3195ea9fc88e31131099d2d2122fe38558a87a",
+     "event_id": "L3-E-7d3195ea9f",
+     "role": "repair"
+    },
+    {
+     "date": "2026-06-02",
+     "repo": "vllm-project/vllm",
+     "pr": 43991,
+     "sha": "1edfd09ffd1ff3c15cea35d50441b2b9d78629f1",
+     "event_id": "L3-E-1edfd09ffd",
+     "role": "successor"
+    }
+   ],
+   "narrative": "#40654 made attention metadata carry CPU-side upper bounds to avoid a GPU-to-CPU synchronization. The optimization was valid for scheduling, but the DSA+MTP cache gather kernel treated the upper bound as if every row belonged to an exact sequence interval. #40772 fixed the kernel by making uncovered rows explicit (`-1`) and returning before block-table access. The optimization idea survived, but later #43991 shows the exact/upper-bound distinction had to be propagated into other attention metadata paths too.",
+   "evidence_urls": [
+    "https://github.com/vllm-project/vllm/pull/40654",
+    "https://github.com/vllm-project/vllm/pull/40772",
+    "https://github.com/vllm-project/vllm/commit/7d3195ea9fc88e31131099d2d2122fe38558a87a",
+    "https://github.com/vllm-project/vllm/pull/43991"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "deep_study_record"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L3-02",
+   "title": "FA3 cascade CUDA-graph scheduler metadata lost `num_splits`",
+   "failed_what": "The V1 FlashAttention FA3 cascade attention integration under FULL_AND_PIECEWISE CUDA graphs failed to pass graph-captured split-count metadata into the cascade wrapper.",
+   "move_ids": [
+    "M-L3-cudagraph-static-metadata",
+    "M-L3-flashattention-paged-online-softmax"
+   ],
+   "artifact_ids": [
+    "L3.flash_attn.v1_backend"
+   ],
+   "mechanism": "`get_scheduler_metadata` was planned with forced CUDA-graph `num_splits`, but `cascade_attention` called `flash_attn_varlen_func` with its own default. Capture/replay could therefore use metadata inconsistent with the kernel call for cascade attention.",
+   "invalidation_scope": "adapter",
+   "durable_encoding": [
+    "test",
+    "abstraction"
+   ],
+   "durable_encoding_evidence": "#28702 changed `cascade_attention` to accept `max_num_splits`, passes `attn_metadata.max_num_splits`, and updates `tests/kernels/attention/test_cascade_flash_attn.py` with `max_num_splits=0` for the no-max test call.",
+   "repeat_assumption": "none found (searched: later L3 flash_attn/cudagraph-static-metadata events including #28763, #53002, #53336, and #53515; later graph repairs concern group geometry or persistent buffers, not cascade `num_splits` loss).",
+   "move_returned": "The CUDA-graph static-metadata move remained: #28702 made split-count metadata part of the cascade adapter protocol, and later graph work reused explicit metadata/persistent-buffer protocols rather than removing CUDA graph support.",
+   "timeline": [
+    {
+     "date": "2025-11-14",
+     "repo": "vllm-project/vllm",
+     "pr": 28702,
+     "sha": "db56a59970a84842da2adc3aa64e436f42448b48",
+     "event_id": "L3-E-db56a59970",
+     "role": "repair"
+    },
+    {
+     "date": "2025-11-18",
+     "repo": "vllm-project/vllm",
+     "pr": 28763,
+     "sha": "4c23690f43e51eccf6ce5866ac47adcf39215e4d",
+     "event_id": "L3-E-4c23690f43",
+     "role": "successor"
+    },
+    {
+     "date": "2026-08-26",
+     "repo": "vllm-project/vllm",
+     "pr": 53515,
+     "sha": "b1fbbc2ade51e3826bc92e4733c9c692ee21d42d",
+     "event_id": "L3-E-b1fbbc2ade",
+     "role": "successor"
+    }
+   ],
+   "narrative": "The failure was not the FA3/cascade idea itself; it was a metadata protocol gap. Full CUDA graphs require replayed scheduler metadata to match the captured kernel arguments. #28702 threaded `max_num_splits` from FlashAttention metadata into the cascade helper and into both prefix/suffix FA calls. That made the graph constraint explicit in the adapter. The next FlashAttention default-selection event and later CUDA-graph work kept the family alive rather than disabling it.",
+   "evidence_urls": [
+    "https://github.com/vllm-project/vllm/pull/28702",
+    "https://github.com/vllm-project/vllm/commit/db56a59970a84842da2adc3aa64e436f42448b48",
+    "https://github.com/vllm-project/vllm/pull/28763",
+    "https://github.com/vllm-project/vllm/pull/53515"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "test",
+    "deep_study_record"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L3-03",
+   "title": "ROCm DeepSeek V4 sparse MLA decoded FP8 cache bytes under the wrong encoding",
+   "failed_what": "DeepSeek V4 ROCm fused qnorm/RoPE/KV-insert and sparse MLA FP8 paths failed on gfx942/gfx950 because cache helpers and sparse decode did not consistently distinguish FNUZ and OCP FP8 encodings.",
+   "move_ids": [
+    "M-L3-rocm-mfma-paged-attention",
+    "M-L3-mla-weight-absorption-schedulers",
+    "M-L3-fp8-kv-cache-scales"
+   ],
+   "artifact_ids": [
+    "L3.mla.rocm_aiter_sparse",
+    "L3.mla.common_v1",
+    "L3.mla.flashmla_sparse"
+   ],
+   "mechanism": "On ROCm, gfx942 writes FNUZ FP8 while gfx950/OCP paths use OCP. Main/SWA and compressed extra caches could have different encoders; decoding both with one `IS_FNUZ` scale convention produced wrong FP8 values and functional failures.",
+   "invalidation_scope": "partial_domain",
+   "durable_encoding": [
+    "test",
+    "guard",
+    "comment"
+   ],
+   "durable_encoding_evidence": "#45681 adds/updates `tests/kernels/test_fused_deepseek_v4_qnorm_rope_kv_insert.py`, introduces `use_fnuz` checks including `ValueError` for invalid FNUZ use, and comments that main cache may be FNUZ on gfx942 while compressed extra cache remains OCP.",
+   "repeat_assumption": "none found (searched: later L3 ROCm sparse-MLA successors #45895 and related sparse MLA repairs through cutoff; later fixes address indexer/MTP sharing, not FNUZ/OCP cache encoding).",
+   "move_returned": "The ROCm sparse MLA and FP8-cache path continued with explicit encoding parameters: `IS_FNUZ_MAIN` and `IS_FNUZ_EXTRA` separated the two cache readers, and #45895 built on the same sparse MLA family for indexer/MTP fixes.",
+   "timeline": [
+    {
+     "date": "2026-04-27",
+     "repo": "vllm-project/vllm",
+     "pr": 40860,
+     "sha": "4d51588e2381018348f1022dfa3a7698899805b7",
+     "event_id": "L3-E-4d51588e23",
+     "role": "introduce"
+    },
+    {
+     "date": "2026-06-17",
+     "repo": "vllm-project/vllm",
+     "pr": 45782,
+     "sha": "d537122398df9f8720c307c8b2fa2a8d66f0ff78",
+     "event_id": "L3-E-d537122398",
+     "role": "failure_report"
+    },
+    {
+     "date": "2026-06-18",
+     "repo": "vllm-project/vllm",
+     "pr": 45681,
+     "sha": "afdcbd5d39eaf2b37b616c8ee8aabc51e15e70ef",
+     "event_id": "L3-E-afdcbd5d39",
+     "role": "repair"
+    },
+    {
+     "date": "2026-06-19",
+     "repo": "vllm-project/vllm",
+     "pr": 45895,
+     "sha": "ab666069935c1f23e8ef56038b4659ac9e8f19f8",
+     "event_id": "L3-E-ab66606993",
+     "role": "successor"
+    }
+   ],
+   "narrative": "DeepSeek V4 added fused cache-insert and sparse MLA machinery, then ROCm-specific fixes exposed that FP8 cache bytes were not a single portable representation. #45681 made the encoding a parameter rather than an implicit platform fact: gfx942 FNUZ, gfx950/OCP, main/SWA cache using the platform encoding, and compressed extra cache remaining OCP. The lesson became tests plus guard/commented protocol. The exact defect-introducing change was not isolated in failure-links, but the lineage successor kept the repaired ROCm sparse MLA path.",
+   "evidence_urls": [
+    "https://github.com/vllm-project/vllm/pull/40860",
+    "https://github.com/vllm-project/vllm/pull/45681",
+    "https://github.com/vllm-project/vllm/commit/afdcbd5d39eaf2b37b616c8ee8aabc51e15e70ef",
+    "https://github.com/vllm-project/vllm/pull/45895"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "test",
+    "deep_study_record",
+    "benchmark"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L3-04",
+   "title": "Per-group FlashAttention geometry fix was reverted during KV-cache layout refactor, then relanded",
+   "failed_what": "The #53002 repair for FA3/DFlash metadata used per-attention-group geometry, but the large #51718 KV-cache layout refactor temporarily reverted it as a stacking workaround before #53336 relanded it.",
+   "move_ids": [
+    "M-L3-cudagraph-static-metadata",
+    "M-L3-flashattention-paged-online-softmax"
+   ],
+   "artifact_ids": [
+    "L3.flash_attn.v1_backend",
+    "L3.dispatch.abstract_interface"
+   ],
+   "mechanism": "FlashAttention metadata builders had read query/KV/head geometry from model-wide target config while the kernel saw draft/group tensor shapes. #51718 reorganized the cache-layout protocol and explicitly reverted #53002, so the geometry repair had to be reapplied against the new adapter structure.",
+   "invalidation_scope": "adapter",
+   "durable_encoding": [
+    "test",
+    "comment"
+   ],
+   "durable_encoding_evidence": "#53002/#53336 add `tests/v1/attention/test_group_head_counts.py`; the test docstring states attention metadata geometry must come from the builder's own group and asserts FA3 uses 16 query heads, 2 KV heads, and head size 64 instead of model-wide 48/8/128.",
+   "repeat_assumption": "none found (searched: reland #53336 and successors #52980/#53515 through cutoff; later changes build on per-group geometry and persistent graph buffers rather than returning to model-wide geometry).",
+   "move_returned": "Yes. #53336 relanded the same per-group geometry repair after #51718, stating the code was behaviorally unchanged from #53002 except for reorganized imports; later #52980 and #53515 continue from that relanded FlashAttention/graph metadata path.",
+   "timeline": [
+    {
+     "date": "2026-08-22",
+     "repo": "vllm-project/vllm",
+     "pr": 53002,
+     "sha": "9ff7041b55555976359fe8a67eef59f3a055a822",
+     "event_id": "L3-E-9ff7041b55",
+     "role": "repair"
+    },
+    {
+     "date": "2026-08-22",
+     "repo": "vllm-project/vllm",
+     "pr": 51718,
+     "sha": "8bdc70ec7b379279ec0152343239c2d50aced687",
+     "event_id": "L3-E-8bdc70ec7b",
+     "role": "revert"
+    },
+    {
+     "date": "2026-08-24",
+     "repo": "vllm-project/vllm",
+     "pr": 53336,
+     "sha": "f620499ee3fe18131d71b02e1e8e5f1cf984cf1c",
+     "event_id": "L3-E-f620499ee3",
+     "role": "reland"
+    },
+    {
+     "date": "2026-08-25",
+     "repo": "vllm-project/vllm",
+     "pr": 52980,
+     "sha": "7156c63bef1f80a2edcc67901fa7ebb3892b4f3d",
+     "event_id": "L3-E-7156c63bef",
+     "role": "successor"
+    },
+    {
+     "date": "2026-08-26",
+     "repo": "vllm-project/vllm",
+     "pr": 53515,
+     "sha": "b1fbbc2ade51e3826bc92e4733c9c692ee21d42d",
+     "event_id": "L3-E-b1fbbc2ade",
+     "role": "successor"
+    }
+   ],
+   "narrative": "This is a successor-story failure rather than an invalid optimization idea. #53002 correctly localized FlashAttention geometry to each attention group, with a regression test for mismatched draft/target shapes. The KV-cache layout refactor #51718 temporarily removed that fix to land a broader adapter reorganization. #53336 then relanded the same behavior on the new structure, preserving the lesson as a focused group-geometry test and keeping later FlashAttention/graph work on top of the repaired adapter.",
+   "evidence_urls": [
+    "https://github.com/vllm-project/vllm/pull/53002",
+    "https://github.com/vllm-project/vllm/pull/51718",
+    "https://github.com/vllm-project/vllm/pull/53336",
+    "https://github.com/vllm-project/vllm/commit/f620499ee3fe18131d71b02e1e8e5f1cf984cf1c"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "test",
+    "revert_record"
+   ],
+   "confidence": "high"
+  }
+ ]
+}

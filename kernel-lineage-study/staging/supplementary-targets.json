@@ -1,0 +1,395 @@
+[
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#4957",
+  "cited_by": [
+   "L1-E-c471d39eb9:ported_from",
+   "L1-E-e98afbe042:ported_from"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#10915",
+  "cited_by": [
+   "L1-E-c7867b6702:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#12866",
+  "cited_by": [
+   "L1-E-7aa443903d:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#13601",
+  "cited_by": [
+   "L1-E-7ab548ef64:repairs"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ },
+ {
+  "lineage": "L1",
+  "ref": "vllm-project/vllm#23671",
+  "cited_by": [
+   "L1-E-34cd32fe30:optimized_from"
+  ],
+  "status": "merged_pr_not_candidate"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#12969",
+  "cited_by": [
+   "L1-E-9f5cd80a8d:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#19161",
+  "cited_by": [
+   "L1-E-fbb6098487:reverts"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#25129",
+  "cited_by": [
+   "L1-E-22dfcdaa04:reverts"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#22809",
+  "cited_by": [
+   "L1-E-ce2506e1c6:reverts"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#27063",
+  "cited_by": [
+   "L1-E-dc24a26821:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L1",
+  "ref": "sgl-project/sglang#15298",
+  "cited_by": [
+   "L1-E-d12b313b93:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#5686",
+  "cited_by": [
+   "L2-E-f6f96b0521:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#9755",
+  "cited_by": [
+   "L2-E-666da3d59f:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#27549",
+  "cited_by": [
+   "L2-E-f4f30d7d23:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#28106",
+  "cited_by": [
+   "L2-E-abaee4664e:optimized_from"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#29232",
+  "cited_by": [
+   "L2-E-abaee4664e:optimized_from"
+  ],
+  "status": "merged_pr_not_candidate"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#28534",
+  "cited_by": [
+   "L2-E-a3194d3585:optimized_from"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#31813",
+  "cited_by": [
+   "L2-E-f5dcbe8f14:reverts"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#32239",
+  "cited_by": [
+   "L2-E-82fe0f041a:repairs"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#28854",
+  "cited_by": [
+   "L2-E-4f883636a2:optimized_from"
+  ],
+  "status": "merged_pr_not_candidate"
+ },
+ {
+  "lineage": "L2",
+  "ref": "sgl-project/sglang#37511",
+  "cited_by": [
+   "L2-E-d9848b9ecd:optimized_from",
+   "L2-E-b5766336d4:optimized_from"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#4886",
+  "cited_by": [
+   "L3-E-99eff67ba9:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#19796",
+  "cited_by": [
+   "L3-E-94a55c7681:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#21302",
+  "cited_by": [
+   "L3-E-2dec7c1a5d:repairs"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#22664",
+  "cited_by": [
+   "L3-E-d94e3026de:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#26835",
+  "cited_by": [
+   "L3-E-314fa8abbf:optimized_from",
+   "L3-E-dbfbf9f324:optimized_from",
+   "L3-E-684f254585:optimized_from"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#27329",
+  "cited_by": [
+   "L3-E-084a9dae80:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#26487",
+  "cited_by": [
+   "L3-E-6482e3895b:repairs"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#31465",
+  "cited_by": [
+   "L3-E-41cfa50632:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#32529",
+  "cited_by": [
+   "L3-E-1a1fc3bbc0:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "sgl-project/sglang#11194",
+  "cited_by": [
+   "L3-E-afdce12c89:ported_from"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#35246",
+  "cited_by": [
+   "L3-E-c5362c739f:repairs",
+   "L3-E-c174d54f86:repairs",
+   "L3-E-428bc718bd:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#31915",
+  "cited_by": [
+   "L3-E-7d65463528:reverts"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#38791",
+  "cited_by": [
+   "L3-E-6d85b36a9f:reverts"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#40631",
+  "cited_by": [
+   "L3-E-3c413a5481:optimized_from"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#41263",
+  "cited_by": [
+   "L3-E-599e75f432:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#41745",
+  "cited_by": [
+   "L3-E-ceb0111a90:ported_from"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#43458",
+  "cited_by": [
+   "L3-E-c9c1540e61:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#36887",
+  "cited_by": [
+   "L3-E-3c8e49596c:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#46180",
+  "cited_by": [
+   "L3-E-b3a688cb9e:reverts"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#43427",
+  "cited_by": [
+   "L3-E-7cd1d57b74:reverts"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#50721",
+  "cited_by": [
+   "L3-E-b2db227a7c:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#43107",
+  "cited_by": [
+   "L3-E-2dc53bae17:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#53491",
+  "cited_by": [
+   "L3-E-43196f2458:repairs",
+   "L3-E-6c18a54648:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#54917",
+  "cited_by": [
+   "L3-E-dcd544486b:repairs",
+   "L3-E-fbf51c7026:repairs"
+  ],
+  "status": "candidate_not_event:related_context_only"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#51692",
+  "cited_by": [
+   "L3-E-b4da4d17ae:repairs",
+   "L3-E-bc0f47cd03:reverts"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#50519",
+  "cited_by": [
+   "L3-E-e78e367c6e:repairs"
+  ],
+  "status": "candidate_not_event:?"
+ },
+ {
+  "lineage": "L3",
+  "ref": "vllm-project/vllm#53793",
+  "cited_by": [
+   "L3-E-609731e8f5:repairs"
+  ],
+  "status": "candidate_not_event:out_of_scope"
+ }
+]

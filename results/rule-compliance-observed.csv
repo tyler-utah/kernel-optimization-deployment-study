@@ -1,0 +1,15 @@
+repo,rule_or_signal,compliant,denominator,weighted_compliant,weighted_denominator,compliance_rate,notes
+vllm,title_bracket_tag,500,600,21005.637202739854,25573.0,0.8213990225135829,"Preregistered lifecycle sample; format signal is a leading [tag], not semantic tag validity. Rate is post-stratified to the recent-PR population."
+vllm,checklist_completion,36,261,1635.264030928394,10952.462582735538,0.1493056030619155,Only PR bodies in the sample that contain markdown checklist items. Rate is post-stratified to the recent-PR population.
+vllm,benchmark_evidence_for_performance,91,114,1498.7596153846155,1886.0,0.7946763602251408,"Textual benchmark evidence in PR body, reviews, or issue comments. Rate is post-stratified to the recent-PR population."
+vllm,tests_with_source_changes,133,307,4268.281051877171,10336.690721649486,0.41292529367620057,"Matched squash commits only; detects changed test/benchmark paths, not external CI coverage. Rate is post-stratified to the recent-PR population."
+vllm,non_author_approval,334,350,11519.198605215282,11980.0,0.9615357767291555,Observable GitHub APPROVED review in first 100 reviews; cannot prove CODEOWNERS status. Rate is post-stratified to the recent-PR population.
+vllm,dco_signed_off_by,336,348,11545.051546391753,11903.56701030928,0.9698816780207958,Matched squash-commit trailers in the lifecycle sample; this can undercount DCO checks on pre-squash commits.
+vllm,required_label_before_full_ci,,0,,,,Not measured: current labels do not preserve when a label was applied relative to CI.
+sglang,title_bracket_tag,367,600,15445.767007837363,26004.0,0.5939765808274636,"Preregistered lifecycle sample; format signal is a leading [tag], not semantic tag validity. Rate is post-stratified to the recent-PR population."
+sglang,checklist_completion,69,365,3052.184319833933,15670.65663242846,0.19477067179927995,Only PR bodies in the sample that contain markdown checklist items. Rate is post-stratified to the recent-PR population.
+sglang,benchmark_evidence_for_performance,80,103,1192.0623376623375,1555.0,0.7665995740593811,"Textual benchmark evidence in PR body, reviews, or issue comments. Rate is post-stratified to the recent-PR population."
+sglang,tests_with_source_changes,107,277,4131.233559577678,10514.875757575757,0.3928941867526306,"Matched squash commits only; detects changed test/benchmark paths, not external CI coverage. Rate is post-stratified to the recent-PR population."
+sglang,non_author_approval,211,346,8089.82356369121,13871.0,0.583218481990571,Observable GitHub APPROVED review in first 100 reviews; cannot prove CODEOWNERS status. Rate is post-stratified to the recent-PR population.
+sglang,dco_signed_off_by,,0,,,,No repository-wide DCO requirement was identified in the frozen SGLang rules.
+sglang,required_label_before_full_ci,,0,,,,Not measured: current labels do not preserve when a label was applied relative to CI.

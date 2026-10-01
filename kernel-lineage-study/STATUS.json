@@ -1,0 +1,630 @@
+{
+  "schema_version": "1.0",
+  "study": "kernel-lineage-study",
+  "cutoff": "2026-09-28T23:59:59Z",
+  "created_at": "2026-09-29T22:33:18Z",
+  "updated_at": "2026-10-01T21:41:32Z",
+  "current_phase": "complete: all work packages done; final consistency check passed",
+  "repositories": {
+    "sglang": {
+      "remote": "https://github.com/sgl-project/sglang",
+      "clone": "experiments/data/repos/sglang",
+      "clone_type": "blobless (filter=blob:none)",
+      "local_head": "79cafec013d0a01c782d7a4bc902ef32a8941ba8",
+      "local_head_date": "2026-09-29T00:21:31Z",
+      "cutoff_commit": "89e1316eae9aae634c174c040415289fe4484aee",
+      "cutoff_commit_date": "2026-09-28T23:41:07Z",
+      "cutoff_rule": "git rev-list -1 --first-parent --before=2026-09-28T23:59:59Z main"
+    },
+    "vllm": {
+      "remote": "https://github.com/vllm-project/vllm",
+      "clone": "experiments/data/repos/vllm",
+      "clone_type": "blobless (filter=blob:none)",
+      "local_head": "7230dfea501b232ce92d057f1c5ee9cb009c4cb4",
+      "local_head_date": "2026-09-29T01:43:07Z",
+      "cutoff_commit": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+      "cutoff_commit_date": "2026-09-28T23:52:29Z",
+      "cutoff_rule": "git rev-list -1 --first-parent --before=2026-09-28T23:59:59Z main"
+    }
+  },
+  "work_packages": {
+    "A": {
+      "name": "ontology_codebook",
+      "description": "Event/edge/move/assumption vocabularies",
+      "status": "complete",
+      "completed": 1,
+      "required": 1,
+      "next_record": "done (CODEBOOK v1.3)",
+      "outputs": [
+        "CODEBOOK.md"
+      ]
+    },
+    "B": {
+      "name": "candidate_discovery",
+      "description": "Over-inclusive candidate census per lineage, manual screening",
+      "status": "complete",
+      "completed": 7962,
+      "required": 7962,
+      "next_record": "done: every candidate screened/adjudicated in context (stage 1, stage 2, cross_reference batch-900, upstream anchors batch-901, artifact reconciliation)",
+      "outputs": [
+        "data/candidate-events.csv",
+        "staging/candidates.jsonl",
+        "staging/screen/",
+        "staging/discovery-log.json"
+      ]
+    },
+    "C": {
+      "name": "artifact_spec_histories",
+      "description": "Artifact IDs, snapshots, specification evolution",
+      "status": "complete",
+      "completed": 232,
+      "required": null,
+      "next_record": "done",
+      "outputs": [
+        "staging/registry/L*-registry.json",
+        "data/artifacts.csv",
+        "data/artifact-snapshots.csv",
+        "data/artifact-release-presence.csv"
+      ],
+      "snapshots": 2959
+    },
+    "D": {
+      "name": "verified_events_graph",
+      "description": "Verified events and lineage edges",
+      "status": "complete",
+      "completed": 3281,
+      "required": 75,
+      "next_record": "done",
+      "outputs": [
+        "data/lineage-events.csv",
+        "data/lineage-edges.csv",
+        "data/external-references.csv",
+        "staging/code/"
+      ],
+      "edges": 5366,
+      "per_lineage": {
+        "L1": 1100,
+        "L2": 653,
+        "L3": 1528
+      }
+    },
+    "E": {
+      "name": "optimization_biographies",
+      "description": "Optimization moves (>=15, >=4/lineage) and >=12 biographies",
+      "status": "complete",
+      "completed": 39,
+      "required": 15,
+      "next_record": "done: moves, biographies and 143 spec-checked assumptions",
+      "outputs": [
+        "data/optimization-moves.csv",
+        "data/move-assumptions.csv",
+        "data/move-biographies.csv",
+        "data/move-release-presence.csv",
+        "staging/moves/"
+      ],
+      "biographies": 21,
+      "biographies_required": 12,
+      "per_lineage": {
+        "L1": 8,
+        "L2": 20,
+        "L3": 11
+      }
+    },
+    "F": {
+      "name": "release_pinned_evolution",
+      "description": "Release map, first-containing release, transitions, survival",
+      "status": "complete",
+      "completed": 190,
+      "required": null,
+      "next_record": "done: release map, first-containing release, transitions, survival, KM, milestones",
+      "outputs": [
+        "data/release-map.csv",
+        "data/release-transitions.csv",
+        "data/release-transition-artifacts.csv",
+        "data/survival-by-releases.csv",
+        "data/km-artifact-lifetime.csv",
+        "data/km-first-repair.csv",
+        "data/artifact-milestones.csv",
+        "data/cutoff-line-survival.csv",
+        "data/lineage-metrics.csv"
+      ],
+      "releases_mapped": 156
+    },
+    "G": {
+      "name": "failures_reverts",
+      "description": ">=8 failure-to-successor histories",
+      "status": "complete",
+      "completed": 12,
+      "required": 8,
+      "next_record": "done",
+      "outputs": [
+        "data/failure-links.csv",
+        "staging/failures/L*-failures.json"
+      ],
+      "failure_links": 197
+    },
+    "H": {
+      "name": "visualizations_reports",
+      "description": "Figures (PNG/SVG + Mermaid/DOT) and lineage reports",
+      "status": "complete",
+      "completed": 66,
+      "required": null,
+      "next_record": "done: 3 lineage reports (10 sections each) + figures (PNG/SVG, DOT/Mermaid sources)",
+      "outputs": [
+        "figures/",
+        "sglang-moe-lineage.md",
+        "sglang-mla-lineage.md",
+        "vllm-attention-lineage.md",
+        "staging/narratives/"
+      ]
+    },
+    "I1": {
+      "name": "independent_recoding",
+      "description": ">=30 events (>=10/lineage) recoded in fresh pass",
+      "status": "complete",
+      "completed": 36,
+      "required": 30,
+      "next_record": "done: agreement + adjudication (recoding/)",
+      "outputs": [
+        "recoding/"
+      ]
+    },
+    "I2": {
+      "name": "source_triangulation",
+      "description": ">=2 independent evidence types per major claim",
+      "status": "complete",
+      "completed": 0,
+      "required": null,
+      "next_record": "done: evidence_types recorded per event; confidence rule (CODEBOOK §10); biographies/histories cite >=2 evidence types where available",
+      "outputs": [
+        "data/lineage-events.csv"
+      ]
+    },
+    "I3": {
+      "name": "consistency_checks",
+      "description": "Exact consistency script",
+      "status": "complete",
+      "completed": 24,
+      "required": 24,
+      "next_record": "done: data/consistency-check.json passed (0 fatal, 0 warnings)",
+      "outputs": [
+        "scripts/consistency.py",
+        "data/consistency-check.json"
+      ]
+    },
+    "S": {
+      "name": "synthesis",
+      "description": "SYNTHESIS.md answering 10 questions",
+      "status": "complete",
+      "completed": 1,
+      "required": 1,
+      "next_record": "done: SYNTHESIS.md answers Q1-Q10 + required closing sections",
+      "outputs": [
+        "SYNTHESIS.md",
+        "staging/synthesis-src.md"
+      ]
+    }
+  },
+  "lineages": {
+    "L1": {
+      "title": "SGLang MoE alignment/routing/top-k/fusion",
+      "status": "complete",
+      "candidates_screened": 2391,
+      "candidates_total": 2391,
+      "verified_events": 1100,
+      "required_events": 20,
+      "moves": 8,
+      "required_moves": 4,
+      "next_record": "none (lineage complete)",
+      "report": "sglang-moe-lineage.md",
+      "candidate_labels": {
+        "related_context_only": 1019,
+        "verified_lineage_event": 1100,
+        "out_of_scope": 198,
+        "name_collision": 72,
+        "insufficient_evidence": 2
+      },
+      "edges": 1627,
+      "artifacts": 88,
+      "biographies": 5,
+      "failure_histories": 4,
+      "release_transitions": 44,
+      "figures": [
+        "l1-artifact-lineage-p1.png",
+        "l1-artifact-lineage-p2.png",
+        "l1-artifact-lineage-p3.png",
+        "l1-artifact-lineage-p4.png",
+        "l1-artifact-lineage-p5.png",
+        "l1-artifact-lineage-p6.png",
+        "l1-move-dag.png",
+        "l1-release-timeline.png"
+      ]
+    },
+    "L2": {
+      "title": "SGLang MLA / FlashInfer MLA / FlashMLA",
+      "status": "complete",
+      "candidates_screened": 1621,
+      "candidates_total": 1621,
+      "verified_events": 653,
+      "required_events": 20,
+      "moves": 20,
+      "required_moves": 4,
+      "next_record": "none (lineage complete)",
+      "report": "sglang-mla-lineage.md",
+      "candidate_labels": {
+        "related_context_only": 673,
+        "verified_lineage_event": 653,
+        "out_of_scope": 278,
+        "name_collision": 16,
+        "insufficient_evidence": 1
+      },
+      "edges": 1155,
+      "artifacts": 57,
+      "biographies": 5,
+      "failure_histories": 4,
+      "release_transitions": 49,
+      "figures": [
+        "l2-artifact-lineage-p1.png",
+        "l2-artifact-lineage-p2.png",
+        "l2-artifact-lineage-p3.png",
+        "l2-artifact-lineage-p4.png",
+        "l2-move-dag.png",
+        "l2-release-timeline.png"
+      ]
+    },
+    "L3": {
+      "title": "vLLM attention implementation family",
+      "status": "complete",
+      "candidates_screened": 3950,
+      "candidates_total": 3950,
+      "verified_events": 1528,
+      "required_events": 20,
+      "moves": 11,
+      "required_moves": 4,
+      "next_record": "none (lineage complete)",
+      "report": "vllm-attention-lineage.md",
+      "candidate_labels": {
+        "related_context_only": 1071,
+        "verified_lineage_event": 1528,
+        "out_of_scope": 1267,
+        "name_collision": 84
+      },
+      "edges": 2584,
+      "artifacts": 87,
+      "biographies": 11,
+      "failure_histories": 4,
+      "release_transitions": 97,
+      "figures": [
+        "l3-artifact-lineage-p1.png",
+        "l3-artifact-lineage-p2.png",
+        "l3-artifact-lineage-p3.png",
+        "l3-artifact-lineage-p4.png",
+        "l3-artifact-lineage-p5.png",
+        "l3-artifact-lineage-p6.png",
+        "l3-move-dag.png",
+        "l3-release-timeline.png"
+      ]
+    }
+  },
+  "release_cursors": {
+    "sglang": {
+      "final_releases": 49,
+      "first": "v0.1.5",
+      "last": "v0.5.20"
+    },
+    "vllm": {
+      "final_releases": 97,
+      "first": "v0.1.0",
+      "last": "v0.30.0"
+    },
+    "anomalies": [
+      "sglang v0.2.13/v0.3.0 GitHub release published weeks after tag -> annotated tag date used",
+      "vllm v0.8.2, v0.9.0, v0.10.1, v0.10.2, v0.11.0 tags re-pointed after publication -> ancestry containment capped at publication date (route suffix _tag_moved)"
+    ]
+  },
+  "query_state": {
+    "git": {
+      "fp_history": "cache/git/<repo>-fp.jsonl (first-parent, --no-renames, bounded by cutoff commit)",
+      "study_clones": "cache/git/<repo>.git (bare, blob:none, --reference to experiments/data/repos/<repo>)",
+      "blob_prefetch": {
+        "sglang": 17469,
+        "vllm": 10722,
+        "missing_after": 0,
+        "script": "scripts/blobs.py"
+      }
+    },
+    "github": {
+      "fetched_urls": [
+        "GraphQL light PR records (title/body/reviews/comments/linked issues) for candidate PRs: cache/gh/prlight/{sglang,vllm}/<n>.json",
+        "git fetch (blob prefetch) from https://github.com/sgl-project/sglang and https://github.com/vllm-project/vllm (blob:none promisor)",
+        "repos/sgl-project/sglang/releases (61)",
+        "repos/vllm-project/vllm/releases (106)"
+      ],
+      "pending_batches": [],
+      "prs_light_sglang": {
+        "total": 2837,
+        "cache": "cache/gh/prlight/sglang/<n>.json",
+        "resume": "python scripts/fetch_candidate_prs.py"
+      },
+      "prs_light_vllm": {
+        "total": 3348,
+        "cache": "cache/gh/prlight/vllm/<n>.json",
+        "resume": "python scripts/fetch_candidate_prs.py"
+      }
+    }
+  },
+  "cache_paths": {
+    "study_cache": "experiments/kernel-lineage-study/cache",
+    "gh_cache": "experiments/kernel-lineage-study/cache/gh",
+    "git_cache": "experiments/kernel-lineage-study/cache/git",
+    "reused_deep_study_cache": "experiments/deep-study/data/cache",
+    "reused_github_cache": "experiments/data/github"
+  },
+  "unresolved_questions": [
+    {
+      "lineage": "L1",
+      "q": "Grok fused_moe deletion successor; some hardware-wrapper PR intents census-only",
+      "source": "staging/registry/L1-registry.json"
+    },
+    {
+      "lineage": "L2",
+      "q": "exact upstream FlashInfer SHAs for MLA wrapper/TRTLLM/CuTe kernels; first AITER MLA commit; FA4 upstream lineage",
+      "source": "staging/registry/L2-registry.json"
+    },
+    {
+      "lineage": "L3",
+      "q": "Triton decode attention (#12528) borrowed from SGLang/LightLLM?; upstream FlashInfer/TRT-LLM ancestry of XQA and TRTLLM-gen MLA",
+      "source": "staging/registry/L3-registry.json"
+    },
+    {
+      "lineage": "all",
+      "q": "relation targets that are not in-lineage events are kept as external references, not edges",
+      "source": "data/external-references.csv"
+    },
+    {
+      "lineage": "all",
+      "q": "per-lineage uncertain ancestry is listed in each report's section 10",
+      "source": "sglang-moe-lineage.md, sglang-mla-lineage.md, vllm-attention-lineage.md"
+    }
+  ],
+  "failures": [
+    {
+      "at": "2026-09-30T22:25:22Z",
+      "where": "agents' ad-hoc `git log -G ... -- .` over whole repo in blobless clones",
+      "message": "triggered lazy per-blob fetches and hogged CPU/network after agents finished; slowed snapshots",
+      "recovery": "orphaned git processes stopped by PID; snapshots.py now uses one cached `ls-tree -r` per release commit"
+    },
+    {
+      "at": "2026-09-30T23:05:09Z",
+      "where": "survival.py moves (move-signature scan)",
+      "message": "git grep aborted on blobs missing from the blobless clone for 9 L2 signatures added in -final catalogs; a failed grep would have been recorded as 'absent'",
+      "recovery": "prefetch_release_blobs.py now reads *-moves-final.json (50 sglang blobs fetched); survival.py retries with lazy fetch and raises instead of caching a failed scan; all 39 moves rescanned with `python survival.py moves --rescan`"
+    },
+    {
+      "at": "2026-09-30T23:05:09Z",
+      "where": "assemble.py candidate labels",
+      "message": "3 hand-verified upstream anchor candidates (batch-901) had no stage-1 label -> consistency FAIL 'all candidates screened'",
+      "recovery": "assemble.py treats batch-901 like batch-900 one-pass adjudication (CODEBOOK v1.3)"
+    }
+  ],
+  "rate_limits": [],
+  "last_consistency_check": {
+    "at": "2026-10-01T21:41:31Z",
+    "passed": true,
+    "fatal": 0,
+    "warnings": 0,
+    "claims": {
+      "total": 502,
+      "passed": 502,
+      "failed": 0
+    }
+  },
+  "resume_instructions": "cd C:\\Users\\tsorensen\\Documents\\github\\RealOptimizationTalk\\experiments\\kernel-lineage-study; python scripts\\status.py show; python scripts\\run_all.py  (offline; re-derives every dataset, figure and report from staging/ and cache/, then runs scripts\\consistency.py). Agent inputs/outputs: staging/ and recoding/; protocols: cache/task-*.md. If move signatures change, run `python scripts\\prefetch_release_blobs.py` then `python scripts\\survival.py moves --rescan` first.",
+  "history": [
+    {
+      "at": "2026-09-29T22:33:18Z",
+      "note": "STATUS.json created"
+    },
+    {
+      "at": "2026-09-29T22:36:59Z",
+      "note": "network batch start: GitHub releases for both repos"
+    },
+    {
+      "at": "2026-09-29T22:37:04Z",
+      "note": "network batch end: releases fetched"
+    },
+    {
+      "at": "2026-09-29T22:39:38Z",
+      "note": "network batch start: study bare clones with --reference (blob:none)"
+    },
+    {
+      "at": "2026-09-29T22:39:44Z",
+      "note": "network batch end: study bare clones"
+    },
+    {
+      "at": "2026-09-29T22:50:31Z",
+      "note": "network batch start: blob prefetch vllm (10722 blobs)"
+    },
+    {
+      "at": "2026-09-29T22:52:08Z",
+      "note": "network batch start: blob prefetch sglang (17469 blobs)"
+    },
+    {
+      "at": "2026-09-29T22:54:08Z",
+      "note": "network batch start: blob prefetch vllm (10722 blobs)"
+    },
+    {
+      "at": "2026-09-29T22:54:27Z",
+      "note": "network batch end: blob prefetch vllm"
+    },
+    {
+      "at": "2026-09-29T22:56:05Z",
+      "note": "network batch start: blob prefetch sglang (17469 blobs)"
+    },
+    {
+      "at": "2026-09-29T22:57:22Z",
+      "note": "network batch end: blob prefetch sglang"
+    },
+    {
+      "at": "2026-09-29T22:58:10Z",
+      "note": "blobs prefetched; release map built; launching registry agents"
+    },
+    {
+      "at": "2026-09-30T18:34:28Z",
+      "note": "network batch start: blob prefetch sglang (8270 blobs)"
+    },
+    {
+      "at": "2026-09-30T18:34:35Z",
+      "note": "network batch end: blob prefetch sglang"
+    },
+    {
+      "at": "2026-09-30T18:35:30Z",
+      "note": "network batch start: blob prefetch vllm (8057 blobs)"
+    },
+    {
+      "at": "2026-09-30T18:35:39Z",
+      "note": "network batch end: blob prefetch vllm"
+    },
+    {
+      "at": "2026-09-30T18:36:37Z",
+      "note": "WP-B: candidate build start"
+    },
+    {
+      "at": "2026-09-30T18:41:45Z",
+      "note": "network batch start: light PR records sglang (2837 PRs)"
+    },
+    {
+      "at": "2026-09-30T18:48:09Z",
+      "note": "network batch end: light PR records sglang: 2837 cached, 0 missing/error"
+    },
+    {
+      "at": "2026-09-30T18:48:09Z",
+      "note": "network batch start: light PR records vllm (3348 PRs)"
+    },
+    {
+      "at": "2026-09-30T18:50:28Z",
+      "note": "network batch start: sharded light PR fetch (4 shards) incl. body_keyword additions"
+    },
+    {
+      "at": "2026-09-30T18:51:04Z",
+      "note": "registries validated: L1 47, L2 36, L3 57 artifacts"
+    },
+    {
+      "at": "2026-09-30T18:55:57Z",
+      "note": "WP-B screening: L1/L2 wave 1 running (10 agents), L3 batches built (24)"
+    },
+    {
+      "at": "2026-09-30T19:07:48Z",
+      "note": "screening checkpoint: 6024 candidates screened"
+    },
+    {
+      "at": "2026-09-30T19:10:58Z",
+      "note": "checkpoint: moves L2/L3 catalogs; assemble.py written"
+    },
+    {
+      "at": "2026-09-30T19:12:56Z",
+      "note": "WP-B screening complete (7916/7916); stage-2 code batches built"
+    },
+    {
+      "at": "2026-09-30T19:41:53Z",
+      "note": "network batch start: release-blob prefetch sglang (528)"
+    },
+    {
+      "at": "2026-09-30T19:41:56Z",
+      "note": "network batch end: release-blob prefetch sglang"
+    },
+    {
+      "at": "2026-09-30T19:42:14Z",
+      "note": "network batch start: release-blob prefetch vllm (17)"
+    },
+    {
+      "at": "2026-09-30T19:42:15Z",
+      "note": "network batch end: release-blob prefetch vllm"
+    },
+    {
+      "at": "2026-09-30T19:45:06Z",
+      "note": "checkpoint: stage-2 L1/L2 complete; failure links built"
+    },
+    {
+      "at": "2026-09-30T19:53:43Z",
+      "note": "checkpoint: stage-2 complete; supplementary, reconciliation, biographies, failures, recode launched"
+    },
+    {
+      "at": "2026-09-30T20:27:24Z",
+      "note": "I1 compare done: 36 events, type kappa 0.669; reconciliation launched; 13 supplementary NEW names mapped; OOS reconciliation excluded 47"
+    },
+    {
+      "at": "2026-09-30T20:37:25Z",
+      "note": "I1 reconciliation applied as overrides (staging/code-overrides.jsonl); codebook v1.2 clarifications recorded"
+    },
+    {
+      "at": "2026-09-30T20:59:25Z",
+      "note": "run_all start"
+    },
+    {
+      "at": "2026-09-30T22:24:59Z",
+      "note": "run_all start"
+    },
+    {
+      "at": "2026-09-30T22:25:22Z",
+      "note": "checkpoint: all agent packages complete; final run_all in progress"
+    },
+    {
+      "at": "2026-09-30T22:43:45Z",
+      "note": "network batch start: release-blob prefetch sglang (50)"
+    },
+    {
+      "at": "2026-09-30T22:43:48Z",
+      "note": "network batch end: release-blob prefetch sglang"
+    },
+    {
+      "at": "2026-09-30T22:51:45Z",
+      "note": "run_all start"
+    },
+    {
+      "at": "2026-09-30T22:55:48Z",
+      "note": "run_all failed at consistency.py (exit 1)"
+    },
+    {
+      "at": "2026-09-30T22:56:34Z",
+      "note": "run_all start"
+    },
+    {
+      "at": "2026-09-30T23:00:42Z",
+      "note": "run_all complete"
+    },
+    {
+      "at": "2026-09-30T23:05:09Z",
+      "note": "study complete: final pipeline run, consistency check passed; STATUS finalized"
+    },
+    {
+      "at": "2026-10-01T21:36:03Z",
+      "note": "run_all start"
+    },
+    {
+      "at": "2026-10-01T21:39:59Z",
+      "note": "run_all complete"
+    }
+  ],
+  "known_issues": [],
+  "known_limitations": [
+    "I1 codebook v1.2 clarifications applied to the 36-event sample only",
+    "move signatures detect identifying code, not intact semantics",
+    "blame without -C (copy detection) to avoid lazy blob fetches",
+    "PR-body keyword strategy limited to PRs created 2025-09-29..2026-09-28"
+  ],
+  "resolved_issues": [
+    {
+      "issue": "move catalogs: first_observed dates to verify (e.g. FP8 KV cache predates 2024-11); assumption statuses uniformly 'derived' -> spec-checked audit planned",
+      "resolution": "first_observed_event = earlier of catalog anchor and earliest coded event; spec-checked assumption audit done (143 assumptions, data/move-assumptions.csv)"
+    },
+    {
+      "issue": "NEW:* artifacts proposed during screening/coding",
+      "resolution": "reconciled into registries (staging/registry/L*-new-map.json, L0-supp-new-map.json); 47 candidates whose artifacts were all out of scope -> rejected_reconciliation"
+    },
+    {
+      "issue": "blame.py origin-based artifact filter",
+      "resolution": "blame re-run in run_all.py with kind-based in-tree filter (data/cutoff-line-survival.csv)"
+    }
+  ]
+}

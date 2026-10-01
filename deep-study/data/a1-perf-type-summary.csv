@@ -1,0 +1,22 @@
+repo,perf_type,n,denominator,share,wilson95_low,wilson95_high,scope
+vllm,system_performance,987,2497,0.3953,0.3763,0.4146,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+vllm,new_kernel_or_fusion,499,2497,0.1998,0.1846,0.216,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+vllm,kernel_optimization,433,2497,0.1734,0.1591,0.1888,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+vllm,precision_format,320,2497,0.1282,0.1156,0.1418,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+vllm,kernel_tuning_config,185,2497,0.0741,0.0645,0.085,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+vllm,perf_regression_fix,73,2497,0.0292,0.0233,0.0366,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+vllm,new_or_faster_kernel_total,932,2497,0.3732,,,kernel_optimization + new_kernel_or_fusion
+sglang,system_performance,1266,2920,0.4336,0.4157,0.4516,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+sglang,new_kernel_or_fusion,749,2920,0.2565,0.241,0.2727,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+sglang,kernel_optimization,423,2920,0.1449,0.1326,0.1581,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+sglang,precision_format,298,2920,0.1021,0.0916,0.1136,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+sglang,kernel_tuning_config,118,2920,0.0404,0.0339,0.0482,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+sglang,perf_regression_fix,66,2920,0.0226,0.0178,0.0287,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+sglang,new_or_faster_kernel_total,1172,2920,0.4014,,,kernel_optimization + new_kernel_or_fusion
+both,system_performance,2253,5417,0.4159,0.4029,0.4291,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+both,new_kernel_or_fusion,1248,5417,0.2304,0.2194,0.2418,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+both,kernel_optimization,856,5417,0.158,0.1486,0.168,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+both,precision_format,618,5417,0.1141,0.1059,0.1228,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+both,kernel_tuning_config,303,5417,0.0559,0.0501,0.0624,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+both,perf_regression_fix,139,5417,0.0257,0.0218,0.0302,adjudicated confirmed performance PRs (rule-confirmed tier has no perf_type)
+both,new_or_faster_kernel_total,2104,5417,0.3884,,,kernel_optimization + new_kernel_or_fusion

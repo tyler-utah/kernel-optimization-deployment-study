@@ -1,0 +1,10 @@
+field,winner,n
+ancestry,first,4
+ancestry,second,6
+event_type,first,5
+event_type,second,5
+move_ids,first,7
+move_ids,second,4
+primary_cause,both_defensible,1
+primary_cause,first,5
+primary_cause,second,7

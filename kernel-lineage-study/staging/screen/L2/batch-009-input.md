@@ -1,0 +1,625 @@
+### L2-1a90ae6727  (L2, 2026-09-17, sha 1a90ae672701, PR #34012)
+TITLE: Add Agentic-Aware Tail-Optimized LRU eviction to the unified radix cache (#34012)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.dispatch.server_args_defaults
+FILES: docs/docs/advanced_features/radix_eviction_policy.mdx (+20/-1); python/sglang/srt/arg_groups/choices.py (+1/-1); python/sglang/srt/arg_groups/fields/memory.py (+12/-6); python/sglang/srt/arg_groups/kv_cache_hook.py (+18/-0); python/sglang/srt/mem_cache/evict_policy.py (+35/-0); python/sglang/srt/mem_cache/registry.py (+12/-0); python/sglang/srt/mem_cache/unified_cache/unified_tree_core.py (+41/-0); python/sglang/srt/mem_cache/utils.py (+2/-0); test/registered/unit/mem_cache/test_tlru_eviction_policy.py (+208/-0)
+LABELS: documentation, run-ci, bypass-fastfail, run-ci-extra, unified-radix-cache
+DEEP_STUDY: deep-study performance PR (system_performance)
+BODY: ## Motivation ⏎  ⏎ Tail-Optimized LRU (T-LRU, [NeurIPS 25](https://arxiv.org/abs/2510.15152)) keeps only as much of a conversation cached as its next prefill needs to stay under a TTFT SLO budget, and frees the rest of the tail before falling back to recency order, so newer requests can be admitted. On agentic traces the tail is what a plain LRU protects at the expense of every other conversation's tail latency by up to 43%. ⏎  ⏎ The policy is opt-in …[truncated]
+
+### L2-bbfcda48ce  (L2, 2026-09-18, sha bbfcda48cebf, PR #40147)
+TITLE: [CI] Add a unified-memory rerun test group (#40147)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: scripts/ci/rerun_test_groups.json (+46/-0)
+BODY: ## Motivation ⏎  ⏎ The unified memory pool's tests sit in a dozen directories. The allocator and pool units are under `unit/mem_cache/`, but so are the PD move gate (`unit/disaggregation/`), the prefill adder and scheduler init (`unit/managers/`), the pool configurator (`unit/model_executor/`), three server-arg gates (`unit/server_args/`), the page-major and Kimi-Linear e2e runs, and three PD disaggregation e2e cases. ⏎  ⏎ There is currently no way to as …[truncated]
+
+### L2-a6cf05817f  (L2, 2026-09-18, sha a6cf05817f11, PR #38798)
+TITLE: dsv4.1: remaining model and runtime integration (#38798)
+SOURCES: symbol_pickaxe
+ARTIFACT_HINTS: L2.dispatch.server_args_defaults
+FILES: docs/docs/advanced_features/server_arguments.mdx (+6/-0); docs/src/snippets/configs/deepseek-ai/deepseek-v4_1.jsx (+1/-1); python/sglang/kernels/ops/attention/dsv4/__init__.py (+7/-1); python/sglang/kernels/ops/attention/dsv4/c2_decode_pool.py (+151/-0); python/sglang/kernels/ops/attention/dsv4/decode_attention_sm100.py (+160/-0); python/sglang/kernels/ops/attention/dsv4/decode_attention_sm100_gluon.py (+190/-0); python/sglang/kernels/ops/attention/dsv4/fp4_indexer.py (+139/-1); python/sglang/kernels/ops/attention/dsv4_attn_metadata_kernels.py (+54/-2); python/sglang/kernels/ops/moe/moe_fused_gate.py (+139/-22); python/sglang/kernels/ops/speculative/dspark/commit_swa.py (+43/-0); (+93 more)
+LABELS: documentation, high priority, quant, dependencies, deepseek, hicache, npu, run-ci, jit-kernel, bypass-fastfail
+DEEP_STUDY: deep-study: introduced the defect fixed in case sglang:2305242f51 (fix PR 40205)
+BODY: - Add DeepSeek V4.1 support. ⏎  ⏎ Please use the image (commit is da64c5cbb8cf6bfd39be19da43573fdfd484c43a) instead of this branch; this branch is being refactored and is unstable. ⏎  ⏎ ## Stack ⏎ - Depends on #39666 (`dsv4.1-engram`). ⏎ - Restacked from `01d34d7b404451bce7f7b35e306de6fab395024d`; the original restack reproduced tree `d529d05f879d36770ad055b2a78dba65a0c675c4`. The standalone NVLink benchmark is now [archived in a gist](https://gist.github. …[truncated]
+
+### L2-3ce3b4969f  (L2, 2026-09-18, sha 3ce3b4969f31, PR #39919)
+TITLE: [NPU] Avoid repeated BF16 wo_a weight transposes in DeepSeek-V4 decode (#39919)
+SOURCES: path_integration+keyword, subject_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/models/deepseek_v4.py (+18/-4); python/sglang/srt/environ.py (+3/-0); test/manual/dsv4/bench_npu_wo_a.py (+217/-0)
+LABELS: deepseek, npu, run-ci
+BODY: ## Motivation ⏎  ⏎ On DeepSeek-V4 Flash TP8, each rank owns one output group. The original BF16 ⏎ `wo_a` einsum path materializes a `[1024, 4096]` weight transpose on Ascend ⏎ 910B4 for every layer and decode step. The baseline serving trace contains ⏎ 43 such transposes per rank per step, taking 1.191 ms in total. ⏎  ⏎ For a single local group, this projection can be expressed as a linear ⏎ operation using the original weight layout. ⏎  ⏎ ## Modifications …[truncated]
+
+### L2-a407915c17  (L2, 2026-09-18, sha a407915c175e, PR #39690)
+TITLE: [CPU] Avoid prefill CP predicates during decode graph capture (#39690)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/communicator.py (+4/-1)
+LABELS: intel, cpu, run-ci
+BODY: Guard the DSA/MLA prefill context-parallel reduce-scatter checks so they only run for context-parallel extend batches. These predicates are irrelevant for decode, but were still traced during CPU torch.compile decode graph capture and regressed Qwen3.6-35B-A3B decode throughput. ⏎  ⏎ This keeps decode graph capture on the hot path free of prefill-only CP runtime checks while preserving the existing reduce-scatter behavior for context-parallel prefi …[truncated]
+
+### L2-f86f60081d  (L2, 2026-09-18, sha f86f60081d0a, PR #39415)
+TITLE: [NPU] Adapt hicache for K3 hybrid models (#39415)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/disaggregation/decode.py (+13/-0); python/sglang/srt/distributed/parallel_state.py (+26/-2); python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py (+16/-1); python/sglang/srt/mem_cache/pool_host/mamba.py (+70/-21); python/sglang/srt/mem_cache/pool_host/mha.py (+4/-0); python/sglang/test/ascend/test_ascend_utils.py (+3/-0); test/manual/hicache/test_npu_kimi_k3_hicache.py (+53/-0); test/registered/unit/disaggregation/test_decode_queue_cleanup.py (+4/-0); test/registered/unit/managers/test_priority_scheduling_disaggregation.py (+4/-0); test/registered/unit/mem_cache/test_decode_radix_lock_ref.py (+4/-0); (+1 more)
+LABELS: hicache, npu, run-ci, memory-pool
+BODY: ## Motivation ⏎  ⏎ Adapt NPU HiCache (L2 host cache) for K3 hybrid models (MLA + KDA/mamba linear attention). Without these changes, hybrid models crash on NPU (MambaPoolHost layout assertion). ⏎  ⏎ ## Modifications ⏎  ⏎ - hybrid_pool_assembler: override host pool layout to page_first_direct when the global layout is page_first_kv_split (MLA-specific; mamba host pool only supports page_first / page_first_direct), for both MambaPoolHost and MHA draft ho …[truncated]
+
+### L2-d346b214fb  (L2, 2026-09-18, sha d346b214fb64, PR #36340)
+TITLE: feat(kv-cache): support SM100 NVFP4 GenMHA and speculative decoding (#36340)
+SOURCES: path_core, symbol_pickaxe
+ARTIFACT_HINTS: L2.pool.mla_token_kv, L2.dispatch.attention_registry, L2.dispatch.server_args_defaults, L2.backend.flashinfer_general_mla
+FILES: python/sglang/srt/layers/attention/attention_registry.py (+5/-1); docs/docs/advanced_features/quantized_kv_cache.mdx (+37/-2); python/sglang/srt/arg_groups/fields/exec_.py (+15/-0); python/sglang/srt/arg_groups/kv_cache_hook.py (+214/-5); python/sglang/srt/arg_groups/pipeline.py (+2/-0); python/sglang/srt/arg_groups/resolution_hooks.py (+1/-0); python/sglang/srt/layers/attention/flashinfer_backend.py (+18/-2); python/sglang/srt/layers/attention/trtllm_mha_backend.py (+290/-59); python/sglang/srt/layers/quantization/fp4_kv_cache_quant_method.py (+192/-27); python/sglang/srt/layers/quantization/nvfp4_kv_cache.py (+290/-0); (+9 more)
+LABELS: documentation, quant, blackwell, run-ci, run-ci-extra, memory-pool
+DEEP_STUDY: deep-study performance PR (precision_format)
+BODY: # SM100 Native NVFP4 KV Cache ⏎  ⏎ Part of #29913. ⏎  ⏎ ## What this implements ⏎  ⏎ - Native packed NVFP4 KV-cache prefill and decode on SM100/SM103 through TRT-LLM GenMHA. ⏎ - An optional FlashInfer prefill path that dequantizes the stored FP4 cache into a shared FP8 E4M3 workspace. ⏎ - Eager/CUDA Graph execution, normal decode, top-k-1 EAGLE/EAGLE3/NEXTN, and breadth-1 NGRAM. ⏎ - FlashInfer NVFP4 quantization plus a fused incremental slot-scatter kerne …[truncated]
+
+### L2-8ac39c66d8  (L2, 2026-09-18, sha 8ac39c66d837, PR #39589)
+TITLE: [NPU] support kimi k3 on A5 and improve performance (#39589)
+SOURCES: path_core, body_keyword
+ARTIFACT_HINTS: L2.backend.npu_mla, L2.pool.mla_token_kv, L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/hardware_backend/npu/attention/mla_cache.py (+23/-0); python/sglang/srt/hardware_backend/npu/attention/mla_preprocess.py (+8/-6); python/sglang/kernels/ops/speculative/dspark/dspark_accept.py (+16/-4); python/sglang/srt/arg_groups/field_order.py (+1/-0); python/sglang/srt/arg_groups/fields/parallel.py (+6/-0); python/sglang/srt/arg_groups/parallel_hook.py (+40/-0); python/sglang/srt/arg_groups/pipeline.py (+2/-0); python/sglang/srt/arg_groups/resolution_hooks.py (+1/-0); python/sglang/srt/distributed/bootstrap.py (+1/-0); python/sglang/srt/distributed/parallel_state.py (+50/-2); (+17 more)
+LABELS: npu, run-ci, jit-kernel, memory-pool
+DEEP_STUDY: deep-study performance PR (system_performance)
+BODY: Co-Authored-By: [hanwlax](https://github.com/hanwlax) ⏎ Co-Authored-By: [Hexq0210](https://github.com/Hexq0210) ⏎ Co-Authored-By: [McZyWu](https://github.com/McZyWu) ⏎ Co-Authored-By: [qybnb](https://github.com/qybnb) ⏎ Co-Authored-By: [sherdavincl9](https://github.com/sherdavincl9) ⏎  ⏎  ⏎  ⏎ ## Motivation ⏎  ⏎  ⏎ support kimi k3 on A5 and improve performance. ⏎  ⏎ ## Modifications ⏎  ⏎  ⏎ 1.add compressed w4a8 mxfp4 moe. ⏎ 2.shared expert: add fine-grained dual …[truncated]
+
+### L2-d507accadc  (L2, 2026-09-18, sha d507accadc49, PR #40264)
+TITLE: [Test] Drop dead and strictly-subsumed CI test registrations (#40264)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: test/manual/test_trtllm_mla.py (+0/-6); test/registered/debug_utils/test_dump_comparator.py (+1/-1); test/registered/e2e/models/test_nvidia_nemotron_3_super_bf16.py (+0/-69); test/registered/e2e/models_large/test_deepseek_v3_cutedsl_4gpu.py (+0/-89); test/registered/ep/test_deepep_large.py (+0/-61); test/registered/hicache/test_hicache_storage_file_backend.py (+0/-48); test/registered/hicache/test_hicache_storage_mooncake_backend.py (+0/-32); test/registered/input_embedding/test_input_embeddings.py (+0/-160); test/registered/kernels/benchmark/diffusion/bench_group_norm_silu.py (+1/-2); test/registered/kernels/benchmark/diffusion/bench_norm_impls.py (+1/-2); (+9 more)
+LABELS: quant, lora, Multi-modal, deepseek, hicache, npu, run-ci
+BODY: Deletion-and-cleanup from a full-tree audit (N² similarity + A1 existence scan across all 1592 registered test files). Every removed item is either never executed in CI, a strict subset of another registration, assertion-free, or a superseded oracle: ⏎  ⏎ **Round 1 (strict subset / disabled / assertion-free):** ⏎ - `test_nvidia_nemotron_3_super_bf16.py`: strict subset of the `_mtp` variant (same args list + EAGLE; gsm8k params byte-identical) ⏎ - `test_l …[truncated]
+
+### L2-5e9342d16f  (L2, 2026-09-18, sha 5e9342d16f03, PR #38792)
+TITLE: [PP][DeepSeek V4] Overlap communication and optimize SM120 prefill (#38792)
+SOURCES: path_integration+keyword, subject_keyword, corpus:performance-pr-population
+ARTIFACT_HINTS: L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/layers/attention/deepseek_v4_backend.py (+4/-4); python/sglang/srt/models/deepseek_v4.py (+8/-13); python/sglang/srt/arg_groups/model_hook.py (+5/-3); python/sglang/srt/arg_groups/serving_hook.py (+5/-5); python/sglang/srt/environ.py (+6/-0); python/sglang/srt/layers/deep_gemm_wrapper/configurer.py (+26/-10); python/sglang/srt/managers/scheduler.py (+5/-7); python/sglang/srt/managers/scheduler_pp_mixin.py (+116/-59); python/sglang/srt/managers/utils.py (+14/-0); python/sglang/srt/mem_cache/deepseek_v4_memory_pool.py (+41/-7); (+7 more)
+LABELS: deepseek, hicache, run-ci, bypass-fastfail, memory-pool
+DEEP_STUDY: deep-study performance PR (system_performance)
+BODY: ## Motivation ⏎  ⏎ DeepSeek-V4-Flash prefill on 4-way pipeline parallelism showed two avoidable sources of serialization on RTX 6000D (SM120): pipeline tensor communication ran through scheduler-stream synchronization, and the SM120 model path did extra work for attention output projection and SWA KV page repacking. ⏎  ⏎ This PR overlaps PP tensor communication with compute and adds guarded SM120 fast paths for DeepSeek-V4. The new paths are disabled by  …[truncated]
+
+### L2-81363bf8cb  (L2, 2026-09-18, sha 81363bf8cb54, PR #36176)
+TITLE: [kernel] Share the warp vectorized copy and enforce its alignment (#36176)
+SOURCES: path_core
+ARTIFACT_HINTS: L2.kernel.set_mla_kv_buffer, L2.kernel.concat_mla, L2.kernel.set_mla_kv_concat_q
+FILES: python/sglang/kernels/jit/csrc/elementwise/concat_mla.cuh (+45/-53); python/sglang/kernels/jit/csrc/elementwise/set_mla_kv_buffer.cuh (+71/-147); python/sglang/kernels/jit/csrc/elementwise/set_mla_kv_concat_q.cuh (+10/-27); python/sglang/kernels/ops/kvcache/mla_buffer.py (+9/-20); python/sglang/kernels/ops/kvcache/set_mla_kv_buffer.py (+1/-21); .claude/skills/add-jit-kernel/SKILL.md (+46/-9); python/sglang/kernels/jit/benchmark/marker.py (+94/-24); python/sglang/kernels/jit/csrc/deepseek_v4/c_plan.cuh (+0/-14); python/sglang/kernels/jit/csrc/deepseek_v4/candidate_block_table.cuh (+1/-1); python/sglang/kernels/jit/csrc/deepseek_v4/fused_norm_rope_v2.cuh (+2/-2); (+24 more)
+LABELS: documentation, quant, hicache, run-ci, jit-kernel, bypass-fastfail, run-ci-extra
+BODY: > Generated by Claude. ⏎  ⏎ ## Motivation ⏎  ⏎ Four JIT kernels hand-rolled the same thing: a warp cooperatively moving one contiguous row. `concat_mla`, `set_mla_kv_buffer`, `store_cache` and `set_mla_kv_concat_q` each had their own vector-width selection, their own tail handling, and their own idea of what alignment they required. `warp_inclusive_sum` existed in four separate copies. ⏎  ⏎ That duplication was not just untidy — it hid a bug class. The vecto …[truncated]
+
+### L2-993d1fccba  (L2, 2026-09-19, sha 993d1fccbaaf, PR #37152)
+TITLE: [ROCm] Widen the HiCache JIT copy rounds and enable the K-only host pool (#37152)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/jit/csrc/kvcacheio/hicache.cuh (+70/-33); python/sglang/kernels/ops/kvcache/hicache.py (+24/-2); python/sglang/srt/mem_cache/pool_host/mha.py (+1/-1); test/registered/kernels/ops/kvcache/test_hicache.py (+2/-1); test/registered/unit/mem_cache/test_hicache_copy_rounds.py (+70/-0)
+LABELS: hicache, run-ci, jit-kernel, run-ci-extra
+BODY: Depends on #35233. That PR makes registered host pointers usable from the ⏎ transfer kernels on ROCm; this one is the part that decides how much of the KV ⏎ cache can actually take that path, and how fast it moves once it does. An ⏎ earlier revision of this PR carried its own pointer fix (pin_memory allocation, ⏎ an unregister guard, and an io-backend downgrade for storage-owned memory); ⏎ those are dropped in favour of #35233, which solves the same p …[truncated]
+
+### L2-986959e3c4  (L2, 2026-09-19, sha 986959e3c4c9, PR #40197)
+TITLE: [Refactor] Deduplicate kernel helpers and remove unused code (#40197)
+SOURCES: path_core, symbol_pickaxe, body_keyword
+ARTIFACT_HINTS: L2.backend.sparse_mla_adapters
+FILES: python/sglang/kernels/ops/attention/dsa/triton_sparse_mla_decode.py (+5/-99); python/sglang/kernels/jit/csrc/attention/kda_packed_decode.cuh (+5/-17); python/sglang/kernels/jit/csrc/inkling/inkling_ar_fused_decode.cuh (+2/-2); python/sglang/kernels/jit/csrc/inkling/inkling_ar_scattered_sconv.cuh (+2/-2); python/sglang/kernels/jit/csrc/moe/moe_align_kernel.cu (+9/-27); python/sglang/kernels/jit/csrc/trtllm_lora_temp/moe_lora_merged_align_kernel.cu (+11/-29); python/sglang/kernels/jit/utils/__init__.py (+2/-0); python/sglang/kernels/jit/utils/arch.py (+8/-0); python/sglang/kernels/ops/activation/activation.py (+2/-13); python/sglang/kernels/ops/attention/dsa/dequant_k_cache.py (+0/-43); (+18 more)
+LABELS: quant, amd, lora, run-ci, jit-kernel
+BODY: ## Motivation ⏎  ⏎ Several kernel integrations carry copies of the same TMA builders, warp primitives, alignment code and compiler policy. Fixes then need to be repeated across implementations, while unused fallback/cache helpers obscure the active paths. Consolidate these implementations and remove unused private code without changing the kernel algorithms or dispatch thresholds. ⏎  ⏎ ## Modifications ⏎  ⏎ - Share the chunk and recurrent/output-state TMA de …[truncated]
+
+### L2-c5326d28a3  (L2, 2026-09-19, sha c5326d28a348, PR #39968)
+TITLE: [AMD] dsv4: pick kv_splits per index stream, not by occupancy alone (#39968)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/ops/attention/dsv4/unified_kv_kernels/paged_decode.py (+48/-0); python/sglang/kernels/ops/attention/dsv4/unified_kv_kernels/runtime.py (+8/-1); python/sglang/srt/layers/attention/deepseek_v4_backend_hip_radix.py (+7/-0)
+LABELS: amd, deepseek, run-ci, jit-kernel
+DEEP_STUDY: deep-study performance PR (kernel_optimization)
+BODY: `_kv_splits_heuristic` splits only when the base grid underfills the device. That is the wrong question for the V4 sparse decode kernel. At bs=14 the grid nearly saturates (196 CTAs against a 384 target) so it picks splits=1, while the cost is set by ONE straggler CTA walking ~5,000 KV entries beside CTAs walking 200. Splitting breaks up that CTA; occupancy never sees it. ⏎  ⏎ The discriminator is static and available at capture time: `compress_ratio …[truncated]
+
+### L2-2305242f51  (L2, 2026-09-19, sha 2305242f514d, PR #40205)
+TITLE: [AMD][DSV4] fix: skip compressed-KV metadata on the draft worker in the HIP radix backend (#40205)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/attention/deepseek_v4_backend_hip_radix.py (+67/-30)
+LABELS: deepseek, run-ci
+DEEP_STUDY: deep-study correctness case sglang:2305242f51: class=integration_backend_cudagraph; symptom=crash_or_exception; introducing=#38798
+BODY: ## Motivation ⏎  ⏎  ⏎ DeepSeek-V4 won't start on ROCm with any speculative algorithm. The draft worker dies during CUDA graph capture: ⏎  ⏎ ``` ⏎   File "python/sglang/srt/layers/attention/deepseek_v4_backend_hip_radix.py", line 922, ⏎     in make_forward_metadata_from_raw_verify ⏎   File "python/sglang/srt/layers/attention/deepseek_v4_backend_hip_radix.py", line 620, ⏎     in init_forward_metadata_indexer ⏎   File "python/sglang/srt/mem_cache/deepseek_v4_ …[truncated]
+
+### L2-3a64faa1f2  (L2, 2026-09-19, sha 3a64faa1f22a, PR #39378)
+TITLE: Fix disagg PP MTP for GLM-5.2 (#39378)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.model.deepseek_v2_mla, L2.optimization.weight_absorption, L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/arg_groups/validation_hook.py (+71/-57); python/sglang/srt/disaggregation/common/conn.py (+8/-2); python/sglang/srt/disaggregation/nixl/conn.py (+55/-7); python/sglang/srt/managers/scheduler_pp_mixin.py (+6/-0); python/sglang/srt/model_executor/model_runner.py (+0/-1); python/sglang/srt/model_executor/model_runner_components/layer_setup.py (+0/-34); python/sglang/srt/models/deepseek_common/deepseek_weight_loader.py (+2/-2); python/sglang/srt/models/deepseek_v2.py (+8/-1); test/registered/unit/disaggregation/test_pp_mla_kv_transfer.py (+258/-0); test/registered/unit/managers/test_auxiliary_output.py (+45/-0); (+2 more)
+LABELS: deepseek, run-ci
+BODY: Supersedes #39052 while @nvjullin is OOTO. The original two commits are preserved with Julien as their author; this branch rebases the change onto current `main` and addresses every review comment on the original PR. ⏎  ⏎ ## Motivation ⏎  ⏎ GLM-5.2 could not run disaggregated PP prefill with MTP because: ⏎  ⏎ 1. PP + speculative decoding was rejected outside NPU even though the prefill path already forwards PP proxy tensors from stages that do not host the d …[truncated]
+
+### L2-e54009240a  (L2, 2026-09-20, sha e54009240a84, PR #38901)
+TITLE: [AMD][DSV4] feat: enable DSpark with fp8 unified_kv on gfx950 (#38901)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/mem_cache/deepseek_v4_memory_pool.py (+27/-8); python/sglang/srt/mem_cache/kv_cache_configurator.py (+16/-0); python/sglang/srt/model_executor/pool_configurator.py (+27/-6); test/registered/e2e/dsv4/test_dsv4_unified_fp8_scatter.py (+17/-0); test/registered/unit/mem_cache/test_dsv4_unified_fp8_pool.py (+213/-0); test/registered/unit/model_executor/test_pool_configurator.py (+33/-0)
+LABELS: deepseek, run-ci, jit-kernel, run-ci-extra, memory-pool
+BODY: ## Motivation ⏎  ⏎  ⏎ Follow-up to [#37413](https://github.com/sgl-project/sglang/pull/37413). Incremental is only 1 commit, 6 files. ⏎  ⏎ In #37413 we added fp8 two-pool unified_kv on gfx950 (`SGLANG_DSV4_UNIFIED_KV_FP8`, 640 B/row, ~1.50× KV capacity) and measured it on MTP. We left DSpark as the next SPD path. ⏎  ⏎ `--speculative-algorithm DSPARK` plus the env builds a second `DeepSeekV4TokenToKVPool` for the draft worker. That constructor used proce …[truncated]
+
+### L2-e9300f643e  (L2, 2026-09-20, sha e9300f643e66, PR #39565)
+TITLE: [Unified Cache][9/N] add opt-in MLA load deduplication for Mooncake Linker (#39565)
+SOURCES: subject_keyword, body_keyword
+ARTIFACT_HINTS: L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/arg_groups/fields/memory.py (+4/-0); python/sglang/srt/arg_groups/hicache_hook.py (+5/-0); python/sglang/srt/mem_cache/storage/mooncake_store/mooncake_direct_linker.py (+95/-4); python/sglang/srt/mem_cache/unified_cache/linker_mla_dedup.py (+85/-0); test/registered/unit/server_args/test_server_args.py (+19/-0)
+LABELS: hicache, run-ci, run-ci-extra, unified-radix-cache
+BODY: ## Summary ⏎  ⏎ Add `--enable-linker-mla-dedup` to load replicated MLA KV caches from Mooncake on TP rank 0, then broadcast the loaded data layer by layer to the other TP ranks. ⏎  ⏎ The feature is opt-in and reuses `MLAHostDedupBroadcaster`. ⏎  ⏎ ## Performance ⏎  ⏎ GLM-5.2 W4AFP8 on 8 × H20 96GB, TP8 / PP1, concurrency 1. ⏎ CUDA graphs enabled, chunked prefill size 8192, FP8 KV cache. ⏎  ⏎ | Cached prefix | All-rank load TTFT | Rank-0 load + broadcast TTF …[truncated]
+
+### L2-59dd2fc734  (L2, 2026-09-20, sha 59dd2fc73431, PR #39837)
+TITLE: [2/N] [Kernel] Fuse padding-preserving HiSparse slot translation (#39837)
+SOURCES: path_core, body_keyword
+ARTIFACT_HINTS: L2.optimization.weight_absorption
+FILES: python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mla_rocm.py (+8/-1); python/sglang/kernels/ops/kvcache/hisparse_slot_mapping.py (+59/-0); python/sglang/srt/mem_cache/hisparse_memory_pool.py (+15/-1); test/registered/amd/test_rocm_hisparse_fused_kv_gpu.py (+136/-0); test/registered/kernels/ops/kvcache/test_hisparse_slot_mapping.py (+72/-0); test/registered/unit/mem_cache/test_hisparse_slot_translation.py (+68/-0); test/registered/unit/models/test_rocm_hisparse_fused_kv.py (+97/-0)
+LABELS: amd, run-ci, jit-kernel, memory-pool
+DEEP_STUDY: deep-study performance PR (new_kernel_or_fusion)
+BODY: ## PR stack ⏎  ⏎ Merge in order: ⏎  ⏎ 1. [[1/N] [AMD] Fix HiSparse slot translation in the fused MLA KV writer](https://github.com/sgl-project/sglang/pull/38776) ⏎ 2. [[2/N] [Kernel] Fuse padding-preserving HiSparse slot translation](https://github.com/sgl-project/sglang/pull/39837) ⏎  ⏎ This PR builds on #38776. The first two commits carry that fix; review the final commit, which combines the kernel-fusion change and its CI registration, as this step of the s …[truncated]
+
+### L2-95521da18d  (L2, 2026-09-20, sha 95521da18df4, PR #40217)
+TITLE: [DeepSeek-V4.1] Bound dense prefill indexer memory (#40217)
+SOURCES: path_integration+keyword, subject_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/attention/deepseek_v4_backend.py (+29/-84); python/sglang/srt/layers/attention/dsv4/candidate_indexer.py (+62/-10); python/sglang/srt/layers/attention/dsv4/dense_prefill_indexer.py (+148/-0); test/registered/kernels/ops/attention/test_dense_prefill_indexer.py (+316/-0); test/registered/unit/layers/test_dsv41_candidate_blocks.py (+86/-0)
+LABELS: high priority, deepseek, run-ci, bypass-fastfail, run-ci-extra
+BODY: ## Motivation ⏎  ⏎ The DeepSeek-V4.1 dense prefill indexer can OOM even when the KV cache has room. The HBM spike comes from temporary scores and candidate masks. ⏎  ⏎ The inputs are FP4, but DeepGEMM returns FP32 scores with shape `[query tokens, visible context entries]`. At the candidate-source layer, those scores stay alive while we build Boolean masks in pieces and concatenate them. The pieces and the combined mask coexist during `torch.cat`. ⏎  ⏎ ```te …[truncated]
+
+### L2-7ad55e4386  (L2, 2026-09-21, sha 7ad55e43865c, PR #40278)
+TITLE: [HiCache] TMA-staged host<->device KV transfer kernel (sm_90+) (#40278)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.pool.mla_token_kv
+FILES: python/sglang/kernels/jit/csrc/kvcacheio/hicache_tma.cuh (+646/-0); python/sglang/kernels/ops/kvcache/hicache.py (+131/-15); python/sglang/srt/environ.py (+3/-0); python/sglang/srt/mem_cache/pool_host/mha.py (+10/-2); python/sglang/srt/mem_cache/pool_host/mla.py (+7/-1); test/registered/kernels/benchmark/kvcache/bench_hicache.py (+90/-14); test/registered/kernels/ops/kvcache/test_hicache_tma.py (+173/-0)
+LABELS: hicache, run-ci, jit-kernel
+DEEP_STUDY: deep-study performance PR (new_kernel_or_fusion)
+BODY: **Before -> after** (HiCache host<->device KV transfer through the pool API, 8 layers x 32K tokens, GB300): H2D 97 -> 192 GB/s, D2H 93 -> 183 GB/s, about 2x, at the host link's copy-engine ceiling, using 4 of 152 SMs. ⏎  ⏎ ## Motivation ⏎  ⏎ HiCache brings cached prefixes back from the pinned host pool into the device pool layer by layer, on a side stream, while the forward pass runs on the same GPU. Two properties of the transfer kernel therefore matter …[truncated]
+
+### L2-632919e498  (L2, 2026-09-21, sha 632919e49865, PR #37762)
+TITLE: [AMD] Fix DeepSeek-R1-MXFP4 accuracy with AITER FP8 (#37762)
+SOURCES: path_core, body_keyword
+ARTIFACT_HINTS: L2.optimization.weight_absorption
+FILES: python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mla_rocm.py (+1/-0)
+LABELS: amd
+BODY: ## Summary ⏎  ⏎ - Keep the BF16 query exception only for the 12-head AITER + FP8 case it was added for. ⏎ - Let other head counts use FP8 queries again. ⏎  ⏎ ## Why ⏎  ⏎ #34647 added the BF16 exception for Kimi-K3 TP8, which has 12 local MLA heads. The condition also applied to every other AITER + FP8 MLA model, causing DeepSeek-R1-MXFP4 TP2, TP4, and TP4-MTP to select the wrong kernel and lose nearly all GSM8K accuracy. ⏎  ⏎ This change adds only the mis …[truncated]
+
+### L2-11e661fd45  (L2, 2026-09-21, sha 11e661fd450d, PR #39175)
+TITLE: [Fix] Don't free the multi-CTAs KV counter the decode graphs captured (#39175)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.backend.sparse_mla_adapters
+FILES: python/sglang/srt/layers/attention/dsa_backend.py (+38/-10); test/registered/kernels/ops/attention/test_dsa_multi_ctas_counter.py (+139/-0)
+BODY: ## Motivation ⏎  ⏎ `DeepseekSparseAttnBackend._forward_trtllm` rebound the counter buffer: ⏎  ⏎ ```python ⏎ self._multi_ctas_kv_counter_buffer = grow_multi_ctas_kv_counter_buffer_if_needed(...) ⏎ ``` ⏎  ⏎ `grow_..._if_needed` returns a **new** `torch.zeros` when it grows, so the assignment frees the buffer the decode CUDA graphs captured. Later replays write through a dangling pointer. ⏎  ⏎ `batch_size` is `page_table_1.shape[0]` — **query rows, not reques …[truncated]
+
+### L2-d20cd9d77f  (L2, 2026-09-21, sha d20cd9d77fbd, PR #32792)
+TITLE: [XPU]Enable HiSparse hierarchical sparse KV cache on Intel XPU (#32792)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.pool.mla_token_kv
+FILES: python/sglang/srt/managers/hisparse_coordinator.py (+36/-7); python/sglang/srt/mem_cache/hisparse_memory_pool.py (+6/-5); python/sglang/srt/mem_cache/memory_pool_host.py (+5/-2); python/sglang/srt/mem_cache/pool_host/common.py (+1/-0); python/sglang/srt/mem_cache/pool_host/mla.py (+1/-1); test/registered/kernels/ops/kvcache/test_hisparse.py (+38/-21); test/registered/unit/managers/test_hisparse_unit.py (+39/-29)
+LABELS: hicache, intel, xpu, run-ci, memory-pool
+BODY: Enable HiSparse (hierarchical sparse KV cache) on Intel XPU (in addition to CUDA/ROCm), and enable the corresponding unit tests. ⏎  ⏎ The two hot kernels — `load_cache_to_device_buffer_{mla,dsv4_mla}` and `transfer_cache_dsv4_mla` — are ported to SYCL in [sgl-kernel-xpu#335](https://github.com/sgl-project/sgl-kernel-xpu/pull/335). CUDA/ROCm JIT-compiles them via `sglang.kernels.ops.kvcache.hisparse`; the XPU port is AOT-compiled into the `sgl_kerne …[truncated]
+
+### L2-b63f8416b3  (L2, 2026-09-21, sha b63f8416b3b7, PR #29189)
+TITLE: [Feature] Gigachat 3.5 support (#29189)
+SOURCES: path_core, body_keyword
+ARTIFACT_HINTS: L2.dispatch.attention_registry, L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/layers/attention/attention_registry.py (+1/-2); docs/docs/advanced_features/server_arguments.mdx (+2/-2); docs/docs/supported-models/generative_models.mdx (+5/-0); python/sglang/srt/arg_groups/model_overrides/__init__.py (+1/-0); python/sglang/srt/arg_groups/model_overrides/gigachat35.py (+26/-0); python/sglang/srt/configs/__init__.py (+2/-0); python/sglang/srt/configs/gigachat35.py (+252/-0); python/sglang/srt/configs/model_config.py (+7/-0); python/sglang/srt/function_call/function_call_parser.py (+2/-0); python/sglang/srt/function_call/gigachat35_detector.py (+151/-0); (+7 more)
+LABELS: documentation, run-ci
+BODY: ## Motivation ⏎  ⏎ GigaChat-3.5-432B-A28B is a Mixture-of-Experts (MoE) language model with 432B total parameters and 28B active parameters. Built on a DeepSeek-V3-style backbone (MLA attention + DeepSeek MoE), it employs a hybrid attention architecture in which most layers use a Qwen3-Next Gated-Delta-Net (GDN) linear-attention block while a periodic subset retains full MLA attention. The architecture further incorporates gated RMSNorm with a low- …[truncated]
+
+### L2-00986c81be  (L2, 2026-09-21, sha 00986c81be68, PR #40310)
+TITLE: Support GLM-5.3-Flash hybrid attention CPU offload and PD index mapping (#40310)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.backend.sparse_mla_adapters
+FILES: python/sglang/kernels/ops/attention/dsa/transform_index.py (+2/-1); python/sglang/srt/layers/attention/dsa/dsa_indexer_kpool.py (+10/-4); python/sglang/srt/utils/offloader.py (+55/-6); test/registered/kernels/ops/attention/test_dsa_transform_index.py (+38/-0)
+LABELS: run-ci, jit-kernel, parallel-stages
+BODY: ## Motivation ⏎  ⏎ Enabling CPU offload prevents GLM-5.3-Flash from starting in the tested TP8/EAGLE configuration. With the original offloader, `--cpu-offload-gb 0` starts and serves requests, while `--cpu-offload-gb 3` fails during CUDA graph initialization: ⏎  ⏎ ```text ⏎ ValueError: functional_call got multiple values for keys ⏎ ['self_attn.A_log', 'self_attn.attn.A_log'], which are tied. ⏎ ``` ⏎  ⏎ The same failure also occurs for the shared `dt_bias …[truncated]
+
+### L2-506698761d  (L2, 2026-09-21, sha 506698761d9e, PR #37507)
+TITLE: [unified-memory] Hierarchical cache for every unified pool shape (#37507)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.pool.mla_token_kv, L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/arg_groups/kv_cache_hook.py (+4/-6); python/sglang/srt/managers/cache_controller.py (+9/-0); python/sglang/srt/managers/scheduler.py (+6/-0); python/sglang/srt/mem_cache/allocator/unified_hybrid_swa.py (+54/-3); python/sglang/srt/mem_cache/allocator/unified_mamba.py (+15/-0); python/sglang/srt/mem_cache/allocator/unified_sub_pool.py (+35/-16); python/sglang/srt/mem_cache/hicache_storage.py (+3/-0); python/sglang/srt/mem_cache/hybrid_cache/hybrid_cache_controller.py (+28/-0); python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py (+44/-8); python/sglang/srt/mem_cache/l2_transfer.py (+43/-10); (+16 more)
+LABELS: hicache, bypass-fastfail, run-ci-extra, unified-radix-cache, memory-pool
+DEEP_STUDY: deep-study performance PR (system_performance)
+BODY: ## Summary ⏎  ⏎ Enable hierarchical HiCache for unified-memory GDN, sliding-window, tri-pool, and MLA configurations. Host transfers resolve virtual IDs into the correct per-layer buffer indices while device-page relocation remains blocked until transfers complete. ⏎  ⏎ - Resolve index translations on the transfer stream after the producer event, including direct-backend CPU indices and DCP logical IDs. ⏎ - Size host pools from explicit token and byte capa …[truncated]
+
+### L2-042b6a488f  (L2, 2026-09-21, sha 042b6a488f52, PR #39338)
+TITLE: [AMD] [GLM-5.3-Flash Day 0] Enable zero-RoPE MHA prefill on ROCm (#39338)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mha_rocm.py (+7/-1); test/registered/unit/models/test_nope_mha_k_cast.py (+83/-0)
+LABELS: amd, run-ci
+BODY: ## Summary ⏎  ⏎ GLM-5.3-Flash's full-attention layers are norope (`qk_rope_head_dim == 0`), so `k_pe` reaches `_concat_and_cast_mha_k_rocm` as `None` or zero-width tensor while the helper still allocates a `qk_head_dim`-wide `k` and appends it. So, this PR returns `k_nope` directly. ⏎  ⏎ | `k_pe` | `attention_backend` | today | with this PR | ⏎ | --- | --- | --- | --- | ⏎ | `None` | `aiter` | `len(k_rope.shape)` → AttributeError | early return `k_nope` | ⏎ | ` …[truncated]
+
+### L2-c4d3770a68  (L2, 2026-09-21, sha c4d3770a6850, PR #40640)
+TITLE: [Kimi K3] Fix CUDA graph stream explosion (#40640)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/models/kimi_k3.py (+25/-33); test/registered/unit/models/test_kimi_k3_bfa_overlap.py (+73/-28)
+BODY: ## Motivation ⏎  ⏎ Kimi K3 target CUDA graph replay expands to 96 streams on B300. Repeated attention forks move subsequent layers onto new replay streams. Record the main attention branches before their auxiliary kernels to fix this stream explosion: the same workload now uses 4 target streams on all eight TP ranks. ⏎  ⏎ ## Modifications ⏎  ⏎ - Record the KDA main projection before the side-stream gate GEMVs. ⏎ - Fork the MLA output gate before attenti …[truncated]
+
+### L2-b44e248682  (L2, 2026-09-21, sha b44e2486824e, PR #38546)
+TITLE: [AMD] [GLM-5.3-Flash Day 0] Enable FP8 and Quark MXFP4 MoE on gfx950 (#38546)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/moe/moe_runner/aiter.py (+7/-4); python/sglang/srt/layers/quantization/fp8.py (+22/-0); python/sglang/srt/layers/quantization/quark/quark.py (+56/-3); python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4_moe.py (+24/-4); python/sglang/srt/models/glm5_next.py (+17/-3); test/registered/e2e/moe/test_glm53_flash_quark_moe_mi35x.py (+397/-0); test/registered/unit/layers/quantization/test_fp8_moe_runner_ownership.py (+48/-0); test/registered/unit/layers/quantization/test_quark_config.py (+185/-1)
+LABELS: amd, run-ci
+DEEP_STUDY: deep-study performance PR (precision_format)
+BODY: ## Summary ⏎  ⏎ Replacement for #38037, which GitHub closed when its deleted support base was merged into main. ⏎  ⏎ Replacement for #37629, which was accidentally squash-merged and then reverted by #37880. This reapplies the same reviewed change on the current support-branch head. ⏎  ⏎ GLM-5.3-Flash ships two gfx950 MoE checkpoint paths that share one model architecture but use different quantization contracts: ⏎  ⏎ - `zai-org/GLM-5.3-Flash`: routed, shared, an …[truncated]
+
+### L2-095e45100b  (L2, 2026-09-21, sha 095e45100b3b, PR #38545)
+TITLE: [AMD] [GLM-5.3-Flash Day 0] Route mHC through AITER on gfx950 (#38545)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/ops/layernorm/mhc.py (+139/-4); test/registered/kernels/ops/layernorm/test_mhc_aiter_hip.py (+213/-0)
+LABELS: amd, run-ci, jit-kernel
+BODY: ## Summary ⏎  ⏎ Replacement for #37626, which GitHub closed when its deleted support base was merged into main. ⏎  ⏎ GLM-5.3-Flash uses mHC in all 45 decoder layers (`hc_mult=4`, `hidden_size=4096`). The support branch already carries the flattened mHC state contract and `MHCLayerCommunicator`, but `hc_pre` and `hc_post` have no AITER dispatch: enabling `SGLANG_USE_AITER=1` still leaves them on TileLang when its flags are set, or on the Torch fallback ot …[truncated]
+
+### L2-bc22e1de9e  (L2, 2026-09-21, sha bc22e1de9e37, PR #40658)
+TITLE: [DSpark] Fix draft CUDA graph stream explosion (#40658)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/distributed/parallel_state.py (+1/-3)
+BODY: ## Motivation ⏎  ⏎ DSpark draft CUDA graph replay expands to seven streams on B300 with TP8/DCP1. Its seven dependent token broadcasts go through ProcessGroupNCCL even while the graph capture context has enabled PyNccl. ⏎  ⏎ ## Modifications ⏎  ⏎ Use the enabled PyNccl communicator for CUDA broadcasts, keeping broadcasts on the current capture stream. Preserve the torch.distributed fallback when PyNccl is disabled or unavailable. Keep the existing typed PyNc …[truncated]
+
+### L2-790551c382  (L2, 2026-09-22, sha 790551c38230, PR #35872)
+TITLE: [AMD] Skip full-vocab softmax in EAGLE topk==1 draft on ROCm (#35872)
+SOURCES: symbol_pickaxe
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/ops/speculative/topk1.py (+12/-0); python/sglang/srt/speculative/eagle_worker_v2.py (+11/-3); test/registered/kernels/ops/speculative/test_spec_topk1.py (+56/-2)
+LABELS: amd, speculative-decoding, run-ci, jit-kernel
+DEEP_STUDY: deep-study performance PR (kernel_optimization)
+BODY: ## Motivation ⏎  ⏎ EAGLE `topk=1` only needs the largest-logit token. For finite logits, a full-vocabulary softmax cannot change the argmax and is redundant. AITER `greedy_sample` has an unmasked vector-tail correctness issue; on MI355X it returned an out-of-vocabulary index for vocabulary size 151,666. SGLang’s existing Triton split-argmax masks offsets `>= vocab_size` and safely handles NaNs. ⏎  ⏎ ## Changes ⏎  ⏎ - Use the existing masked Triton spli …[truncated]
+
+### L2-61d0cf2074  (L2, 2026-09-22, sha 61d0cf207471, PR #32673)
+TITLE: [Spec] Windowed draft-decode attention for built-in EAGLE / MTP drafts (#32673)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.dispatch.server_args_defaults, L2.backend.flashinfer_general_mla
+FILES: python/sglang/kernels/ops/speculative/cache_locs.py (+43/-39); python/sglang/srt/arg_groups/fields/spec.py (+5/-1); python/sglang/srt/arg_groups/speculative_hook.py (+24/-4); python/sglang/srt/layers/attention/flashinfer_backend.py (+6/-0); python/sglang/srt/layers/attention/triton_backend.py (+6/-0); python/sglang/srt/speculative/spec_utils.py (+36/-0); test/registered/kernel/spec/test_draft_decode_window.py (+439/-0); test/registered/unit/spec/test_spec_registry.py (+1/-0)
+LABELS: speculative-decoding, run-ci, jit-kernel
+DEEP_STUDY: deep-study performance PR (system_performance)
+BODY: # [Spec] Windowed draft-decode attention for built-in EAGLE / MTP drafts ⏎  ⏎ ## Motivation ⏎  ⏎ In [arXiv:2607.21535](https://arxiv.org/abs/2607.21535) we show that a built-in MTP draft ⏎ head's full-attention KV read grows with the prefix until it dominates the decode step, ⏎ and that restricting the *draft's* attention to a sink plus recent window cuts the ⏎ per-decode-step cost by +28% to +44% at 1M context across three architecture families at ⏎ near-unchan …[truncated]
+
+### L2-15eba3b464  (L2, 2026-09-22, sha 15eba3b4643c, PR #27265)
+TITLE: Feat: Add TensorCast storage as a new HiCache backend (#27265)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/arg_groups/fields/memory.py (+2/-1); python/sglang/srt/managers/cache_controller.py (+1/-0); python/sglang/srt/mem_cache/pool_host/common.py (+12/-0); python/sglang/srt/mem_cache/storage/backend_factory.py (+8/-0); python/sglang/srt/mem_cache/storage/tensorcast_store/README.md (+368/-0); python/sglang/srt/mem_cache/storage/tensorcast_store/configs/global_store_config.yaml (+93/-0); python/sglang/srt/mem_cache/storage/tensorcast_store/configs/store_daemon_config.yaml (+389/-0); python/sglang/srt/mem_cache/storage/tensorcast_store/host_allocator.py (+476/-0); python/sglang/srt/mem_cache/storage/tensorcast_store/tensorcast_store.py (+860/-0); python/sglang/srt/mem_cache/storage/tensorcast_store/test_tensorcast_host_allocator.py (+301/-0); (+1 more)
+LABELS: documentation, hicache, run-ci, bypass-fastfail, run-ci-extra
+BODY: This PR implements the TensorCast KV backend, as proposed in https://github.com/sgl-project/sglang/issues/26702. Most modifications sit in `python/sglang/srt/mem_cache/storage/tensorcast_store` as a newly added modules derived from `HiCacheStorage` and `HostTensorAllocator`. See `python/sglang/srt/mem_cache/storage/tensorcast_store/README.md` on how to use and configure it. ⏎  ⏎ ## Design ⏎  ⏎ The overall design is similar to `MooncakeStore` ⏎  ⏎ - Int …[truncated]
+
+### L2-7b977ce5dc  (L2, 2026-09-22, sha 7b977ce5dcce, PR #40672)
+TITLE: [Fix] Decide the MoE padded-row bound from the layer scatter mode (#40672)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.model.deepseek_v2_mla, L2.optimization.weight_absorption
+FILES: python/sglang/srt/layers/communicator.py (+19/-13); python/sglang/srt/layers/moe/mega_moe.py (+1/-1); python/sglang/srt/model_executor/forward_batch_info.py (+44/-0); python/sglang/srt/models/bailing_moe.py (+1/-1); python/sglang/srt/models/bailing_moe_v3.py (+1/-1); python/sglang/srt/models/deepseek_v2.py (+5/-3); python/sglang/srt/models/deepseek_v4.py (+11/-19); python/sglang/srt/models/dots3_common/modeling.py (+2/-2); python/sglang/srt/models/exaone_moe.py (+1/-1); python/sglang/srt/models/glm4_moe.py (+2/-2); (+11 more)
+LABELS: deepseek, run-ci, run-ci-extra, bypass-fail-fast, highest-priority
+BODY: ## Summary ⏎  ⏎ A more general fix for the truncation reported in #40643, which #39574 introduced: rather than special-casing DP attention, the bound is decided from the layer communicator's scatter mode, which also covers the non-DP and CP gathered cases and the other MoE models on the same path. ⏎  ⏎ `forward_batch.num_token_non_padded` is **LOCAL** (`forward_batch_info.py`). It bounds a sparse MoE's input only while that input is this rank's own s …[truncated]
+
+### L2-ddebc52f23  (L2, 2026-09-22, sha ddebc52f237a, PR #38468)
+TITLE: [kv-shard 3/4] Enable Control plane (#38468)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/managers/scheduler_components/invariant_checker.py (+55/-16); python/sglang/srt/mem_cache/page_interleave.py (+79/-3); python/sglang/srt/mem_cache/page_interleave_pool.py (+37/-5); test/registered/unit/managers/scheduler_components/test_invariant_checker.py (+230/-0); test/registered/unit/managers/test_kv_page_invariants.py (+21/-0); test/registered/unit/mem_cache/test_page_interleave_shard.py (+174/-0)
+LABELS: deepseek, blackwell, run-ci, bypass-fastfail, run-ci-extra, unified-radix-cache, memory-pool
+BODY: ## Motivation ⏎  ⏎  ⏎ This is the control plane: `--enable-kv-cache-sharding` plus the wiring that makes a prefill worker actually build the widened allocator and the striped pools and schedule against them. ⏎  ⏎ The gate restricts the feature to PD prefill workers with fa3 (or trtllm_mla for plain-TP MLA), a real page size, and chunked prefill; picks the shard axis by topology (attention-CP under prefill CP, attention-TP for MLA without CP); ⏎ rounds  …[truncated]
+
+### L2-de123f38bb  (L2, 2026-09-23, sha de123f38bbc9, PR #33723)
+TITLE: [3/N] elastic-ep: Recapture decode CUDA graphs after scale-up (#33723)
+SOURCES: symbol_pickaxe, body_keyword
+ARTIFACT_HINTS: L2.backend.fa3_fa4_mla, L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/arg_groups/parallel_hook.py (+31/-10); python/sglang/srt/elastic_ep/elastic_ep.py (+30/-12); python/sglang/srt/layers/attention/base_attn_backend.py (+3/-0); python/sglang/srt/layers/attention/flashattention_backend.py (+9/-3); python/sglang/srt/layers/attention/hybrid_attn_backend.py (+3/-0); python/sglang/srt/layers/attention/tbo_backend.py (+4/-0); python/sglang/srt/layers/communicator.py (+10/-2); python/sglang/srt/layers/dp_attention.py (+9/-0); python/sglang/srt/layers/moe/token_dispatcher/nixl.py (+1/-1); python/sglang/srt/managers/tp_worker.py (+7/-0); (+8 more)
+LABELS: run-ci, bypass-fastfail
+BODY: ## Summary ⏎  ⏎ This PR follows [PR #30553](https://github.com/sgl-project/sglang/pull/30553) ⏎ and adds FULL decode CUDA graph recapture after runtime Elastic EP scale-up. ⏎ Primary and joiner ranks rebuild their graphs for the expanded topology before ⏎ the new EP size is committed. ⏎  ⏎ The existing scale-up API and EPLB lifecycle are unchanged. ⏎  ⏎ ## Changes ⏎  ⏎ - Defer initial decode graph capture on joining ranks until they enter the ⏎   expanded wo …[truncated]
+
+### L2-a89f849158  (L2, 2026-09-23, sha a89f84915891, PR #38340)
+TITLE: [ROCm] Fuse the MLA q absorb into the RoPE + KV-write kernel on gfx950 (#38340)
+SOURCES: path_core, path_integration+keyword, subject_keyword, symbol_pickaxe, corpus:performance-pr-population
+ARTIFACT_HINTS: L2.optimization.weight_absorption
+FILES: python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mla_rocm.py (+114/-18); python/sglang/srt/layers/rocm_linear_utils.py (+18/-1); test/registered/unit/models/test_rocm_mla_absorb_fusion_gate.py (+94/-0)
+LABELS: amd, run-ci
+DEEP_STUDY: deep-study performance PR (new_kernel_or_fusion)
+BODY: ## Motivation ⏎  ⏎ On gfx950, the absorbed q BMM and the fused RoPE + cat + KV write are two ⏎ separate launches -- `rocm_absorb_q_bmm` in prepare, `_fused_rope_cat_and_cache` ⏎ in core. At decode shapes neither fills half the CUs, so they run back to back ⏎ with most of the machine idle. ⏎  ⏎ aiter ships `fused_fp8_bmm_rope_cat_and_cache_mla`, which does all three in one ⏎ grid. It is present at the pinned `AITER_COMMIT_DEFAULT` (`4ad9983`). ⏎  ⏎ ## What  …[truncated]
+
+### L2-4cd63da996  (L2, 2026-09-23, sha 4cd63da99619, PR #38778)
+TITLE: [Unified Cache] Dedup replicated MLA/DSA KV in the UMBP direct linker (#38778)
+SOURCES: subject_keyword, body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/mem_cache/storage/umbp/umbp_direct_linker.py (+25/-2); test/registered/unit/mem_cache/test_umbp_direct_linker_rank_keys.py (+95/-0)
+LABELS: amd, hicache, run-ci
+BODY: ## Motivation ⏎  ⏎ The UMBP direct external linker suffixes every stored object key with `tp{rank}`: ⏎  ⏎ ```python ⏎ rank_suffix = f"tp{tp_rank}_cp{params.attn_cp_rank}_pp{params.pp_rank}" ⏎ self.storage.mla_suffix = rank_suffix ⏎ self.storage.mha_suffix = rank_suffix ⏎ ``` ⏎  ⏎ For DeepSeek-V4 that stores `tp_size` byte-identical copies of every page. The DSv4/DSA device pools carry no `tp_size` term (`deepseek_v4_memory_pool.py` has no `tp_size`/`tp_rank` anywher …[truncated]
+
+### L2-66ce8c55cc  (L2, 2026-09-23, sha 66ce8c55cc6c, PR #40831)
+TITLE: [HiCache] ci: add HiCache and unified radix rerun group (#40831)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: scripts/ci/rerun_test_groups.json (+55/-0)
+BODY: ## Motivation ⏎  ⏎ Provide `/rerun-group hicache-all` for tests whose primary subject is HiCache or unified radix cache correctness, combining feature regressions, focused component tests, and dedicated cache E2E/KL checks. ⏎  ⏎ ## Modifications ⏎  ⏎ Add an explicit list of 53 existing files to `scripts/ci/rerun_test_groups.json`: ⏎  ⏎ | Coverage | Files | ⏎ | --- | ---: | ⏎ | CPU/CUDA-dispatchable HiCache feature tests | 10 | ⏎ | Entire unified radix tree regression  …[truncated]
+
+### L2-f4b90382a2  (L2, 2026-09-23, sha f4b90382a29a, PR #40804)
+TITLE: [RL] Keep DSA cuda-graph state and the graph pool intact across TMS pause/resume (#40804)
+SOURCES: symbol_pickaxe, body_keyword
+ARTIFACT_HINTS: L2.backend.sparse_mla_adapters
+FILES: python/sglang/srt/layers/attention/dsa_backend.py (+30/-20); python/sglang/srt/model_executor/runner_backend/full_cuda_graph_backend.py (+2/-0); test/registered/kernels/ops/attention/test_dsa_indexer.py (+4/-0); test/registered/kernels/ops/attention/test_dsa_multi_ctas_counter.py (+2/-0)
+LABELS: run-ci
+BODY: ## Motivation ⏎  ⏎ In RL colocation the engine releases the `GPU_MEMORY_TYPE_CUDA_GRAPH` torch-memory-saver region while the trainer runs and resumes it before the next rollout. Two things break on main: ⏎  ⏎ 1. The full-cuda-graph pool holds capture-time-initialized device state that replays read but never rewrite. Pausing discards it, so the first replay after resume reads garbage. ⏎ 2. DSA's wide `page_table` (`max_num_tokens x max_ctx_len` int32) and t …[truncated]
+
+### L2-d94d784441  (L2, 2026-09-24, sha d94d78444183, PR #39059)
+TITLE: [AMD] Tune Triton sparse MLA on gfx950 and make split-K workspaces graph-safe (#39059)
+SOURCES: path_core, path_integration+keyword, subject_keyword, symbol_pickaxe, corpus:performance-pr-population, body_keyword
+ARTIFACT_HINTS: L2.backend.sparse_mla_adapters
+FILES: python/sglang/kernels/ops/attention/dsa/triton_sparse_mla.py (+216/-53); python/sglang/kernels/ops/attention/dsa/triton_sparse_mla_decode.py (+70/-20); python/sglang/srt/layers/attention/dsa_backend.py (+13/-0); test/registered/kernels/ops/attention/test_triton_sparse_mla_hip.py (+160/-0)
+LABELS: run-ci, jit-kernel
+DEEP_STUDY: deep-study performance PR (kernel_optimization)
+BODY: ## Summary ⏎ - Tune split-K and reduction launch geometry for gfx950 FP8 sparse MLA. ⏎ - Reuse decode split-K workspaces across graph capture and replay. ⏎  ⏎ The fused prefill kernel narrows page offsets to i32 only when they provably ⏎ fit; the split-K kernel keeps i64 offsets. ⏎  ⏎ ## The Sweep of AgentX  Results ⏎  ⏎ Concurrency | Config | Total Throughput | Output Throughput | P90 Interactivity | P90 TTFT ⏎ -- | -- | -- | -- | -- | -- ⏎ C=1 Baseline |  …[truncated]
+
+### L2-78b382b1ad  (L2, 2026-09-24, sha 78b382b1ad36, PR #39478)
+TITLE: Support unified memory decode host pools (#39478)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/arg_groups/kv_cache_hook.py (+33/-10); python/sglang/srt/disaggregation/decode_kvcache_offload_manager.py (+122/-26); python/sglang/srt/disaggregation/utils.py (+5/-0); python/sglang/srt/managers/cache_controller.py (+3/-0); python/sglang/srt/mem_cache/hybrid_cache/hybrid_cache_controller.py (+207/-53); python/sglang/srt/mem_cache/hybrid_cache/hybrid_pool_assembler.py (+64/-17); python/sglang/srt/mem_cache/kv_cache_builder.py (+24/-3); python/sglang/srt/mem_cache/l2_transfer.py (+62/-25); python/sglang/srt/mem_cache/memory_pool_host.py (+25/-0); python/sglang/srt/mem_cache/pool_host/base.py (+72/-1); (+14 more)
+LABELS: hicache, run-ci, run-ci-extra, unified-radix-cache, memory-pool, bypass-fail-fast
+BODY: Original PR: [#36731](https://github.com/sgl-project/sglang/pull/36731) — previous reviews and comments. ⏎  ⏎ ## Motivation ⏎  ⏎ Full and sliding-window KV caches share a device byte budget under unified memory, but independently sized host pools cannot redistribute free capacity between them. This PR adds a shared host arena with stable logical page IDs, safe compaction, and coordinated allocation/reclaim. It also enables the supported unified-memory de …[truncated]
+
+### L2-86b3558b41  (L2, 2026-09-24, sha 86b3558b41bd, PR #41138)
+TITLE: [Fix] Skip the DCP target-verify MLA kernel during FlashInfer autotune (#41138)
+SOURCES: path_core, path_integration+keyword, subject_keyword, body_keyword
+ARTIFACT_HINTS: L2.backend.trtllm_mla, L2.runner.cuda_graph_mla
+FILES: python/sglang/srt/layers/attention/trtllm_mla_backend.py (+13/-3); test/registered/dcp/test_trtllm_mla_family_dcp_metadata.py (+63/-0)
+LABELS: blackwell
+BODY: ## Summary ⏎  ⏎ With spec decoding + DCP, the autotune dummy forward is `TARGET_VERIFY`, so it bypasses `forward_decode`'s guard and runs the real MLA kernel, whose FlashInfer tuning can OOM on some ranks only and hang startup. Skip it there too. ⏎  ⏎ `TestKimiK3B300MegaMoE`, 8×B300, cold autotune cache: ⏎  ⏎ | | Startup | GSM8K | ⏎ |---|---|---| ⏎ | Before | Hangs at `Tuning trtllm_batch_decode_mla 17/21` | — | ⏎ | After | OK | 0.985 | ⏎  ⏎ Unit tests cove …[truncated]
+
+### L2-1446e24d13  (L2, 2026-09-24, sha 1446e24d13cc, PR #41120)
+TITLE: [AMD] Add .co for deepseek v4 fp8 decode kernel and add group decode opt (#41120)
+SOURCES: path_core, path_integration+keyword, subject_keyword, corpus:performance-pr-population
+ARTIFACT_HINTS: -
+FILES: docker/rocm.Dockerfile (+6/-0); python/sglang/kernels/ops/attention/dsv4/asm/gfx950/mla_v4/mla_a8w8_qh64_qseqlen1_gqaratio64_nm.co (+0/-0); python/sglang/kernels/ops/attention/dsv4/unified_kv_kernels/grouped_verify_streams.py (+139/-0); python/sglang/kernels/ops/attention/dsv4/unified_kv_kernels/runtime.py (+15/-14); python/sglang/srt/layers/attention/deepseek_v4_backend_hip_radix.py (+91/-3)
+LABELS: amd, dependencies, deepseek, sgl-kernel, run-ci, jit-kernel
+DEEP_STUDY: deep-study performance PR (kernel_optimization)
+BODY: ## Motivation ⏎  ⏎  ⏎  ⏎ DSpark uses 7 draft tokens a step. They share the same compressed KV and their SWA windows differ by one token each, but the fp8 asm decode splits the grid per token, so that KV gets read 7 times over. ⏎  ⏎ aiter's v4 nm asm kernel already takes several q rows in one tile at head=16 (1, 2 or 4), but it doesn't mask between them. Every row sees the full compressed KV and SWA, so the results come out wrong. ⏎  ⏎ Once the mask is th …[truncated]
+
+### L2-961404b010  (L2, 2026-09-24, sha 961404b0106f, PR #41090)
+TITLE: [DSV4] Fix TRTLLM uniform FP8 KV memory budgeting (#41090)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/model_executor/pool_configurator.py (+2/-0); test/registered/unit/model_executor/test_pool_configurator.py (+16/-0)
+BODY: ## Motivation ⏎  ⏎ The DSV4 TRTLLM backend allocates uniform FP8 KV rows: 448 NoPE + 64 RoPE = 512 bytes. The configurator currently charges FlashMLA's 584-byte mixed-layout row, over-reserving 72 bytes per stored token per layer and reducing usable KV capacity. ⏎  ⏎ ## Modifications ⏎  ⏎ Select the attention head dimension as the row-byte cost for the TRTLLM backend, after the existing unified-KV case. ⏎  ⏎ Add one 16-line regression for TRTLLM row and SWA cost …[truncated]
+
+### L2-0c578d97fe  (L2, 2026-09-24, sha 0c578d97fe7e, PR #41049)
+TITLE: [DSV4] Size compressed pools from one per-ratio table in DSV4PoolConfigurator (#41049)
+SOURCES: symbol_pickaxe
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/attention/deepseek_v4_backend.py (+26/-50); python/sglang/srt/layers/attention/deepseek_v4_backend_hip_radix.py (+48/-109); python/sglang/srt/mem_cache/deepseek_v4_memory_pool.py (+70/-96); python/sglang/srt/model_executor/pool_configurator.py (+101/-188); test/registered/unit/mem_cache/test_dsv4_c4_state_lifecycle.py (+1/-1); test/registered/unit/model_executor/test_pool_configurator.py (+34/-43)
+LABELS: deepseek, run-ci, memory-pool
+BODY: Stacks on #41048. Pure refactor: the configurator now budgets from the same per-ratio owner-layer table the pool allocates from (`collect_sources_by_ratio`), both sides resolve the compress state ring size through one helper, the `swa_page_size` / `swa_window_size` aliases give way to `page_size` / `sliding_window_size`, and the attention backends drop a hardcoded `swa_page_size = 128` that only fed always-true asserts. Byte accounting is unchang …[truncated]
+
+### L2-a2025b8c4d  (L2, 2026-09-24, sha a2025b8c4d09, PR #41091)
+TITLE: [DSV4] Account for FlashMLA physical KV page padding in memory budgets (#41091)
+SOURCES: subject_keyword, body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/model_executor/pool_configurator.py (+29/-5); test/registered/unit/model_executor/test_pool_configurator.py (+24/-0)
+LABELS: run-ci
+BODY: ## Motivation ⏎  ⏎ DSV4's FlashMLA KV budget charges every latent slot at 584 bytes, but allocation rounds each physical page to the layout's alignment. With a 256-token logical page, V4 SWA/C4 slots cost 585 bytes each and C128 slots cost 864 bytes each. The resulting underestimate grows with token capacity. ⏎  ⏎ ## Modifications ⏎  ⏎ Use the pool's layout selection and `KVLayout.page_bytes()` to price SWA, C4, and C128 at their respective physical page siz …[truncated]
+
+### L2-ea5baf4022  (L2, 2026-09-24, sha ea5baf4022e4, PR #40922)
+TITLE: [Refactor] Retire the model-specific Kimi K3 kernel namespace (#40922)
+SOURCES: path_core, body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/ops/attention/mla_output_gate.py (+0/-0); python/sglang/kernels/README.md (+4/-0); python/sglang/kernels/ops/__init__.py (+0/-1); python/sglang/kernels/ops/activation/__init__.py (+23/-0); python/sglang/kernels/ops/activation/_jit_situ_and_mul.py (+0/-0); python/sglang/kernels/ops/attention/__init__.py (+52/-0); python/sglang/kernels/ops/attention/attn_res.py (+1/-1); python/sglang/kernels/ops/attention/attn_res_hip.py (+0/-0); python/sglang/kernels/ops/attention/kda_decode_mtp.py (+0/-0); python/sglang/kernels/ops/attention/kda_flydsl/__init__.py (+0/-0); (+42 more)
+LABELS: documentation, quant, run-ci, jit-kernel, run-ci-extra
+BODY: ## Motivation ⏎  ⏎ `sglang.kernels.ops.kimi_k3` collects unrelated activation, attention, GEMM, MoE and communication kernels under a model name. Retire this package and restore the logical operator grouping from #29630. ⏎  ⏎ ## Modifications ⏎  ⏎ - Move SiTU into `activation`, masked SiTU/quantization into `moe`, and the shape-tuned tiny GEMM adapter into `gemm`. ⏎ - Move attention-residual, MLA output gating, KDA MTP and FlyDSL KDA implementations into `atte …[truncated]
+
+### L2-4142235c2b  (L2, 2026-09-24, sha 4142235c2bfa, PR #40524)
+TITLE: [NPU] Update CANN version to 9.1.0 (#40524)
+SOURCES: dependency_pin
+ARTIFACT_HINTS: -
+FILES: docker/npu.Dockerfile (+88/-30); .github/workflows/_npu-pr-test-stage.yml (+1/-1); .github/workflows/_npu-single-node-test-stage.yml (+2/-2); .github/workflows/coverage-collection-npu.yml (+1/-1); .github/workflows/diffusion-ci-gt-gen-npu.yml (+2/-2); .github/workflows/full-test-npu.yml (+2/-29); .github/workflows/nightly-test-npu.yml (+5/-150); .github/workflows/pr-test-npu.yml (+64/-22); .github/workflows/release-docker-npu-nightly.yml (+60/-27); .github/workflows/release-docker-npu.yml (+2/-2); (+5 more)
+LABELS: dependencies, npu, run-ci
+BODY: Motivation ⏎  ⏎  ⏎  ⏎ Move the SGLang NPU stack from CANN 9.0.0 / Python 3.11 to CANN 9.1.0 / Python 3.12, and align the ⏎ device matrix with what 9.1.0 actually ships. ⏎  ⏎ * CANN 9.1.0 is the current Ascend toolkit release, and the prebuilt base images ⏎   (`quay.io/ascend/cann:9.1.0-<device_type>-ubuntu22.04-py3.12`) are published for both `a3` and `950`. ⏎ * The `torch_npu` and `sgl-kernel-npu` builds we consume now target CANN 9.1.0 on Python 3.12: ⏎  …[truncated]
+
+### L2-ec070ec8c8  (L2, 2026-09-24, sha ec070ec8c861, PR #41159)
+TITLE: [AMD] Fix int32 offset overflow in Triton DSv4 KV store kernels (#41159)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/ops/kvcache/triton_store_cache.py (+3/-2)
+LABELS: jit-kernel
+BODY: ## Motivation ⏎ On ROCm, the Triton DSv4 KV store kernels (`triton_store_cache.py`) cast `loc` to int32 and compute cache offsets in int32.  ⏎  ⏎ DeepSeek-V4.1-Flash's compress-ratio-1 KV pool is ~23.6 GB per layer, so the offsets overflow once `loc` passes ~3.67M tokens: writes land outside the buffer, silently at first, then as a `Memory access fault` at ~7.34M tokens (hit during AgentX warmup at conc >= 16). The CUDA kernel with the same function …[truncated]
+
+### L2-1409f469be  (L2, 2026-09-25, sha 1409f469be46, PR #41194)
+TITLE: [Fix] Plan NextN / MTP draft layers as one-layer models and fix the Bailing V2 NextN draft (#41194)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/configs/model_config.py (+6/-3); python/sglang/srt/models/bailing_moe.py (+3/-2); python/sglang/srt/models/bailing_moe_linear.py (+3/-2); python/sglang/srt/models/step3p5.py (+3/-4); test/registered/unit/configs/test_model_config_shapes.py (+18/-0); test/registered/unit/models/test_last_layer_communicator.py (+58/-5)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41200 ⏎ * #41199 ⏎ * #41191 ⏎ * #41198 ⏎ * #41197 ⏎ * #41196 ⏎ * #41195 ⏎ * __->__ #41194 ⏎ * #41193 ⏎  ⏎ ## Motivation ⏎  ⏎ This PR fixes three defects in NextN / MTP draft layers. Each commit fixes one. ⏎  ⏎ 1. **Layout plan.** `LayerScatterModes` treats `layer_id == 0` as the first layer (it takes the model's input layout) and `layer_id == num_layers - 1` as the last (it returns the model's output layout). Two draft laye …[truncated]
+
+### L2-9d7f44bdbb  (L2, 2026-09-25, sha 9d7f44bdbb1e, PR #41196)
+TITLE: [Refactor] Carry a deferred FFN all-reduce as UnreducedOutput and complete it in the next layer without the fused kernel (#41196)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.model.deepseek_v2_mla, L2.optimization.weight_absorption
+FILES: python/sglang/srt/batch_overlap/two_batch_overlap.py (+2/-0); python/sglang/srt/layers/communicator.py (+115/-44); python/sglang/srt/layers/communicator_mhc.py (+3/-0); python/sglang/srt/layers/moe/__init__.py (+2/-0); python/sglang/srt/layers/moe/cutedsl_ar_fusion.py (+4/-4); python/sglang/srt/models/bailing_moe.py (+2/-2); python/sglang/srt/models/bailing_moe_v3.py (+4/-3); python/sglang/srt/models/deepseek_v2.py (+2/-1); python/sglang/srt/models/dots3_common/modeling.py (+2/-1); python/sglang/srt/models/glm4_moe.py (+2/-2); (+17 more)
+LABELS: deepseek, npu
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41200 ⏎ * #41199 ⏎ * #41191 ⏎ * #41198 ⏎ * #41197 ⏎ * __->__ #41196 ⏎ * #41195 ⏎ * #41194 ⏎ * #41193 ⏎  ⏎ ## Motivation ⏎  ⏎ A decoder layer can leave its FFN all-reduce to the next layer's input norm. Until now it did so only when the fused all-reduce + residual + norm kernel took the batch, and it marked the output tensor with a `_sglang_needs_allreduce_fusion` attribute. ⏎  ⏎ - **The marker was easy to lose.** Slicing, v …[truncated]
+
+### L2-27e883a20d  (L2, 2026-09-25, sha 27e883a20d2d, PR #41018)
+TITLE: dsv4.1-amd: gfx950 MXFP8 matmul kernels and fp8-grid producers (#41018)
+SOURCES: symbol_pickaxe
+ARTIFACT_HINTS: -
+FILES: benchmark/kernels/quantization/tuning_mxfp8_native_gfx95.py (+156/-0); python/sglang/kernels/jit/csrc/deepseek_v4/mxfp8_gemv_gfx95.cuh (+376/-0); python/sglang/kernels/ops/activation/silu_and_mul_clamp_hip.py (+123/-0); python/sglang/kernels/ops/gemm/gfx95_batched_gemm_bf16_fp8_grid.py (+345/-0); python/sglang/kernels/ops/quantization/mxfp8_amd_gfx95.py (+210/-1); python/sglang/kernels/ops/quantization/mxfp8_gemv_gfx95_configs.json (+142/-0); python/sglang/kernels/ops/quantization/mxfp8_native_amd_gfx95.py (+380/-0); python/sglang/kernels/ops/quantization/rmsnorm_fake_quant_amd_gfx95.py (+218/-0); test/registered/kernels/ops/quantization/test_fp8_grid_producers_gfx95.py (+193/-0); test/registered/kernels/ops/quantization/test_mxfp8_amd_gfx95.py (+144/-0)
+LABELS: quant, amd, run-ci, jit-kernel
+DEEP_STUDY: deep-study performance PR (precision_format)
+BODY: > This PR was "stack 1/4" of the DeepSeek-V4.1 AMD series (#41018 to #41021). It now follows the CUDA dsv4.1 layout (#39646, #39652, #39653, #39656, #39664, then #38798): kernel PRs by domain, each on `main` with no callers, then one integration PR. This is the first kernel PR. ⏎  ⏎ ## Summary ⏎ - Native MXFP8 dense route for 32x32-block ue8m0 fp8 checkpoints on gfx950 (`ops/quantization/mxfp8_native_amd_gfx95.py`, `csrc/deepseek_v4/mxfp8_gemv_gfx95.cu …[truncated]
+
+### L2-efd9a40bb8  (L2, 2026-09-25, sha efd9a40bb8ab, PR #39660)
+TITLE: [PD] Share one head-slice helper across mooncake, mori, and nixl (#39660)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/disaggregation/mooncake/conn.py (+16/-27); python/sglang/srt/disaggregation/mori/conn.py (+13/-15); python/sglang/srt/disaggregation/nixl/conn.py (+14/-24); test/registered/disaggregation/test_disaggregation_different_tp.py (+0/-160); test/registered/unit/disaggregation/test_head_slice_params.py (+104/-0)
+LABELS: run-ci
+BODY: - RFC: [PD disaggregation: single protocol layer, per-backend transport #33861](https://github.com/sgl-project/sglang/issues/33861) ⏎ - Staged implementation plan and PR tracking: [PD shared-protocol unification #34510](https://github.com/sgl-project/sglang/issues/34510) ⏎ - Preceding PR: [Share the prefill->decode failure notification across backends #36612](https://github.com/sgl-project/sglang/pull/36612) ⏎  ⏎ ## Background ⏎  ⏎ Step 1 of #34510: the same …[truncated]
+
+### L2-8772916e06  (L2, 2026-09-25, sha 8772916e06e6, PR #41125)
+TITLE: [DSv4.1] Move the low-ratio index top-k into dsv4/low_ratio_indexer (#41125)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/ops/attention/dsv4/candidate_blocks.py (+46/-64); python/sglang/kernels/ops/attention/dsv4/topk.py (+7/-7); python/sglang/srt/layers/attention/deepseek_v4_backend.py (+144/-560); python/sglang/srt/layers/attention/dsv4/candidate_indexer.py (+0/-194); python/sglang/srt/layers/attention/dsv4/candidate_indexer_deep_gemm.py (+0/-439); python/sglang/srt/layers/attention/dsv4/dense_prefill_indexer.py (+0/-234); python/sglang/srt/layers/attention/dsv4/metadata.py (+27/-0); python/sglang/srt/layers/attention/dsv4/v41_indexer/__init__.py (+134/-0); python/sglang/srt/layers/attention/dsv4/v41_indexer/dense_blocks.py (+345/-0); python/sglang/srt/layers/attention/dsv4/v41_indexer/full_topk.py (+184/-0); (+8 more)
+LABELS: deepseek, npu, run-ci, jit-kernel, run-ci-extra, highest-priority
+BODY: (auto generated by Claude) ⏎  ⏎ ## What ⏎  ⏎ Move the DSv4.1 ratio-1/2 (low-ratio) index top-k out of `deepseek_v4_backend.py` into `layers/attention/dsv4/low_ratio_indexer/`. The attention backend only dispatches dense / candidate source / candidate consumer layers and keeps an opaque `CandidateMetadata` on the forward metadata. ⏎  ⏎ - `DenseIndexer`: the plain top-k (DeepGEMM on SM100, the portable path with the fp4 decode logits kernel elsewhere) and the  …[truncated]
+
+### L2-38ec649048  (L2, 2026-09-26, sha 38ec649048df, PR #41243)
+TITLE: [Refactor] Restore logical kernel groups and test organization (#41243)
+SOURCES: symbol_pickaxe
+ARTIFACT_HINTS: L2.backend.sparse_mla_adapters
+FILES: .claude/skills/add-jit-kernel/SKILL.md (+32/-2); .claude/skills/add-sgl-kernel/SKILL.md (+19/-0); .claude/skills/kernel-organization/SKILL.md (+82/-0); .claude/skills/write-sglang-test/SKILL.md (+4/-0); benchmark/kernels/decoding_attention_triton/triton_flashinfer_cudnn.py (+1/-1); benchmark/kernels/deepseek/benchmark_deepgemm_fp8_gemm.py (+1/-1); benchmark/kernels/deepseek/benchmark_deepgemm_fp8_gemm_blackwell.py (+2/-4); benchmark/kernels/quantization/README.md (+1/-1); benchmark/kernels/quantization/tuning_block_wise_kernel.py (+3/-3); python/sglang/kernels/README.md (+26/-3); (+347 more)
+LABELS: documentation, quant, Multi-modal, deepseek, blackwell, run-ci, jit-kernel, run-ci-extra
+BODY: ## Motivation ⏎  ⏎ Recent additions have drifted from the logical operator groups in the [kernels RFC](https://github.com/sgl-project/sglang/issues/29630): MiniCPM is a top-level group, Qwen PLE combines unrelated operators, attention modules own standalone GEMM/MoE operations, and quantization modules own matmul implementations. The corresponding tests also mix numerical kernels, runtime integration, and server evaluation. ⏎  ⏎ This restores those bound …[truncated]
+
+### L2-7bc988446d  (L2, 2026-09-26, sha 7bc988446d54, PR #40556)
+TITLE: [DeepSeek V4.1] Add DeepSelect JIT kernel. (#40556)
+SOURCES: symbol_pickaxe
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/jit/csrc/deepselect/README.md (+59/-0); python/sglang/kernels/jit/csrc/deepselect/entry.cuh (+294/-0); python/sglang/kernels/jit/csrc/deepselect/vendor/.clang-format (+4/-0); python/sglang/kernels/jit/csrc/deepselect/vendor/3rdparty/kerutils/README.md (+20/-0); python/sglang/kernels/jit/csrc/deepselect/vendor/3rdparty/kerutils/include/kerutils/common/common.h (+15/-0); python/sglang/kernels/jit/csrc/deepselect/vendor/3rdparty/kerutils/include/kerutils/device/cuda/common.h (+75/-0); python/sglang/kernels/jit/csrc/deepselect/vendor/3rdparty/kerutils/include/kerutils/device/cuda/sm100/intrinsics.cuh (+649/-0); python/sglang/kernels/jit/csrc/deepselect/vendor/3rdparty/kerutils/include/kerutils/device/cuda/sm80/helpers.cuh (+55/-0); python/sglang/kernels/jit/csrc/deepselect/vendor/3rdparty/kerutils/include/kerutils/device/cuda/sm80/intrinsics.cuh (+160/-0); python/sglang/kernels/jit/csrc/deepselect/vendor/3rdparty/kerutils/include/kerutils/device/cuda/sm90/intrinsics.cuh (+107/-0); (+17 more)
+LABELS: documentation, high priority, sgl-kernel, mthreads, jit-kernel
+BODY: ## Motivation ⏎  ⏎ #39421. ⏎  ⏎ This PR moves DeepSelect to the existing JIT infrastructure so only the required call signature is compiled for the local CUDA target. ⏎  ⏎  ⏎  ⏎ ## Modifications ⏎  ⏎ - Remove the DeepSelect AOT target, bindings, and explicit instantiations. ⏎ - Move the vendored kernel headers under `jit/csrc/deepselect/vendor`. ⏎ - Add a JIT C++ entry point and Python wrapper for BF16/FP32, int32/int64 ⏎   indices, normal and cluster kernels …[truncated]
+
+### L2-effb752188  (L2, 2026-09-26, sha effb75218808, PR #41019)
+TITLE: dsv4.1-amd: KV cache layouts, FP4 indexer, compressor and router kernels (#41019)
+SOURCES: symbol_pickaxe, body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/jit/csrc/deepseek_v4/c1.cuh (+1/-1); python/sglang/kernels/jit/csrc/deepseek_v4/fp4_indexer_rope.cuh (+13/-2); python/sglang/kernels/jit/csrc/deepseek_v4/fp4_indexer_rope_hip.cuh (+156/-0); python/sglang/kernels/jit/csrc/deepseek_v4/main_norm_rope.cuh (+79/-6); python/sglang/kernels/jit/csrc/deepseek_v4/store.cuh (+2/-0); python/sglang/kernels/jit/include/sgl_kernel/deepseek_v4/fp4_utils.cuh (+52/-0); python/sglang/kernels/jit/include/sgl_kernel/deepseek_v4/kv_layout.cuh (+18/-21); python/sglang/kernels/ops/attention/dsv4/attn.py (+6/-4); python/sglang/kernels/ops/attention/dsv4/c2_decode_pool.py (+3/-3); python/sglang/kernels/ops/attention/dsv4/compress.py (+5/-2); (+16 more)
+LABELS: documentation, quant, amd, deepseek, sgl-kernel, run-ci, jit-kernel, run-ci-extra, memory-pool
+BODY: > This PR was "stack 2/4" of the DeepSeek-V4.1 AMD series (#41018 to #41021). It now follows the CUDA dsv4.1 layout (#39646, #39652, #39653, #39656, #39664, then #38798): kernel PRs by domain, each on `main` with no callers, then one integration PR. This is the second kernel PR; it does not depend on #41018. ⏎  ⏎ ## Summary ⏎ - Build the V4.1 KV layouts on ROCm (`include/sgl_kernel/deepseek_v4/kv_layout.cuh`, `fp4_utils.cuh`): `v41::store_row` quantize …[truncated]
+
+### L2-446d181e23  (L2, 2026-09-27, sha 446d181e23d0, PR #41417)
+TITLE: [Refactor] Choose the boundaries of plain-TP dense layers and MoE layers from declarations (#41417)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/boundary_layout.py (+50/-15); python/sglang/srt/layers/communicator.py (+114/-45); python/sglang/srt/layers/moe/cutedsl_ar_fusion.py (+3/-3); test/registered/unit/layers/moe/test_cutedsl_ar_fusion.py (+7/-4); test/registered/unit/layers/test_declared_decoder_boundary.py (+316/-90)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * __->__ #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ #41257 chose the boundaries of an attention followed by a dense MLP under attention DP from declarations. Every other layer still took i …[truncated]
+
+### L2-9f87d28db6  (L2, 2026-09-27, sha 9f87d28db6fc, PR #41419)
+TITLE: [Refactor] Choose the LayerNorm SP region's and input-scattered batches' steps from declarations (#41419)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/boundary_layout.py (+70/-0); python/sglang/srt/layers/communicator.py (+172/-45); test/registered/unit/layers/test_communicator_ffn_exit.py (+24/-3); test/registered/unit/layers/test_communicator_layout.py (+7/-5); test/registered/unit/layers/test_declared_decoder_boundary.py (+190/-10); test/registered/unit/layers/test_layer_communicator_fusion_gate.py (+22/-2); test/registered/unit/layers/test_layernorm_sp.py (+19/-1); test/registered/unit/layers/test_postprocess_reduce_scatterv.py (+4/-2); test/registered/unit/layers/test_prepare_attn_steps.py (+2/-1); test/registered/unit/lora/test_triton_dp_attention_unit.py (+2/-1); (+1 more)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * __->__ #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ Two batch variants still had hand-written steps, and a layer that could run them kept the scatter-mode path for all of its batches. ⏎ - ** …[truncated]
+
+### L2-7a833ad0a2  (L2, 2026-09-27, sha 7a833ad0a2a0, PR #41421)
+TITLE: [Refactor] Choose a GQA prefill CP extend's steps from declarations (#41421)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/communicator.py (+135/-67); python/sglang/srt/model_executor/forward_batch_info.py (+6/-12); python/sglang/srt/models/nemotron_h.py (+2/-1); test/registered/unit/layers/test_communicator_ffn_exit.py (+3/-1); test/registered/unit/layers/test_declared_decoder_boundary.py (+108/-5); test/registered/unit/layers/test_layer_communicator_fusion_gate.py (+2/-0); test/registered/unit/layers/test_layernorm_sp.py (+1/-0); test/registered/unit/layers/test_postprocess_reduce_scatterv.py (+2/-0); test/registered/unit/layers/test_prepare_attn_steps.py (+1/-0); test/registered/unit/lora/test_triton_dp_attention_unit.py (+1/-0); (+2 more)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * __->__ #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ A GQA prefill CP shards a batch's tokens over attention CP only on a CP extend that carries CP metadata; on every other batch each CP ra …[truncated]
+
+### L2-1c919e401d  (L2, 2026-09-27, sha 1c919e401de4, PR #41422)
+TITLE: [Fix] Keep one copy of CP-replicated rows in the DP gather (#41422)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/dp_attention.py (+18/-1); test/registered/unit/layers/test_dp_attention_cp_replicas.py (+153/-0)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * __->__ #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ Under attention DP with attention CP, the CP ranks of a DP group hold the same rows wherever a DP gather runs on them: decode, short pre …[truncated]
+
+### L2-f5ae989a0e  (L2, 2026-09-27, sha f5ae989a0e94, PR #41424)
+TITLE: [Refactor] Choose fully-DP dense and DSA / MLA prefill CP layers' steps from declarations (#41424)
+SOURCES: path_integration+keyword, subject_keyword, body_keyword
+ARTIFACT_HINTS: L2.model.deepseek_v2_mla, L2.optimization.weight_absorption, L2.backend.sparse_mla_adapters, L2.dispatch.server_args_defaults
+FILES: python/sglang/srt/model_executor/model_runner.py (+1/-1); python/sglang/srt/models/deepseek_v2.py (+5/-4); python/sglang/srt/arg_groups/model_overrides/deepseek_v2.py (+4/-4); python/sglang/srt/layers/boundary_layout.py (+1/-1); python/sglang/srt/layers/communicator.py (+201/-40); python/sglang/srt/layers/communicator_dsa_cp.py (+0/-153); python/sglang/srt/model_executor/runner/decode_cuda_graph_runner.py (+5/-6); test/registered/unit/layers/test_declared_attention_cp.py (+277/-0); test/registered/unit/layers/test_declared_decoder_boundary.py (+233/-29)
+LABELS: deepseek
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * __->__ #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ - **A dense MLP on every rank (`moe_dense_tp_size=1`)** runs on each rank's own slice of the tokens and owes no sum, like a MoE dispatch …[truncated]
+
+### L2-6f2d2437b6  (L2, 2026-09-27, sha 6f2d2437b63f, PR #41425)
+TITLE: [Refactor] Run MHC layers on the shared boundary steps with MHC's residual operations (#41425)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/boundary_layout.py (+46/-0); python/sglang/srt/layers/communicator.py (+415/-105); python/sglang/srt/layers/communicator_mhc.py (+65/-413); python/sglang/srt/layers/dp_attention.py (+11/-22); python/sglang/srt/models/glm5_next.py (+0/-1); test/registered/unit/layers/test_communicator_ffn_exit.py (+10/-13); test/registered/unit/layers/test_communicator_layout.py (+39/-15); test/registered/unit/layers/test_declared_decoder_boundary.py (+340/-13); test/registered/unit/layers/test_dp_attention_cp_gather.py (+3/-1); test/registered/unit/layers/test_prepare_attn_steps.py (+2/-0); (+3 more)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * __->__ #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ An MHC layer (GLM5-Next) still chose and ran its boundary steps on its own. ⏎ - **How it chose its steps:** ⏎   - its FFN input by the scatt …[truncated]
+
+### L2-6f370c3bcd  (L2, 2026-09-27, sha 6f370c3bcd6a, PR #41429)
+TITLE: [Refactor] Build each decoder boundary from the declarations of its two sides (#41429)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/boundary_layout.py (+65/-2); python/sglang/srt/layers/communicator.py (+268/-98); test/registered/unit/layers/moe/test_cutedsl_ar_fusion.py (+15/-0); test/registered/unit/layers/test_boundary_edges.py (+232/-0); test/registered/unit/layers/test_communicator_ffn_exit.py (+8/-0); test/registered/unit/layers/test_declared_decoder_boundary.py (+75/-7); test/registered/unit/layers/test_layer_communicator_fusion_gate.py (+8/-0); test/registered/unit/layers/test_layernorm_sp.py (+8/-0); test/registered/unit/layers/test_postprocess_reduce_scatterv.py (+8/-0); test/registered/unit/layers/test_prepare_attn_steps.py (+36/-2); (+2 more)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * __->__ #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ - **One structure per layer.** A decoder layer's steps were chosen from one structure describing the whole layer (`DecoderLayerSides`).  …[truncated]
+
+### L2-4fac02fe5d  (L2, 2026-09-27, sha 4fac02fe5dad, PR #41435)
+TITLE: [Refactor] Choose MoE layers' boundaries from declarations when moe_dp_size equals attn_cp_size (#41435)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/boundary_layout.py (+11/-1); python/sglang/srt/layers/communicator.py (+25/-5); test/registered/unit/layers/test_boundary_edges.py (+27/-0); test/registered/unit/layers/test_declared_decoder_boundary.py (+56/-0)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * __->__ #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ With GQA prefill CP, attention DP 1 and `moe_dp_size == attn_cp_size`, every layer still chose its steps from the scatter modes, because …[truncated]
+
+### L2-427c9e05c1  (L2, 2026-09-27, sha 427c9e05c165, PR #41438)
+TITLE: [Refactor] Choose every layer's boundaries from declarations and remove the scatter-mode selection (#41438)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.model.deepseek_v2_mla, L2.optimization.weight_absorption, L2.backend.npu_mla, L2.backend.sparse_mla_adapters
+FILES: python/sglang/srt/hardware_backend/npu/modules/deepseek_v2_attention_mla_npu.py (+8/-20); python/sglang/srt/layers/attention/dsa/dsa_npu_indexer.py (+3/-12); python/sglang/srt/layers/communicator.py (+91/-425); python/sglang/srt/layers/communicator_mhc.py (+12/-10); python/sglang/srt/model_executor/forward_batch_info.py (+6/-10); python/sglang/srt/models/deepseek_v2.py (+9/-7); python/sglang/srt/models/gigachat35.py (+3/-1); python/sglang/srt/models/glm4_moe_lite.py (+3/-1); python/sglang/srt/models/glm5_next.py (+3/-1); test/registered/unit/layers/test_communicator_layout.py (+0/-332); (+2 more)
+LABELS: deepseek, npu
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * __->__ #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ Two kinds of code still depended on scatter modes: ⏎ - **Readers outside the communicator.** ⏎   - The NPU MLA / DSA attention and the DSA N …[truncated]
+
+### L2-644014bc98  (L2, 2026-09-27, sha 644014bc981b, PR #41440)
+TITLE: [Refactor] Declare each stage's residual read and update, and give each stage its own entry (#41440)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/communicator/__init__.py (+12/-2); python/sglang/srt/layers/communicator/boundary.py (+138/-69); python/sglang/srt/layers/communicator/layer.py (+113/-69); python/sglang/srt/layers/communicator/ops.py (+42/-34); python/sglang/srt/layers/communicator/residual/__init__.py (+59/-32); python/sglang/srt/layers/communicator/residual/add_norm.py (+81/-23); python/sglang/srt/layers/communicator/residual/mhc.py (+100/-35); python/sglang/srt/layers/moe/cutedsl_ar_fusion.py (+1/-1); python/sglang/srt/models/nemotron_h_utils.py (+8/-6); python/sglang/test/communicator_patch.py (+2/-2); (+12 more)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * __->__ #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ The boundary steps are chosen from declarations of each stage's rows and sums. How a stage writes its output into the residual, and how  …[truncated]
+
+### L2-341d5273bd  (L2, 2026-09-27, sha 341d5273bd3f, PR #41441)
+TITLE: [Refactor] Build the boundary into any stage with one construction (#41441)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/communicator/__init__.py (+4/-2); python/sglang/srt/layers/communicator/boundary.py (+180/-219); python/sglang/srt/layers/communicator/layer.py (+25/-27); python/sglang/srt/layers/communicator/ops.py (+87/-20); python/sglang/srt/models/nemotron_h_utils.py (+11/-10); test/registered/unit/layers/moe/test_cutedsl_ar_fusion.py (+10/-7); test/registered/unit/layers/test_boundary_edges.py (+178/-35); test/registered/unit/layers/test_communicator_ffn_exit.py (+17/-7); test/registered/unit/layers/test_declared_decoder_boundary.py (+133/-73); test/registered/unit/layers/test_dp_attention_cp_gather.py (+1/-1); (+6 more)
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * #41443 ⏎ * #41442 ⏎ * __->__ #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ `make_boundary` still routed on what its consumer was, via `reads=InputRead.ATTENTION`, `InputRead.FFN` or `None`, into two families of  …[truncated]
+
+### L2-81f27fb3a7  (L2, 2026-09-27, sha 81f27fb3a71d, PR #41443)
+TITLE: [Refactor] Replace LayerScatterModes with LayerFacts and remove ScatterMode (#41443)
+SOURCES: body_keyword
+ARTIFACT_HINTS: L2.model.deepseek_v2_mla, L2.optimization.weight_absorption
+FILES: python/sglang/srt/layers/communicator/__init__.py (+2/-4); python/sglang/srt/layers/communicator/layer.py (+32/-136); python/sglang/srt/layers/communicator/layout.py (+0/-40); python/sglang/srt/models/bailing_moe.py (+3/-3); python/sglang/srt/models/bailing_moe_linear.py (+3/-3); python/sglang/srt/models/bailing_moe_v3.py (+3/-3); python/sglang/srt/models/deepseek_v2.py (+3/-3); python/sglang/srt/models/dots3_common/modeling.py (+3/-3); python/sglang/srt/models/falcon_h1.py (+3/-3); python/sglang/srt/models/glm4_moe.py (+3/-3); (+39 more)
+LABELS: amd, deepseek, run-ci, run-ci-extra, bypass-fail-fast, parallel-stages, max-concurrency
+BODY: This PR is part of a stack (oldest at bottom): ⏎  ⏎ * __->__ #41443 ⏎ * #41442 ⏎ * #41441 ⏎ * #41440 ⏎ * #41439 ⏎ * #41438 ⏎ * #41437 ⏎ * #41436 ⏎ * #41435 ⏎ * #41434 ⏎ * #41433 ⏎ * #41432 ⏎ * #41431 ⏎ * #41430 ⏎ * #41429 ⏎ * #41428 ⏎ * #41427 ⏎ * #41426 ⏎ * #41425 ⏎ * #41424 ⏎ * #41423 ⏎ * #41422 ⏎ * #41421 ⏎ * #41420 ⏎ * #41419 ⏎ * #41418 ⏎ * #41417 ⏎  ⏎ ## Motivation ⏎  ⏎ Every layer's boundaries are now chosen from declarations that read five layer facts: whether the layer and each of its neighbours is sp …[truncated]
+
+### L2-55cc90b533  (L2, 2026-09-27, sha 55cc90b533cd, PR #41378)
+TITLE: [CI] Real-model Kimi-Linear PD parity at page, DCP virtual-page, chunk and cached-prefix boundaries (#41378)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/test/kits/pd_parity_kit.py (+67/-19); test/registered/disaggregation/test_disaggregation_kimi_linear.py (+66/-12)
+BODY: Follow-up to #41321: moves Kimi-Linear PD boundary parity onto the real `moonshotai/Kimi-Linear-48B-A3B-Instruct` checkpoint, in deterministic mode. ⏎  ⏎ - `PDLogprobParityMixin`: configurable prompt list, output length, logprob delta, and an optional cached-prefix resend (flush decode only, so prefill serves the prompt from radix). Defaults are unchanged for the unified-memory users. ⏎ - `test_disaggregation_kimi_linear.py`: 11 prompts at the 16-token …[truncated]
+
+### L2-e581520c67  (L2, 2026-09-28, sha e581520c67a9, PR #39726)
+TITLE: [HiCache] Add the page-unified KV load-back JIT kernel  (#39726)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/jit/csrc/kvcacheio/hicache.cuh (+174/-0); python/sglang/kernels/ops/kvcache/hicache.py (+183/-0); test/registered/kernels/ops/kvcache/test_hicache.py (+289/-2)
+LABELS: high priority, hicache, run-ci, jit-kernel, run-ci-extra
+BODY: ## Motivation ⏎ The load-back half of the page-unified HiCache layout, and the mirror of the staged write-back added in #39606. That PR writes a device pool out into host pages ordered ⏎  ⏎   MHA: (page, head_group, layer, 2, page_size, head_in_group, dim), K=0 V=1 ⏎   MLA: (page, layer, page_size, dim) ⏎  ⏎ but stops at write-back; nothing could read those pages back. This kernel does, for one layer at a time. ⏎  ⏎ Per-layer and unstaged, unlike its wri …[truncated]
+
+### L2-85be04978d  (L2, 2026-09-28, sha 85be04978d76, PR #40943)
+TITLE: [AMD][DSV4] moe: enable shared-expert fusion on the grouped-topk path (megamoe) (#40943)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/layers/moe/topk.py (+2/-2)
+LABELS: amd, deepseek, run-ci
+DEEP_STUDY: deep-study performance PR (new_kernel_or_fusion)
+BODY: > Stacked on top of the Aiter MegaMoEv2 integration, **sgl-project/sglang#35619** — that PR adds the FlyDSL MegaMoEv2 backend but requires `--disable-shared-experts-fusion` on ROCm because of the bug below. This change removes that restriction. Base is the `20260922` image commit; #35619 is bind-mounted on top for the megamoe path. ⏎  ⏎ ## Motivation ⏎  ⏎ `select_experts` already computes `num_fused_shared_experts_for_gate` — `0` on the per-rank fuse …[truncated]
+
+### L2-14ab74ef95  (L2, 2026-09-28, sha 14ab74ef951e, PR #41402)
+TITLE: [PD] Fan drain abort ACKs out to every decode peer of the room (#41402)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/disaggregation/common/conn.py (+52/-2); python/sglang/srt/managers/scheduler.py (+4/-15); test/registered/unit/disaggregation/test_deferred_decode_kv_release.py (+67/-3); test/registered/unit/disaggregation/test_disaggregation_wire.py (+2/-0); test/registered/unit/disaggregation/test_nixl_deferred_kv_release.py (+70/-0)
+LABELS: run-ci
+BODY: ## Motivation ⏎  ⏎ With prefill TP < decode TP (the MLA fan-out shape) several decode ranks share one bootstrap room, but the prefill's `_deferred_ack_targets` registry holds a single `(ip, port)` per room. Each decode rank's ABORT overwrites the previous registration, so when the transfer drains only the **last** rank to abort receives the `ABORT_ACK` — every other rank holds its KV pages for the full `SGLANG_DISAGGREGATION_DEFERRED_DECODE_KV_RELEAS …[truncated]
+
+### L2-096b066fb4  (L2, 2026-09-28, sha 096b066fb4f6, PR #41020)
+TITLE: dsv4.1-amd: gfx950 sparse decode attention and sorted top-k (#41020)
+SOURCES: symbol_pickaxe
+ARTIFACT_HINTS: -
+FILES: python/sglang/kernels/aot/benchmark/bench_dsv4_topk_transform.py (+76/-0); python/sglang/kernels/aot/csrc/common_extension_rocm.cc (+1/-1); python/sglang/kernels/aot/csrc/elementwise/deepseek_v4_topk.cu (+172/-6); python/sglang/kernels/aot/include/sgl_kernel_ops.h (+2/-1); python/sglang/kernels/aot/python/sgl_kernel/top_k.py (+7/-2); python/sglang/kernels/aot/tests/test_topk.py (+45/-0); python/sglang/kernels/ops/attention/dsv4/attn_glue_hip.py (+426/-0); python/sglang/kernels/ops/attention/dsv4/candidate_blocks_hip.py (+408/-0); python/sglang/kernels/ops/attention/dsv4/compact_attention_hip.py (+403/-0); python/sglang/kernels/ops/attention/dsv4/decode_attention_sm100.py (+45/-3); (+7 more)
+LABELS: documentation, quant, amd, deepseek, sgl-kernel, run-ci, jit-kernel, bypass-fastfail, run-ci-extra, memory-pool
+DEEP_STUDY: deep-study performance PR (new_kernel_or_fusion)
+BODY: > This PR was "stack 3/4" of the DeepSeek-V4.1 AMD series (#41018 to #41021). It now follows the CUDA dsv4.1 layout (#39646, #39652, #39653, #39656, #39664, then #38798): kernel PRs by domain, each on `main` with no callers, then one integration PR. This is the third kernel PR; it does not depend on #41018 or #41019. ⏎  ⏎ ## Summary ⏎ - `ops/attention/sparse_decode_reduce_hip.py`: `gfx_sparse_split_reduce` combines the split-KV partials of aiter's gfx9 …[truncated]
+
+### L2-6624999385  (L2, 2026-09-29, sha 662499938501, PR #40446)
+TITLE: [Fix][NPU] fix dp-attn hang when pin_mem is True on NPU (#40446)
+SOURCES: body_keyword
+ARTIFACT_HINTS: -
+FILES: python/sglang/srt/hardware_backend/npu/graph_runner/npu_cudagraph_backend.py (+10/-0); python/sglang/srt/platforms/npu.py (+3/-1); test/registered/unit/platforms/test_platform_interface.py (+3/-6)
+LABELS: npu, run-ci, bypass-fail-fast
+BODY: ## Motivation ⏎  ⏎  ⏎  ⏎ In theory, the NPU platform supports `pin_memory=True` just like the CUDA platform. Combined with `non_blocking=True`, this allows host-to-device operations to be performed completely asynchronously. However, with the current implementation, enabling `pin_memory=True` causes non-DSA models in the DP-Attn scenario to hang. ⏎  ⏎ Also see [issue 38971](https://github.com/sgl-project/sglang/issues/38971). ⏎  ⏎ ## Modifications ⏎  ⏎  ⏎  …[truncated]

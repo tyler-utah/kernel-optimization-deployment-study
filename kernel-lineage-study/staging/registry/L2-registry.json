@@ -1,0 +1,4361 @@
+{
+  "lineage": "L2",
+  "identity_notes": [
+    "Pure moves preserve identity; rewrites/new backends get new IDs.",
+    "Upstream kernels and in-tree adapters are separate artifacts.",
+    "Sparse MLA kernel adapters are included; sparse indexer/top-k is excluded.",
+    "KV/cache auxiliary kernels are included because they define the MLA cache contract.",
+    "CUTLASS artifacts end at #32114 because no textual successor remains."
+  ],
+  "artifacts": [
+    {
+      "artifact_id": "L2.model.deepseek_v2_mla",
+      "name": "DeepSeek-V2/V3 MLA model path",
+      "kind": "reference_impl",
+      "role": "MLA projections, latent KV cache, weight absorption and model-side backend calls.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/models/deepseek_v2.py",
+          "from": "2024-07-26",
+          "from_sha": "679ebcbbdc37",
+          "from_pr": 693,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "DeepseekV2AttentionMLA",
+        "DeepseekMLAForwardMixin"
+      ],
+      "introduced": {
+        "sha": "679ebcbbdc37",
+        "pr": 693,
+        "date": "2024-07-26",
+        "evidence": "git show --stat: Deepseek v2 support added deepseek_v2.py"
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [],
+      "hardware": [
+        "all_cuda",
+        "amd_mi300",
+        "npu",
+        "cpu"
+      ],
+      "framework_interface": "nn.Module attention class; forwards to RadixAttention/unified attention.",
+      "dispatch_status_history": [
+        {
+          "date": "2024-08-05",
+          "status": "optional",
+          "scope": "--enable-mla",
+          "ref": "e1eae1fd15ed/#905"
+        },
+        {
+          "date": "2024-09-17",
+          "status": "default",
+          "scope": "DeepSeek MLA enabled by default",
+          "ref": "c6b6d2e71b2b/#1447"
+        },
+        {
+          "date": "2025-04-17",
+          "status": "deprecated",
+          "scope": "--disable-mla deprecated",
+          "ref": "4fb05583ef38/#5481"
+        }
+      ],
+      "tests": [
+        "test/srt/test_mla.py",
+        "test/registered/mla/test_mla.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/models/deepseek_v2\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.triton_decode_lightllm",
+      "name": "Triton MLA/GQA/MQA decode kernel",
+      "kind": "kernel",
+      "role": "Paged decode attention with split softmax/reduce used by early MLA path.",
+      "language": "Triton",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/decode_attention.py",
+          "from": "2024-08-19",
+          "from_sha": "df191254abc0",
+          "from_pr": 1138,
+          "to": "2024-09-10",
+          "to_sha": "3a6e8b6d78d8",
+          "to_pr": 1379,
+          "transition": "created",
+          "end": "moved_to:python/sglang/srt/layers/attention/triton_ops/decode_attention.py"
+        },
+        {
+          "path": "python/sglang/srt/layers/attention/triton_ops/decode_attention.py",
+          "from": "2024-09-10",
+          "from_sha": "3a6e8b6d78d8",
+          "from_pr": 1379,
+          "to": "2026-07-10",
+          "to_sha": "6ed9843b57aa",
+          "to_pr": 30044,
+          "transition": "moved_from:python/sglang/srt/layers/decode_attention.py",
+          "end": "moved_to:python/sglang/kernels/ops/attention/decode_attention.py"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/decode_attention.py",
+          "from": "2026-07-10",
+          "from_sha": "6ed9843b57aa",
+          "from_pr": 30044,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "decode_attention_fwd",
+        "_decode_grouped_att_m_fwd"
+      ],
+      "introduced": {
+        "sha": "df191254abc0",
+        "pr": 1138,
+        "date": "2024-08-19",
+        "evidence": "PR #1138 body: optimize MLA/GQA/MQA decoding; file comments cite LightLLM."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.upstream.lightllm_decode",
+          "relation": "ported_from",
+          "evidence": "comments cite ModelTC/lightllm token_attention kernels",
+          "evidence_ref": "df191254abc0:decode_attention.py:21"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "amd_mi300"
+      ],
+      "framework_interface": "RadixAttention decode_forward_triton calls decode_attention_fwd.",
+      "dispatch_status_history": [
+        {
+          "date": "2024-08-19",
+          "status": "default",
+          "scope": "Triton backend decode path",
+          "ref": "df191254abc0/#1138"
+        },
+        {
+          "date": "2024-08-05",
+          "status": "optional",
+          "scope": "DeepSeek MLA enabled only by --enable-mla",
+          "ref": "e1eae1fd15ed/#905"
+        },
+        {
+          "date": "2024-09-17",
+          "status": "default",
+          "scope": "Default DeepSeek MLA backend after MLA became default",
+          "ref": "c6b6d2e71b2b/#1447"
+        },
+        {
+          "date": "2025-04-12",
+          "status": "default",
+          "scope": "Fallback/default for non-Hopper CUDA and invalid FA3 FP8 e5m2; sm80 and sm120 generic MLA fallback at cutoff",
+          "ref": "57de7c6b5fb3/#5210;89e1316e"
+        }
+      ],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        ".*decode_attention\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.optimization.weight_absorption",
+      "name": "MLA weight absorption",
+      "kind": "adapter",
+      "role": "Algebraic absorption of kv_b weights into query/output path; offline transposed weights.",
+      "language": "Python/PyTorch",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/models/deepseek_v2.py",
+          "from": "2024-08-05",
+          "from_sha": "e1eae1fd15ed",
+          "from_pr": 905,
+          "to": "2026-02-27",
+          "to_sha": "776709efe893",
+          "to_pr": 19122,
+          "transition": "split_from:python/sglang/srt/models/deepseek_v2.py",
+          "end": "moved_to:python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mla.py"
+        },
+        {
+          "path": "python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mla.py",
+          "from": "2026-02-27",
+          "from_sha": "776709efe893",
+          "from_pr": 19122,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "w_kc",
+        "w_vc",
+        "forward_absorb_prepare",
+        "forward_absorb_core"
+      ],
+      "introduced": {
+        "sha": "e1eae1fd15ed",
+        "pr": 905,
+        "date": "2024-08-05",
+        "evidence": "grep shows w_kc/w_vc and DeepseekV2AttentionMLA added."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.model.deepseek_v2_mla",
+          "relation": "textual_successor",
+          "evidence": "same class receives absorbed weights and split forward file",
+          "evidence_ref": "e1eae1fd15ed,776709efe893"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "amd_mi300",
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2024-08-30",
+          "status": "default",
+          "scope": "offline transposed MLA weights",
+          "ref": "f414352ae678/#1261"
+        },
+        {
+          "date": "2024-12-05",
+          "status": "optional",
+          "scope": "prefill without weight absorption",
+          "ref": "ec52464ddeab/#2349"
+        }
+      ],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        ".*deepseek.*(forward_mla|v2)\\.py",
+        "python/sglang/srt/models/(deepseek_v2|deepseek_common/attention_forward_methods/forward_mla.*)\\.py"
+      ],
+      "notes": "Optimization categories: algebraic_rewrite, layout_transformation."
+    },
+    {
+      "artifact_id": "L2.backend.flashinfer_mla",
+      "name": "FlashInfer MLA backend",
+      "kind": "backend",
+      "role": "Adapter for FlashInfer BatchMLAPagedAttentionWrapper, ragged prefill, fast plan, CUDA graph.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/flashinfer_backend.py",
+          "from": "2025-02-14",
+          "from_sha": "70f894b810c0",
+          "from_pr": 3550,
+          "to": "2025-02-24",
+          "to_sha": "b110084654a1",
+          "to_pr": 3785,
+          "transition": "split_from:general_flashinfer_backend",
+          "end": "split_to:python/sglang/srt/layers/attention/flashinfer_mla_backend.py"
+        },
+        {
+          "path": "python/sglang/srt/layers/attention/flashinfer_mla_backend.py",
+          "from": "2025-02-24",
+          "from_sha": "b110084654a1",
+          "from_pr": 3785,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "FlashInferMLAAttnBackend",
+        "BatchMLAPagedAttentionWrapper",
+        "fast_mla_decode_plan",
+        "fast_mla_prefill_plan"
+      ],
+      "introduced": {
+        "sha": "b110084654a1",
+        "pr": 3785,
+        "date": "2025-02-24",
+        "evidence": "PR #3785: extracts MLA logic into flashinfer_mla_backend.py."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.upstream.flashinfer_mla",
+          "relation": "wraps",
+          "evidence": "imports BatchMLAPagedAttentionWrapper",
+          "evidence_ref": "89e1316e:flashinfer_mla_backend.py"
+        },
+        {
+          "artifact_id": "L2.backend.flashinfer_general_mla",
+          "relation": "textual_successor",
+          "evidence": "#3785 extracted MLA logic from flashinfer_backend.py",
+          "evidence_ref": "PR #3785 body"
+        },
+        {
+          "artifact_id": "L2.backend.cutlass_mla",
+          "relation": "replaces",
+          "evidence": "#32114 says cutlass_mla fell through to FlashInferMLABackend except plain decode",
+          "evidence_ref": "PR #32114 body"
+        }
+      ],
+      "hardware": [
+        "sm80",
+        "sm90",
+        "sm100",
+        "sm120",
+        "amd_mi300"
+      ],
+      "framework_interface": "AttentionBackend init_forward_metadata/init_cuda_graph_state/forward_extend/forward_decode.",
+      "dispatch_status_history": [
+        {
+          "date": "2025-02-14",
+          "status": "optional",
+          "scope": "DeepSeek-V3 FlashInfer MLA",
+          "ref": "70f894b810c0/#3550"
+        },
+        {
+          "date": "2025-02-24",
+          "status": "optional",
+          "scope": "dedicated backend",
+          "ref": "b110084654a1/#3785"
+        },
+        {
+          "date": "2025-02-28",
+          "status": "optional",
+          "scope": "ragged prefill",
+          "ref": "90a4b7d98a5c/#3967"
+        },
+        {
+          "date": "2025-02-24",
+          "status": "optional",
+          "scope": "selected by --enable-flashinfer-mla after split",
+          "ref": "b110084654a1/#3785"
+        },
+        {
+          "date": "2025-07-31",
+          "status": "default",
+          "scope": "sm100 generic MLA default in model_runner auto selection",
+          "ref": "4b04998d3854/#8632"
+        },
+        {
+          "date": "2026-09-10",
+          "status": "default",
+          "scope": "successor fallback for removed cutlass_mla plain/unsupported decode use cases",
+          "ref": "c0b790cf7fe6/#32114"
+        }
+      ],
+      "tests": [
+        "test/srt/test_mla_flashinfer.py",
+        "test/registered/attention/unittests/mla/test_flashinfer.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/flashinfer_mla_backend\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.upstream.flashinfer_mla",
+      "name": "FlashInfer MLA wrapper API",
+      "kind": "upstream_kernel",
+      "role": "Upstream FlashInfer paged/ragged MLA plan and run API.",
+      "language": "CUDA C++/Python",
+      "origin": "upstream_pip",
+      "upstream": "flashinfer-ai/flashinfer",
+      "path_history": [],
+      "key_symbols": [
+        "BatchMLAPagedAttentionWrapper"
+      ],
+      "introduced": {
+        "sha": "",
+        "pr": null,
+        "date": "2025-02-24",
+        "evidence": "Anchored by SGLang #3785 imports from flashinfer."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [],
+      "hardware": [
+        "sm80",
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-02-14",
+          "status": "optional",
+          "scope": "flashinfer_python>=0.2.1.post1 first observed with FlashInfer MLA integration",
+          "ref": "70f894b810c0/#3550"
+        },
+        {
+          "date": "2025-02-24",
+          "status": "optional",
+          "scope": "flashinfer_python>=0.2.1.post2 with dedicated MLA backend split",
+          "ref": "b110084654a1/#3785"
+        },
+        {
+          "date": "2026-09-28",
+          "status": "default",
+          "scope": "flashinfer_python[cu13]==0.6.18 at cutoff",
+          "ref": "89e1316e:python/pyproject.toml"
+        }
+      ],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [],
+      "notes": "Upstream SHA unresolved. First SGLang pin enabling MLA wrapper: flashinfer_python>=0.2.1.post1 (#3550); split pin >=0.2.1.post2 (#3785); cutoff pin flashinfer_python[cu13]==0.6.18."
+    },
+    {
+      "artifact_id": "L2.backend.flashmla",
+      "name": "FlashMLA backend",
+      "kind": "backend",
+      "role": "Uses FlashMLA decode and inherits FlashInfer MLA for prefill/extend cases.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/flashmla_backend.py",
+          "from": "2025-03-16",
+          "from_sha": "a53fe428f9f5",
+          "from_pr": 4472,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "FlashMLABackend",
+        "flash_mla_with_kvcache",
+        "get_mla_metadata"
+      ],
+      "introduced": {
+        "sha": "a53fe428f9f5",
+        "pr": 4472,
+        "date": "2025-03-16",
+        "evidence": "PR #4472: integrate flashmla for decoding."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashinfer_mla",
+          "relation": "reimplementation_of",
+          "evidence": "FlashMLABackend subclasses FlashInferMLAAttnBackend",
+          "evidence_ref": "89e1316e:flashmla_backend.py:58"
+        },
+        {
+          "artifact_id": "L2.upstream.flashmla",
+          "relation": "wraps",
+          "evidence": "imports flash_mla_with_kvcache/get_mla_metadata",
+          "evidence_ref": "89e1316e:flashmla_backend.py:13"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-03-16",
+          "status": "optional",
+          "scope": "FlashMLA decode backend",
+          "ref": "a53fe428f9f5/#4472"
+        },
+        {
+          "date": "2025-03-19",
+          "status": "optional",
+          "scope": "CUDA graph support",
+          "ref": "b6944f97a616/#4514"
+        },
+        {
+          "date": "2025-04-17",
+          "status": "deprecated",
+          "scope": "--enable-flashmla deprecated",
+          "ref": "6fb29ffd9e7b/#5480"
+        },
+        {
+          "date": "2025-03-16",
+          "status": "optional",
+          "scope": "external flash_mla package backend; page_size forced to 64 when selected",
+          "ref": "a53fe428f9f5/#4472"
+        },
+        {
+          "date": "2025-10-21",
+          "status": "optional",
+          "scope": "switch to in-tree sgl-kernel/FlashMLA FetchContent wrapper, GIT_TAG bc8576abc3e507425cf6498f3d3393df7733ce37",
+          "ref": "23afdfd1c2b1/#11717"
+        },
+        {
+          "date": "2026-09-28",
+          "status": "default",
+          "scope": "DeepSeek-V4 dsv4 path uses FlashMLA sparse prefill by default; dsv4_attn_backend auto resolves to flashmla",
+          "ref": "89e1316e:deepseek_v4_hook.py;fields/exec_.py"
+        }
+      ],
+      "tests": [
+        "test/srt/test_flashmla.py",
+        "test/registered/attention/unittests/mla/test_flashmla.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/flashmla_backend\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.upstream.flashmla",
+      "name": "DeepSeek FlashMLA upstream",
+      "kind": "upstream_kernel",
+      "role": "FlashMLA decode kernel and tile-scheduler metadata.",
+      "language": "CUDA C++",
+      "origin": "upstream_pip",
+      "upstream": "deepseek-ai/FlashMLA",
+      "path_history": [],
+      "key_symbols": [
+        "flash_mla_with_kvcache",
+        "get_mla_metadata"
+      ],
+      "introduced": {
+        "sha": "",
+        "pr": null,
+        "date": "2025-03-16",
+        "evidence": "SGLang PR #4472 integrates FlashMLA."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [],
+      "notes": "Upstream commit unresolved."
+    },
+    {
+      "artifact_id": "L2.build.flashmla_sgl_kernel",
+      "name": "FlashMLA sgl-kernel build/wrapper",
+      "kind": "build_rule",
+      "role": "CMake/libtorch integration and Python wrapper for FlashMLA.",
+      "language": "CMake/Python/C++",
+      "origin": "upstream_fetchcontent",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "sgl-kernel/cmake/flashmla.cmake",
+          "from": "2025-10-21",
+          "from_sha": "23afdfd1c2b1",
+          "from_pr": 11717,
+          "to": "2026-07-29",
+          "to_sha": "c32c4ef79cf5",
+          "to_pr": 32648,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/aot/cmake/flashmla.cmake"
+        },
+        {
+          "path": "python/sglang/kernels/aot/cmake/flashmla.cmake",
+          "from": "2026-07-29",
+          "from_sha": "c32c4ef79cf5",
+          "from_pr": 32648,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "flashmla.cmake",
+        "sgl_kernel.flash_mla",
+        "get_mla_metadata"
+      ],
+      "introduced": {
+        "sha": "23afdfd1c2b1",
+        "pr": 11717,
+        "date": "2025-10-21",
+        "evidence": "PR #11717: support flashmla libtorch."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.upstream.flashmla",
+          "relation": "integrates",
+          "evidence": "CMake rule/wrapper deliver FlashMLA ops",
+          "evidence_ref": "23afdfd1c2b1/#11717"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-10-21",
+          "status": "default",
+          "scope": "in-tree build when FlashMLA selected",
+          "ref": "23afdfd1c2b1/#11717"
+        },
+        {
+          "date": "2026-07-29",
+          "status": "default",
+          "scope": "moved under kernels/aot",
+          "ref": "c32c4ef79cf5/#32648"
+        },
+        {
+          "date": "2025-10-21",
+          "status": "optional",
+          "scope": "GIT_TAG bc8576abc3e507425cf6498f3d3393df7733ce37",
+          "ref": "23afdfd1c2b1/#11717"
+        },
+        {
+          "date": "2026-09-13",
+          "status": "default",
+          "scope": "cutoff FlashMLA archive tag 3e18517fb055a6c9608eef5a1f1347fb1a047bbd for DeepSeek V4.1 kernels",
+          "ref": "5ebb16005d28/#39171"
+        }
+      ],
+      "tests": [
+        "sgl-kernel/tests/test_flashmla.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "(sgl-kernel|python/sglang/kernels/aot)/(cmake/flashmla\\.cmake|python/sgl_kernel/flash_mla\\.py|csrc/flashmla_extension\\.cc)",
+        "(sgl-kernel|python/sglang/kernels/aot)/(cmake/flashmla\\.cmake|python/sgl_kernel/flash_mla\\.py|csrc/flashmla_extension\\.cc|tests/test_flashmla\\.py)"
+      ],
+      "notes": "FlashMLA pin history count through cutoff: 14 first-parent tag/URL changes. Initial #11717 GIT_TAG bc8576a; later tags include 6fde808, be055fb, b1860dc, 9804b12, abb5477, df022eb, 05e2664, c1dee56, cutoff 3e18517 (URL archive)."
+    },
+    {
+      "artifact_id": "L2.kernel.cutlass_mla",
+      "name": "CUTLASS SM100 MLA kernel",
+      "kind": "kernel",
+      "role": "Blackwell CUTLASS MLA decode kernel with SM100 tile scheduler/reduction.",
+      "language": "CUTLASS C++",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "sgl-kernel/csrc/attention/cutlass_mla_kernel.cu",
+          "from": "2025-04-11",
+          "from_sha": "f65b8d5c896c",
+          "from_pr": 5142,
+          "to": "2026-07-29",
+          "to_sha": "c32c4ef79cf5",
+          "to_pr": 32648,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/aot/csrc/attention/cutlass_mla_kernel.cu"
+        },
+        {
+          "path": "python/sglang/kernels/aot/csrc/attention/cutlass_mla_kernel.cu",
+          "from": "2026-07-29",
+          "from_sha": "c32c4ef79cf5",
+          "from_pr": 32648,
+          "to": "2026-09-10",
+          "to_sha": "c0b790cf7fe6",
+          "to_pr": 32114,
+          "transition": "moved_from:sgl-kernel/csrc/attention/cutlass_mla_kernel.cu",
+          "end": "deleted"
+        }
+      ],
+      "key_symbols": [
+        "cutlass_mla_decode",
+        "cutlass_sm100_mla",
+        "sm100_mla_tile_scheduler"
+      ],
+      "introduced": {
+        "sha": "f65b8d5c896c",
+        "pr": 5142,
+        "date": "2025-04-11",
+        "evidence": "PR #5142: adds Blackwell cutlass MLA kernel; requires CUTLASS 3.9."
+      },
+      "ended": {
+        "sha": "c0b790cf7fe6",
+        "pr": 32114,
+        "date": "2026-09-10",
+        "how": "replaced_by:L2.backend.flashinfer_mla for unsupported/plain fallback; replaced_by:L2.backend.trtllm_mla for SM100 DeepSeek override/explicit Blackwell decode"
+      },
+      "live_at_cutoff": false,
+      "predecessors": [
+        {
+          "artifact_id": "L2.upstream.cutlass",
+          "relation": "ported_from",
+          "evidence": "PR body says requires CUTLASS 3.9",
+          "evidence_ref": "PR #5142 body"
+        }
+      ],
+      "hardware": [
+        "sm100"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-04-11",
+          "status": "experimental",
+          "scope": "kernel only",
+          "ref": "f65b8d5c896c/#5142"
+        },
+        {
+          "date": "2026-09-10",
+          "status": "removed",
+          "scope": "SM10.0-only, GB300-disabled, no CI",
+          "ref": "c0b790cf7fe6/#32114"
+        }
+      ],
+      "tests": [
+        "sgl-kernel/tests/test_cutlass_mla.py"
+      ],
+      "benchmarks": [
+        "sgl-kernel/benchmark/bench_cutlass_mla.py"
+      ],
+      "path_regexes": [
+        ".*cutlass.*mla.*",
+        "(sgl-kernel|python/sglang/kernels/aot)/(csrc/attention/cutlass.*mla.*|benchmark/bench_cutlass_mla\\.py|tests/test_cutlass_mla\\.py)"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.backend.cutlass_mla",
+      "name": "CUTLASS MLA backend",
+      "kind": "backend",
+      "role": "Python adapter selecting CUTLASS MLA decode and fallbacks.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/cutlass_mla_backend.py",
+          "from": "2025-04-27",
+          "from_sha": "84810da4ae42",
+          "from_pr": 5390,
+          "to": "2026-09-10",
+          "to_sha": "c0b790cf7fe6",
+          "to_pr": 32114,
+          "transition": "created",
+          "end": "deleted"
+        }
+      ],
+      "key_symbols": [
+        "CutlassMLABackend"
+      ],
+      "introduced": {
+        "sha": "84810da4ae42",
+        "pr": 5390,
+        "date": "2025-04-27",
+        "evidence": "diff-filter=A: Add Cutlass MLA attention backend."
+      },
+      "ended": {
+        "sha": "c0b790cf7fe6",
+        "pr": 32114,
+        "date": "2026-09-10",
+        "how": "replaced_by:L2.backend.flashinfer_mla for unsupported/plain fallback; replaced_by:L2.backend.trtllm_mla for SM100 DeepSeek override/explicit Blackwell decode"
+      },
+      "live_at_cutoff": false,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.cutlass_mla",
+          "relation": "wraps",
+          "evidence": "backend wraps sgl-kernel CUTLASS op",
+          "evidence_ref": "84810da4ae42/#5390"
+        }
+      ],
+      "hardware": [
+        "sm100"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-04-27",
+          "status": "experimental",
+          "scope": "selectable backend",
+          "ref": "84810da4ae42/#5390"
+        },
+        {
+          "date": "2026-09-10",
+          "status": "removed",
+          "scope": "registry/backend deleted",
+          "ref": "c0b790cf7fe6/#32114"
+        },
+        {
+          "date": "2026-09-10",
+          "status": "removed",
+          "scope": "removed; replacements are FlashInfer generic MLA fallback or trtllm_mla for SM100 DeepSeek override/explicit Blackwell decode",
+          "ref": "c0b790cf7fe6/#32114"
+        }
+      ],
+      "tests": [
+        "test/registered/attention/unittests/mla/test_cutlass_mla.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/cutlass_mla_backend\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.upstream.cutlass",
+      "name": "NVIDIA CUTLASS",
+      "kind": "upstream_kernel",
+      "role": "CUTLASS templates used by in-tree SM100 MLA kernel.",
+      "language": "CUTLASS C++",
+      "origin": "upstream_other",
+      "upstream": "NVIDIA/cutlass",
+      "path_history": [],
+      "key_symbols": [
+        "cutlass"
+      ],
+      "introduced": {
+        "sha": "",
+        "pr": null,
+        "date": "2025-04-11",
+        "evidence": "PR #5142 states kernel requires CUTLASS 3.9."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [],
+      "hardware": [
+        "sm100"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.backend.trtllm_mla",
+      "name": "TRT-LLM MLA backend via FlashInfer",
+      "kind": "backend",
+      "role": "Adapter for FlashInfer-exposed TRT-LLM Gen MLA decode/prefill kernels.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/trtllm_mla_backend.py",
+          "from": "2025-07-31",
+          "from_sha": "4b04998d3854",
+          "from_pr": 8632,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "TRTLLMMLABackend",
+        "TRTLLMMLAPrefillMetadata",
+        "TRTLLMMLADecodeMetadata"
+      ],
+      "introduced": {
+        "sha": "4b04998d3854",
+        "pr": 8632,
+        "date": "2025-07-31",
+        "evidence": "PR #8632 title: TRTLLM Gen MLA Decode Kernel Integration."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashinfer_mla",
+          "relation": "reimplementation_of",
+          "evidence": "subclasses FlashInferMLAAttnBackend",
+          "evidence_ref": "89e1316e:trtllm_mla_backend.py:193"
+        },
+        {
+          "artifact_id": "L2.upstream.trtllm_mla_flashinfer",
+          "relation": "wraps",
+          "evidence": "docstring says TRTLLM MLA kernels from flashinfer",
+          "evidence_ref": "89e1316e:trtllm_mla_backend.py:2"
+        },
+        {
+          "artifact_id": "L2.backend.cutlass_mla",
+          "relation": "replaces",
+          "evidence": "after cutlass removal, Blackwell DeepSeek override/explicit path uses trtllm_mla rather than cutlass_mla",
+          "evidence_ref": "c0b790cf7fe6/#32114;89e1316e deepseek_v2 override"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-07-31",
+          "status": "optional",
+          "scope": "trtllm_mla backend",
+          "ref": "4b04998d3854/#8632"
+        },
+        {
+          "date": "2025-08-11",
+          "status": "optional",
+          "scope": "FP8 path",
+          "ref": "f508cd3cb78a/#8638"
+        },
+        {
+          "date": "2026-09-28",
+          "status": "default",
+          "scope": "DeepSeek-V3 sm100 model override selects trtllm_mla when all attention backends unset",
+          "ref": "89e1316e:arg_groups/model_overrides/deepseek_v2.py"
+        },
+        {
+          "date": "2026-09-10",
+          "status": "optional",
+          "scope": "explicit replacement path for Cutlass MLA low-latency/Blackwell use cases after cutlass removal",
+          "ref": "c0b790cf7fe6/#32114"
+        }
+      ],
+      "tests": [
+        "python/sglang/test/attention/test_trtllm_mla_backend.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/trtllm_mla_backend\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.upstream.trtllm_mla_flashinfer",
+      "name": "FlashInfer TRT-LLM Gen MLA kernels",
+      "kind": "upstream_kernel",
+      "role": "TRT-LLM Gen MLA kernels exposed by FlashInfer.",
+      "language": "CUDA C++",
+      "origin": "upstream_pip",
+      "upstream": "flashinfer-ai/flashinfer:trtllm-gen MLA",
+      "path_history": [],
+      "key_symbols": [
+        "trtllm_gen_mla"
+      ],
+      "introduced": {
+        "sha": "",
+        "pr": null,
+        "date": "2025-07-31",
+        "evidence": "SGLang #8632 integrates TRTLLM Gen MLA via FlashInfer."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.backend.fa3_fa4_mla",
+      "name": "FlashAttention FA3/FA4 MLA path",
+      "kind": "backend",
+      "role": "FlashAttention backend branch for absorbed MLA extend/decode.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/flashattention_backend.py",
+          "from": "2025-03-28",
+          "from_sha": "20c90be23de7",
+          "from_pr": 4831,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "FlashAttentionBackend",
+        "_mla_cp_attn"
+      ],
+      "introduced": {
+        "sha": "20c90be23de7",
+        "pr": 4831,
+        "date": "2025-03-28",
+        "evidence": "PR #4831: Support FlashAttention 3 backend for MLA; cites FA3 example."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.upstream.flashattention_mla",
+          "relation": "wraps",
+          "evidence": "PR cites Dao-AILab benchmark_mla_decode.py",
+          "evidence_ref": "PR #4831 body"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-03-28",
+          "status": "optional",
+          "scope": "FA3 MLA support",
+          "ref": "20c90be23de7/#4831"
+        },
+        {
+          "date": "2025-04-12",
+          "status": "default",
+          "scope": "FA3 MLA default on Hopper",
+          "ref": "57de7c6b5fb3/#5210"
+        },
+        {
+          "date": "2025-04-12",
+          "status": "default",
+          "scope": "Hopper/sm90 DeepSeek MLA default when CUDA>=12.3",
+          "ref": "57de7c6b5fb3/#5210"
+        },
+        {
+          "date": "2026-09-28",
+          "status": "default",
+          "scope": "generic MLA sm90 default; fa4 deterministic only on SM100/SM110",
+          "ref": "89e1316e:model_override_base.py;attention_hook.py"
+        }
+      ],
+      "tests": [
+        "python/sglang/test/attention/test_flashattn_mla_backend.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/flashattention_backend\\.py"
+      ],
+      "notes": "File read at cutoff with git show because it changed after cutoff."
+    },
+    {
+      "artifact_id": "L2.upstream.flashattention_mla",
+      "name": "FlashAttention MLA kernels",
+      "kind": "upstream_kernel",
+      "role": "FA3/FA4 MLA kernels/examples used by SGLang backend.",
+      "language": "CUDA C++/Python",
+      "origin": "upstream_pip",
+      "upstream": "Dao-AILab/flash-attention",
+      "path_history": [],
+      "key_symbols": [
+        "benchmark_mla_decode.py"
+      ],
+      "introduced": {
+        "sha": "",
+        "pr": null,
+        "date": "2025-03-28",
+        "evidence": "PR #4831 cites Dao-AILab/flash-attention MLA example."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [],
+      "hardware": [
+        "sm90",
+        "sm100"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.backend.cutedsl_mla",
+      "name": "CuTe-DSL MLA backend",
+      "kind": "backend",
+      "role": "Adapter for flashinfer CuTe-DSL MLA decode kernels, reusing TRTLLM MLA metadata.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/cutedsl_mla_backend.py",
+          "from": "2026-07-28",
+          "from_sha": "ef6c07008b5e",
+          "from_pr": 32612,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "CuteDslMLABackend"
+      ],
+      "introduced": {
+        "sha": "ef6c07008b5e",
+        "pr": 32612,
+        "date": "2026-07-28",
+        "evidence": "diff-filter=A adds cutedsl_mla_backend.py; docstring says flashinfer cute-dsl MLA."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.trtllm_mla",
+          "relation": "reimplementation_of",
+          "evidence": "subclasses TRTLLMMLABackend",
+          "evidence_ref": "89e1316e:cutedsl_mla_backend.py:5"
+        }
+      ],
+      "hardware": [
+        "sm100"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-05-28",
+          "status": "optional",
+          "scope": "FlashInfer Cute-DSL MLA support",
+          "ref": "50e0b3b77f27/#24737"
+        }
+      ],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/cutedsl_mla_backend\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.cutedsl_flash_fwd_mla_sm100",
+      "name": "CuTe flash_fwd_mla_sm100",
+      "kind": "kernel",
+      "role": "SM100 CuTe DSL MLA JIT wrapper.",
+      "language": "CuTe DSL",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/jit_kernel/flash_attn/cute/flash_fwd_mla_sm100.py",
+          "from": "2026-07-19",
+          "from_sha": "02236fa38cb0",
+          "from_pr": 31681,
+          "to": "2026-07-22",
+          "to_sha": "74338e94f10e",
+          "to_pr": 32045,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/ops/attention/flash_attn/cute/flash_fwd_mla_sm100.py"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/flash_attn/cute/flash_fwd_mla_sm100.py",
+          "from": "2026-07-22",
+          "from_sha": "74338e94f10e",
+          "from_pr": 32045,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "flash_fwd_mla_sm100"
+      ],
+      "introduced": {
+        "sha": "02236fa38cb0",
+        "pr": 31681,
+        "date": "2026-07-19",
+        "evidence": "path added with Inkling model support."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.cutedsl_mla",
+          "relation": "wraps",
+          "evidence": "same CuTe MLA backend family",
+          "evidence_ref": "02236fa38cb0"
+        }
+      ],
+      "hardware": [
+        "sm100"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        ".*flash_fwd_mla_sm100\\.py",
+        "python/sglang/(jit_kernel|kernels/ops/attention)/flash_attn/cute/flash_fwd_mla_sm100\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.backend.tokenspeed_mla",
+      "name": "tokenspeed_mla backend",
+      "kind": "backend",
+      "role": "External tokenspeed_mla Blackwell FP8 KV prefill/decode adapter.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/tokenspeed_mla_backend.py",
+          "from": "2026-05-13",
+          "from_sha": "7618ad707568",
+          "from_pr": 24925,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "TokenspeedMLABackend"
+      ],
+      "introduced": {
+        "sha": "7618ad707568",
+        "pr": 24925,
+        "date": "2026-05-13",
+        "evidence": "PR #24925: integrate tokenspeed_mla prefill/decode kernels."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.trtllm_mla",
+          "relation": "reimplementation_of",
+          "evidence": "subclasses TRTLLMMLABackend",
+          "evidence_ref": "89e1316e:tokenspeed_mla_backend.py:25"
+        }
+      ],
+      "hardware": [
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-05-13",
+          "status": "optional",
+          "scope": "Blackwell FP8 KV cache backend",
+          "ref": "7618ad707568/#24925"
+        }
+      ],
+      "tests": [
+        "test/registered/attention/unittests/mla/test_tokenspeed_mla.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/tokenspeed_mla_backend\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.rocm_mla_decode_rope",
+      "name": "ROCm Triton MLA decode+RoPE",
+      "kind": "kernel",
+      "role": "Fused ROCm Triton MLA decode and RoPE for DeepSeek V3.",
+      "language": "Triton/HIP",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/triton_ops/rocm_mla_decode_rope.py",
+          "from": "2025-02-24",
+          "from_sha": "6ce9dbe82882",
+          "from_pr": 3237,
+          "to": "2026-07-10",
+          "to_sha": "6ed9843b57aa",
+          "to_pr": 30044,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/ops/attention/rocm_mla_decode_rope.py"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/rocm_mla_decode_rope.py",
+          "from": "2026-07-10",
+          "from_sha": "6ed9843b57aa",
+          "from_pr": 30044,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "_fwd_kernel",
+        "decode_attention_fwd_grouped_rope"
+      ],
+      "introduced": {
+        "sha": "6ce9dbe82882",
+        "pr": 3237,
+        "date": "2025-02-24",
+        "evidence": "PR #3237: Enable Fused MLA Triton kernel for DeepSeekV3 on ROCm."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.triton_decode_lightllm",
+          "relation": "reimplementation_of",
+          "evidence": "same decode role but ROCm fused RoPE path",
+          "evidence_ref": "6ce9dbe82882/#3237"
+        }
+      ],
+      "hardware": [
+        "amd_mi300",
+        "gfx942",
+        "gfx950"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [
+        "test/srt/test_triton_attention_rocm_mla.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        ".*rocm_mla_decode_rope\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.backend.aiter_mla",
+      "name": "ROCm AITER MLA backend path",
+      "kind": "backend",
+      "role": "AITER MLA decode/prefill/reduce integration.",
+      "language": "Python/HIP",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/aiter_backend.py",
+          "from": "2025-03-07",
+          "from_sha": "unknown",
+          "from_pr": null,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "AiterAttnBackend",
+        "mla_decode_fwd",
+        "mla_prefill_fwd",
+        "mla_reduce_v1"
+      ],
+      "introduced": {
+        "sha": "unknown",
+        "pr": null,
+        "date": "2025-03-07",
+        "evidence": "cutoff grep shows AITER imports aiter.mla and use_mla branch; exact intro unresolved."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.upstream.aiter_mla",
+          "relation": "wraps",
+          "evidence": "imports aiter.mla and reduce_v1",
+          "evidence_ref": "89e1316e:aiter_backend.py:50-59"
+        }
+      ],
+      "hardware": [
+        "amd_mi300",
+        "mi350",
+        "gfx942",
+        "gfx950"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-03-07",
+          "status": "optional",
+          "scope": "ROCm AITER MLA path",
+          "ref": "local grep at cutoff"
+        },
+        {
+          "date": "2025-07-31",
+          "status": "default",
+          "scope": "ROCm MLA default only when KV heads are 16 or 128 and no speculative decoding; else Triton",
+          "ref": "4b04998d3854/#8632"
+        }
+      ],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/aiter_backend\\.py"
+      ],
+      "notes": "Exact first commit unresolved."
+    },
+    {
+      "artifact_id": "L2.upstream.aiter_mla",
+      "name": "ROCm AITER MLA kernels",
+      "kind": "upstream_kernel",
+      "role": "Upstream AITER MLA decode/prefill/reduce kernels.",
+      "language": "HIP/C++",
+      "origin": "upstream_pip",
+      "upstream": "ROCm/aiter",
+      "path_history": [],
+      "key_symbols": [
+        "mla_decode_fwd",
+        "mla_prefill_fwd",
+        "mla_reduce_v1"
+      ],
+      "introduced": {
+        "sha": "",
+        "pr": null,
+        "date": "2025-03-07",
+        "evidence": "SGLang AITER backend imports from aiter.mla."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [],
+      "hardware": [
+        "amd_mi300",
+        "gfx942",
+        "gfx950"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.hip_flash_mla",
+      "name": "HIP Flash MLA",
+      "kind": "kernel",
+      "role": "ROCm/HIP FlashMLA-style kernels for DeepSeek V4/dense-sparse MLA.",
+      "language": "HIP/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/hip_flash_mla.py",
+          "from": "2026-05-18",
+          "from_sha": "866793c502b7",
+          "from_pr": 24933,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "hip_flash_mla",
+        "flash_mla_sparse_fwd"
+      ],
+      "introduced": {
+        "sha": "866793c502b7",
+        "pr": 24933,
+        "date": "2026-05-18",
+        "evidence": "diff-filter=A adds hip_flash_mla.py."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashmla",
+          "relation": "reimplementation_of",
+          "evidence": "AMD DeepSeek V4 FlashMLA-style path",
+          "evidence_ref": "866793c502b7/#24933"
+        }
+      ],
+      "hardware": [
+        "amd_mi300",
+        "gfx950"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/hip_flash_mla\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.aiter_mla_gluon",
+      "name": "AITER Gluon MLA decode",
+      "kind": "kernel",
+      "role": "AITER Gluon 12-head FP8 MLA decode path.",
+      "language": "HIP/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/aiter_mla_gluon.py",
+          "from": "2026-08-31",
+          "from_sha": "8a191554e379",
+          "from_pr": 34647,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "mla_gluon_decode",
+        "prefer_mla_gluon_decode"
+      ],
+      "introduced": {
+        "sha": "8a191554e379",
+        "pr": 34647,
+        "date": "2026-08-31",
+        "evidence": "PR #34647: Enable 12-head MLA aiter fp8 Gluon decode."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.aiter_mla",
+          "relation": "optimized_from",
+          "evidence": "AITER backend imports aiter_mla_gluon helpers",
+          "evidence_ref": "89e1316e:aiter_backend.py:83"
+        }
+      ],
+      "hardware": [
+        "gfx950",
+        "mi350"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [
+        "test/registered/attention/test_aiter_gluon_h12_fp8.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/aiter_mla_gluon\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.flash_mla_sm120",
+      "name": "SM120 Flash MLA path",
+      "kind": "kernel",
+      "role": "Blackwell desktop SM120 Flash MLA/sparse MLA decode support.",
+      "language": "Python/Triton/CUDA",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/flash_mla_sm120.py",
+          "from": "2026-06-01",
+          "from_sha": "524ba10eda1b",
+          "from_pr": 24692,
+          "to": "2026-07-14",
+          "to_sha": "1a35440c4af9",
+          "to_pr": 30789,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/ops/attention/flash_mla_sm120.py"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/flash_mla_sm120.py",
+          "from": "2026-07-14",
+          "from_sha": "1a35440c4af9",
+          "from_pr": 30789,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "flash_mla_sm120",
+        "flash_mla_sparse_fwd"
+      ],
+      "introduced": {
+        "sha": "524ba10eda1b",
+        "pr": 24692,
+        "date": "2026-06-01",
+        "evidence": "PR #24692: SM120 support for DeepSeek-V4 inference."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashinfer_mla",
+          "relation": "reimplementation_of",
+          "evidence": "FlashInfer sparse MLA decode for DSv4-Flash",
+          "evidence_ref": "f0bf96390bd2/#27455"
+        }
+      ],
+      "hardware": [
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [
+        "test/registered/kernels/test_sm120_flash_mla.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        ".*flash_mla_sm120.*\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.backend.npu_mla",
+      "name": "Ascend/NPU MLA backend",
+      "kind": "backend",
+      "role": "NPU hardware-specific MLA attention and preprocess modules.",
+      "language": "Python/NPU",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/hardware_backend/npu/modules/deepseek_v2_attention_mla_npu.py",
+          "from": "2025-12-04",
+          "from_sha": "894c0dc57cfd",
+          "from_pr": 13359,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/hardware_backend/npu/attention/mla_preprocess.py",
+          "from": "2025-12-04",
+          "from_sha": "894c0dc57cfd",
+          "from_pr": 13359,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "deepseek_v2_attention_mla_npu",
+        "mla_preprocess"
+      ],
+      "introduced": {
+        "sha": "894c0dc57cfd",
+        "pr": 13359,
+        "date": "2025-12-04",
+        "evidence": "diff-filter=A adds NPU MLA module/preprocess."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.model.deepseek_v2_mla",
+          "relation": "reimplementation_of",
+          "evidence": "NPU module implements DeepSeek MLA attention",
+          "evidence_ref": "894c0dc57cfd/#13359"
+        }
+      ],
+      "hardware": [
+        "npu"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2025-07-03",
+          "status": "optional",
+          "scope": "Ascend PA/MLA backend",
+          "ref": "1e0e549766a0/#7722"
+        },
+        {
+          "date": "2025-07-31",
+          "status": "default",
+          "scope": "NPU MLA default is ascend backend",
+          "ref": "4b04998d3854/#8632"
+        }
+      ],
+      "tests": [
+        "test/registered/unit/npu/attention/test_npu_mla_preprocess.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/hardware_backend/npu/(modules/deepseek_v2_attention_mla_npu|attention/mla_preprocess)\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.backend.sparse_mla_adapters",
+      "name": "DSA/NSA sparse MLA adapters",
+      "kind": "adapter",
+      "role": "Adapters routing DeepSeek-V3.2 DSA/NSA sparse MLA to FlashMLA/TRT-LLM sparse kernels; indexer excluded.",
+      "language": "Python/Triton/CUDA",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/attention/dsa/triton_sparse_mla.py",
+          "from": "2026-07-15",
+          "from_sha": "ba5be86d42af",
+          "from_pr": 30792,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/sparse_mla_q8kv8_prefill_sm90.py",
+          "from": "2026-07-22",
+          "from_sha": "74338e94f10e",
+          "from_pr": 32045,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "triton_sparse_mla",
+        "sparse_mla_q8kv8_prefill_sm90"
+      ],
+      "introduced": {
+        "sha": "5e12c4e08ec3",
+        "pr": 21783,
+        "date": "2026-04-01",
+        "evidence": "PR #21783: Support trtllm sparse mla kernel for prefill batches."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashmla",
+          "relation": "reimplementation_of",
+          "evidence": "FlashMLA sparse prefill default branch",
+          "evidence_ref": "c865347b98ae/#29775"
+        },
+        {
+          "artifact_id": "L2.backend.trtllm_mla",
+          "relation": "reimplementation_of",
+          "evidence": "TRT-LLM sparse MLA prefill",
+          "evidence_ref": "5e12c4e08ec3/#21783"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120",
+        "gfx950"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-04-01",
+          "status": "optional",
+          "scope": "TRT-LLM sparse MLA prefill",
+          "ref": "5e12c4e08ec3/#21783"
+        },
+        {
+          "date": "2026-07-01",
+          "status": "default",
+          "scope": "FlashMLA sparse prefill default for DeepSeek V4",
+          "ref": "c865347b98ae/#29775"
+        }
+      ],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        ".*(dsa|nsa|sparse_mla).*",
+        "python/sglang/(jit_kernel|kernels/(jit|ops)|srt/layers)/.*(dsa|nsa|sparse_mla).*"
+      ],
+      "notes": "Sparse indexer/top-k logic excluded."
+    },
+    {
+      "artifact_id": "L2.pool.mla_token_kv",
+      "name": "MLA KV pool/cache layout",
+      "kind": "adapter",
+      "role": "Latent no-PE plus RoPE KV cache layout and transfer metadata.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/mem_cache/memory_pool.py",
+          "from": "2024-08-05",
+          "from_sha": "e1eae1fd15ed",
+          "from_pr": 905,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "MLATokenToKVPool",
+        "MLATokenToKVPoolHost",
+        "get_contiguous_buf_infos"
+      ],
+      "introduced": {
+        "sha": "e1eae1fd15ed",
+        "pr": 905,
+        "date": "2024-08-05",
+        "evidence": "PR #905 body includes memory adaptation for MLA."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.model.deepseek_v2_mla",
+          "relation": "integrates",
+          "evidence": "MLA model uses latent+RoPE KV layout",
+          "evidence_ref": "e1eae1fd15ed/#905"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "amd_mi300",
+        "npu",
+        "cpu"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2024-08-05",
+          "status": "default",
+          "scope": "MLA model KV pool",
+          "ref": "e1eae1fd15ed/#905"
+        }
+      ],
+      "tests": [
+        "test/srt/hicache/test_hicache_mla.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/mem_cache/(memory_pool|pool_host/mla)\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.set_mla_kv_buffer",
+      "name": "set_mla_kv_buffer kernels",
+      "kind": "kernel",
+      "role": "Write MLA latent/RoPE K parts into paged KV buffer; Triton plus JIT CUDA variants.",
+      "language": "Triton/CUDA C++",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/mem_cache/triton_ops/mla_buffer.py",
+          "from": "2024-08-05",
+          "from_sha": "e1eae1fd15ed",
+          "from_pr": 905,
+          "to": "2026-07-10",
+          "to_sha": "6ed9843b57aa",
+          "to_pr": 30044,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/ops/kvcache/mla_buffer.py"
+        },
+        {
+          "path": "python/sglang/kernels/ops/kvcache/mla_buffer.py",
+          "from": "2026-07-10",
+          "from_sha": "6ed9843b57aa",
+          "from_pr": 30044,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/jit/csrc/elementwise/set_mla_kv_buffer.cuh",
+          "from": "2026-05-14",
+          "from_sha": "dca9ba63215d",
+          "from_pr": 25311,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "set_mla_kv_buffer_kernel",
+        "set_mla_kv_buffer_triton"
+      ],
+      "introduced": {
+        "sha": "e1eae1fd15ed",
+        "pr": 905,
+        "date": "2024-08-05",
+        "evidence": "PR #905: memory & triton kernel adaptation."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.pool.mla_token_kv",
+          "relation": "integrates",
+          "evidence": "writes MLATokenToKVPool layout",
+          "evidence_ref": "89e1316e:mla_buffer.py"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "sm90",
+        "sm100",
+        "sm120",
+        "amd_mi300"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-05-14",
+          "status": "optional",
+          "scope": "TMA bulk-store JIT fast path",
+          "ref": "dca9ba63215d/#25311"
+        }
+      ],
+      "tests": [
+        "test/registered/jit/test_set_mla_kv_buffer.py"
+      ],
+      "benchmarks": [
+        "test/registered/jit/benchmark/bench_set_mla_kv_buffer.py"
+      ],
+      "path_regexes": [
+        ".*(mla_buffer|set_mla_kv_buffer).*",
+        "python/sglang/(srt/mem_cache/triton_ops|jit_kernel|kernels/(ops|jit)/.*)/.*(mla_buffer|set_mla_kv_buffer).*\\.(py|cuh)"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.concat_mla",
+      "name": "concat_mla kernels",
+      "kind": "kernel",
+      "role": "Concatenate MLA K/Q no-PE and RoPE parts; absorbed-Q helper.",
+      "language": "CUDA C++/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "sgl-kernel/csrc/elementwise/concat_mla.cu",
+          "from": "2025-09-08",
+          "from_sha": "0096798ed60b",
+          "from_pr": 10156,
+          "to": "2026-02-03",
+          "to_sha": "9b1619c148a0",
+          "to_pr": 17889,
+          "transition": "created",
+          "end": "moved_to:python/sglang/jit_kernel/csrc/elementwise/concat_mla.cuh"
+        },
+        {
+          "path": "python/sglang/kernels/jit/csrc/elementwise/concat_mla.cuh",
+          "from": "2026-07-23",
+          "from_sha": "99f636a86fb8",
+          "from_pr": 32072,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "concat_mla_k_kernel",
+        "concat_mla_absorb_q_kernel"
+      ],
+      "introduced": {
+        "sha": "0096798ed60b",
+        "pr": 10156,
+        "date": "2025-09-08",
+        "evidence": "PR #10156: Speed up prefill MLA attention."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.optimization.weight_absorption",
+          "relation": "optimized_from",
+          "evidence": "concat_mla_absorb_q accelerates absorbed-Q concat",
+          "evidence_ref": "89e1316e:concat_mla.cuh"
+        }
+      ],
+      "hardware": [
+        "sm80",
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [
+        "test/registered/jit/test_concat_mla.py"
+      ],
+      "benchmarks": [
+        "test/registered/jit/benchmark/bench_concat_mla.py"
+      ],
+      "path_regexes": [
+        ".*concat_mla\\.(cu|cuh|py)",
+        "(sgl-kernel/csrc/elementwise|python/sglang/jit_kernel|python/sglang/kernels/(jit|ops)/.*)/.*concat_mla.*\\.(cu|cuh|py)"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.mla_kv_pack_quantize_fp8",
+      "name": "MLA KV pack quantize FP8",
+      "kind": "kernel",
+      "role": "Fused cat plus FP8 quantize for chunked-prefill MLA K/V.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/jit_kernel/mla_kv_pack_quantize_fp8.py",
+          "from": "2026-05-15",
+          "from_sha": "ee93795476a4",
+          "from_pr": 25333,
+          "to": "2026-07-22",
+          "to_sha": "74338e94f10e",
+          "to_pr": 32045,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/ops/attention/mla_kv_pack_quantize_fp8.py"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/mla_kv_pack_quantize_fp8.py",
+          "from": "2026-07-22",
+          "from_sha": "74338e94f10e",
+          "from_pr": 32045,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "mla_kv_pack_quantize_fp8"
+      ],
+      "introduced": {
+        "sha": "ee93795476a4",
+        "pr": 25333,
+        "date": "2026-05-15",
+        "evidence": "PR #25333: fused cat+FP8-quantize for MLA chunked-prefill K/V."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.set_mla_kv_buffer",
+          "relation": "optimized_from",
+          "evidence": "fuses packing/quantization before KV write",
+          "evidence_ref": "ee93795476a4/#25333"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120",
+        "amd_mi300"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [
+        "test/registered/jit/test_mla_kv_pack_quantize_fp8.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        ".*mla_kv_pack_quantize_fp8\\.py",
+        "python/sglang/(jit_kernel|kernels/ops/attention)/mla_kv_pack_quantize_fp8\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.kernel.set_mla_kv_concat_q",
+      "name": "Fused set_mla_kv_concat_q",
+      "kind": "kernel",
+      "role": "One launch replacing set_mla_kv_buffer plus concat_mla_absorb_q; FP8 variant included.",
+      "language": "CUDA C++/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/jit/csrc/elementwise/set_mla_kv_concat_q.cuh",
+          "from": "2026-08-01",
+          "from_sha": "fb207b72b02a",
+          "from_pr": 32890,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/set_mla_kv_concat_q.py",
+          "from": "2026-08-01",
+          "from_sha": "fb207b72b02a",
+          "from_pr": 32890,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "set_mla_kv_concat_q_kernel",
+        "set_mla_kv_concat_q_fp8_kernel"
+      ],
+      "introduced": {
+        "sha": "fb207b72b02a",
+        "pr": 32890,
+        "date": "2026-08-01",
+        "evidence": "PR #32890 ports standalone Kimi K3 kernels including set_mla_kv_concat_q."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.set_mla_kv_buffer",
+          "relation": "optimized_from",
+          "evidence": "docstring says replacing set_mla_kv_buffer + concat_mla_absorb_q",
+          "evidence_ref": "89e1316e:set_mla_kv_concat_q.py:3"
+        },
+        {
+          "artifact_id": "L2.kernel.concat_mla",
+          "relation": "optimized_from",
+          "evidence": "same docstring names concat_mla_absorb_q",
+          "evidence_ref": "89e1316e:set_mla_kv_concat_q.py:3"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        ".*set_mla_kv_concat_q\\.(cuh|py)"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.dispatch.attention_registry",
+      "name": "MLA attention backend registry",
+      "kind": "dispatcher",
+      "role": "Maps backend strings to MLA backend classes and guards incompatible model/backends.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/attention_registry.py",
+          "from": "2024-09-10",
+          "from_sha": "46094e0c1b9c",
+          "from_pr": 1380,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "register_attention_backend",
+        "create_flashmla_backend",
+        "create_trtllm_mla_backend",
+        "create_cutedsl_mla_backend"
+      ],
+      "introduced": {
+        "sha": "46094e0c1b9c",
+        "pr": 1380,
+        "date": "2024-09-10",
+        "evidence": "PR #1380 introduced --attention-backend; cutoff registry maps MLA backends."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.model.deepseek_v2_mla",
+          "relation": "integrates",
+          "evidence": "registry chooses MLA-specific backend classes",
+          "evidence_ref": "89e1316e:attention_registry.py"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "amd_mi300",
+        "npu"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2024-09-10",
+          "status": "default",
+          "scope": "named attention backend selection",
+          "ref": "46094e0c1b9c/#1380"
+        },
+        {
+          "date": "2026-09-10",
+          "status": "default",
+          "scope": "cutlass_mla entry removed",
+          "ref": "c0b790cf7fe6/#32114"
+        }
+      ],
+      "tests": [
+        "test/registered/unit/server_args/test_server_args.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/attention_registry\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.dispatch.server_args_defaults",
+      "name": "Server args/default selection",
+      "kind": "dispatcher",
+      "role": "CLI/default selection for MLA and hardware-specific backend choices.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/server_args.py",
+          "from": "2024-09-10",
+          "from_sha": "46094e0c1b9c",
+          "from_pr": 1380,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "ServerArgs",
+        "attention_backend",
+        "attention_backends_of"
+      ],
+      "introduced": {
+        "sha": "46094e0c1b9c",
+        "pr": 1380,
+        "date": "2024-09-10",
+        "evidence": "PR #1380 introduced --attention-backend."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.dispatch.attention_registry",
+          "relation": "integrates",
+          "evidence": "ServerArgs attention_backend feeds registry",
+          "evidence_ref": "89e1316e:server_args.py"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "amd_mi300",
+        "npu",
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2024-08-05",
+          "status": "optional",
+          "scope": "DeepSeek-V2 MLA exists behind --enable-mla; otherwise non-MLA path",
+          "ref": "e1eae1fd15ed/#905"
+        },
+        {
+          "date": "2024-09-17",
+          "status": "default",
+          "scope": "MLA became default for DeepSeek V2/V3/R1; --disable-mla opt-out",
+          "ref": "c6b6d2e71b2b/#1447"
+        },
+        {
+          "date": "2025-02-14",
+          "status": "optional",
+          "scope": "--enable-flashinfer-mla selects FlashInfer for DeepSeek V3; default remains Triton MLA unless flag set",
+          "ref": "70f894b810c0/#3550"
+        },
+        {
+          "date": "2025-02-24",
+          "status": "optional",
+          "scope": "--enable-flashinfer-mla selects dedicated flashinfer_mla backend",
+          "ref": "b110084654a1/#3785"
+        },
+        {
+          "date": "2025-04-12",
+          "status": "default",
+          "scope": "Hopper/sm90 CUDA>=12.3 DeepSeek MLA defaults to fa3; other CUDA defaults to Triton except explicit FlashInfer/FlashMLA",
+          "ref": "57de7c6b5fb3/#5210"
+        },
+        {
+          "date": "2025-07-31",
+          "status": "default",
+          "scope": "DeepSeek MLA default logic: sm90->fa3, sm100->flashinfer; ROCm head 16/128 without spec->aiter else triton; NPU->ascend; other->triton",
+          "ref": "4b04998d3854/#8632"
+        },
+        {
+          "date": "2026-05-13",
+          "status": "optional",
+          "scope": "tokenspeed_mla selectable for Blackwell FP8 KV; not general default",
+          "ref": "7618ad707568/#24925"
+        },
+        {
+          "date": "2026-07-28",
+          "status": "optional",
+          "scope": "cutedsl_mla selectable/DCP Kimi path; not general default",
+          "ref": "ef6c07008b5e/#32612"
+        },
+        {
+          "date": "2026-09-10",
+          "status": "removed",
+          "scope": "cutlass_mla removed from choices; use FlashInfer default/fallback or trtllm_mla when model override selects it",
+          "ref": "c0b790cf7fe6/#32114"
+        },
+        {
+          "date": "2026-09-28",
+          "status": "default",
+          "scope": "Cutoff: generic MLA auto sm90->fa3, sm100->flashinfer, ROCm head16/128->aiter else triton, other CUDA/sm80/sm120->triton; DeepSeek-V3 sm100 override->trtllm_mla; DeepSeek-V4 override->dsv4/FlashMLA sparse prefill, trtllm opt-in for SM100 FP8",
+          "ref": "89e1316e:model_override_base.py, model_overrides/deepseek_v2.py, deepseek_v4.py"
+        }
+      ],
+      "tests": [
+        "test/registered/unit/models/test_deepseek_mla_dispatch.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/(server_args|arg_groups/.*)\\.py"
+      ],
+      "notes": "Default backend timeline reconstructed from model_runner.py before split and arg_groups/model_override_base.py plus DeepSeek overrides at cutoff."
+    },
+    {
+      "artifact_id": "L2.runner.cuda_graph_mla",
+      "name": "MLA CUDA-graph/compile protocol",
+      "kind": "runner",
+      "role": "Lifecycle hooks and metadata plans for CUDA graph capture/replay and torch.compile-safe MLA.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/flashinfer_mla_backend.py",
+          "from": "2025-03-05",
+          "from_sha": "fc91d08a8f0",
+          "from_pr": 4012,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/layers/attention/flashmla_backend.py",
+          "from": "2025-03-19",
+          "from_sha": "b6944f97a616",
+          "from_pr": 4514,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/layers/attention/trtllm_mla_backend.py",
+          "from": "2025-10-23",
+          "from_sha": "36a4cad7b0ab",
+          "from_pr": 11821,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "init_cuda_graph_state",
+        "init_forward_metadata_out_graph",
+        "_apply_cuda_graph_metadata"
+      ],
+      "introduced": {
+        "sha": "fc91d08a8f0",
+        "pr": 4012,
+        "date": "2025-03-05",
+        "evidence": "PR #4012 revises FlashInfer MLA fast decode plan under CUDA graph."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashinfer_mla",
+          "relation": "adapt_framework",
+          "evidence": "fast plan avoids graph replay host blocking",
+          "evidence_ref": "PR #3987/#4012 bodies"
+        },
+        {
+          "artifact_id": "L2.backend.flashmla",
+          "relation": "adapt_framework",
+          "evidence": "#4514 supports FlashMLA CUDA graph",
+          "evidence_ref": "b6944f97a616/#4514"
+        }
+      ],
+      "hardware": [
+        "sm80",
+        "sm90",
+        "sm100",
+        "sm120",
+        "amd_mi300"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-06-09",
+          "status": "default",
+          "scope": "Cuda Graph Runner/Backend refactor",
+          "ref": "2495c02c2c57/#23906"
+        }
+      ],
+      "tests": [
+        "test/registered/attention/unittests/mla/test_flashinfer.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/.*mla.*backend\\.py",
+        "python/sglang/srt/model_executor/cuda_graph_runner.*\\.py"
+      ],
+      "notes": ""
+    },
+    {
+      "artifact_id": "L2.upstream.lightllm_decode",
+      "name": "LightLLM token attention decode kernels",
+      "kind": "upstream_kernel",
+      "role": "Upstream Triton token-attention kernels cited as the source for SGLang's early decode_attention implementation.",
+      "language": "Triton",
+      "origin": "upstream_other",
+      "upstream": "ModelTC/lightllm",
+      "path_history": [],
+      "key_symbols": [
+        "token_attention_nopad_att1.py",
+        "token_attention_softmax_and_reducev.py"
+      ],
+      "introduced": {
+        "sha": "df191254abc0",
+        "pr": 1138,
+        "date": "2024-08-19",
+        "evidence": "SGLang source comments cite ModelTC/lightllm token_attention_nopad_att1.py and token_attention_softmax_and_reducev.py."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [],
+      "hardware": [
+        "all_cuda"
+      ],
+      "framework_interface": "Upstream source referenced by comments; not imported as a package.",
+      "dispatch_status_history": [
+        {
+          "date": "2024-08-19",
+          "status": "optional",
+          "scope": "ancestry source for in-tree Triton decode kernel",
+          "ref": "df191254abc0/#1138"
+        }
+      ],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [],
+      "notes": "Evidence ref: df191254abc0:python/sglang/srt/layers/decode_attention.py:21-22 source-comment URLs."
+    },
+    {
+      "artifact_id": "L2.backend.flashinfer_general_mla",
+      "name": "FlashInfer MLA path inside general FlashInfer backend",
+      "kind": "backend",
+      "role": "Initial FlashInfer MLA integration before the dedicated flashinfer_mla_backend.py split.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/flashinfer_backend.py",
+          "from": "2025-02-14",
+          "from_sha": "70f894b810c0",
+          "from_pr": 3550,
+          "to": "2025-02-24",
+          "to_sha": "b110084654a1",
+          "to_pr": 3785,
+          "transition": "created",
+          "end": "split_to:python/sglang/srt/layers/attention/flashinfer_mla_backend.py"
+        }
+      ],
+      "key_symbols": [
+        "enable_flashinfer_mla",
+        "FlashInferAttnBackend",
+        "BatchMLAPagedAttentionWrapper"
+      ],
+      "introduced": {
+        "sha": "70f894b810c0",
+        "pr": 3550,
+        "date": "2025-02-14",
+        "evidence": "PR #3550: support flashinfer mla attention for DeepSeek V3; model_runner selected flashinfer when enable_flashinfer_mla."
+      },
+      "ended": {
+        "sha": "b110084654a1",
+        "pr": 3785,
+        "date": "2025-02-24",
+        "how": "merged_into:L2.backend.flashinfer_mla"
+      },
+      "live_at_cutoff": false,
+      "predecessors": [
+        {
+          "artifact_id": "L2.upstream.flashinfer_mla",
+          "relation": "wraps",
+          "evidence": "FlashInfer general backend exposed MLA wrapper before split",
+          "evidence_ref": "70f894b810c0/#3550"
+        }
+      ],
+      "hardware": [
+        "sm80",
+        "sm90",
+        "sm100"
+      ],
+      "framework_interface": "model_runner set attention_backend='flashinfer' when --enable-flashinfer-mla.",
+      "dispatch_status_history": [
+        {
+          "date": "2025-02-14",
+          "status": "optional",
+          "scope": "--enable-flashinfer-mla on DeepSeek V3/R1",
+          "ref": "70f894b810c0/#3550"
+        },
+        {
+          "date": "2025-02-24",
+          "status": "removed",
+          "scope": "split into dedicated flashinfer_mla_backend.py",
+          "ref": "b110084654a1/#3785"
+        },
+        {
+          "date": "2025-02-14",
+          "status": "optional",
+          "scope": "selected by --enable-flashinfer-mla before split",
+          "ref": "70f894b810c0/#3550"
+        }
+      ],
+      "tests": [
+        "test/srt/test_mla_flashinfer.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/flashinfer_backend\\.py"
+      ],
+      "notes": "First enabling dependency pin observed at #3550: python/pyproject.toml flashinfer_python>=0.2.1.post1; #3785 bumped to >=0.2.1.post2."
+    },
+    {
+      "artifact_id": "L2.model.deepseek_v4_mla",
+      "name": "DeepSeek-V4 MLA/DSV4 model path",
+      "kind": "reference_impl",
+      "role": "DeepSeek-V4 model-side MLA, unified attention sinks, DSpark hooks and backend calls.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/models/deepseek_v4.py",
+          "from": "2026-05-07",
+          "from_sha": "35870d55aca7",
+          "from_pr": 23882,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "DeepseekV4ForCausalLM",
+        "DeepseekV4Attention",
+        "unified_attention_sink"
+      ],
+      "introduced": {
+        "sha": "35870d55aca7",
+        "pr": 23882,
+        "date": "2026-05-07",
+        "evidence": "diff-filter=A adds deepseek_v4.py for Deepseek V4."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.model.deepseek_v2_mla",
+          "relation": "reimplementation_of",
+          "evidence": "DeepSeek-V4 model path reuses MLA role",
+          "evidence_ref": "35870d55aca7/#23882"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "amd_mi300",
+        "gfx950",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-05-07",
+          "status": "optional",
+          "scope": "DeepSeek-V4 model path",
+          "ref": "35870d55aca7/#23882"
+        }
+      ],
+      "tests": [
+        "test/registered/attention/unittests/dsv4/test_deepseek_v4.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/models/deepseek_v4.*\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.backend.dsv4_hip_radix",
+      "name": "DeepSeek-V4 HIP radix attention backend",
+      "kind": "backend",
+      "role": "ROCm/AMD DeepSeek-V4 attention backend coordinating HIP radix metadata, DSpark and unified-KV kernels.",
+      "language": "Python/HIP",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/deepseek_v4_backend_hip_radix.py",
+          "from": "2026-05-18",
+          "from_sha": "866793c502b",
+          "from_pr": 24933,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "DeepseekV4AttentionBackendHipRadix",
+        "forward_decode",
+        "forward_extend"
+      ],
+      "introduced": {
+        "sha": "866793c502b",
+        "pr": 24933,
+        "date": "2026-05-18",
+        "evidence": "diff-filter=A adds deepseek_v4_backend_hip_radix.py."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.hip_flash_mla",
+          "relation": "reimplementation_of",
+          "evidence": "AMD DeepSeek V4 HIP attention path",
+          "evidence_ref": "866793c502b/#24933"
+        }
+      ],
+      "hardware": [
+        "amd_mi300",
+        "gfx950",
+        "mi350"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-05-18",
+          "status": "optional",
+          "scope": "DeepSeek-V4 ROCm backend",
+          "ref": "866793c502b/#24933"
+        },
+        {
+          "date": "2026-09-14",
+          "status": "default",
+          "scope": "gfx950 fp8 unified_kv path",
+          "ref": "5aa9b8fb3e/#37413"
+        }
+      ],
+      "tests": [
+        "test/registered/amd/test_deepseek_v4_pro_fp4_dspark.py",
+        "test/registered/amd/test_dsv4_hip_bcg_metadata.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/deepseek_v4_backend_hip_radix\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.dsv4_unified_kv_triton",
+      "name": "DSV4 unified-KV Triton kernels",
+      "kind": "kernel",
+      "role": "ROCm Triton paged prefill/decode/runtime kernels for DeepSeek-V4 unified KV attention, including FP8 two-pool decode.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/dsv4/unified_kv_kernels",
+          "from": "2026-06-09",
+          "from_sha": "f2bcdb0508",
+          "from_pr": 27380,
+          "to": "2026-07-15",
+          "to_sha": "ba5be86d42af",
+          "to_pr": null,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/ops/attention/dsv4/unified_kv_kernels"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/unified_kv_kernels",
+          "from": "2026-07-15",
+          "from_sha": "ba5be86d42af",
+          "from_pr": null,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "moved_from:python/sglang/srt/layers/attention/dsv4/unified_kv_kernels",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "paged_decode",
+        "paged_prefill",
+        "paged_decode_indices",
+        "unified_kv",
+        "grouped_verify_streams"
+      ],
+      "introduced": {
+        "sha": "f2bcdb0508",
+        "pr": 27380,
+        "date": "2026-06-09",
+        "evidence": "PR #27380 adds dsv4/unified_kv_kernels paged decode/prefill/runtime files."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.dsv4_hip_radix",
+          "relation": "integrates",
+          "evidence": "HIP radix backend calls unified KV runtime",
+          "evidence_ref": "f2bcdb0508/#27380"
+        }
+      ],
+      "hardware": [
+        "gfx950",
+        "mi350",
+        "amd_mi300"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-06-09",
+          "status": "optional",
+          "scope": "DeepSeek-V4 unified_kv_triton",
+          "ref": "f2bcdb0508/#27380"
+        },
+        {
+          "date": "2026-09-14",
+          "status": "default",
+          "scope": "fp8 two-pool unified_kv on gfx950",
+          "ref": "5aa9b8fb3e/#37413"
+        }
+      ],
+      "tests": [
+        "test/registered/e2e/dsv4/test_dsv4_unified_fp8_decode.py",
+        "test/registered/unit/layers/test_dsv4_kv_splits_heuristic.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/(srt/layers/attention|kernels/ops/attention)/dsv4/unified_kv_kernels/.*\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.pool.dsv4_unified_kv",
+      "name": "DeepSeek-V4 unified KV pool/cache layout",
+      "kind": "adapter",
+      "role": "DeepSeek-V4 memory-pool/cache accounting for unified, FP8/two-pool, SWA and HiCache KV layouts.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/mem_cache/deepseek_v4_memory_pool.py",
+          "from": "2026-05-07",
+          "from_sha": "35870d55aca7",
+          "from_pr": 23882,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/model_executor/pool_configurator.py",
+          "from": "2026-05-07",
+          "from_sha": "35870d55aca7",
+          "from_pr": 23882,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "DeepseekV4TokenToKVPool",
+        "DSV4PoolConfigurator",
+        "unified_kv"
+      ],
+      "introduced": {
+        "sha": "35870d55aca7",
+        "pr": 23882,
+        "date": "2026-05-07",
+        "evidence": "DeepSeek V4 introduces deepseek_v4_memory_pool.py and pool configurator use."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.pool.mla_token_kv",
+          "relation": "reimplementation_of",
+          "evidence": "DSV4-specific MLA KV pool layout",
+          "evidence_ref": "35870d55aca7/#23882"
+        }
+      ],
+      "hardware": [
+        "amd_mi300",
+        "gfx950",
+        "sm100",
+        "all_cuda"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-14",
+          "status": "default",
+          "scope": "fp8 two-pool unified_kv on gfx950",
+          "ref": "5aa9b8fb3e/#37413"
+        }
+      ],
+      "tests": [
+        "test/registered/unit/mem_cache/test_dsv4_unified_fp8_pool.py",
+        "test/registered/unit/mem_cache/test_dsv4_c4_state_lifecycle.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/mem_cache/deepseek_v4_.*\\.py",
+        "python/sglang/srt/model_executor/pool_configurator\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.verify_mla",
+      "name": "K3/DSpark verify MLA Triton kernel",
+      "kind": "kernel",
+      "role": "Triton verification/draft attention kernel for Kimi-K3/DSpark MLA paths, including grouped-head shared KV variants.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/attention/verify_mla.py",
+          "from": "2026-08-07",
+          "from_sha": "6679d9b60c",
+          "from_pr": 33981,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "verify_mla",
+        "verify_mla_kernel",
+        "shared_kv"
+      ],
+      "introduced": {
+        "sha": "6679d9b60c",
+        "pr": 33981,
+        "date": "2026-08-07",
+        "evidence": "diff-filter=A adds verify_mla.py and triton backend wiring."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.triton_decode_lightllm",
+          "relation": "reimplementation_of",
+          "evidence": "verify attention fills Triton MLA verification slot",
+          "evidence_ref": "6679d9b60c/#33981"
+        }
+      ],
+      "hardware": [
+        "gfx950",
+        "amd_mi300"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-08-07",
+          "status": "optional",
+          "scope": "K3 verified MLA path on triton backend",
+          "ref": "6679d9b60c/#33981"
+        }
+      ],
+      "tests": [
+        "test/registered/attention/test_verify_shared_kv.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/kernels/ops/attention/verify_mla\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.dcp_lse_merge",
+      "name": "DCP MLA LSE merge/pack kernels",
+      "kind": "kernel",
+      "role": "Triton kernels that pack/unpack and merge partial MLA LSE/output tensors for decode-context parallelism.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/attention/dcp_kernels.py",
+          "from": "2026-07-14",
+          "from_sha": "1a35440c4af9",
+          "from_pr": 30789,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "dcp_lse",
+        "pack",
+        "unpack",
+        "combine"
+      ],
+      "introduced": {
+        "sha": "1a35440c4af9",
+        "pr": 30789,
+        "date": "2026-07-14",
+        "evidence": "migration adds kernels.ops attention dcp_kernels.py; later DCP events edit MLA LSE combine."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashinfer_mla",
+          "relation": "integrates",
+          "evidence": "DCP merge combines MLA partial outputs",
+          "evidence_ref": "35e25f53567c/#21637"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120",
+        "all_cuda"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-07-24",
+          "status": "optional",
+          "scope": "DCP MLA LSE combine",
+          "ref": "35e25f53567c/#21637"
+        }
+      ],
+      "tests": [
+        "test/registered/kernels/test_dcp_lse_combine.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/(srt/layers/dcp/kernels|kernels/ops/attention/dcp_kernels)\\.py",
+        "python/sglang/srt/layers/dcp/comm\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.adapter.dsv4_nonpaged_indexer",
+      "name": "DeepSeek-V4 non-paged prefill indexer",
+      "kind": "adapter",
+      "role": "Optional/default index metadata path for long-context DeepSeek-V4 prefill without paged indexing.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/dsv4/indexer.py",
+          "from": "2026-05-07",
+          "from_sha": "35870d55aca7",
+          "from_pr": 23882,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/layers/attention/dsv4/metadata.py",
+          "from": "2026-05-07",
+          "from_sha": "35870d55aca7",
+          "from_pr": 23882,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "nonpaged_indexer",
+        "DSV4Metadata",
+        "indexer"
+      ],
+      "introduced": {
+        "sha": "a6ee64d237",
+        "pr": 29619,
+        "date": "2026-07-02",
+        "evidence": "PR #29619 adds opt-in non-paged indexer for long-context prefill."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.dsv4_hip_radix",
+          "relation": "integrates",
+          "evidence": "backend consumes DSV4 indexer metadata",
+          "evidence_ref": "a6ee64d237/#29619"
+        }
+      ],
+      "hardware": [
+        "amd_mi300",
+        "gfx950"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-07-02",
+          "status": "optional",
+          "scope": "non-paged indexer",
+          "ref": "a6ee64d237/#29619"
+        },
+        {
+          "date": "2026-07-07",
+          "status": "default",
+          "scope": "large prefill chunks",
+          "ref": "48ad6a83cf/#30140"
+        }
+      ],
+      "tests": [
+        "test/registered/unit/layers/test_dsv4_nonpaged_indexer.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/dsv4/(indexer|metadata)\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.backend.xpu_mla",
+      "name": "Intel XPU MLA attention backend",
+      "kind": "backend",
+      "role": "Intel XPU attention backend branch that invokes sgl-kernel FlashMLA decode and prefill APIs.",
+      "language": "Python/XPU",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/xpu_backend.py",
+          "from": "2026-05-07",
+          "from_sha": "9dfb1d2ebe",
+          "from_pr": 24372,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "XPUAttentionBackend",
+        "flash_mla_decode",
+        "flash_mla_prefill"
+      ],
+      "introduced": {
+        "sha": "9dfb1d2ebe",
+        "pr": 24372,
+        "date": "2026-05-07",
+        "evidence": "PR #24372 fixes flash_mla_get_workspace_size call in xpu_backend.py."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashmla",
+          "relation": "wraps",
+          "evidence": "XPU backend imports flash_mla decode/prefill ops",
+          "evidence_ref": "cf35384fe459/#35866"
+        }
+      ],
+      "hardware": [
+        "xpu"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-05-07",
+          "status": "optional",
+          "scope": "XPU FlashMLA decode",
+          "ref": "9dfb1d2ebe/#24372"
+        },
+        {
+          "date": "2026-09-08",
+          "status": "optional",
+          "scope": "XPU MLA prefill",
+          "ref": "cf35384fe459/#35866"
+        }
+      ],
+      "tests": [
+        "test/registered/xpu/test_intel_xpu_backend.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/xpu_backend\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.model.glm47_flash_mla",
+      "name": "GLM-4.7 Flash standalone MLA model path",
+      "kind": "reference_impl",
+      "role": "GLM-4.7 Flash model-side standalone MLA implementation and NextN/MTP integration.",
+      "language": "Python/PyTorch",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/models/glm4_moe_lite.py",
+          "from": "2026-05-26",
+          "from_sha": "7ef06bfc06",
+          "from_pr": 26088,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/models/glm4_moe_lite_nextn.py",
+          "from": "2026-05-26",
+          "from_sha": "7ef06bfc06",
+          "from_pr": 26088,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "Glm4MoeLite",
+        "glm4_moe_lite_nextn",
+        "MLA"
+      ],
+      "introduced": {
+        "sha": "7ef06bfc06",
+        "pr": 26088,
+        "date": "2026-05-26",
+        "evidence": "PR #26088 adds GLM-4.7-Flash standalone MLA and NextN/MTP."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.model.deepseek_v2_mla",
+          "relation": "reimplementation_of",
+          "evidence": "standalone MLA model-side path",
+          "evidence_ref": "7ef06bfc06/#26088"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-05-26",
+          "status": "optional",
+          "scope": "GLM-4.7-Flash model path",
+          "ref": "7ef06bfc06/#26088"
+        }
+      ],
+      "tests": [],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/models/glm4_moe_lite.*\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.dsv3_fused_a_gemm",
+      "name": "DSV3 fused A GEMM MLA down-projection",
+      "kind": "kernel",
+      "role": "JIT CUDA/CuTe fused A GEMM kernel for MLA down projection in DeepSeek-V3/GLM-5 paths.",
+      "language": "CUDA C++/CuTe DSL/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/jit_kernel/csrc/gemm/dsv3_fused_a_gemm.cuh",
+          "from": "2026-06-27",
+          "from_sha": "e4253b39e",
+          "from_pr": 27397,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/jit_kernel/dsv3_fused_a_gemm.py",
+          "from": "2026-06-27",
+          "from_sha": "e4253b39e",
+          "from_pr": 27397,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/jit_kernel/cutedsl_dsv3_fused_a_gemm.py",
+          "from": "2026-06-27",
+          "from_sha": "e4253b39e",
+          "from_pr": 27397,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "dsv3_fused_a_gemm",
+        "fused_a_gemm"
+      ],
+      "introduced": {
+        "sha": "e4253b39e",
+        "pr": 27397,
+        "date": "2026-06-27",
+        "evidence": "PR #27397 adds JIT fused A GEMM MLA down projection files."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.optimization.weight_absorption",
+          "relation": "optimized_from",
+          "evidence": "fused A GEMM accelerates MLA down projection",
+          "evidence_ref": "e4253b39e/#27397"
+        }
+      ],
+      "hardware": [
+        "sm120",
+        "sm100",
+        "sm90"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-06-27",
+          "status": "optional",
+          "scope": "DeepSeek-V3/GLM-5 MLA down projection",
+          "ref": "e4253b39e/#27397"
+        }
+      ],
+      "tests": [
+        "test/registered/jit/test_dsv3_fused_a_gemm.py",
+        "test/registered/jit/test_cutedsl_dsv3_fused_a_gemm.py"
+      ],
+      "benchmarks": [
+        "test/registered/jit/benchmark/bench_dsv3_fused_a_gemm.py"
+      ],
+      "path_regexes": [
+        "python/sglang/(jit_kernel|kernels/(jit|ops)).*dsv3_fused_a_gemm.*"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.lean_attention_triton",
+      "name": "ROCm Lean Attention decode kernel",
+      "kind": "kernel",
+      "role": "Work-centric persistent-CTA Triton decode path inside decode_attention.py for long-context ROCm serving.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/attention/decode_attention.py",
+          "from": "2026-08-28",
+          "from_sha": "4944e50e2c",
+          "from_pr": 33576,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "_decode_lean_attention_fwd",
+        "lean_decode_seqlen_gate",
+        "enable_lean"
+      ],
+      "introduced": {
+        "sha": "4944e50e2c",
+        "pr": 33576,
+        "date": "2026-08-28",
+        "evidence": "diff comment: Work-Centric (Lean) Attention persistent-CTA decode kernel."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.triton_decode_lightllm",
+          "relation": "optimized_from",
+          "evidence": "new persistent-CTA decode path in decode_attention.py",
+          "evidence_ref": "4944e50e2c/#33576"
+        }
+      ],
+      "hardware": [
+        "amd_mi300",
+        "gfx950"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-08-28",
+          "status": "optional",
+          "scope": "ROCm long-context decode when lean gate enables",
+          "ref": "4944e50e2c/#33576"
+        }
+      ],
+      "tests": [
+        "test/registered/kernels/test_lean_attention.py"
+      ],
+      "benchmarks": [
+        "benchmark/lean_kernel_sweep.py"
+      ],
+      "path_regexes": [
+        "python/sglang/kernels/ops/attention/decode_attention\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.pd_dcp_gather",
+      "name": "PD DCP MLA row gather kernel",
+      "kind": "kernel",
+      "role": "Triton kernel packing MLA KV rows into destination-contiguous RDMA blocks for PD/DCP transfers.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/kvcache/pd_dcp_gather.py",
+          "from": "2026-08-28",
+          "from_sha": "3760296be8",
+          "from_pr": 35762,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "copy_mla_rows_into_pack",
+        "_copy_mla_rows_into_pack_kernel"
+      ],
+      "introduced": {
+        "sha": "3760296be8",
+        "pr": 35762,
+        "date": "2026-08-28",
+        "evidence": "new file pd_dcp_gather.py copies MLA rows into pack."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.pool.mla_token_kv",
+          "relation": "integrates",
+          "evidence": "kernel copies MLA rows into PD/DCP pack",
+          "evidence_ref": "3760296be8/#35762"
+        }
+      ],
+      "hardware": [
+        "all_cuda",
+        "amd_mi300"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-08-28",
+          "status": "optional",
+          "scope": "PD DCP KV transfer packing",
+          "ref": "3760296be8/#35762"
+        }
+      ],
+      "tests": [
+        "test/registered/kernels/ops/kvcache/test_pd_dcp_gather.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/kernels/ops/kvcache/pd_dcp_gather\\.py",
+        "python/sglang/srt/disaggregation/common/dcp_pack\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.triton_prefill_mla",
+      "name": "Triton MLA prefill/extend kernel",
+      "kind": "kernel",
+      "role": "Triton extend/prefill attention path used by Kimi-K3 and MLA backends, including gfx950 tuning.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/attention/extend_attention.py",
+          "from": "2026-07-10",
+          "from_sha": "6ed9843b57aa",
+          "from_pr": 30044,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "extend_attention_fwd",
+        "context_attention_fwd",
+        "_get_block_sizes_for_extend_attention"
+      ],
+      "introduced": {
+        "sha": "3c2724c48d",
+        "pr": 35770,
+        "date": "2026-09-04",
+        "evidence": "PR #35770 optimizes Kimi-K3 Triton MLA prefill on gfx950."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.triton_decode_lightllm",
+          "relation": "reimplementation_of",
+          "evidence": "same Triton attention family for prefill slot",
+          "evidence_ref": "3c2724c48d/#35770"
+        }
+      ],
+      "hardware": [
+        "gfx950",
+        "amd_mi300",
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-04",
+          "status": "optional",
+          "scope": "Kimi-K3 Triton MLA prefill on gfx950",
+          "ref": "3c2724c48d/#35770"
+        }
+      ],
+      "tests": [
+        "test/registered/unit/layers/attention/test_triton_mla_prefill_gfx950.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/kernels/ops/attention/extend_attention\\.py",
+        "python/sglang/srt/layers/attention/triton_backend\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.backend.dsv4_trtllm",
+      "name": "DeepSeek-V4 TRT-LLM sparse MLA backend",
+      "kind": "backend",
+      "role": "SM100/SM103 DSv4 adapter using FlashInfer-exposed trtllm-gen sparse MLA decode and varlen prefill kernels.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/srt/layers/attention/deepseek_v4_trtllm_backend.py",
+          "from": "2026-09-09",
+          "from_sha": "880d6fa64d",
+          "from_pr": 30805,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/layers/attention/dsv4/compressor_trtllm.py",
+          "from": "2026-09-09",
+          "from_sha": "880d6fa64d",
+          "from_pr": 30805,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "DeepseekV4TrtllmAttnBackend",
+        "trtllm_attn",
+        "compressor_trtllm"
+      ],
+      "introduced": {
+        "sha": "880d6fa64d",
+        "pr": 30805,
+        "date": "2026-09-09",
+        "evidence": "new backend docstring: DeepSeek V4 trtllm-gen sparse MLA backend."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.trtllm_mla",
+          "relation": "reimplementation_of",
+          "evidence": "DSV4 attention through trtllm-gen sparse MLA",
+          "evidence_ref": "880d6fa64d/#30805"
+        }
+      ],
+      "hardware": [
+        "sm100",
+        "sm103"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-09",
+          "status": "optional",
+          "scope": "DeepSeek-V4 SM100/103 trtllm attention",
+          "ref": "880d6fa64d/#30805"
+        }
+      ],
+      "tests": [
+        "test/registered/e2e/dsv4/test_dsv4_fp8_trtllm_backend.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/srt/layers/attention/deepseek_v4_trtllm_backend\\.py",
+        "python/sglang/srt/layers/attention/dsv4/compressor_trtllm\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.dsv4_1_standalone",
+      "name": "DeepSeek-V4.1 standalone attention helper kernels",
+      "kind": "kernel",
+      "role": "Standalone JIT/Python wrappers for DSV4.1 scheduling metadata, q_rope_store, candidate blocks and related attention helpers.",
+      "language": "CUDA C++/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/jit/csrc/deepseek_v4/flashmla_sched_meta.cuh",
+          "from": "2026-09-15",
+          "from_sha": "91f691c490",
+          "from_pr": 39646,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/flashmla_sched_meta.py",
+          "from": "2026-09-15",
+          "from_sha": "91f691c490",
+          "from_pr": 39646,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/q_rope_store.py",
+          "from": "2026-09-15",
+          "from_sha": "91f691c490",
+          "from_pr": 39646,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/candidate_blocks.py",
+          "from": "2026-09-15",
+          "from_sha": "91f691c490",
+          "from_pr": 39646,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "flashmla_sched_meta",
+        "q_rope_store",
+        "candidate_blocks",
+        "wo_a_bf16"
+      ],
+      "introduced": {
+        "sha": "91f691c490",
+        "pr": 39646,
+        "date": "2026-09-15",
+        "evidence": "PR #39646 adds dsv4.1 standalone kernels and Python wrappers."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.flashmla",
+          "relation": "reimplementation_of",
+          "evidence": "standalone FlashMLA scheduling metadata wrappers",
+          "evidence_ref": "91f691c490/#39646"
+        }
+      ],
+      "hardware": [
+        "sm100",
+        "sm120",
+        "gfx950"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-15",
+          "status": "optional",
+          "scope": "DSV4.1 standalone helper kernels",
+          "ref": "91f691c490/#39646"
+        }
+      ],
+      "tests": [
+        "test/registered/kernel/attention/test_flashmla_sched_meta.py",
+        "test/registered/kernels/ops/attention/test_dsv4_q_rope_store.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/kernels/(jit/csrc/deepseek_v4|ops/attention/dsv4)/(flashmla_sched_meta|q_rope_store|candidate_blocks|wo_a_bf16).*"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.dsv4_1_kv_layout",
+      "name": "DeepSeek-V4.1 KV layout/compression kernels",
+      "kind": "kernel",
+      "role": "DSV4.1 compressed KV layout, C1/C2 compression, low-ratio compression and metadata kernels.",
+      "language": "CUDA C++/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/jit/include/sgl_kernel/deepseek_v4/kv_layout.cuh",
+          "from": "2026-09-16",
+          "from_sha": "13d593b6cf",
+          "from_pr": 39652,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/jit/csrc/deepseek_v4/c1.cuh",
+          "from": "2026-09-16",
+          "from_sha": "13d593b6cf",
+          "from_pr": 39652,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/jit/csrc/deepseek_v4/c2.cuh",
+          "from": "2026-09-16",
+          "from_sha": "13d593b6cf",
+          "from_pr": 39652,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/kv_layout.py",
+          "from": "2026-09-16",
+          "from_sha": "13d593b6cf",
+          "from_pr": 39652,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/low_ratio_compress.py",
+          "from": "2026-09-16",
+          "from_sha": "13d593b6cf",
+          "from_pr": 39652,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "kv_layout",
+        "low_ratio_compress",
+        "c1",
+        "c2",
+        "fp4_utils"
+      ],
+      "introduced": {
+        "sha": "13d593b6cf",
+        "pr": 39652,
+        "date": "2026-09-16",
+        "evidence": "PR #39652 adds compression, KV I/O, and metadata kernels."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.pool.dsv4_unified_kv",
+          "relation": "optimized_from",
+          "evidence": "DSV4.1 compression and KV I/O generalize pool layout",
+          "evidence_ref": "13d593b6cf/#39652"
+        }
+      ],
+      "hardware": [
+        "gfx950",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-16",
+          "status": "optional",
+          "scope": "DSV4.1 KV compression/layout",
+          "ref": "13d593b6cf/#39652"
+        }
+      ],
+      "tests": [
+        "test/registered/kernel/attention/test_deepseek_v4_compress_plan_bounds.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/kernels/(jit/(csrc|include).*deepseek_v4|ops/attention/dsv4)/(c1|c2|kv_layout|low_ratio_compress|torch_quant|fp4_utils).*"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.adapter.dsv4_compress_ratio_metadata",
+      "name": "DSV4 compress-ratio metadata adapter",
+      "kind": "adapter",
+      "role": "Metadata and sparse-prefill adapter generalizing DSv4 attention and KV pools over multiple compression ratios.",
+      "language": "Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/sparse_prefill_kernels.py",
+          "from": "2026-09-17",
+          "from_sha": "1f0c73e9bd",
+          "from_pr": 39921,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/mem_cache/deepseek_v4_compress_state.py",
+          "from": "2026-09-17",
+          "from_sha": "1f0c73e9bd",
+          "from_pr": 39921,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/srt/layers/attention/dsv4/sparse_prefill_utils.py",
+          "from": "2026-09-17",
+          "from_sha": "1f0c73e9bd",
+          "from_pr": 39921,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "compress_ratio",
+        "sparse_prefill",
+        "combine_topk_swa_indices"
+      ],
+      "introduced": {
+        "sha": "1f0c73e9bd",
+        "pr": 39921,
+        "date": "2026-09-17",
+        "evidence": "PR #39921 generalizes metadata, sparse prefill and KV pool over compress ratios."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.kernel.dsv4_1_kv_layout",
+          "relation": "integrates",
+          "evidence": "metadata uses generalized compress ratios",
+          "evidence_ref": "1f0c73e9bd/#39921"
+        }
+      ],
+      "hardware": [
+        "gfx950",
+        "sm100",
+        "npu"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-17",
+          "status": "default",
+          "scope": "DSV4 compress-ratio metadata",
+          "ref": "1f0c73e9bd/#39921"
+        }
+      ],
+      "tests": [
+        "test/registered/kernel/attention/test_combine_topk_swa_indices.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/(kernels/ops/attention/dsv4/(sparse_prefill.*)|srt/(mem_cache/deepseek_v4_compress_state|layers/attention/dsv4/sparse_prefill_utils))\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.hisparse_slot_mapping",
+      "name": "HiSparse MLA slot mapping kernel",
+      "kind": "kernel",
+      "role": "Triton kernel translating logical HiSparse MLA cache slots to physical GPU rows while preserving padding.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/kvcache/hisparse_slot_mapping.py",
+          "from": "2026-09-20",
+          "from_sha": "59dd2fc734",
+          "from_pr": 39837,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "translate_padded_hisparse_locations",
+        "_translate_padded_hisparse_locations"
+      ],
+      "introduced": {
+        "sha": "59dd2fc734",
+        "pr": 39837,
+        "date": "2026-09-20",
+        "evidence": "new file docstring: Padding-preserving logical-to-physical HiSparse slot translation."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.pool.dsv4_unified_kv",
+          "relation": "integrates",
+          "evidence": "maps HiSparse KV cache slots for MLA path",
+          "evidence_ref": "59dd2fc734/#39837"
+        }
+      ],
+      "hardware": [
+        "gfx950",
+        "amd_mi300"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-20",
+          "status": "optional",
+          "scope": "ROCm HiSparse fused KV path",
+          "ref": "59dd2fc734/#39837"
+        }
+      ],
+      "tests": [
+        "test/registered/kernels/ops/kvcache/test_hisparse_slot_mapping.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/kernels/ops/kvcache/hisparse_slot_mapping\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.hicache_transfer",
+      "name": "HiCache MLA KV transfer kernels",
+      "kind": "kernel",
+      "role": "JIT CUDA HiCache host/device KV transfer kernels for MLA, including page-unified load-back and SM90 TMA-staged copies.",
+      "language": "CUDA C++/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/jit_kernel/csrc/hicache.cuh",
+          "from": "2025-11-20",
+          "from_sha": "unknown",
+          "from_pr": null,
+          "to": "2026-07-23",
+          "to_sha": "99f636a86fb",
+          "to_pr": null,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/jit/csrc/kvcacheio/hicache.cuh"
+        },
+        {
+          "path": "python/sglang/kernels/jit/csrc/kvcacheio/hicache.cuh",
+          "from": "2026-07-23",
+          "from_sha": "99f636a86fb",
+          "from_pr": null,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/jit/csrc/kvcacheio/hicache_tma.cuh",
+          "from": "2026-09-21",
+          "from_sha": "7ad55e4386",
+          "from_pr": 40278,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/kvcache/hicache.py",
+          "from": "2026-07-22",
+          "from_sha": "977ea336cd",
+          "from_pr": 32015,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "hicache_transfer_per_layer_page_unified",
+        "hicache_tma",
+        "HicachePageUnifiedKernelParams",
+        "HicacheTmaParams"
+      ],
+      "introduced": {
+        "sha": "e581520c67",
+        "pr": 39726,
+        "date": "2026-09-28",
+        "evidence": "PR #39726 adds page-unified KV load-back JIT kernel for MLA."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.pool.mla_token_kv",
+          "relation": "integrates",
+          "evidence": "HiCache transfer moves MLA KV rows",
+          "evidence_ref": "e581520c67/#39726"
+        }
+      ],
+      "hardware": [
+        "sm90",
+        "sm100",
+        "sm120"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-21",
+          "status": "optional",
+          "scope": "TMA-staged host-device KV transfer sm90+",
+          "ref": "7ad55e4386/#40278"
+        },
+        {
+          "date": "2026-09-28",
+          "status": "optional",
+          "scope": "page-unified MLA load-back",
+          "ref": "e581520c67/#39726"
+        }
+      ],
+      "tests": [
+        "test/registered/kernels/ops/kvcache/test_hicache_tma.py",
+        "test/registered/kernels/ops/kvcache/test_hicache.py"
+      ],
+      "benchmarks": [
+        "test/registered/kernels/benchmark/kvcache/bench_hicache.py"
+      ],
+      "path_regexes": [
+        "python/sglang/(jit_kernel|kernels/(jit|ops)).*(hicache|kvcacheio).*\\.(py|cuh)",
+        "python/sglang/srt/mem_cache/pool_host/mla\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.dsv4_kv_store",
+      "name": "Triton DSV4/FlashMLA KV store kernels",
+      "kind": "kernel",
+      "role": "Triton fused store-cache kernels for FlashMLA/DSV4 FP8/BF16 KV cache writes.",
+      "language": "Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/jit_kernel/triton_store_cache.py",
+          "from": "2026-05-23",
+          "from_sha": "unknown",
+          "from_pr": null,
+          "to": "2026-07-22",
+          "to_sha": "977ea336cd",
+          "to_pr": 32015,
+          "transition": "created",
+          "end": "moved_to:python/sglang/kernels/ops/kvcache/triton_store_cache.py"
+        },
+        {
+          "path": "python/sglang/kernels/ops/kvcache/triton_store_cache.py",
+          "from": "2026-07-22",
+          "from_sha": "977ea336cd",
+          "from_pr": 32015,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "triton_fused_store_flashmla",
+        "_triton_fused_store_flashmla_kernel",
+        "_triton_fused_store_indexer_kernel"
+      ],
+      "introduced": {
+        "sha": "977ea336cd",
+        "pr": 32015,
+        "date": "2026-07-22",
+        "evidence": "kernel ops migration carries triton_store_cache.py; #41159 fixes DSV4 KV store offsets."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.pool.dsv4_unified_kv",
+          "relation": "integrates",
+          "evidence": "stores FP8/BF16 DSv4 cache rows",
+          "evidence_ref": "ec070ec8c8/#41159"
+        }
+      ],
+      "hardware": [
+        "amd_mi300",
+        "gfx950",
+        "all_cuda"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-24",
+          "status": "default",
+          "scope": "DSV4 KV store path",
+          "ref": "ec070ec8c8/#41159"
+        }
+      ],
+      "tests": [
+        "test/registered/jit/test_store_cache.py"
+      ],
+      "benchmarks": [],
+      "path_regexes": [
+        "python/sglang/(jit_kernel|kernels/ops/kvcache)/triton_store_cache\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    },
+    {
+      "artifact_id": "L2.kernel.dsv4_amd_sparse_decode",
+      "name": "DSV4.1 AMD sparse decode kernels",
+      "kind": "kernel",
+      "role": "gfx950 sparse decode attention glue/compact/swap kernels and HIP reduction path for DeepSeek-V4.1 AMD.",
+      "language": "HIP/Triton/Python",
+      "origin": "in_tree",
+      "upstream": "",
+      "path_history": [
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/attn_glue_hip.py",
+          "from": "2026-09-28",
+          "from_sha": "096b066fb4",
+          "from_pr": 41020,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/candidate_blocks_hip.py",
+          "from": "2026-09-28",
+          "from_sha": "096b066fb4",
+          "from_pr": 41020,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/compact_attention_hip.py",
+          "from": "2026-09-28",
+          "from_sha": "096b066fb4",
+          "from_pr": 41020,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/dsv4/swapab_gluon_hip.py",
+          "from": "2026-09-28",
+          "from_sha": "096b066fb4",
+          "from_pr": 41020,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        },
+        {
+          "path": "python/sglang/kernels/ops/attention/sparse_decode_reduce_hip.py",
+          "from": "2026-09-28",
+          "from_sha": "096b066fb4",
+          "from_pr": 41020,
+          "to": null,
+          "to_sha": null,
+          "to_pr": null,
+          "transition": "created",
+          "end": "live"
+        }
+      ],
+      "key_symbols": [
+        "compact_attention_hip",
+        "candidate_blocks_hip",
+        "sparse_decode_reduce_hip",
+        "swapab_gluon_hip"
+      ],
+      "introduced": {
+        "sha": "096b066fb4",
+        "pr": 41020,
+        "date": "2026-09-28",
+        "evidence": "PR #41020 adds gfx950 sparse decode attention and sorted top-k files."
+      },
+      "ended": null,
+      "live_at_cutoff": true,
+      "predecessors": [
+        {
+          "artifact_id": "L2.backend.dsv4_hip_radix",
+          "relation": "optimized_from",
+          "evidence": "AMD sparse decode attention for DSV4.1",
+          "evidence_ref": "096b066fb4/#41020"
+        }
+      ],
+      "hardware": [
+        "gfx950",
+        "mi350"
+      ],
+      "framework_interface": "",
+      "dispatch_status_history": [
+        {
+          "date": "2026-09-28",
+          "status": "optional",
+          "scope": "DSV4.1 AMD gfx950 sparse decode",
+          "ref": "096b066fb4/#41020"
+        }
+      ],
+      "tests": [
+        "test/registered/kernels/ops/attention/dsv4/test_compact_attention_hip.py",
+        "test/registered/kernels/ops/attention/dsv4/test_dsv41_decode_glue_hip.py"
+      ],
+      "benchmarks": [
+        "python/sglang/kernels/aot/benchmark/bench_dsv4_topk_transform.py"
+      ],
+      "path_regexes": [
+        "python/sglang/kernels/ops/attention/(dsv4/(attn_glue_hip|candidate_blocks_hip|compact_attention_hip|swapab_gluon_hip)|sparse_decode_reduce_hip)\\.py"
+      ],
+      "notes": "",
+      "added_in": "reconciliation"
+    }
+  ],
+  "excluded_artifacts": [
+    {
+      "name": "Sparse DSA/NSA indexer/top-k selection",
+      "paths": [
+        "python/sglang/srt/layers/attention/dsa/dsa_indexer.py"
+      ],
+      "reason": "out_of_scope",
+      "evidence": "Task explicitly excludes sparse indexer/top-k selection."
+    },
+    {
+      "name": "Generic MHA use of MLA-capable backends",
+      "paths": [
+        "python/sglang/srt/layers/attention/flashinfer_backend.py",
+        "python/sglang/srt/layers/attention/trtllm_mha_backend.py"
+      ],
+      "reason": "out_of_scope",
+      "evidence": "Task says generic MHA use is context, not lineage."
+    },
+    {
+      "name": "MLAMA multimodal processor",
+      "paths": [
+        "python/sglang/srt/multimodal/processors/mlama.py"
+      ],
+      "reason": "name_collision",
+      "evidence": "MLAMA contains substring mla but is unrelated."
+    },
+    {
+      "name": "concat_and_cast_mha_k_pad_kernel",
+      "paths": [
+        "python/sglang/kernels/ops/kvcache/cache_ops.py"
+      ],
+      "reason": "out_of_scope",
+      "evidence": "MHA K concat/pad helper; not an MLA/FlashMLA lineage artifact. Diff comment says 'concat_and_cast_mha_k_kernel'."
+    }
+  ],
+  "unresolved": [
+    {
+      "question": "Exact upstream FlashInfer commits for BatchMLAPagedAttentionWrapper/TRTLLM/CuTe kernels.",
+      "missing_evidence": "No local upstream clone; only SGLang PR/code evidence."
+    },
+    {
+      "question": "Exact first AITER MLA change in aiter_backend.py.",
+      "missing_evidence": "Path predates MLA; cutoff grep confirms but pickaxe isolation remains."
+    },
+    {
+      "question": "FA4 upstream lineage separate from FA3.",
+      "missing_evidence": "SGLang backend has FA4 branch but upstream PR/SHA unresolved."
+    }
+  ],
+  "searches_run": [
+    "read task-registry.md, agent-brief.md, CODEBOOK.md",
+    "paths.py sglang (?i)mla",
+    "first-parent JSON mining for MLA keywords",
+    "git log --diff-filter=A on core paths",
+    "git log -M --follow decode_attention",
+    "git show --stat -M cutlass deletion and sgl-kernel move",
+    "git grep key symbols at cutoff",
+    "gh pr view selected PR bodies",
+    "git show model_runner.py/server_args.py/attention_registry.py snapshots for default backend logic",
+    "git show arg_groups/model_override_base.py and deepseek_v2/deepseek_v4 overrides at cutoff",
+    "git grep pyproject/cmake for FlashInfer and FlashMLA version pins",
+    "read L2-new-artifacts.md and existing L2 registry",
+    "git show --name-status for NEW proposal commits",
+    "paths.py sglang unified_kv_kernels/verify_mla/dcp_kernels/dsv4/kvcache gaps",
+    "git show diffs for ambiguous cache_ops, decode_attention, extend_attention, triton_store_cache, hicache, pd_dcp_gather, hisparse_slot_mapping, xpu and trtllm backend paths",
+    "first-parent JSON searches for PR/SHA/path histories used in reconciliation"
+  ]
+}

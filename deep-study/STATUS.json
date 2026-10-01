@@ -1,0 +1,1258 @@
+{
+ "schema_version": 1,
+ "created_at_utc": "2026-09-29T07:29:03Z",
+ "study": "Deep empirical follow-up: kernel delivery, failures, and papers to production",
+ "study_cutoff_utc": "2026-09-28T23:59:59+00:00",
+ "windows": {
+  "A_pr_delivery_12m": [
+   "2025-09-29",
+   "2026-09-28"
+  ],
+  "B_failures_24m": [
+   "2024-09-29",
+   "2026-09-28"
+  ]
+ },
+ "repository_heads": {
+  "vllm-project/vllm": "7230dfea501b232ce92d057f1c5ee9cb009c4cb4",
+  "sgl-project/sglang": "79cafec013d0a01c782d7a4bc902ef32a8941ba8"
+ },
+ "first_study_inputs": {
+  "status": "experiments/results/study-status.json",
+  "rest_recent_prs": "experiments/data/github/{repo}/recent_prs/page-*.json",
+  "rest_open_prs": "experiments/data/github/{repo}/open_prs/page-*.json",
+  "lifecycle_rows": "experiments/results/pr-lifecycle-{repo}.csv",
+  "first_parent_logs": "experiments/data/{repo}-log.txt",
+  "blobless_git": "experiments/data/repos/{repo}",
+  "rules": "experiments/results/contribution-rules.csv"
+ },
+ "work_packages": {
+  "A": {
+   "status": "complete",
+   "title": "Deep PR delivery study",
+   "subtasks": {
+    "A1_population": {
+     "status": "complete",
+     "completed": 9480,
+     "required": 9480,
+     "unit": "adjudication records (all 8,193 ambiguous + all 934 first-study queue candidates + 700 validation)",
+     "description": "Complete high-precision perf-PR population; adjudicate all 589+345 open-queue candidates and every ambiguous candidate",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/performance-pr-population.csv",
+      "experiments/deep-study/data/a1-tier-validation.csv",
+      "experiments/deep-study/data/a1-population-summary.csv"
+     ],
+     "notes": "Confirmed performance: vLLM 3214/25573, SGLang 3094/26004 in-window. First-study queue: 565/589 and 324/345 confirmed. Rule-confirmed precision .993/.980; rule-excluded miss rate .080/.095 (Wilson CIs in a1-tier-validation.csv). Independent 300-record second pass: 97% agreement, kappa .94.",
+     "updated_at_utc": "2026-09-29T09:25:51Z"
+    },
+    "A2_metadata": {
+     "status": "complete",
+     "completed": 1,
+     "required": 1,
+     "unit": "analysis",
+     "description": "Full-population metadata, KM survival, bootstrap effect sizes",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/pr-population-metadata.csv",
+      "experiments/deep-study/data/a2-population-summary.csv",
+      "experiments/deep-study/data/a2-survival.csv",
+      "experiments/deep-study/data/a2-effects.csv",
+      "experiments/deep-study/data/a2-open-queue.csv",
+      "experiments/deep-study/figures/a2-time-to-merge-km-cif.png",
+      "experiments/deep-study/figures/a2-open-queue-age.png"
+     ],
+     "notes": "",
+     "updated_at_utc": "2026-09-29T09:32:55Z"
+    },
+    "A3_collect": {
+     "status": "complete",
+     "completed": 3105,
+     "required": 3105,
+     "unit": "PR timelines (1000 perf + >=550 comparison per repo)",
+     "description": "Detailed review/comment/timeline cache: all confirmed perf PRs (<=2500/repo) + >=500 matched non-perf per repo",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/a3-detailed-corpus.csv",
+      "experiments/deep-study/data/cache/a3/detail/"
+     ],
+     "notes": "Perf population >2500 in both repos -> seeded state x month stratified samples of 1000/repo; matched comparisons 552 vLLM / 553 SGLang (month x size tercile x state, human-authored).",
+     "updated_at_utc": "2026-09-29T09:42:55Z"
+    },
+    "A3_code": {
+     "status": "complete",
+     "completed": 3105,
+     "required": 3105,
+     "unit": "coded PRs",
+     "description": "Contextual coding of every detailed PR; second pass >=200/repo",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/review-coding.csv",
+      "experiments/deep-study/data/a3-evidence-summary.csv"
+     ],
+     "notes": "",
+     "updated_at_utc": "2026-09-29T10:15:35Z"
+    },
+    "A3_second_pass": {
+     "status": "complete",
+     "completed": 400,
+     "required": 400,
+     "unit": "records",
+     "description": "Fresh second-pass coding of >=200 records per repo and agreement",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/review-coding-agreement.csv"
+     ],
+     "notes": "kappa .73-.95 across 15 codes",
+     "updated_at_utc": "2026-09-29T10:15:35Z"
+    },
+    "A4_rules": {
+     "status": "complete",
+     "completed": 1,
+     "required": 1,
+     "unit": "analysis",
+     "description": "Compliance with codified rules; recurring undocumented requests (>=10 PRs)",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/a4-summary.csv",
+      "experiments/deep-study/data/a4-request-types.csv",
+      "experiments/deep-study/data/a4-rule-compliance.csv",
+      "experiments/deep-study/data/a4-request-documentation-final.csv",
+      "experiments/deep-study/coding/a4-request-taxonomy.json"
+     ],
+     "notes": "",
+     "updated_at_utc": "2026-09-29T10:15:35Z"
+    },
+    "A5_cases": {
+     "status": "complete",
+     "completed": 12,
+     "required": 12,
+     "unit": "case histories",
+     "description": "12 verified PR case histories (4 fast, 4 slow, 4 abandoned/reverted/superseded)",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/cache/a5/"
+     ],
+     "notes": "12 verified histories: 4 fast, 4 slow, 2 reverted, 2 superseded (vLLM #58051 #56743 #43232 #32996 #48223 #42294; SGLang #18073 #20395 #14717 #24651 #13453 #15546)",
+     "updated_at_utc": "2026-09-29T09:56:12Z"
+    }
+   }
+  },
+  "B": {
+   "status": "complete",
+   "title": "Confirmed kernel failures and reverts",
+   "subtasks": {
+    "B1_reverts": {
+     "status": "complete",
+     "completed": 516,
+     "required": 516,
+     "unit": "revert-language candidates adjudicated",
+     "description": "24-month revert census, context-confirmed",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/confirmed-reverts.csv"
+     ],
+     "notes": "516 revert-language candidates adjudicated; 467 confirmed reverts/partial reverts/explicit rollbacks.",
+     "updated_at_utc": "2026-09-29T08:08:26Z"
+    },
+    "B2_corpus": {
+     "status": "complete",
+     "completed": 334,
+     "required": 150,
+     "unit": "confirmed kernel-correctness cases",
+     "description": ">=150 confirmed kernel-correctness fixes, coded",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/kernel-correctness-cases.csv"
+     ],
+     "notes": "440 sampled fix commits screened (ranks 0-219 per repo of 2,354-commit frame); 334 confirmed after second pass + reconciliation.",
+     "updated_at_utc": "2026-10-01T21:35:48Z"
+    },
+    "B3_counterfactual": {
+     "status": "complete",
+     "completed": 334,
+     "required": 334,
+     "unit": "cases",
+     "description": "Counterfactual detection technique + second pass on every case",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/kernel-correctness-cases.csv",
+      "experiments/deep-study/data/failure-coding-agreement.csv"
+     ],
+     "notes": "Second pass complete on all 355 first-pass-confirmed cases; agreement in data/failure-coding-agreement.csv (failure_class kappa .83, counterfactual kappa .76).",
+     "updated_at_utc": "2026-10-01T21:35:48Z"
+    },
+    "B4_cases": {
+     "status": "complete",
+     "completed": 12,
+     "required": 10,
+     "unit": "case studies",
+     "description": ">=10 failure case studies",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/cache/b4/"
+     ],
+     "notes": "12 verified case studies (races 2-3, numerical 3, hardware 3, integration 2, memory 2).",
+     "updated_at_utc": "2026-09-29T08:45:47Z"
+    }
+   }
+  },
+  "C": {
+   "status": "complete",
+   "title": "Conference paper census and deployment ladder",
+   "subtasks": {
+    "C1_census": {
+     "status": "complete",
+     "completed": 221,
+     "required": 221,
+     "unit": "papers classified (61 MLSys + 160 ASPLOS official)",
+     "description": "Classify all MLSys 2025 (61) and ASPLOS 2025 research papers; second pass positives/ambiguous",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/paper-census.csv",
+      "experiments/deep-study/data/paper-census-agreement.csv"
+     ],
+     "notes": "MLSys 18/61 kernel-style; ASPLOS 21/160 (+2 ambiguous). 51 yes/ambiguous second-passed; 18 disagreements adjudicated. 41 ASPLOS papers abstract-only (no open copy).",
+     "updated_at_utc": "2026-09-29T10:44:09Z"
+    },
+    "C2_eval_audit": {
+     "status": "complete",
+     "completed": 41,
+     "required": 41,
+     "unit": "positives",
+     "description": "Evaluation audit for every kernel-style positive",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/paper-deployment-ladder.csv",
+      "experiments/deep-study/data/paper-eval-audit-summary.csv"
+     ],
+     "notes": "",
+     "updated_at_utc": "2026-09-29T10:44:09Z"
+    },
+    "C3_deployment": {
+     "status": "complete",
+     "completed": 81,
+     "required": 81,
+     "unit": "papers",
+     "description": "L0-L5/S ladder for every positive; >=20 negatives per conference checked",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/paper-deployment-ladder.csv",
+      "experiments/deep-study/data/paper-funnel.csv"
+     ],
+     "notes": "39 positives + 2 ambiguous + 40 negatives; strict verification pass on 44 (3 levels corrected).",
+     "updated_at_utc": "2026-09-29T10:44:09Z"
+    },
+    "C4_latency": {
+     "status": "complete",
+     "completed": 1,
+     "required": 1,
+     "unit": "analysis",
+     "description": "Adoption latency + funnel figure",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/figures/c-paper-to-production-funnel.png",
+      "experiments/deep-study/figures/c-adoption-latency.png"
+     ],
+     "notes": "",
+     "updated_at_utc": "2026-09-29T10:44:09Z"
+    }
+   }
+  },
+  "D": {
+   "status": "complete",
+   "title": "Reverse provenance of deployed kernels",
+   "subtasks": {
+    "D1_provenance": {
+     "status": "complete",
+     "completed": 204,
+     "required": 40,
+     "unit": "families",
+     "description": ">=40 kernel/backend families with verified provenance",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/production-kernel-provenance.csv",
+      "experiments/deep-study/data/provenance-agreement.csv"
+     ],
+     "notes": "204 implementation records (vLLM+SGLang); two independent passes + reconciliation.",
+     "updated_at_utc": "2026-10-01T21:35:56Z"
+    }
+   }
+  },
+  "R": {
+   "status": "complete",
+   "title": "Reports, synthesis, consistency",
+   "subtasks": {
+    "R1_reports": {
+     "status": "complete",
+     "completed": 7,
+     "required": 7,
+     "unit": "files",
+     "description": "METHODS + 4 reports + SYNTHESIS + STATUS",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/METHODS.md",
+      "experiments/deep-study/kernel-pr-delivery-report.md",
+      "experiments/deep-study/kernel-failures-report.md",
+      "experiments/deep-study/paper-to-production-report.md",
+      "experiments/deep-study/production-kernel-provenance-report.md",
+      "experiments/deep-study/SYNTHESIS.md",
+      "experiments/deep-study/STATUS.json"
+     ],
+     "notes": "",
+     "updated_at_utc": "2026-09-29T10:44:09Z"
+    },
+    "R2_consistency": {
+     "status": "complete",
+     "completed": 1,
+     "required": 1,
+     "unit": "check",
+     "description": "Every numerical executive claim linked to CSV row",
+     "next": "done",
+     "outputs": [
+      "experiments/deep-study/data/consistency-check.json"
+     ],
+     "notes": "730/730 tagged claims recomputed from CSV rows",
+     "updated_at_utc": "2026-09-29T10:44:09Z"
+    }
+   }
+  }
+ },
+ "api": {
+  "cursors": {
+   "enrich_vllm": {
+    "cache_files": 839,
+    "v2_jobs_total_at_start": 544,
+    "last_job": "complete",
+    "batch_size": 50,
+    "rate_limit": {},
+    "at_utc": "2026-09-29T09:03:24Z",
+    "resume": "python experiments/deep-study/scripts/a1_metadata.py enrich vllm"
+   },
+   "enrich_sglang": {
+    "cache_files": 811,
+    "v2_jobs_total_at_start": 483,
+    "last_job": "complete",
+    "batch_size": 50,
+    "rate_limit": {},
+    "at_utc": "2026-09-29T08:56:36Z",
+    "resume": "python experiments/deep-study/scripts/a1_metadata.py enrich sglang"
+   },
+   "revert_ctx_sglang": {
+    "prs_fetched": 542,
+    "total": 542,
+    "at_utc": "2026-09-29T07:38:25Z",
+    "resume": "python experiments/deep-study/scripts/b1_reverts.py context sglang"
+   },
+   "revert_ctx_vllm": {
+    "prs_fetched": 333,
+    "total": 333,
+    "at_utc": "2026-09-29T07:38:25Z",
+    "resume": "python experiments/deep-study/scripts/b1_reverts.py context vllm"
+   },
+   "b2_ctx_vllm": {
+    "repo": "vllm",
+    "prs": 219,
+    "sample_upto_rank": 220,
+    "at_utc": "2026-09-29T08:08:00Z"
+   },
+   "b2_ctx_sglang": {
+    "repo": "sglang",
+    "prs": 220,
+    "sample_upto_rank": 220,
+    "at_utc": "2026-09-29T08:08:48Z"
+   },
+   "a3_detail_vllm": {
+    "targets": 1552,
+    "cached": 1552,
+    "next_number": null,
+    "rate_limit": {
+     "cost": 7,
+     "remaining": 4398,
+     "resetAt": "2026-09-29T10:37:02Z"
+    },
+    "at_utc": "2026-09-29T09:39:38Z",
+    "resume": "python experiments/deep-study/scripts/a3_details.py collect vllm"
+   },
+   "a3_detail_sglang": {
+    "targets": 1553,
+    "cached": 1553,
+    "next_number": null,
+    "rate_limit": {
+     "cost": 5,
+     "remaining": 4165,
+     "resetAt": "2026-09-29T10:37:02Z"
+    },
+    "at_utc": "2026-09-29T09:41:28Z",
+    "resume": "python experiments/deep-study/scripts/a3_details.py collect sglang"
+   }
+  },
+  "cache_paths": {
+   "compact_metadata": "experiments/deep-study/data/cache/{repo}/meta/",
+   "graphql_enrichment": "experiments/deep-study/data/cache/{repo}/enrich/batch-*.json",
+   "detailed_timelines": "experiments/deep-study/data/cache/{repo}/detail/batch-*.json",
+   "revert_context": "experiments/deep-study/data/cache/{repo}/reverts/",
+   "papers": "experiments/deep-study/data/cache/papers/"
+  }
+ },
+ "failures": [
+  {
+   "at_utc": "2026-09-29T10:44:27Z",
+   "where": "a1_metadata.enrich (6 unpaced shards)",
+   "message": "GitHub GraphQL secondary rate limit (CPU time) killed all shards after ~96 batches.",
+   "recovery": "Added pacing (GQL_PACE) and multi-minute backoff in common.graphql; reran with <=4 paced shards; cached batches reused."
+  },
+  {
+   "at_utc": "2026-09-29T10:44:27Z",
+   "where": "a1_metadata.enrich heavy queries",
+   "message": "50-PR heavy queries hit GitHub's ~10s server timeout and retried with backoff (~2 min/batch).",
+   "recovery": "Reduced heavy batches to 20 PRs; cache keyed by number range so reruns skip completed numbers."
+  },
+  {
+   "at_utc": "2026-09-29T10:44:27Z",
+   "where": "c1_papers.asplos",
+   "message": "Live asplos-conference.org/asplos2025/program/ now serves the ASPLOS 2026 program.",
+   "recovery": "Use Wayback snapshot 20250426171456 (cached at data/cache/papers/asplos2025-program-wayback.html); official set = DOIs under 10.1145/3669940 and 10.1145/3676641."
+  },
+  {
+   "at_utc": "2026-09-29T10:44:27Z",
+   "where": "c1 full text",
+   "message": "ACM DL returns 403 to scripted access; 92 ASPLOS papers lacked an open copy via arXiv/OpenAlex.",
+   "recovery": "c1_fulltext agents located 45 open copies via web search; 41 remain abstract-only and are flagged in paper-census.csv (sections_read)."
+  },
+  {
+   "at_utc": "2026-09-29T10:44:27Z",
+   "where": "b1_reverts.candidates (first attempt)",
+   "message": "git log --name-only without --no-renames on the blobless clone triggered lazy blob fetches.",
+   "recovery": "Killed and reran with --no-renames; only additive packs were written to the first study's object store."
+  }
+ ],
+ "outputs": {
+  "experiments/deep-study/kernel-failures-report.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 70560,
+   "sha256_12": "0f3739ea03b2"
+  },
+  "experiments/deep-study/kernel-pr-delivery-report.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 117101,
+   "sha256_12": "640b4ee9230f"
+  },
+  "experiments/deep-study/METHODS.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 13242,
+   "sha256_12": "aea4ba093ba4"
+  },
+  "experiments/deep-study/paper-to-production-report.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 22239,
+   "sha256_12": "7305a76ab0b6"
+  },
+  "experiments/deep-study/production-kernel-provenance-report.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 41790,
+   "sha256_12": "4af539654018"
+  },
+  "experiments/deep-study/SYNTHESIS.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 17342,
+   "sha256_12": "35707a8a9515"
+  },
+  "experiments/deep-study/data/a1-adjudication-agreement.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 525,
+   "sha256_12": "6290d1a2e79a"
+  },
+  "experiments/deep-study/data/a1-perf-type-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 2751,
+   "sha256_12": "f9ed8e1d90c4"
+  },
+  "experiments/deep-study/data/a1-population-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 323,
+   "sha256_12": "2f4b29efd384"
+  },
+  "experiments/deep-study/data/a1-recall-estimate.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 272,
+   "sha256_12": "3dd43bc84526"
+  },
+  "experiments/deep-study/data/a1-tier-validation.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 375,
+   "sha256_12": "fb9a2395d64f"
+  },
+  "experiments/deep-study/data/a2-effects.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 1595,
+   "sha256_12": "6c7cb514d331"
+  },
+  "experiments/deep-study/data/a2-open-queue.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 393,
+   "sha256_12": "fb71ac189394"
+  },
+  "experiments/deep-study/data/a2-population-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 1241,
+   "sha256_12": "9cc403ca7565"
+  },
+  "experiments/deep-study/data/a2-revert-rates.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 737,
+   "sha256_12": "e2720cfbae5c"
+  },
+  "experiments/deep-study/data/a2-survival.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 1043,
+   "sha256_12": "9e186832c97f"
+  },
+  "experiments/deep-study/data/a3-detailed-corpus.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 255114,
+   "sha256_12": "2b427531ed98"
+  },
+  "experiments/deep-study/data/a3-evidence-by-outcome.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 2957,
+   "sha256_12": "9ac5e2c7dcf5"
+  },
+  "experiments/deep-study/data/a3-evidence-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 4813,
+   "sha256_12": "d1a6d677f6cb"
+  },
+  "experiments/deep-study/data/a4-doc-check-agreement.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 123,
+   "sha256_12": "f40411f604ae"
+  },
+  "experiments/deep-study/data/a4-label-agreement.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 2302,
+   "sha256_12": "d6413ad114ab"
+  },
+  "experiments/deep-study/data/a4-per-pr-undocumented.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 50822,
+   "sha256_12": "f702ad6a53a2"
+  },
+  "experiments/deep-study/data/a4-request-documentation-final.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 17867,
+   "sha256_12": "db2d83de5da8"
+  },
+  "experiments/deep-study/data/a4-request-documentation-p2.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 17505,
+   "sha256_12": "624d772cdfcc"
+  },
+  "experiments/deep-study/data/a4-request-documentation.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 15711,
+   "sha256_12": "42eefdc11374"
+  },
+  "experiments/deep-study/data/a4-request-types.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 58787,
+   "sha256_12": "e176d696b96a"
+  },
+  "experiments/deep-study/data/a4-rule-compliance-per-pr.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 179833,
+   "sha256_12": "11eb73b00ad1"
+  },
+  "experiments/deep-study/data/a4-rule-compliance.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 2647,
+   "sha256_12": "b898d35a474a"
+  },
+  "experiments/deep-study/data/a4-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 511,
+   "sha256_12": "16bfeeccb752"
+  },
+  "experiments/deep-study/data/a5-case-candidates.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 5949,
+   "sha256_12": "503a062d711c"
+  },
+  "experiments/deep-study/data/b1-revert-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 8416,
+   "sha256_12": "99dcb8afe2be"
+  },
+  "experiments/deep-study/data/b2-failure-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 12787,
+   "sha256_12": "4a3e89491906"
+  },
+  "experiments/deep-study/data/c-census-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 2361,
+   "sha256_12": "2f9625389d4d"
+  },
+  "experiments/deep-study/data/confirmed-reverts.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 248666,
+   "sha256_12": "e22e547515ad"
+  },
+  "experiments/deep-study/data/d-provenance-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 8514,
+   "sha256_12": "de428e22feee"
+  },
+  "experiments/deep-study/data/failure-coding-agreement.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 562,
+   "sha256_12": "b82d209afcf0"
+  },
+  "experiments/deep-study/data/kernel-correctness-cases.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 381590,
+   "sha256_12": "24506133d19a"
+  },
+  "experiments/deep-study/data/paper-census-agreement.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 166,
+   "sha256_12": "e4e148ef6b46"
+  },
+  "experiments/deep-study/data/paper-census.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 177843,
+   "sha256_12": "2c1a6721313d"
+  },
+  "experiments/deep-study/data/paper-deployment-ladder.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 240351,
+   "sha256_12": "d571f2dd90f3"
+  },
+  "experiments/deep-study/data/paper-eval-audit-summary.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 3041,
+   "sha256_12": "497e2a4e8c4f"
+  },
+  "experiments/deep-study/data/paper-funnel.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 2062,
+   "sha256_12": "13a5363d5400"
+  },
+  "experiments/deep-study/data/performance-pr-population.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 23252288,
+   "sha256_12": "f5cbb3b26aa6"
+  },
+  "experiments/deep-study/data/pr-population-metadata.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 7836989,
+   "sha256_12": "822b7a894677"
+  },
+  "experiments/deep-study/data/production-kernel-provenance.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 155904,
+   "sha256_12": "cfd8d00658f9"
+  },
+  "experiments/deep-study/data/provenance-agreement.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 212,
+   "sha256_12": "236aa04203d3"
+  },
+  "experiments/deep-study/data/review-coding-agreement.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 7243,
+   "sha256_12": "2c253124fc9b"
+  },
+  "experiments/deep-study/data/review-coding.csv": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 1909888,
+   "sha256_12": "00e7e04b74b1"
+  },
+  "experiments/deep-study/data/consistency-check.json": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 205018,
+   "sha256_12": "fea6210987db"
+  },
+  "experiments/deep-study/data/paper-dossiers.json": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 2030537,
+   "sha256_12": "19b1a99acc39"
+  },
+  "experiments/deep-study/figures/a2-open-queue-age.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 63620,
+   "sha256_12": "6f26e5f3d299"
+  },
+  "experiments/deep-study/figures/a2-time-to-merge-km-cif.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 121846,
+   "sha256_12": "cba94c79edf0"
+  },
+  "experiments/deep-study/figures/a3-evidence-and-review-requests.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 99806,
+   "sha256_12": "4d10669047c8"
+  },
+  "experiments/deep-study/figures/a4-reviewer-requests-vs-written-rules.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 259203,
+   "sha256_12": "a952b1e6150b"
+  },
+  "experiments/deep-study/figures/b1-reverts-by-class-reason.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 84313,
+   "sha256_12": "e996f52fad7f"
+  },
+  "experiments/deep-study/figures/b3-failure-vs-detector-matrix.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 89421,
+   "sha256_12": "3070e95152dd"
+  },
+  "experiments/deep-study/figures/c-adoption-latency.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 40714,
+   "sha256_12": "254a1eb99b7b"
+  },
+  "experiments/deep-study/figures/c-paper-to-production-funnel.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 83150,
+   "sha256_12": "54194922259a"
+  },
+  "experiments/deep-study/figures/d-provenance-by-operator.png": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 69340,
+   "sha256_12": "5b44e5155ed8"
+  },
+  "experiments/deep-study/coding/a4-request-taxonomy.json": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 22666,
+   "sha256_12": "71f1dc9d1ef6"
+  },
+  "experiments/deep-study/coding/codebook-a1-performance.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 2566,
+   "sha256_12": "ae057421c119"
+  },
+  "experiments/deep-study/coding/codebook-a3-review.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 3492,
+   "sha256_12": "11a5e5cbc504"
+  },
+  "experiments/deep-study/coding/codebook-a4-requests.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 20875,
+   "sha256_12": "ea401a21cea9"
+  },
+  "experiments/deep-study/coding/codebook-b1-reverts.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 3694,
+   "sha256_12": "c93d7b967cb2"
+  },
+  "experiments/deep-study/coding/codebook-b2-failures.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 6272,
+   "sha256_12": "f1d92ff48a4e"
+  },
+  "experiments/deep-study/coding/codebook-c1-census.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 3488,
+   "sha256_12": "db9b2674f436"
+  },
+  "experiments/deep-study/coding/codebook-c3-deployment.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 4563,
+   "sha256_12": "23a73b9a5537"
+  },
+  "experiments/deep-study/coding/codebook-d-provenance.md": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 4048,
+   "sha256_12": "b7c83a6e09fe"
+  },
+  "experiments/deep-study/scripts/a1_metadata.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 7390,
+   "sha256_12": "54d16854fd94"
+  },
+  "experiments/deep-study/scripts/a1_population.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 16435,
+   "sha256_12": "58ef98beafbb"
+  },
+  "experiments/deep-study/scripts/a2_analysis.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 14116,
+   "sha256_12": "1d70794adb5b"
+  },
+  "experiments/deep-study/scripts/a3_code.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 21038,
+   "sha256_12": "259fd3311a04"
+  },
+  "experiments/deep-study/scripts/a3_details.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 5210,
+   "sha256_12": "4d829370985d"
+  },
+  "experiments/deep-study/scripts/a4_rules.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 18147,
+   "sha256_12": "c43e69ab9f37"
+  },
+  "experiments/deep-study/scripts/a5_cases.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 3456,
+   "sha256_12": "44a0e34af132"
+  },
+  "experiments/deep-study/scripts/b1_reverts.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 13294,
+   "sha256_12": "52e37ded670d"
+  },
+  "experiments/deep-study/scripts/b2_failures.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 10526,
+   "sha256_12": "97ee06b66415"
+  },
+  "experiments/deep-study/scripts/batches.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 5260,
+   "sha256_12": "ea5e234cb888"
+  },
+  "experiments/deep-study/scripts/b_analysis.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 8948,
+   "sha256_12": "3965b8403aba"
+  },
+  "experiments/deep-study/scripts/b_summary.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 8948,
+   "sha256_12": "f5a910b803d6"
+  },
+  "experiments/deep-study/scripts/c1_papers.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 15106,
+   "sha256_12": "422374e1d18d"
+  },
+  "experiments/deep-study/scripts/common.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 10813,
+   "sha256_12": "01c1cb807b63"
+  },
+  "experiments/deep-study/scripts/consistency.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 3727,
+   "sha256_12": "dc08d2ebb8db"
+  },
+  "experiments/deep-study/scripts/c_analysis.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 20514,
+   "sha256_12": "10eb4ddb058a"
+  },
+  "experiments/deep-study/scripts/d_analysis.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 5150,
+   "sha256_12": "7b096878491c"
+  },
+  "experiments/deep-study/scripts/reports.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 77767,
+   "sha256_12": "23b3376ff588"
+  },
+  "experiments/deep-study/scripts/show.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 1278,
+   "sha256_12": "68564f5ee71e"
+  },
+  "experiments/deep-study/scripts/status.py": {
+   "note": "",
+   "registered_at_utc": "2026-09-29T10:44:09Z",
+   "exists": true,
+   "bytes": 7781,
+   "sha256_12": "b53d93f99dfd"
+  }
+ },
+ "next_action": "Study complete. To re-verify: python experiments/deep-study/scripts/status.py verify; python experiments/deep-study/scripts/consistency.py. To regenerate reports: python experiments/deep-study/scripts/reports.py all.",
+ "resume_instructions": "Read this file; run `python experiments/deep-study/scripts/status.py verify`; then run the command in next_action. Every collector reuses cached batches. Subagent coding batches live in experiments/deep-study/coding/batches/<task>/; a batch is complete when its *-output.jsonl passes `python experiments/deep-study/scripts/batches.py check <task>`.",
+ "last_sanity_check": {
+  "at_utc": "2026-09-29T10:44:31Z",
+  "missing": [],
+  "present": 88
+ },
+ "updated_at_utc": "2026-10-01T21:41:31Z",
+ "coding_batches": {
+  "b1_reverts": {
+   "batches": 12,
+   "complete": 12,
+   "records": 516,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:08Z"
+  },
+  "b2_failures": {
+   "batches": 18,
+   "complete": 18,
+   "records": 440,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "b3_second_pass": {
+   "batches": 12,
+   "complete": 12,
+   "records": 355,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "b2_intro": {
+   "batches": 3,
+   "complete": 3,
+   "records": 92,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "d_second_pass": {
+   "batches": 4,
+   "complete": 4,
+   "records": 204,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "c1_census": {
+   "batches": 19,
+   "complete": 19,
+   "records": 221,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "d_reconcile": {
+   "batches": 2,
+   "complete": 2,
+   "records": 48,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "c1_fulltext": {
+   "batches": 4,
+   "complete": 4,
+   "records": 86,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "c1_census_p2": {
+   "batches": 5,
+   "complete": 5,
+   "records": 51,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "a1_adjudication": {
+   "batches": 95,
+   "complete": 95,
+   "records": 9480,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "c3_deploy": {
+   "batches": 14,
+   "complete": 14,
+   "records": 81,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "a1_adjudication_p2": {
+   "batches": 3,
+   "complete": 3,
+   "records": 300,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "a3_review": {
+   "batches": 69,
+   "complete": 69,
+   "records": 3105,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "a4_requests": {
+   "batches": 17,
+   "complete": 17,
+   "records": 961,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "a3_pass2": {
+   "batches": 9,
+   "complete": 9,
+   "records": 400,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "c3_verify": {
+   "batches": 6,
+   "complete": 6,
+   "records": 44,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "a4_requests_p2": {
+   "batches": 3,
+   "complete": 3,
+   "records": 150,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "b3_reconcile": {
+   "batches": 6,
+   "complete": 6,
+   "records": 176,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  },
+  "c1_reconcile": {
+   "batches": 2,
+   "complete": 2,
+   "records": 18,
+   "incomplete": [],
+   "at_utc": "2026-09-29T10:44:09Z"
+  }
+ },
+ "downstream_snapshot_heads": {
+  "flashinfer-ai/flashinfer": {
+   "sha": "90a709ca842996e3431ece0346d97b73693eff94",
+   "commit_date": "2026-09-28T23:06:23-07:00"
+  },
+  "facebookresearch/xformers": {
+   "sha": "a8aa655c444e75c69373f5d9fd09dc1f2f6a2bdb",
+   "commit_date": "2026-09-23T14:43:00Z"
+  },
+  "ROCm/aiter": {
+   "sha": "475cf0f607d71010a02288094f20e97254d7d2d2",
+   "commit_date": "2026-09-29T16:29:16+08:00"
+  },
+  "ggml-org/llama.cpp": {
+   "sha": "c8cda8b4fe3f2217793eb68e6df2e93a0a1a73c1",
+   "commit_date": "2026-09-29T16:21:54+08:00"
+  },
+  "NVIDIA/Megatron-LM": {
+   "sha": "d52a6b8e2cad1eb7224c62b913bf6743ae123737",
+   "commit_date": "2026-09-29T01:38:24Z"
+  },
+  "deepspeedai/DeepSpeed": {
+   "sha": "084e5f6e2f43467060c38417e154a17778e2d5ab",
+   "commit_date": "2026-09-29T06:33:42Z"
+  },
+  "NVIDIA/TensorRT-LLM": {
+   "sha": "313c4858e4a599d628e494b7ed84aae38ed6295b",
+   "commit_date": "2026-09-29T15:55:06+08:00"
+  },
+  "pytorch/pytorch": {
+   "sha": "27ea453d4f6605e37499ca15d70cb7c88629e6cb",
+   "commit_date": "2026-09-29T08:19:04Z"
+  },
+  "linkedin/Liger-Kernel": {
+   "sha": "6ad077c36379eb9c7950f5572cc713f4d38e21a7",
+   "commit_date": "2026-09-28T07:01:06Z"
+  },
+  "NVIDIA/cutlass": {
+   "sha": "0b55a2f691d69981583568fd9eb69687b1f0de8a",
+   "commit_date": "2026-09-23T16:49:11+08:00"
+  }
+ },
+ "downstream_snapshot_note": "Shallow clones (depth 1, blob:limit=2m, LFS skipped) under experiments/deep-study/data/src/downstream/ taken 2026-09-29 for C3 adoption search; hits must be dated <= 2026-09-28 via PR/commit history.",
+ "last_consistency_check": {
+  "checked_at_utc": "2026-10-01T21:41:31Z",
+  "claims": 730,
+  "passed": 730,
+  "failed": 0
+ },
+ "completion": {
+  "completed_at_utc": "2026-09-29T10:44:09Z",
+  "gates": {
+   "open_queue_candidates_adjudicated": "934/934",
+   "detailed_corpus": "1000+552 vLLM, 1000+553 SGLang (perf population >2500 -> stratified 1000)",
+   "pr_case_histories": 12,
+   "revert_census_24m": "516 candidates adjudicated, 467 confirmed",
+   "kernel_correctness_cases": 334,
+   "failure_case_studies": 12,
+   "mlsys2025_classified": "61/61",
+   "asplos2025_classified": "160/160",
+   "positives_audited_and_scored": "39/39 (+2 ambiguous)",
+   "negative_adoption_checks": "20 MLSys + 20 ASPLOS",
+   "provenance_records": 204,
+   "reports": "5 + SYNTHESIS + METHODS",
+   "consistency": "730/730"
+  }
+ }
+}

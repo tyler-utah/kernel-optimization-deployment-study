@@ -1,0 +1,514 @@
+{
+  "classifier_version": "3.0",
+  "repositories": {
+    "vllm": {
+      "n": 220,
+      "macro_f1": 0.7560601366134964,
+      "kernel_performance_precision": 1.0,
+      "kernel_touch_precision": 0.9444444444444444,
+      "kernel_touch_recall": 0.7846153846153846,
+      "per_class": {
+        "kernel_performance": {
+          "support": 43,
+          "precision": 1.0,
+          "recall": 0.7906976744186046,
+          "f1": 0.8831168831168831
+        },
+        "kernel_correctness": {
+          "support": 13,
+          "precision": 0.9230769230769231,
+          "recall": 0.9230769230769231,
+          "f1": 0.9230769230769231
+        },
+        "bugfix": {
+          "support": 36,
+          "precision": 1.0,
+          "recall": 0.9166666666666666,
+          "f1": 0.9565217391304348
+        },
+        "hardware_backend": {
+          "support": 27,
+          "precision": 0.6666666666666666,
+          "recall": 0.8888888888888888,
+          "f1": 0.761904761904762
+        },
+        "model_support": {
+          "support": 13,
+          "precision": 0.6666666666666666,
+          "recall": 0.6153846153846154,
+          "f1": 0.64
+        },
+        "core_runtime_serving": {
+          "support": 18,
+          "precision": 0.5,
+          "recall": 0.7777777777777778,
+          "f1": 0.6086956521739131
+        },
+        "api_frontend_router": {
+          "support": 7,
+          "precision": 0.8333333333333334,
+          "recall": 0.7142857142857143,
+          "f1": 0.7692307692307692
+        },
+        "test_ci_build_benchmark_deps": {
+          "support": 33,
+          "precision": 0.8666666666666667,
+          "recall": 0.7878787878787878,
+          "f1": 0.8253968253968254
+        },
+        "documentation": {
+          "support": 5,
+          "precision": 0.5,
+          "recall": 0.8,
+          "f1": 0.6153846153846154
+        },
+        "maintenance_refactor": {
+          "support": 23,
+          "precision": 0.7368421052631579,
+          "recall": 0.6086956521739131,
+          "f1": 0.6666666666666666
+        },
+        "new_workloads": {
+          "support": 2,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "other": {
+          "support": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "confusion_matrix": {
+        "kernel_performance": {
+          "kernel_performance": 34,
+          "kernel_correctness": 1,
+          "bugfix": 0,
+          "hardware_backend": 3,
+          "model_support": 2,
+          "core_runtime_serving": 3,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "kernel_correctness": {
+          "kernel_performance": 0,
+          "kernel_correctness": 12,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 0,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 1,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "bugfix": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 33,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 0,
+          "api_frontend_router": 1,
+          "test_ci_build_benchmark_deps": 1,
+          "documentation": 0,
+          "maintenance_refactor": 1,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "hardware_backend": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 24,
+          "model_support": 0,
+          "core_runtime_serving": 1,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 2,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "model_support": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 1,
+          "model_support": 8,
+          "core_runtime_serving": 3,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 1,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "core_runtime_serving": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 3,
+          "model_support": 1,
+          "core_runtime_serving": 14,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "api_frontend_router": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 2,
+          "api_frontend_router": 5,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "test_ci_build_benchmark_deps": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 3,
+          "model_support": 0,
+          "core_runtime_serving": 1,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 26,
+          "documentation": 1,
+          "maintenance_refactor": 2,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "documentation": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 0,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 4,
+          "maintenance_refactor": 1,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "maintenance_refactor": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 2,
+          "model_support": 1,
+          "core_runtime_serving": 3,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 3,
+          "maintenance_refactor": 14,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "new_workloads": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 1,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 1,
+          "other": 0
+        },
+        "other": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 0,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        }
+      }
+    },
+    "sglang": {
+      "n": 220,
+      "macro_f1": 0.6918877334709826,
+      "kernel_performance_precision": 0.8387096774193549,
+      "kernel_touch_precision": 0.7142857142857143,
+      "kernel_touch_recall": 0.603448275862069,
+      "per_class": {
+        "kernel_performance": {
+          "support": 36,
+          "precision": 0.8387096774193549,
+          "recall": 0.7222222222222222,
+          "f1": 0.7761194029850746
+        },
+        "kernel_correctness": {
+          "support": 11,
+          "precision": 0.7777777777777778,
+          "recall": 0.6363636363636364,
+          "f1": 0.7000000000000001
+        },
+        "bugfix": {
+          "support": 30,
+          "precision": 0.8709677419354839,
+          "recall": 0.9,
+          "f1": 0.8852459016393444
+        },
+        "hardware_backend": {
+          "support": 22,
+          "precision": 0.5,
+          "recall": 0.7727272727272727,
+          "f1": 0.6071428571428571
+        },
+        "model_support": {
+          "support": 12,
+          "precision": 0.6666666666666666,
+          "recall": 0.6666666666666666,
+          "f1": 0.6666666666666666
+        },
+        "core_runtime_serving": {
+          "support": 17,
+          "precision": 0.41935483870967744,
+          "recall": 0.7647058823529411,
+          "f1": 0.5416666666666666
+        },
+        "api_frontend_router": {
+          "support": 4,
+          "precision": 0.75,
+          "recall": 0.75,
+          "f1": 0.75
+        },
+        "test_ci_build_benchmark_deps": {
+          "support": 45,
+          "precision": 0.8947368421052632,
+          "recall": 0.7555555555555555,
+          "f1": 0.8192771084337349
+        },
+        "documentation": {
+          "support": 12,
+          "precision": 1.0,
+          "recall": 0.8333333333333334,
+          "f1": 0.9090909090909091
+        },
+        "maintenance_refactor": {
+          "support": 27,
+          "precision": 0.7777777777777778,
+          "recall": 0.5185185185185185,
+          "f1": 0.6222222222222222
+        },
+        "new_workloads": {
+          "support": 4,
+          "precision": 0.5,
+          "recall": 0.25,
+          "f1": 0.3333333333333333
+        },
+        "other": {
+          "support": 0,
+          "precision": null,
+          "recall": null,
+          "f1": null
+        }
+      },
+      "confusion_matrix": {
+        "kernel_performance": {
+          "kernel_performance": 26,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 8,
+          "model_support": 0,
+          "core_runtime_serving": 2,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "kernel_correctness": {
+          "kernel_performance": 0,
+          "kernel_correctness": 7,
+          "bugfix": 2,
+          "hardware_backend": 1,
+          "model_support": 0,
+          "core_runtime_serving": 0,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 1,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "bugfix": {
+          "kernel_performance": 0,
+          "kernel_correctness": 1,
+          "bugfix": 27,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 1,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 1,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "hardware_backend": {
+          "kernel_performance": 1,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 17,
+          "model_support": 1,
+          "core_runtime_serving": 3,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "model_support": {
+          "kernel_performance": 2,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 1,
+          "model_support": 8,
+          "core_runtime_serving": 1,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "core_runtime_serving": {
+          "kernel_performance": 1,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 2,
+          "core_runtime_serving": 13,
+          "api_frontend_router": 1,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "api_frontend_router": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 1,
+          "api_frontend_router": 3,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "test_ci_build_benchmark_deps": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 1,
+          "hardware_backend": 5,
+          "model_support": 0,
+          "core_runtime_serving": 2,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 34,
+          "documentation": 0,
+          "maintenance_refactor": 3,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "documentation": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 1,
+          "model_support": 0,
+          "core_runtime_serving": 0,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 1,
+          "documentation": 10,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        },
+        "maintenance_refactor": {
+          "kernel_performance": 1,
+          "kernel_correctness": 1,
+          "bugfix": 1,
+          "hardware_backend": 1,
+          "model_support": 0,
+          "core_runtime_serving": 6,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 2,
+          "documentation": 0,
+          "maintenance_refactor": 14,
+          "new_workloads": 1,
+          "other": 0
+        },
+        "new_workloads": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 1,
+          "core_runtime_serving": 2,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 1,
+          "other": 0
+        },
+        "other": {
+          "kernel_performance": 0,
+          "kernel_correctness": 0,
+          "bugfix": 0,
+          "hardware_backend": 0,
+          "model_support": 0,
+          "core_runtime_serving": 0,
+          "api_frontend_router": 0,
+          "test_ci_build_benchmark_deps": 0,
+          "documentation": 0,
+          "maintenance_refactor": 0,
+          "new_workloads": 0,
+          "other": 0
+        }
+      }
+    }
+  },
+  "thresholds": {
+    "macro_f1": 0.8,
+    "kernel_performance_precision": 0.9
+  },
+  "macro_f1": 0.7239739350422395,
+  "kernel_performance_precision": 0.9193548387096775,
+  "passed_threshold": false
+}

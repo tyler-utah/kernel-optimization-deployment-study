@@ -1,0 +1,31 @@
+repo,rule_id,signal,scope,group,n,compliant,share
+vllm,vllm-title-001,title_bracket_tag,all,performance,1000,880,0.88
+vllm,vllm-title-001,title_bracket_tag,all,comparison,552,455,0.8243
+vllm,vllm-prdesc-001,template_purpose_filled,all,performance,1000,619,0.619
+vllm,vllm-prdesc-001,template_purpose_filled,all,comparison,552,299,0.5417
+vllm,vllm-prdesc-001,template_test_plan_filled,all,performance,1000,423,0.423
+vllm,vllm-prdesc-001,template_test_plan_filled,all,comparison,552,222,0.4022
+vllm,vllm-prdesc-001,template_test_result_filled,all,performance,1000,436,0.436
+vllm,vllm-prdesc-001,template_test_result_filled,all,comparison,552,252,0.4565
+vllm,vllm-review-001 (proxy),approval_by_write_role_before_merge,merged,performance,399,388,0.9724
+vllm,vllm-review-001 (proxy),approval_by_write_role_before_merge,merged,comparison,219,208,0.9498
+vllm,vllm-ci-002,ready_label_before_merge,merged,performance,399,369,0.9248
+vllm,vllm-ci-002,ready_label_before_merge,merged,comparison,219,195,0.8904
+vllm,vllm-tests-001 (proxy),tests_changed,all,performance,1000,574,0.574
+vllm,vllm-tests-001 (proxy),tests_changed,all,comparison,552,382,0.692
+vllm,vllm-kernel-003 (proxy),kernel_change_with_numerical_test_evidence,kernel,performance,498,255,0.512
+vllm,vllm-kernel-003 (proxy),kernel_change_with_numerical_test_evidence,kernel,comparison,103,55,0.534
+sglang,sglang-accuracy-001 (template),template_accuracy_tests_filled,all,performance,1000,409,0.409
+sglang,sglang-accuracy-001 (template),template_accuracy_tests_filled,all,comparison,553,149,0.2694
+sglang,sglang-perf-001 (template),template_benchmarking_filled,all,performance,1000,382,0.382
+sglang,sglang-perf-001 (template),template_benchmarking_filled,all,comparison,553,114,0.2061
+sglang,sglang-perf-001 (coded evidence),perf_evidence_reported,all,performance,1000,713,0.713
+sglang,sglang-perf-001 (coded evidence),perf_evidence_reported,all,comparison,553,102,0.1844
+sglang,sglang-ci-001,run_ci_label_before_merge,merged,performance,460,407,0.8848
+sglang,sglang-ci-001,run_ci_label_before_merge,merged,comparison,252,176,0.6984
+sglang,sglang-review-001 (proxy),approval_by_write_role_before_merge,merged,performance,460,320,0.6957
+sglang,sglang-review-001 (proxy),approval_by_write_role_before_merge,merged,comparison,252,124,0.4921
+sglang,sglang-tests-001 (proxy),tests_changed,all,performance,1000,543,0.543
+sglang,sglang-tests-001 (proxy),tests_changed,all,comparison,553,334,0.604
+sglang,sglang-kernel-001,aot_change_with_tests_and_benchmark,aot,performance,63,8,0.127
+sglang,sglang-kernel-001,aot_change_with_tests_and_benchmark,aot,comparison,12,3,0.25

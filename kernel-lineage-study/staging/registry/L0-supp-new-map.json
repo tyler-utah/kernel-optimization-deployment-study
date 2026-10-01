@@ -1,0 +1,15 @@
+{
+ "NEW:vllm_nvfp4_experts_quant": "L1.upstream.vllm.nvfp4_moe_kernels",
+ "NEW:vllm_nvfp4_moe_quant": "L1.upstream.vllm.nvfp4_moe_kernels",
+ "NEW:vllm_flashinfer_fp4_moe_adapter": "L1.upstream.vllm.flashinfer_moe_adapter",
+ "NEW:vllm_gemma4_fused_router": "L1.upstream.vllm.routing_kernels",
+ "NEW:deepseek_v4_c128_state_pool": "L2.pool.dsv4_unified_kv",
+ "NEW:kimi_multimodal_mla_graph_path": "L2.runner.cuda_graph_mla",
+ "NEW:vllm_deepseek_v32_blackwell_mla": "L3.mla.flashinfer_sparse",
+ "NEW:vllm_flashinfer_mla_sparse": "L3.mla.flashinfer_sparse",
+ "NEW:deepseek_v4_fp8_attention_scale_metadata": "L2.backend.dsv4_hip_radix",
+ "NEW:triton_extend_attention_amd_compact_grid": "L2.kernel.triton_decode_lightllm",
+ "NEW:kimi_k3_mla_gate_fusion": "L2.model.deepseek_v2_mla",
+ "NEW:sglang_sparse_attention_fast_topk": "OUT_OF_SCOPE",
+ "NEW:context_parallel_attention_common": "L3.merge.triton_lse"
+}

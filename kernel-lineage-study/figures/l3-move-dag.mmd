@@ -1,0 +1,78 @@
+graph LR
+  M_L3_paged_kv_block_table_layout_0["M-L3-paged-kv-block-table-layout<br/>vllm-project/vllm 2023-02-18<br/>first"]
+  M_L3_paged_kv_block_table_layout_1["M-L3-paged-kv-block-table-layout<br/>vllm-project/vllm 2023-03-01<br/>same_artifact_modified"]
+  M_L3_paged_kv_block_table_layout_0 -->|same_artifact_modified| M_L3_paged_kv_block_table_layout_1
+  M_L3_paged_kv_block_table_layout_2["M-L3-paged-kv-block-table-layout<br/>vllm-project/vllm 2026-05-29<br/>same_artifact_modified"]
+  M_L3_paged_kv_block_table_layout_1 -->|same_artifact_modified| M_L3_paged_kv_block_table_layout_2
+  M_L3_paged_kv_block_table_layout_3["M-L3-paged-kv-block-table-layout<br/>vllm-project/vllm 2026-09-28<br/>same_artifact_modified"]
+  M_L3_paged_kv_block_table_layout_2 -->|same_artifact_modified| M_L3_paged_kv_block_table_layout_3
+  M_L3_pagedattention_v1_single_cta_0["M-L3-pagedattention-v1-single-cta<br/>vllm-project/vllm 2023-03-01<br/>first"]
+  M_L3_pagedattention_v1_single_cta_1["M-L3-pagedattention-v1-single-cta<br/>vllm-project/vllm 2023-05-03<br/>same_artifact_modified"]
+  M_L3_pagedattention_v1_single_cta_0 -->|same_artifact_modified| M_L3_pagedattention_v1_single_cta_1
+  M_L3_pagedattention_v1_single_cta_2["M-L3-pagedattention-v1-single-cta<br/>vllm-project/vllm 2024-11-11<br/>same_artifact_modified"]
+  M_L3_pagedattention_v1_single_cta_1 -->|same_artifact_modified| M_L3_pagedattention_v1_single_cta_2
+  M_L3_pagedattention_v1_single_cta_3["M-L3-pagedattention-v1-single-cta<br/>vllm-project/vllm 2026-07-02<br/>removed"]
+  M_L3_pagedattention_v1_single_cta_2 -->|removed| M_L3_pagedattention_v1_single_cta_3
+  M_L3_pagedattention_v2_split_kv_reduce_0["M-L3-pagedattention-v2-split-kv-reduce<br/>vllm-project/vllm 2023-10-16<br/>first"]
+  M_L3_pagedattention_v2_split_kv_reduce_1["M-L3-pagedattention-v2-split-kv-reduce<br/>vllm-project/vllm 2023-10-16<br/>first"]
+  M_L3_pagedattention_v2_split_kv_reduce_0 -->|first| M_L3_pagedattention_v2_split_kv_reduce_1
+  M_L3_pagedattention_v2_split_kv_reduce_2["M-L3-pagedattention-v2-split-kv-reduce<br/>vllm-project/vllm 2025-02-21<br/>reimplemented"]
+  M_L3_pagedattention_v2_split_kv_reduce_1 -->|reimplemented| M_L3_pagedattention_v2_split_kv_reduce_2
+  M_L3_pagedattention_v2_split_kv_reduce_3["M-L3-pagedattention-v2-split-kv-reduce<br/>sgl-project/sglang 2026-09-28<br/>reimplemented"]
+  M_L3_pagedattention_v2_split_kv_reduce_2 -->|reimplemented| M_L3_pagedattention_v2_split_kv_reduce_3
+  M_L3_flashattention_paged_online_softmax_0["M-L3-flashattention-paged-online-softmax<br/>vllm-project/vllm 2024-03-07<br/>first"]
+  M_L3_flashattention_paged_online_softmax_1["M-L3-flashattention-paged-online-softmax<br/>vllm-project/vllm 2024-10-22<br/>reimplemented"]
+  M_L3_flashattention_paged_online_softmax_0 -->|reimplemented| M_L3_flashattention_paged_online_softmax_1
+  M_L3_flashattention_paged_online_softmax_2["M-L3-flashattention-paged-online-softmax<br/>vllm-project/vllm 2025-01-23<br/>same_artifact_modified"]
+  M_L3_flashattention_paged_online_softmax_1 -->|same_artifact_modified| M_L3_flashattention_paged_online_softmax_2
+  M_L3_flashattention_paged_online_softmax_3["M-L3-flashattention-paged-online-softmax<br/>vllm-project/vllm 2026-03-01<br/>ported"]
+  M_L3_flashattention_paged_online_softmax_2 -->|ported| M_L3_flashattention_paged_online_softmax_3
+  M_L3_flashinfer_plan_cascade_0["M-L3-flashinfer-plan-cascade<br/>vllm-project/vllm 2024-05-03<br/>first"]
+  M_L3_flashinfer_plan_cascade_1["M-L3-flashinfer-plan-cascade<br/>vllm-project/vllm 2025-04-22<br/>reimplemented"]
+  M_L3_flashinfer_plan_cascade_0 -->|reimplemented| M_L3_flashinfer_plan_cascade_1
+  M_L3_flashinfer_plan_cascade_2["M-L3-flashinfer-plan-cascade<br/>vllm-project/vllm 2025-11-14<br/>repaired"]
+  M_L3_flashinfer_plan_cascade_1 -->|repaired| M_L3_flashinfer_plan_cascade_2
+  M_L3_flashinfer_plan_cascade_3["M-L3-flashinfer-plan-cascade<br/>sgl-project/sglang 2026-09-28<br/>reimplemented"]
+  M_L3_flashinfer_plan_cascade_2 -->|reimplemented| M_L3_flashinfer_plan_cascade_3
+  M_L3_flashinfer_trtllm_xqa_decode_0["M-L3-flashinfer-trtllm-xqa-decode<br/>vllm-project/vllm 2025-07-11<br/>first"]
+  M_L3_flashinfer_trtllm_xqa_decode_1["M-L3-flashinfer-trtllm-xqa-decode<br/>vllm-project/vllm 2025-08-05<br/>same_artifact_modified"]
+  M_L3_flashinfer_trtllm_xqa_decode_0 -->|same_artifact_modified| M_L3_flashinfer_trtllm_xqa_decode_1
+  M_L3_flashinfer_trtllm_xqa_decode_2["M-L3-flashinfer-trtllm-xqa-decode<br/>vllm-project/vllm 2026-07-02<br/>reimplemented"]
+  M_L3_flashinfer_trtllm_xqa_decode_1 -->|reimplemented| M_L3_flashinfer_trtllm_xqa_decode_2
+  M_L3_triton_unified_paged_attention_0["M-L3-triton-unified-paged-attention<br/>vllm-project/vllm 2025-01-30<br/>first"]
+  M_L3_triton_unified_paged_attention_1["M-L3-triton-unified-paged-attention<br/>vllm-project/vllm 2025-03-06<br/>same_artifact_modified"]
+  M_L3_triton_unified_paged_attention_0 -->|same_artifact_modified| M_L3_triton_unified_paged_attention_1
+  M_L3_triton_unified_paged_attention_2["M-L3-triton-unified-paged-attention<br/>vllm-project/vllm 2025-05-06<br/>reimplemented"]
+  M_L3_triton_unified_paged_attention_1 -->|reimplemented| M_L3_triton_unified_paged_attention_2
+  M_L3_triton_unified_paged_attention_3["M-L3-triton-unified-paged-attention<br/>sgl-project/sglang 2026-09-28<br/>first"]
+  M_L3_triton_unified_paged_attention_2 -->|first| M_L3_triton_unified_paged_attention_3
+  M_L3_rocm_mfma_paged_attention_0["M-L3-rocm-mfma-paged-attention<br/>vllm-project/vllm 2024-09-13<br/>first"]
+  M_L3_rocm_mfma_paged_attention_1["M-L3-rocm-mfma-paged-attention<br/>vllm-project/vllm 2025-02-13<br/>same_artifact_modified"]
+  M_L3_rocm_mfma_paged_attention_0 -->|same_artifact_modified| M_L3_rocm_mfma_paged_attention_1
+  M_L3_rocm_mfma_paged_attention_2["M-L3-rocm-mfma-paged-attention<br/>vllm-project/vllm 2025-06-18<br/>ported"]
+  M_L3_rocm_mfma_paged_attention_1 -->|ported| M_L3_rocm_mfma_paged_attention_2
+  M_L3_rocm_mfma_paged_attention_3["M-L3-rocm-mfma-paged-attention<br/>vllm-project/vllm 2025-10-06<br/>reimplemented"]
+  M_L3_rocm_mfma_paged_attention_2 -->|reimplemented| M_L3_rocm_mfma_paged_attention_3
+  M_L3_mla_weight_absorption_schedulers_0["M-L3-mla-weight-absorption-schedulers<br/>vllm-project/vllm 2025-01-30<br/>first"]
+  M_L3_mla_weight_absorption_schedulers_1["M-L3-mla-weight-absorption-schedulers<br/>vllm-project/vllm 2025-02-27<br/>integrates"]
+  M_L3_mla_weight_absorption_schedulers_0 -->|integrates| M_L3_mla_weight_absorption_schedulers_1
+  M_L3_mla_weight_absorption_schedulers_2["M-L3-mla-weight-absorption-schedulers<br/>vllm-project/vllm 2025-04-27<br/>reimplemented"]
+  M_L3_mla_weight_absorption_schedulers_1 -->|reimplemented| M_L3_mla_weight_absorption_schedulers_2
+  M_L3_mla_weight_absorption_schedulers_3["M-L3-mla-weight-absorption-schedulers<br/>sgl-project/sglang 2026-09-28<br/>ported"]
+  M_L3_mla_weight_absorption_schedulers_2 -->|ported| M_L3_mla_weight_absorption_schedulers_3
+  M_L3_fp8_kv_cache_scales_0["M-L3-fp8-kv-cache-scales<br/>vllm-project/vllm 2024-04-03<br/>first"]
+  M_L3_fp8_kv_cache_scales_1["M-L3-fp8-kv-cache-scales<br/>vllm-project/vllm 2024-01-28<br/>precursor_unscaled_fp8"]
+  M_L3_fp8_kv_cache_scales_0 -->|precursor_unscaled_fp8| M_L3_fp8_kv_cache_scales_1
+  M_L3_fp8_kv_cache_scales_2["M-L3-fp8-kv-cache-scales<br/>vllm-project/vllm 2025-07-11<br/>same_artifact_modified"]
+  M_L3_fp8_kv_cache_scales_1 -->|same_artifact_modified| M_L3_fp8_kv_cache_scales_2
+  M_L3_fp8_kv_cache_scales_3["M-L3-fp8-kv-cache-scales<br/>vllm-project/vllm 2026-07-02<br/>same_artifact_modified"]
+  M_L3_fp8_kv_cache_scales_2 -->|same_artifact_modified| M_L3_fp8_kv_cache_scales_3
+  M_L3_fp8_kv_cache_scales_4["M-L3-fp8-kv-cache-scales<br/>vllm-project/vllm 2026-09-28<br/>same_artifact_modified"]
+  M_L3_fp8_kv_cache_scales_3 -->|same_artifact_modified| M_L3_fp8_kv_cache_scales_4
+  M_L3_cudagraph_static_metadata_0["M-L3-cudagraph-static-metadata<br/>vllm-project/vllm 2024-10-22<br/>first"]
+  M_L3_cudagraph_static_metadata_1["M-L3-cudagraph-static-metadata<br/>vllm-project/vllm 2025-11-14<br/>repaired"]
+  M_L3_cudagraph_static_metadata_0 -->|repaired| M_L3_cudagraph_static_metadata_1
+  M_L3_cudagraph_static_metadata_2["M-L3-cudagraph-static-metadata<br/>vllm-project/vllm 2026-09-28<br/>same_artifact_modified"]
+  M_L3_cudagraph_static_metadata_1 -->|same_artifact_modified| M_L3_cudagraph_static_metadata_2
+  M_L3_cudagraph_static_metadata_3["M-L3-cudagraph-static-metadata<br/>sgl-project/sglang 2025-03-24<br/>repaired"]
+  M_L3_cudagraph_static_metadata_2 -->|repaired| M_L3_cudagraph_static_metadata_3

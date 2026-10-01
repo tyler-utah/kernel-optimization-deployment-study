@@ -1,0 +1,1 @@
+{"introducing_pr_is_performance": ["yes", "no", "unclear"], "reported_correctness_tests": ["yes", "no"], "reported_accuracy_eval": ["yes", "no"], "reported_multi_hardware": ["yes", "no"], "evidence_snippet": null, "rationale": null, "confidence": ["high", "medium", "low"]}

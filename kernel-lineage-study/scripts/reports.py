@@ -1,0 +1,346 @@
+"""WP-H reports: lineage reports + SYNTHESIS from data CSVs and narrative sources.
+
+  python reports.py all
+Placeholders in narrative/synthesis sources:
+  {{M|<lineage>|<metric>|<column>|<fmt>}}             -> data/lineage-metrics.csv
+  {{C|data/<file>.csv|<col>=<v>&...|<column>|<fmt>}}  -> any CSV (filter must match exactly one row)
+Rendered as  <value><!-- claim:<file>::<filter>::<column>::<fmt> -->  (checked by consistency.py).
+"""
+import csv
+import glob
+import json
+import os
+import re
+import sys
+from collections import Counter
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, HERE)
+import status as S  # noqa: E402
+from study_config import CUTOFF_COMMITS, CUTOFF_ISO, REPOSITORIES  # noqa: E402
+
+csv.field_size_limit(10 ** 9)
+DATA = os.path.join(S.STUDY, "data")
+STAGING = os.path.join(S.STUDY, "staging")
+LINFO = {
+    "L1": ("sglang-moe-lineage.md", "SGLang MoE alignment, routing, top-k and fusion",
+           REPOSITORIES["sglang"]["slug"], CUTOFF_COMMITS["sglang"]),
+    "L2": ("sglang-mla-lineage.md", "SGLang MLA, FlashInfer MLA and FlashMLA",
+           REPOSITORIES["sglang"]["slug"], CUTOFF_COMMITS["sglang"]),
+    "L3": ("vllm-attention-lineage.md", "The vLLM attention implementation family",
+           REPOSITORIES["vllm"]["slug"], CUTOFF_COMMITS["vllm"]),
+}
+_cache = {}
+UNRESOLVED = []
+
+
+def rcsv(p):
+    if p not in _cache:
+        with open(os.path.join(S.STUDY, p), encoding="utf-8") as f:
+            _cache[p] = list(csv.DictReader(f))
+    return _cache[p]
+
+
+def fmt(v, f):
+    v = float(v)
+    if f == "int":
+        return f"{int(round(v)):,}"
+    if f == "pct1":
+        return f"{100 * v:.1f}"
+    if f == "dec1":
+        return f"{v:.1f}"
+    if f == "dec2":
+        return f"{v:.2f}"
+    if f == "dec3":
+        return f"{v:.3f}"
+    raise ValueError(f)
+
+
+def claim(file, flt, col, f):
+    rows = rcsv(file)
+    conds = [c.split("=", 1) for c in flt.split("&") if c]
+    hit = [r for r in rows if all(r.get(k) == v for k, v in conds)]
+    if len(hit) != 1 or hit[0].get(col) in (None, ""):
+        UNRESOLVED.append(f"{file}::{flt}::{col} ({len(hit)} rows)")
+        return f"[[UNRESOLVED {file}::{flt}::{col}]]"
+    try:
+        float(hit[0][col])
+    except ValueError:
+        return hit[0][col].replace("_", " ")  # e.g. KM median 'not_reached' (no numeric claim)
+    return f"{fmt(hit[0][col], f)}<!-- claim:{file}::{flt}::{col}::{f} -->"
+
+
+def M(L, metric, col="value", f="int"):
+    return claim("data/lineage-metrics.csv", f"lineage={L}&metric={metric}", col, f)
+
+
+def resolve(text):
+    def rep(m):
+        parts = m.group(1).split("|")
+        if (parts[0] == "M" and len(parts) != 5) or (parts[0] == "C" and len(parts) != 5):
+            UNRESOLVED.append("malformed " + m.group(0))
+            return "[[MALFORMED " + m.group(0).strip("{}") + "]]"
+        if parts[0] == "M":
+            _, L, metric, col, f = parts
+            return M(L, metric, col, f)
+        if parts[0] == "C":
+            _, file, flt, col, f = parts
+            return claim(file, flt, col, f)
+        UNRESOLVED.append(m.group(0))
+        return m.group(0)
+    return re.sub(r"\{\{([^{}]+)\}\}", rep, text)
+
+
+def has_metric(L, metric):
+    return any(r["lineage"] == L and r["metric"] == metric for r in rcsv("data/lineage-metrics.csv"))
+
+
+def narrative(L):
+    fn = os.path.join(STAGING, "narratives", f"{L}.md")
+    if not os.path.exists(fn):
+        return {}
+    text = open(fn, encoding="utf-8").read()
+    secs = {}
+    for m in re.finditer(r"^## (N\d)[^\n]*\n(.*?)(?=^## N\d|\Z)", text, flags=re.S | re.M):
+        secs[m.group(1)] = m.group(2).strip()
+    return secs
+
+
+def link_pr(repo, pr):
+    return f"[#{pr}](https://github.com/{repo}/pull/{pr})" if pr else ""
+
+
+def md_table(headers, rows):
+    out = ["| " + " | ".join(headers) + " |", "|" + "|".join("---" for _ in headers) + "|"]
+    for r in rows:
+        out.append("| " + " | ".join(str(x).replace("|", "\\|").replace("\n", " ") for x in r) + " |")
+    return "\n".join(out)
+
+
+def lineage_report(L):
+    fname, title, repo, cutoff_sha = LINFO[L]
+    N = narrative(L)
+    ev = [e for e in rcsv("data/lineage-events.csv") if e["lineage"] == L]
+    edges = [x for x in rcsv("data/lineage-edges.csv") if x["lineage"] == L]
+    reg = json.load(open(os.path.join(STAGING, "registry", f"{L}-registry.json"), encoding="utf-8"))
+    mfin = json.load(open(os.path.join(STAGING, "moves", f"{L}-moves-final.json"), encoding="utf-8"))
+    fails = json.load(open(os.path.join(STAGING, "failures", f"{L}-failures.json"), encoding="utf-8"))
+    mv = [m for m in rcsv("data/optimization-moves.csv") if m["lineage"] == L]
+    out = []
+    out.append(f"# {title} — kernel lineage report ({L})\n")
+    out.append(f"*Kernel lineage study. Frozen cutoff {CUTOFF_ISO}; repository `{repo}` at `{cutoff_sha[:12]}`. "
+               f"Tables and every number are generated by `scripts/reports.py` from `data/*.csv` (each number carries a hidden claim tag "
+               f"re-verified by `scripts/consistency.py`); prose in the narrative sections was drafted from the same records and reviewed. "
+               f"Coding was done by LLM coders under `CODEBOOK.md`; agreement figures are model–model consistency, not human inter-rater "
+               f"reliability. Nothing here is causal. See [`METHODS.md`](METHODS.md).*\n")
+    out.append("## Summary\n")
+    if N.get("N0"):
+        out.append(N["N0"] + "\n")
+    out.append(f"- **Census.** {M(L, 'candidates')} candidates were screened in context; {M(L, 'verified_events')} are verified lineage events "
+               f"({M(L, 'key_events')} key events: introductions, ports, integrations, default changes, replacements, removals, reverts, relands, deprecations).")
+    out.append(f"- **Artifacts.** {M(L, 'artifacts_registered')} artifacts registered ({M(L, 'artifacts_upstream')} upstream kernels or pins); "
+               f"{M(L, 'artifacts_live_at_cutoff')} live at the cutoff, {M(L, 'artifacts_ended')} ended.")
+    out.append(f"- **Moves.** {M(L, 'moves')} optimization moves traced, {M(L, 'moves_with_biography')} with biographies; "
+               f"{M(L, 'events_with_moves')} events carry a verified move.")
+    out.append(f"- **Code vs mechanism.** Across one subsequent release, {claim('data/survival-by-releases.csv', f'kind=artifact_unchanged&lineage={L}&k_releases=1&basis=all_present_releases', 'share', 'pct1')}% "
+               f"of present artifacts stayed textually unchanged, and across three releases {claim('data/survival-by-releases.csv', f'kind=artifact_unchanged&lineage={L}&k_releases=3&basis=all_present_releases', 'share', 'pct1')}%; "
+               f"move code signatures persisted across three releases in {claim('data/survival-by-releases.csv', f'kind=move&lineage={L}&k_releases=3&basis=all_present_releases', 'share', 'pct1')}% of cases.")
+    out.append(f"- **Maintenance mix.** Primary causes: correctness {M(L, 'primary_cause:correctness')}, performance {M(L, 'primary_cause:performance')}, "
+               f"framework integration {M(L, 'primary_cause:framework_integration')}, specification {M(L, 'primary_cause:specification')}, "
+               f"build/dependency {M(L, 'primary_cause:build_dependency')}, hardware/compiler {M(L, 'primary_cause:hardware_compiler')}"
+               + (f", maintenance {M(L, 'primary_cause:maintenance')}" if has_metric(L, 'primary_cause:maintenance') else "") + ".")
+    out.append(f"- **Failures.** {M(L, 'failure_histories')} failure-to-successor histories reconstructed; "
+               f"{M(L, 'edge_type:reverts')} revert edges and {M(L, 'edge_type:relands')} reland edges; median time from artifact introduction to first "
+               f"correctness/performance repair (Kaplan–Meier) {M(L, 'km-first-repair_median_days')} days.\n")
+
+    out.append("## 1. Scope and identity rules\n")
+    out.append(f"**Scope.** {title}. Operational scope: `scripts/scope.py` (paths, integration paths, keywords) and `cache/task-screen.md` (decision rule and "
+               f"scope reminders). Identity rules: `CODEBOOK.md` §2. Lineage-specific identity notes from the artifact registry "
+               f"(`staging/registry/{L}-registry.json`):\n")
+    for n in reg.get("identity_notes", [])[:8]:
+        out.append(f"- {n}")
+    out.append("")
+    strat = [r for r in rcsv("data/lineage-metrics.csv") if r["lineage"] == L and r["metric"].startswith("discovery:")]
+    rows = []
+    for r in sorted(strat, key=lambda r: -int(r["value"])):
+        s = r["metric"].split(":", 1)[1]
+        rows.append([f"`{s}`", M(L, r["metric"])])
+    out.append("**Discovery strategies** (a candidate may carry several):\n")
+    out.append(md_table(["strategy", "candidates"], rows) + "\n")
+    lab = [r for r in rcsv("data/lineage-metrics.csv") if r["lineage"] == L and r["metric"].startswith("candidate_label:")]
+    out.append("**Screening outcome** (all candidates inspected in context; final labels after stage-2 and reconciliation): " +
+               "; ".join(f"`{r['metric'].split(':',1)[1]}` {M(L, r['metric'])}" for r in sorted(lab, key=lambda r: -int(r['value']))) + ".\n")
+    if reg.get("excluded_artifacts"):
+        out.append("**Excluded look-alikes** (name collisions / other scope):\n")
+        for x in reg["excluded_artifacts"][:10]:
+            out.append(f"- {x.get('name')}: {x.get('reason')} — {(x.get('evidence') or '')[:160]}")
+        out.append("")
+
+    out.append("## 2. Chronology and mechanism narrative\n")
+    if N.get("N1"):
+        out.append(N["N1"] + "\n")
+    out.append("### Chronological table of key events\n")
+    key = [e for e in ev if e["event_type"] in ("introduce", "port", "integrate", "replace", "change_default", "remove", "revert", "reland", "deprecate")
+           or (e["event_type"] == "optimize" and e["optimization_move_ids"])]
+    key.sort(key=lambda e: e["date"])
+    cap = 140
+    shown = key if len(key) <= cap else [e for e in key if e["event_type"] != "integrate"][:cap]
+    rows = [[e["date"][:10], e["release"], f"`{e['event_id']}`", e["event_type"], e["artifact_ids"].replace(";", "; ")[:70],
+             link_pr(e["repo"], e["pr_number"]) + ("" if e["repo"] == repo else f" ({e['repo'].split('/')[0]})"),
+             (e["evidence_excerpt"] or "")[:110]] for e in shown]
+    out.append(f"Showing {len(shown)} of {len(key)} key events (all events with full fields: `data/lineage-events.csv`, filter `lineage == {L}`).\n")
+    out.append(md_table(["date", "first release", "event", "type", "artifacts", "PR", "evidence (excerpt)"], rows) + "\n")
+
+    out.append("## 3. Artifact-lineage DAG\n")
+    pages = sorted(glob.glob(os.path.join(S.STUDY, "figures", f"{L.lower()}-artifact-lineage-p*.png")))
+    out.append(f"Lane diagrams (x = time; bar = artifact lifespan from introduction to end or cutoff; markers = coded events by type; arrows = "
+               f"registry predecessor relations; grey verticals = final releases). Editable sources: "
+               f"[`figures/{L.lower()}-artifact-lineage.dot`](figures/{L.lower()}-artifact-lineage.dot), "
+               f"[`figures/{L.lower()}-artifact-lineage.mmd`](figures/{L.lower()}-artifact-lineage.mmd).\n")
+    for p in pages:
+        b = os.path.basename(p)
+        out.append(f"![{b}](figures/{b})\n")
+    arts = [a for a in rcsv("data/artifacts.csv") if a["lineage"] == L]
+    rows = [[f"`{a['artifact_id']}`", a["kind"], a["language"][:18], f"{a['introduced_date'][:10]} {link_pr(repo, a['introduced_pr']) if a['introduced_pr'] and a['introduced_pr'] != 'None' else ''}",
+             (a["ended_date"][:10] + " " + a["ended_how"][:40]) if a["ended_date"] else "live", a["predecessors"][:80]] for a in arts]
+    out.append("<details><summary>Artifact table</summary>\n\n" + md_table(["artifact", "kind", "language", "introduced", "ended", "predecessors (relation)"], rows) + "\n\n</details>\n")
+
+    out.append("## 4. Optimization-move DAG\n")
+    out.append(f"![{L} move DAG](figures/{L.lower()}-move-dag.png)\n")
+    out.append(f"Each lane is one move: dots are catalogued occurrences (colour = relation to the first occurrence; squares = other repository), the green band marks "
+               f"final releases whose tree matches the move's validated code signature, ticks are coded events that apply the move. Sources: "
+               f"[`figures/{L.lower()}-move-dag.dot`](figures/{L.lower()}-move-dag.dot), [`figures/{L.lower()}-move-dag.mmd`](figures/{L.lower()}-move-dag.mmd).\n")
+    rows = [[f"`{m['move_id']}`", m["category"], m["first_observed_event"], m["current_status"],
+             claim("data/optimization-moves.csv", f"move_id={m['move_id']}", "n_coded_events", "int"),
+             claim("data/optimization-moves.csv", f"move_id={m['move_id']}", "cross_repo_occurrences", "int"), m["assumption_status"][:60]] for m in mv]
+    out.append(md_table(["move", "category", "first observed (event)", "status at cutoff", "coded events", "cross-repo occurrences", "assumption statuses"], rows) + "\n")
+
+    out.append("## 5. Release-overlaid timeline\n")
+    out.append(f"![{L} release timeline](figures/{L.lower()}-release-timeline.png)\n")
+    out.append(f"Events are placed in the first final release that contains them (ancestry of the release's branch point, cherry-picks matched by PR number"
+               + (", and for `sgl-kernel`/`sglang-kernel` paths the first release pinning a kernel wheel built after the change" if repo.startswith("sgl") else "")
+               + f"). Over {M(L, 'transitions')} release transitions the mean number of repair events landing per transition was "
+               f"{M(L, 'repairs_per_transition_mean', 'value', 'dec2')} (median {M(L, 'repairs_per_transition_median')}); "
+               f"{M(L, 'transitions_with_repair')} transitions carried at least one repair.\n")
+    cls = [r for r in rcsv("data/lineage-metrics.csv") if r["lineage"] == L and r["metric"].startswith("artifact_transition_class:")]
+    rows = [[f"`{r['metric'].split(':',1)[1]}`", M(L, r["metric"]), M(L, r["metric"], "denominator")] for r in sorted(cls, key=lambda r: -int(r["value"]))]
+    out.append("How each present artifact crossed each release boundary (analytical classification, `CODEBOOK.md` §9, v1.2 and v1.3; one row per artifact × transition):\n")
+    out.append(md_table(["rebase class", "artifact × transitions", "of"], rows) + "\n")
+    out.append(f"`direct_carry` means that no verified lineage event on the artifact landed in the transition; in "
+               f"{M(L, 'artifact_transition_direct_carry_textually_modified')} of these observations the artifact's files still changed textually, "
+               f"through commits that were screened as outside the lineage (for example shared-file refactors).\n")
+    tcls = [r for r in rcsv("data/lineage-metrics.csv") if r["lineage"] == L and r["metric"].startswith("rebase_class:")]
+    out.append("Most invasive class per transition: " + "; ".join(f"`{r['metric'].split(':',1)[1]}` {M(L, r['metric'])}" for r in sorted(tcls, key=lambda r: -int(r['value']))) +
+               ". Full table: `data/release-transitions.csv`; per artifact: `data/release-transition-artifacts.csv`.\n")
+
+    out.append("## 6. Specification and framework-boundary changes\n")
+    spec = [r for r in rcsv("data/lineage-metrics.csv") if r["lineage"] == L and r["metric"].startswith("spec_requirement:")]
+    rows = [[f"`{r['metric'].split(':',1)[1]}`", M(L, r["metric"])] for r in sorted(spec, key=lambda r: -int(r["value"]))]
+    out.append(f"Events coded with a specification change ({M(L, 'spec_change_events')} contract changes; {M(L, 'newly_supported_events')} newly supported inputs), by requirement:\n")
+    out.append(md_table(["requirement", "events"], rows) + "\n")
+    out.append(f"{M(L, 'events_integration_change')} events changed the framework-facing protocol (metadata, backend API, CUDA-graph path, registry, flags) and "
+               f"{M(L, 'events_default_change')} changed which implementation is selected by default for some configuration.\n")
+    if N.get("N2"):
+        out.append(N["N2"] + "\n")
+
+    out.append("## 7. Optimization biographies\n")
+    for m in mfin["moves"]:
+        b = m.get("biography")
+        if not b:
+            continue
+        out.append(f"### {m['name']} (`{m['move_id']}`)\n")
+        out.append(f"1. **First appearance.** {b.get('first_appearance','')}")
+        out.append(f"2. **Problem solved.** {b.get('problem','')}")
+        out.append(f"3. **Preconditions.** {b.get('preconditions','')}")
+        out.append(f"4. **Survival.** {b.get('survival','')}")
+        out.append(f"5. **Ported / repeated / replaced / rediscovered.** {b.get('recurrence','')}")
+        out.append(f"6. **Failures and reverts.** {b.get('failures','')}")
+        out.append(f"7. **Acknowledgement of earlier work.** {b.get('acknowledgement','')}")
+        evs = ", ".join(f"`{x}`" for x in (b.get("event_ids") or [])[:10])
+        urls = " ".join(f"[{i + 1}]({u})" for i, u in enumerate((b.get("evidence_urls") or [])[:6]))
+        out.append(f"\n*Events:* {evs}. *Evidence:* {urls}. *Evidence types:* {', '.join(m.get('evidence_types') or [])}. *Confidence:* {b.get('confidence','')}.\n")
+        asm = [a for a in rcsv("data/move-assumptions.csv") if a["move_id"] == m["move_id"] and a["source_file"] == "audit"]
+        if asm:
+            out.append("<details><summary>Load-bearing assumptions (spec-checked audit)</summary>\n")
+            out.append(md_table(["assumption", "kind", "platform", "status", "spec / evidence"],
+                                [[a["assumption"][:110], a["kind"], a["platform"], a["status"], (a["spec_checked"] or a["code_evidence"])[:90]] for a in asm]))
+            out.append("\n</details>\n")
+
+    out.append("## 8. Failures, reverts, relands and replacements\n")
+    c = fails.get("census") or {}
+    out.append(f"Census of failures linked to lineage events: {M(L, 'failure_census:linked_failures')} linked failure/revert events, "
+               f"{M(L, 'failure_census:with_introducing_change')} with an identifiable introducing change (see `staging/failures/{L}-failures.json` for the counting rule). "
+               f"The event graph holds {M(L, 'edge_type:repairs')} `repairs`, {M(L, 'edge_type:reverts')} `reverts` and {M(L, 'edge_type:relands')} `relands` edges "
+               f"and {M(L, 'event_type:change_default')} default changes.\n")
+    for h in fails["histories"]:
+        out.append(f"### {h['history_id']}: {h['title']}\n")
+        out.append(f"- **What failed:** {h.get('failed_what','')}")
+        out.append(f"- **Mechanism:** {h.get('mechanism','')}")
+        out.append(f"- **Scope of invalidation:** `{h.get('invalidation_scope','')}`")
+        out.append(f"- **Durable encoding:** {', '.join(h.get('durable_encoding') or [])} — {h.get('durable_encoding_evidence','')}")
+        out.append(f"- **Later repetition of the assumption:** {h.get('repeat_assumption','')}")
+        out.append(f"- **Did the move return?** {h.get('move_returned','')}")
+        tl = "; ".join(f"{t.get('date','')} {t.get('role','')} {link_pr(t.get('repo') or repo, t.get('pr')) if t.get('pr') else (t.get('sha') or '')[:10]}"
+                       for t in h.get("timeline", []))
+        out.append(f"- **Timeline:** {tl}")
+        out.append(f"\n{h.get('narrative','')}\n")
+        out.append(f"*Evidence types:* {', '.join(h.get('evidence_types') or [])}; *confidence:* {h.get('confidence','')}.\n")
+    if N.get("N3"):
+        out.append(N["N3"] + "\n")
+
+    out.append("## 9. What survives at the cutoff\n")
+    yrs = sorted({r["metric"].split(":")[1] for r in rcsv("data/lineage-metrics.csv") if r["lineage"] == L and r["metric"].startswith("event_code_survival_share:")})
+    rows = [[y, M(L, f"event_code_survival_share:{y}", "value", "pct1") + "%", M(L, f"event_concept_only_share:{y}", "value", "pct1") + "%",
+             M(L, f"event_code_survival_share:{y}", "denominator")] for y in yrs]
+    out.append("Share of events (by year) whose added lines still exist at the cutoff (`git blame -w -M` over every live lineage file), and share with no surviving "
+               "line but a live move (concept-only survival):\n")
+    out.append(md_table(["event year", "code survives", "concept only", "events"], rows) + "\n")
+    ms = [r for r in rcsv("data/lineage-metrics.csv") if r["lineage"] == L and r["metric"].startswith("move_status:")]
+    out.append("Move status at the cutoff: " + "; ".join(f"`{r['metric'].split(':',1)[1]}` {M(L, r['metric'])}" for r in ms) + ".\n")
+    km_life = M(L, 'km-artifact-lifetime_median_days')
+    out.append(f"Kaplan–Meier median artifact lifetime (introduction → removal/replacement, censored at cutoff): "
+               + (f"{km_life} days.\n" if not km_life.startswith("not") else "not reached — fewer than half of the artifacts had ended by the cutoff.\n"))
+    if N.get("N4"):
+        out.append(N["N4"] + "\n")
+
+    out.append("## 10. Limitations and uncertain ancestry\n")
+    unc = [x for x in edges if x["edge_type"] == "historical_connection_uncertain"]
+    out.append(f"{M(L, 'edge_type:historical_connection_uncertain') if has_metric(L, 'edge_type:historical_connection_uncertain') else 'No'} edges are recorded as "
+               f"`historical_connection_uncertain`" + (":" if unc else "."))
+    for x in unc[:12]:
+        out.append(f"- `{x['from_event_id']}` → `{x['to_event_id']}`: {x['evidence'][:200]}")
+    out.append("")
+    if reg.get("unresolved"):
+        out.append("Open identity/ancestry questions from the registry:\n")
+        for u in reg["unresolved"][:8]:
+            out.append(f"- {u.get('question','')} *(missing: {u.get('missing_evidence','')})*")
+        out.append("")
+    out.append(f"Blind recoding agreement for this lineage's sampled events: event type {claim('recoding/agreement.csv', f'field=event_type[{L}]', 'percent_agreement', 'pct1')}% "
+               f"(κ = {claim('recoding/agreement.csv', f'field=event_type[{L}]', 'cohen_kappa', 'dec2')}); pooled figures for all fields are in "
+               f"[`SYNTHESIS.md`](SYNTHESIS.md) and `recoding/agreement.csv`.\n")
+    if N.get("N5"):
+        out.append(N["N5"] + "\n")
+    text = "\n".join(out)
+    text = resolve(text)
+    open(os.path.join(S.STUDY, fname), "w", encoding="utf-8").write(text)
+    print("wrote", fname, len(text), "chars")
+
+
+def synthesis():
+    src = os.path.join(STAGING, "synthesis-src.md")
+    if not os.path.exists(src):
+        print("no synthesis source yet")
+        return
+    text = resolve(open(src, encoding="utf-8").read())
+    open(os.path.join(S.STUDY, "SYNTHESIS.md"), "w", encoding="utf-8").write(text)
+    print("wrote SYNTHESIS.md", len(text), "chars")
+
+
+if __name__ == "__main__":
+    for L in ("L1", "L2", "L3"):
+        lineage_report(L)
+    synthesis()
+    if UNRESOLVED:
+        print("UNRESOLVED placeholders:", len(UNRESOLVED))
+        for u in UNRESOLVED[:30]:
+            print("  ", u)

@@ -1,0 +1,303 @@
+{
+ "lineage": "L2",
+ "census": {
+  "linked_failures": 74,
+  "with_introducing_change": 57,
+  "reverts": 14,
+  "relands": 10,
+  "notes": "Census is the union of L2 failure-links fix_event_id rows and L2 lineage-edges to_events where edge_type is repairs/reverts/relands: 38 failure-links rows plus 57 special edges yield 74 unique linked repair/revert/reland/failure events. The 57 introducing-change count includes failure-links rows with introducing_event_id/ref plus special-edge to_events with an explicit from_event_id. Revert/reland counts are unique linked events whose event_type is revert/reland; special edges contain 12 reverts and 12 relands."
+ },
+ "histories": [
+  {
+   "history_id": "F-L2-01",
+   "title": "FA3 raw-K/V embedding fast path violated piecewise CUDA-graph varlen shape contract",
+   "failed_what": "FA3 `fa_skip_kv_cache` embedding fast path that bypassed paged KV cache and called `flash_attn_varlen_func` with raw K/V tensors.",
+   "move_ids": [
+    "M-L2-fa3-hopper-mla"
+   ],
+   "artifact_ids": [
+    "L2.backend.fa3_fa4_mla",
+    "L2.runner.cuda_graph_mla"
+   ],
+   "mechanism": "Piecewise CUDA graph padded Q to a captured bucket while `cu_seqlens_q` covered only real tokens. FA3 varlen requires `q.shape[0] == cu_seqlens_q[-1]`, so the boundary block corrupted the last real token used by LAST-token pooling.",
+   "invalidation_scope": "partial_domain",
+   "durable_encoding": [
+    "test",
+    "guard",
+    "comment"
+   ],
+   "durable_encoding_evidence": "PR #27343 added `test/registered/prefill_only/test_fa_skip_kv_cache_piecewise_nan.py`, cached `fa_skip_cu_seqlens_q`, and comments explaining dummy-tail metadata for piecewise CUDA graph; PR #24097 had already guarded `fa_skip_kv_cache` with `and not self.use_mla` for MLA.",
+   "repeat_assumption": "none found (searched: L2 events for PR #27343/#21971/fa_skip/piecewise CUDA graph; first-parent `flashattention_backend.py` history after #27343; cutoff source for `fa_skip_cu_seqlens_q`, `fa_skip_kv_cache`, and `q.shape[0] == cu_seqlens_q`).",
+   "move_returned": "Yes. The raw-K/V FA embedding fast path stayed in `flashattention_backend.py`, but with dummy-tail varlen metadata for padded piecewise runs and a registered no-NaN/cosine-match test.",
+   "timeline": [
+    {
+     "date": "2026-04-13",
+     "repo": "sgl-project/sglang",
+     "pr": 21971,
+     "sha": "a2b51119621a3f599c99adac5dd45fab17fd8f18",
+     "event_id": "",
+     "role": "introduce",
+     "ref": "deep-study:sglang#21971"
+    },
+    {
+     "date": "2026-05-09",
+     "repo": "sgl-project/sglang",
+     "pr": 24097,
+     "sha": "fd636410a20977e9253dba1114328d37b9b066ef",
+     "event_id": "L2-E-fd636410a2",
+     "role": "repair"
+    },
+    {
+     "date": "2026-06-05",
+     "repo": "sgl-project/sglang",
+     "pr": 27343,
+     "sha": "",
+     "event_id": "",
+     "role": "failure_report",
+     "ref": "deep-study:sglang#27343-opened"
+    },
+    {
+     "date": "2026-06-15",
+     "repo": "sgl-project/sglang",
+     "pr": 27343,
+     "sha": "4ed698a491122859f86775bfd3ab6b90da587b9b",
+     "event_id": "",
+     "role": "repair",
+     "ref": "deep-study:sglang#27343"
+    },
+    {
+     "date": "2026-09-28",
+     "repo": "sgl-project/sglang",
+     "pr": 27343,
+     "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+     "event_id": "",
+     "role": "successor",
+     "ref": "cutoff:L2.backend.fa3_fa4_mla"
+    }
+   ],
+   "narrative": "PR #21971 optimized embedding mode by skipping FA KV-cache writes and reading raw K/V through `flash_attn_varlen_func`. It tested embedding cosine and non-FA backends, but not the production piecewise CUDA-graph padding case. PR #27343 reported about 40% fully-NaN short embeddings on H100 with FA3 + `fa_skip_kv_cache` + piecewise graph. The repair did not abandon the fast path; it encoded the missing shape contract by appending padded rows as a dummy self-attending segment and added a registered regression test.",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/21971",
+    "https://github.com/sgl-project/sglang/pull/24097",
+    "https://github.com/sgl-project/sglang/pull/27343",
+    "https://github.com/sgl-project/sglang/pull/27343.diff",
+    "experiments/deep-study/kernel-failures-report.md#fa3-piecewise-cuda-graph-nan-embeddings-sgl-projectsglang-27343"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "test",
+    "deep_study_record",
+    "code_at_commit"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L2-02",
+   "title": "FlashInfer MLA fast decode planning was reverted for cross-workload regression and relanded as a graph-replay plan wrapper",
+   "failed_what": "Fast decode planning for the FlashInfer MLA backend under CUDA graph replay.",
+   "move_ids": [
+    "M-L2-flashinfer-plan-run-graph"
+   ],
+   "artifact_ids": [
+    "L2.backend.flashinfer_mla",
+    "L2.runner.cuda_graph_mla"
+   ],
+   "mechanism": "The first fast-plan change removed a graph-replay synchronization cost but regressed other cases. The reland narrowed the mechanism to replay-time CPU indptr buffers and a `fast_mla_decode_plan` wrapper instead of replacing all planning behavior.",
+   "invalidation_scope": "implementation",
+   "durable_encoding": [
+    "abstraction",
+    "comment"
+   ],
+   "durable_encoding_evidence": "PR #4012 added `fast_mla_decode_plan`, `fast_decode_kwargs`, replay-only CPU indptr buffers, and the docstring/comment: 'for skipping the stream synchronization in original plan function during cuda graph replaying.' No regression test was added.",
+   "repeat_assumption": "none found (searched: L2 move registry occurrences for `M-L2-flashinfer-plan-run-graph`, failure-links for #3987/#4008/#4012, and cutoff `flashinfer_mla_backend.py` for later unconditional plan replacement).",
+   "move_returned": "Yes. #4008 reverted #3987 within minutes, then #4012 relanded the fast planning idea in revised form; the move registry records it live at cutoff and reimplemented later in vLLM FlashInfer MLA sparse wrappers.",
+   "timeline": [
+    {
+     "date": "2025-03-02",
+     "repo": "sgl-project/sglang",
+     "pr": 3987,
+     "sha": "fa5610673196a22a59cf439ed8140632d2dc072d",
+     "event_id": "L2-E-fa56106731",
+     "role": "introduce"
+    },
+    {
+     "date": "2025-03-02",
+     "repo": "sgl-project/sglang",
+     "pr": 4008,
+     "sha": "9e1014cf99411f2deebeeb01d25188d2917f618f",
+     "event_id": "L2-E-9e1014cf99",
+     "role": "revert"
+    },
+    {
+     "date": "2025-03-05",
+     "repo": "sgl-project/sglang",
+     "pr": 4012,
+     "sha": "fc91d08a8f0ef6458bc640bee4de7cf06234f098",
+     "event_id": "L2-E-fc91d08a8f",
+     "role": "reland"
+    },
+    {
+     "date": "2026-02-12",
+     "repo": "vllm-project/vllm",
+     "pr": 33451,
+     "sha": "f2c47886fdba",
+     "event_id": "",
+     "role": "successor",
+     "ref": "registry:vllm.flashinfer_mla_sparse"
+    }
+   ],
+   "narrative": "PR #3987 targeted a real CUDA-graph cost: FlashInfer MLA replay was blocked by indptr tensor transfer in `BatchMLAPagedAttentionWrapper.plan`, and the PR reported 1-2% throughput gains. PR #4008 immediately reverted it because it regressed other cases. PR #4012 relanded the idea with a replay-specific wrapper and preallocated CPU/GPU indptr state, preserving normal planning outside replay. The optimization survived as a dispatch-plan pattern rather than an unconditional backend replacement.",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/3987",
+    "https://github.com/sgl-project/sglang/pull/4008",
+    "https://github.com/sgl-project/sglang/pull/4012",
+    "https://github.com/sgl-project/sglang/commit/fa5610673196a22a59cf439ed8140632d2dc072d",
+    "https://github.com/sgl-project/sglang/commit/fc91d08a8f0ef6458bc640bee4de7cf06234f098"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "benchmark",
+    "revert_record",
+    "code_at_commit"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L2-03",
+   "title": "FlashMLA FP8 sparse update produced NVFP4 accuracy collapse and returned through rollback/reland dependency pins",
+   "failed_what": "SGLang's FlashMLA dependency pin and sgl-kernel build integration for FP8 sparse MLA optimizations.",
+   "move_ids": [
+    "M-L2-flashmla-tile-metadata"
+   ],
+   "artifact_ids": [
+    "L2.build.flashmla_sgl_kernel",
+    "L2.upstream.flashmla",
+    "L2.backend.flashmla"
+   ],
+   "mechanism": "Updating the vendored FlashMLA source for FP8 sparse MLA worked for the FP8 checkpoint but broke the NVFP4 DeepSeek checkpoint: GSM8K accuracy fell to zero and kernel comparison produced NaN diffs/mismatches under larger batches.",
+   "invalidation_scope": "partial_domain",
+   "durable_encoding": [
+    "no durable encoding found"
+   ],
+   "durable_encoding_evidence": "The linked revert #16678 changed only `sgl-kernel/cmake/flashmla.cmake` GIT_TAG; later #21922 restored newer FlashMLA sources and Python import guards/comments, but no regression test or explicit NVFP4/sparse requirement was found in the checked diffs.",
+   "repeat_assumption": "possible later recurrence: #21430 again rolled FlashMLA back to an older version to temporarily avoid #21291, then #21922 reverted that rollback; evidence is a repeated dependency-pin rollback/reland, not enough to prove the same NVFP4 numerical assumption repeated.",
+   "move_returned": "Yes. #16678 rolled back the FP8 sparse FlashMLA pin from `b1860dc...` to `be055fb...`; #21430 later rolled back again; #21922 restored newer FlashMLA integration at `9804b120...` with sparse decode/prefill source lists and import-error guards.",
+   "timeline": [
+    {
+     "date": "2025-12-16",
+     "repo": "sgl-project/sglang",
+     "pr": 15242,
+     "sha": "930705863f2dabeeb97b8ef5e82744f9c3b4603e",
+     "event_id": "L2-E-930705863f",
+     "role": "introduce"
+    },
+    {
+     "date": "2026-01-08",
+     "repo": "sgl-project/sglang",
+     "pr": 16678,
+     "sha": "12a0292bfdde5f807e3a6dba7575df50cf1473bc",
+     "event_id": "L2-E-12a0292bfd",
+     "role": "revert"
+    },
+    {
+     "date": "2026-03-25",
+     "repo": "sgl-project/sglang",
+     "pr": 21430,
+     "sha": "dbe871efdd978e0f6a0663869a93eed5ccb6f79a",
+     "event_id": "L2-E-dbe871efdd",
+     "role": "revert"
+    },
+    {
+     "date": "2026-04-02",
+     "repo": "sgl-project/sglang",
+     "pr": 21922,
+     "sha": "c7d03a6215f1cd7895a27d2b9ebe8e8474edac2b",
+     "event_id": "L2-E-c7d03a6215",
+     "role": "reland"
+    }
+   ],
+   "narrative": "PR #15242 bumped FlashMLA to include FP8 sparse MLA optimizations and reported FP8 DeepSeek-V3.2 accuracy and a modest serving improvement. PR #16678 reverted the pin because the same update broke an NVFP4 DeepSeek checkpoint: GSM8K 8-shot accuracy became zero and direct kernel comparison showed NaN mismatches. The lineage did not discard FlashMLA; it used dependency rollback as containment, then later restored a newer FlashMLA integration with broader source lists and compatibility shims.",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/15242",
+    "https://github.com/sgl-project/sglang/pull/16678",
+    "https://github.com/sgl-project/sglang/pull/21430",
+    "https://github.com/sgl-project/sglang/pull/21922",
+    "https://github.com/sgl-project/sglang/commit/12a0292bfdde5f807e3a6dba7575df50cf1473bc",
+    "https://github.com/sgl-project/sglang/commit/c7d03a6215f1cd7895a27d2b9ebe8e8474edac2b"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "benchmark",
+    "revert_record",
+    "deep_study_record"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L2-04",
+   "title": "DeepSeek-V4 HIP radix draft worker still built compressed-KV metadata after DSV4.1 pool filtering",
+   "failed_what": "HIP radix DeepSeek-V4 compressed-KV metadata builders for speculative draft workers.",
+   "move_ids": [
+    "M-L2-paged-latent-kv-fused-writes"
+   ],
+   "artifact_ids": [
+    "L2.backend.sparse_mla_adapters",
+    "L2.runner.cuda_graph_mla"
+   ],
+   "mechanism": "DSV4.1 filtered `compressed_pool_configs` to actual model ratios; draft workers use ratio 0 and therefore no ratio-4 indexer pool. HIP radix metadata builders still passed `need_compress=True`, causing startup assertion and then a `None` compressed-page-table path.",
+   "invalidation_scope": "adapter",
+   "durable_encoding": [
+    "guard",
+    "comment"
+   ],
+   "durable_encoding_evidence": "PR #40205 derives `self.need_compress = not self.is_draft_worker`, passes it to metadata builders, uses dummy paged-compress data, sets `csa_width=0` when compressed pages are absent, and comments that draft pools have no compressed KV/indexer pool.",
+   "repeat_assumption": "none found (searched: L2 failure-links for #38798/#40205, repair edge X04731, and cutoff `deepseek_v4_backend_hip_radix.py` for later unconditional `need_compress=True` in raw verify metadata builders).",
+   "move_returned": "Yes. DSV4.1 HIP radix support remained enabled; only draft-worker compressed metadata construction was guarded while target workers kept `need_compress=True`.",
+   "timeline": [
+    {
+     "date": "2026-09-18",
+     "repo": "sgl-project/sglang",
+     "pr": 38798,
+     "sha": "a6cf05817f11d22023fd951a76255ef50fb09f49",
+     "event_id": "L2-E-a6cf05817f",
+     "role": "introduce"
+    },
+    {
+     "date": "2026-09-18",
+     "repo": "sgl-project/sglang",
+     "pr": 40205,
+     "sha": "",
+     "event_id": "",
+     "role": "failure_report",
+     "ref": "kernel-correctness-cases:sglang:2305242f51"
+    },
+    {
+     "date": "2026-09-19",
+     "repo": "sgl-project/sglang",
+     "pr": 40205,
+     "sha": "2305242f514da95eba3c411de0517c4d79ffff94",
+     "event_id": "L2-E-2305242f51",
+     "role": "repair"
+    }
+   ],
+   "narrative": "PR #38798 added DSV4.1 model/runtime integration and filtered compressed-pool allocation to ratios present in the model. The draft worker overwrote all ratios to `COMPRESS_RATIO_NEXTN_LAYER` (0), so the filtered draft pool had no ratio-4 indexer. Three HIP radix builders nevertheless assumed compressed metadata existed. PR #40205 encoded draft-vs-target behavior as a constructor-time guard and made the no-compressed case explicit with dummy metadata and zero-width compressed stream inputs.",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/38798",
+    "https://github.com/sgl-project/sglang/pull/40205",
+    "https://github.com/sgl-project/sglang/commit/a6cf05817f11d22023fd951a76255ef50fb09f49",
+    "https://github.com/sgl-project/sglang/commit/2305242f514da95eba3c411de0517c4d79ffff94"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "benchmark",
+    "deep_study_record",
+    "code_at_commit"
+   ],
+   "confidence": "high"
+  }
+ ]
+}

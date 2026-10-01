@@ -1,0 +1,6 @@
+field,n,percent_agreement,cohen_kappa,comparison
+case_status,355,0.9352,0.0,first pass vs independent second pass (model-model; not human IRR)
+failure_class,332,0.8765,0.8341,first pass vs independent second pass (model-model; not human IRR)
+hardware_specific,332,0.7711,0.6031,first pass vs independent second pass (model-model; not human IRR)
+counterfactual_primary,332,0.8223,0.7634,first pass vs independent second pass (model-model; not human IRR)
+counterfactual_all_overlap,332,0.9699,,share of cases where the two plausible-technique sets intersect

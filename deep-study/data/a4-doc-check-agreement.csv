@@ -1,0 +1,2 @@
+n,percent_agreement,cohen_kappa,comparison
+70,0.8143,0.6946,two independent model passes over frozen docs; not human IRR

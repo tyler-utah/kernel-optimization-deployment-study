@@ -1,0 +1,60 @@
+venue,field,value,n,denominator,share
+MLSys 2025,eval_scope,both,15,18,0.8333
+MLSys 2025,eval_scope,end_to_end_only,3,18,0.1667
+MLSys 2025,baseline_versions_stated,no,9,18,0.5
+MLSys 2025,baseline_versions_stated,partial,8,18,0.4444
+MLSys 2025,baseline_versions_stated,yes,1,18,0.0556
+MLSys 2025,correctness_validation,model_accuracy_eval,9,18,0.5
+MLSys 2025,correctness_validation,none_reported,5,18,0.2778
+MLSys 2025,correctness_validation,tolerance_vs_reference,2,18,0.1111
+MLSys 2025,correctness_validation,formal_or_exact,1,18,0.0556
+MLSys 2025,correctness_validation,both,1,18,0.0556
+MLSys 2025,public_code,yes,11,18,0.6111
+MLSys 2025,public_code,no,7,18,0.3889
+MLSys 2025,claimed_production,no,16,18,0.8889
+MLSys 2025,claimed_production,yes,2,18,0.1111
+MLSys 2025,hardware_vendors,single_vendor,13,18,0.7222
+MLSys 2025,n_hardware_targets,median,2.0,18,
+MLSys 2025,n_hardware_targets,single_target,7,18,0.3889
+MLSys 2025,artifact_badges,none_found,17,18,0.9444
+MLSys 2025,artifact_badges,available,1,18,0.0556
+ASPLOS 2025,eval_scope,both,11,21,0.5238
+ASPLOS 2025,eval_scope,microbenchmark_only,6,21,0.2857
+ASPLOS 2025,eval_scope,end_to_end_only,4,21,0.1905
+ASPLOS 2025,baseline_versions_stated,no,10,21,0.4762
+ASPLOS 2025,baseline_versions_stated,partial,9,21,0.4286
+ASPLOS 2025,baseline_versions_stated,yes,2,21,0.0952
+ASPLOS 2025,correctness_validation,none_reported,11,21,0.5238
+ASPLOS 2025,correctness_validation,formal_or_exact,4,21,0.1905
+ASPLOS 2025,correctness_validation,model_accuracy_eval,4,21,0.1905
+ASPLOS 2025,correctness_validation,tolerance_vs_reference,2,21,0.0952
+ASPLOS 2025,public_code,no,11,21,0.5238
+ASPLOS 2025,public_code,yes,10,21,0.4762
+ASPLOS 2025,claimed_production,no,20,21,0.9524
+ASPLOS 2025,claimed_production,yes,1,21,0.0476
+ASPLOS 2025,hardware_vendors,single_vendor,12,20,0.6
+ASPLOS 2025,n_hardware_targets,median,2.0,21,
+ASPLOS 2025,n_hardware_targets,single_target,8,21,0.381
+ASPLOS 2025,artifact_badges,none_found,14,21,0.6667
+ASPLOS 2025,artifact_badges,unknown,7,21,0.3333
+both,eval_scope,both,26,39,0.6667
+both,eval_scope,end_to_end_only,7,39,0.1795
+both,eval_scope,microbenchmark_only,6,39,0.1538
+both,baseline_versions_stated,no,19,39,0.4872
+both,baseline_versions_stated,partial,17,39,0.4359
+both,baseline_versions_stated,yes,3,39,0.0769
+both,correctness_validation,none_reported,16,39,0.4103
+both,correctness_validation,model_accuracy_eval,13,39,0.3333
+both,correctness_validation,formal_or_exact,5,39,0.1282
+both,correctness_validation,tolerance_vs_reference,4,39,0.1026
+both,correctness_validation,both,1,39,0.0256
+both,public_code,yes,21,39,0.5385
+both,public_code,no,18,39,0.4615
+both,claimed_production,no,36,39,0.9231
+both,claimed_production,yes,3,39,0.0769
+both,hardware_vendors,single_vendor,25,38,0.6579
+both,n_hardware_targets,median,2.0,39,
+both,n_hardware_targets,single_target,15,39,0.3846
+both,artifact_badges,none_found,31,39,0.7949
+both,artifact_badges,unknown,7,39,0.1795
+both,artifact_badges,available,1,39,0.0256

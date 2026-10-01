@@ -1,0 +1,7 @@
+repo,group,open_at_cutoff,median_age_days,p75_age_days,share_older_than_90d,share_older_than_30d
+vllm,performance,1022,41.46,99.51,0.272,0.6067
+vllm,non_performance,4787,48.23,100.23,0.2883,0.6432
+vllm,uncertain,12,200.97,404.23,0.75,0.8333
+sglang,performance,784,34.31,64.49,0.1339,0.5395
+sglang,non_performance,3678,35.86,68.7,0.1446,0.5672
+sglang,uncertain,8,396.94,418.5,0.75,0.875

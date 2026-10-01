@@ -1,0 +1,1227 @@
+event_id,lineage,assumption,status,source,excerpt
+L1-E-09de730dee,L1,Sorted token ids are padded to BLOCK_SIZE_M for one-expert GEMM tiles,derived,fused_moe.py,padding ensures divisibility by BLOCK_SIZE_M
+L1-E-8d4ed42ad5,L1,Patch applies only when class name contains FusedMoE,derived,cuda_graph_runner.py,"if ""FusedMoE"" in sub.__class__.__name__"
+L1-E-5f65e2b830,L1,Padding is enabled only by MOE_PADDING on HIP,derived,fused_moe/layer.py,"if is_hip() and bool(int(os.getenv(""MOE_PADDING"", ""0"")))"
+L1-E-087ab83223,L1,Unmasked B loads require K divisible by BLOCK_SIZE_K,derived,fused_moe.py,"if K % config[""BLOCK_SIZE_K""] == 0"
+L1-E-07ec07ad1f,L1,MoE torch.compile path is used only for batch size 1,derived,fused_moe_patch.py,if batch_size == 1
+L1-E-3d32e4a32c,L1,Stable sorted topk ids define contiguous per-expert segments,derived,ep_moe/kernels.py,"torch.sort(topk_ids.view(-1), stable=True)"
+L1-E-31548116a8,L1,Each expert count is rounded up to block_size,derived,moe_align_kernel.cu,"CEILDIV(tokens_cnts[index(num_experts, blockDim.x, i - 1)], block_size) * block_size"
+L1-E-ba5112ff69,L1,Triton align is opt-in via environment variable,derived,fused_moe.py,ENABLE_MOE_ALIGN_BLOCK_SIZE_TRITON
+L1-E-ded9fcd09a,L1,Shared counter layout assumes experts_per_warp partitioning,derived,moe_align_kernel.cu,int expert_offset = expert_id % experts_per_warp
+L1-E-e808c1df3e,L1,CK MoE path is gated by HIP and CK_MOE env variable,derived,fused_moe_triton/layer.py,"if is_hip() and bool(int(os.getenv(""CK_MOE"", ""0"")))"
+L1-E-1ebe1d6de5,L1,Compiled grouped_topk uses configured compiler backend,derived,topk.py,"@torch.compile(dynamic=True, backend=get_compiler_backend())"
+L1-E-cdae77b03d,L1,cumsum_buffer can be reused as atomic scatter offsets after padded cumsum is built,derived,cdae77b diff moe_align_kernel.cu,"rank_post_pad = atomicAdd(&cumsum_buffer[expert_id], 1)"
+L1-E-21463e321a,L1,topk ids can be stably sorted into contiguous expert segments,derived,21463e diff ep_moe/kernels.py,"torch.sort(topk_ids.view(-1), stable=True)"
+L1-E-1c96fa86cf,L1,cooperative grid synchronization is available for the launched align kernel,derived,1c96fa diff moe_align_kernel.cu,cg::grid_group& grid
+L1-E-c6d7f8d370,L1,router input hidden_dim fits configured BLOCK_SIZE mask,derived,c6d7f8 diff router.py,mask = offsets < hidden_dim
+L1-E-45dcfc2e76,L1,number of experts is a power of two,derived,PR #4530 body,Currently only support `# experts` is power of 2
+L1-E-924ca7c92c,L1,shared-expert fusion only valid for DeepSeek V3/R1 with 256 routed experts and scaling 2.5,derived,924ca7 diff deepseek_v2.py,config.n_routed_experts != 256 or config.routed_scaling_factor != 2.5
+L1-E-a73c4df438,L1,CPU fused MoE keeps second GEMM loads contiguous using offsets.,derived,a73c4df438:sgl-kernel/csrc/cpu/moe.cpp,load_A for the 2nd gemm would be contiguous
+L1-E-f730362ee2,L1,The generic path can pass uninitialized token_cnts_buffer because kernel writes counts before use.,derived,f730362ee2:fused_moe.py and moe_align_kernel.cu,token_cnts_buffer = torch.empty
+L1-E-60bcbf2a35,L1,cumsum_buffer is initialized by sgl_moe_align_block_size before consumers read it.,derived,60bcbf2a35:fused_moe.py,cumsum_buffer = torch.empty
+L1-E-adca585bfb,L1,Low-latency final_hidden_states contains masked portions that should not be scaled.,derived,PR#5277 body,most of its values are masked
+L1-E-8e09b37077,L1,Shared-expert fusion consumes one top-k slot in this implementation.,derived,8e09b37077:moe_fused_gate.cu,topk - (n_share_experts_fusion > 0 ? 1 : 0)
+L1-E-d58e354472,L1,Shared-expert weight uses model routed_scaling_factor rather than a fixed constant.,derived,d58e354472:topk.py,"topk_weights[:, -1].sum(dim=-1) / routed_scaling_factor"
+L1-E-d9dd529854,L1,Fused shared-expert tuning config exists only for SM>=90.,derived,PR#5571 body,only has tuning config for SM>=90
+L1-E-e62c49557d,L1,Kernel target is Blackwell/SM100 CUTLASS tensor-op path.,derived,e62c49557d:fp8_blockwise_moe_kernel.cu,using ArchTag = cutlass::arch::Sm100
+L1-E-f194e14fb7,L1,Disposed tensors are no longer needed by later EP MoE computation.,derived,PR#6147 body,more lightweight approach to do something similar as DisposableTensor
+L1-E-6fc9357503,L1,Only fp8 blockscale is supported by this wrapper.,derived,6fc9357503:cutlass_moe.py,Only support fp8 blockscale for now
+L1-E-2716830802,L1,DeepEP kernels treat -1 topk ids as padding/skipped experts.,derived,2716830802:topk.py,"topk_ids[indices >= num_token_non_padded, :] = -1"
+L1-E-e3b8a72291,L1,Large-scale EP can exceed int32 indexing in scatter/gather kernels.,derived,PR#6348 body,caused by the index overflow
+L1-E-a071dc4084,L1,Dispatcher stages must be called in the intended order.,derived,PR#6467 title/diff,stage assertions to DeepEPDispatcher to avoid misuse
+L1-E-c087ddd686,L1,BLOCK_SIZE vector offsets can be reused unchanged across loop iterations.,derived,c087ddd686:ep_moe/kernels.py,"vec = tl.arange(0, BLOCK_SIZE)"
+L1-E-55444ed667,L1,Hidden size vectorized loop processes multiples of 16-byte elements; later bug fix adds tail handling.,derived,55444ed667:ep_moe_reorder_kernel.cu,hidden_size / vec_size
+L1-E-eb38c7d1ca,L1,FP4 path expects uint8 packed FP4 weights and rank-3 blockscale tensors.,derived,eb38c7d1ca:cutlass_moe.py,weight 1 must be uint8
+L1-E-81964328b7,L1,Shared experts occupy num_fused_shared_experts top-k slots.,derived,81964328b7:moe_fused_gate.cu,topk - num_fused_shared_experts
+L1-E-bd75690f4e,L1,Hidden sizes not divisible by vector width need scalar tail handling.,derived,bd75690f4e:ep_moe_reorder_kernel.cu,for (int idx = vec_elements + tid; idx < hidden_size
+L1-E-8b5f83ed3b,L1,topk_ids.numel sentinel marks padding slots,derived,8b5f83ed:fused_moe.py,sorted_ids.fill_(topk_ids.numel())
+L1-E-515ef4facb,L1,routed scaling is a scalar per MoE call,derived,515ef4:fused_moe.py,routed_scaling_factor: Optional[float]
+L1-E-3e56f557fd,L1,input row mapping uses c_map/permutation indices,derived,3e56f557:prepare_moe_input.cu,"c2[c_map].view(m, topk, k)"
+L1-E-84727a5139,L1,reorder_topk_ids indexes expert rows for gate/up output,derived,84727a:ep_moe_silu_and_mul_kernel.cu,const int expert_id = reorder_topk_ids[token_idx]
+L1-E-294fc1e2c9,L1,Optimized kernel is compiled only for CUDA architecture >= 1000.,derived,294fc1e2c90a:nvfp4_experts_quant.cu,#if defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 1000)
+L1-E-294fc1e2c9,L1,Register-offset path chunks expert offsets in groups of 16 plus sentinel.,derived,294fc1e2c90a:nvfp4_experts_quant.cu,Local array size set to 17 because of register limit
+L1-E-506c4928f5,L1,stable sort of topk ids creates expert segments,derived,506c4928:ep_moe/kernels.py,"torch.sort(topk_ids.view(-1), stable=True)"
+L1-E-7151194bb2,L1,align kernel overwrites cumsum_buffer before consumers read it,derived,7151194:fused_moe.py,cumsum_buffer = torch.empty
+L1-E-755f314785,L1,invalid DeepEP rank -1 can be masked as num_experts_per_partition,derived,755f314:ep_moe/layer.py,aiter does not accept -1
+L1-E-57ab776910,L1,pad slots may be filled with sentinel topk_ids.numel,derived,57ab776:moe_align_kernel.cu,pad_sorted_token_ids
+L1-E-82eccae44e,L1,ue8m0 packs four scales per int32,derived,82eccae:ep_moe/kernels.py,4 scales per int32
+L1-E-22352d47a9,L1,fused router remains limited to topk<=2,derived,22352d:router.py,assert topk <= 2
+L1-E-2c4feaf308,L1,small-K CUTLASS path should be skipped,derived,2c4feaf:PR body,skip these Small K scenarios
+L1-E-2998c4bdf4,L1,renormalization divides by selected top-k row sum,derived,2998c4:moe_topk_softmax_kernels.cu,1.f / row_sum_for_renormalize
+L1-E-c797322280,L1,row_stride may exceed threads and needs strided coverage,derived,c797322:prepare_moe_input.cu,d_vec_idx += stride
+L1-E-a3398d8478,L1,scan buffer size is power-of-two at least num_experts,derived,moe_align_kernel.cu,const size_t scan_size = next_pow2(num_experts)
+L1-E-cb9d91ea8a,L1,W4A8 path expects int4-packed expert weights with FP8 activation scales,derived,cutlass_w4a8_moe.py,w1_q: The first set of int4-quantized expert weights
+L1-E-659907e32b,L1,ModelOpt FP4 uses weight_scale_2 while FP8 uses weight_scale for per-tensor scale loading.,derived,659907e32b95:fused_moe_triton/layer.py,"FP4 uses ""weight_scale_2"" for per-tensor, FP8 uses ""weight_scale"""
+L1-E-5f6756b038,L1,Large grids can exceed int32 src/dst index range,derived,PR body,avoid overflow caused by excessively large grid sizes
+L1-E-5c08a36cbf,L1,DeepGEMM JIT path is valid only for FP8 quantized models,derived,PR body,without an FP8 quantized model present
+L1-E-af1cc8fe2d,L1,Optimized path applies to num_experts >= 128,tested_only,PR body,num_experts >= 128 appliable to this PR
+L1-E-48c1fa7bb6,L1,Llama4 applies topk weight before MoE calculation,derived,PR body,llama4 applies the topk weight before MoE calculation
+L1-E-a589a07167,L1,DeepSeek correction bias tensor is float32,derived,PR body,"e_score_correction_bias, which need to be float32"
+L1-E-c9e8613c97,L1,Fused padding is enabled only for sorted_ids buffers <=4096,derived,fused_moe.py,fuse_sorted_ids_padding = sorted_ids.shape[0] <= 4096
+L1-E-85486b6f6f,L1,FlashInfer kernel requires 8-64 tokens per CTA tile,derived,ep_moe/layer.py,Cap to 8-64 tokens per CTA tile
+L1-E-a9dd3ec3e9,L1,Shared expert replacement expects last routed slot to have the minimal score,derived,PR body,guarantee the last expert in the list has the smallest score
+L1-E-9b9e82539b,L1,int offset or stride can overflow for large M/N/K/groups,derived,PR body,Using `int` as offset or stride may sometimes cause OOB
+L1-E-a5f5ab4030,L1,Filtered EP expert ids are encoded as -1,derived,PR body,"In EP, we set the expert ids for filtered experts as -1"
+L1-E-e179e0b797,L1,EP wrapper has num_experts + 1 ids including filtered experts,derived,fused_moe.py,We have num_experts + 1 ids in total
+L1-E-aa4c66b564,L1,FlashInfer blockscale fp8 requires renormalized routing and no fused shared experts,derived,fused_moe_triton/layer.py,Renormalize is required for flashinfer blockscale fp8 moe
+L1-E-c8d3a402c1,L1,EPMoE currently does not apply routed_scaling_factor itself,derived,PR body,epmoe won't apply *routed_scaling_factor by itself
+L1-E-1fe691a429,L1,N or K may not be multiples of 128 in CPU FP8 block quantize,derived,PR body,when N or K is not multiples of 128
+L1-E-f642524fd9,L1,Gate-output scaling is only for paths that need routed_scaling_factor before combine,derived,PR body,routed_scaling_factor is fused into moe_sum_reduce
+L1-E-d9def43dcd,L1,"Optimization targets H100, H200 and H800 where Tensor Core MMA time shrinks",tested_only,PR body,"When migrating from H20 to H100, H200, and H800"
+L1-E-3435a24e81,L1,Colocated RL releases model-init GPU allocations before weight reload,derived,PR body,release all GPU allocations within model init
+L1-E-915140fd18,L1,FlashInfer TRTLLM MoE requires FP4 quantization and compatible FlashInfer import.,derived,915140fd18:fused_moe_triton/layer.py,Use FP4 variant when FP4 quantization is enabled
+L1-E-4373df5525,L1,FlashInfer BF16 MXFP4 path receives bf16 activations.,derived,4373df5525:mxfp4.py,assert x.dtype == torch.bfloat16
+L1-E-b4c9f38a76,L1,Blackwell DeepGEMM path needs TMA-aligned scale tensors.,derived,PR body,absence of get_col_major_tma_aligned_tensor
+L1-E-591c232f7c,L1,Scaling gate output is optional and explicitly selected.,derived,591c232f:moe_fused_gate.cu,if (apply_routed_scaling_factor_on_output)
+L1-E-137e75daa1,L1,Ascend DeepEP low-latency path is limited to W8A8 int8.,tested_only,PR body,only support W8A8 int8 quant method currently
+L1-E-5190ba7f42,L1,Quantization kernel can handle alignment to padded hidden size.,derived,5190ba7:mxfp4.py,"mxfp8_quantize( x, False, alignment=self.hidden_size )"
+L1-E-5f5b3b2449,L1,"When gathered buffers are required, non-padded tokens are sharded evenly by attention TP rank.",derived,5f5b3b2449f9:cuda_graph_runner.py,tokens_per_rank = bs // self.attn_tp_size
+L1-E-13c48dcf88,L1,Shared experts are divided so later global scaling does not scale shared outputs.,derived,13c48dc:sgl_kernel/moe.py,intended to cancel out later
+L1-E-4fc09e0df0,L1,Optimized kernel targets NVIDIA Blackwell GPUs.,tested_only,PR body,Hardware: NVIDIA B200 (Blackwell GPU)
+L1-E-eff4eb3fdd,L1,"Optimization applies when FlashInfer Cutlass MoE, DP attention, and dp_size == ep_size are enabled.",derived,PR body,dp_size == ep_size must all be true
+L1-E-0fc54b971e,L1,Optimized instance is gated by H20 device and tuning env var.,derived,0fc54b:fp8_blockwise_moe_kernel.cu,is_h20 && tuning_H20_kernel
+L1-E-c6c379ab31,L1,AMD warp size should come from C10_WARP_SIZE after header refactor.,derived,PR body,WARP_SIZE=C10_WARP_SIZE defined in include/utils.h
+L1-E-a91e90d9a3,L1,Only supported top-k implementations may receive the fused scaling flag.,derived,a91e90d:topk.py,assert not apply_routed_scaling_factor_on_output
+L1-E-18da2c96ec,L1,FlashInferFP4MoE supports only modelopt_fp4 quantized methods.,derived,PR body,only supports the modelopt_fp4 quantized method
+L1-E-dae9a80f43,L1,MXFP4 intermediate size must be divisible by 32-element blocks.,derived,dae9a80f43e8:gpt_oss.py,must be divisible by {mxfp4_block=}
+L1-E-fda4792620,L1,small-M branch selected by a.size(0) <= 2048,derived,fda47926208e:fp8_blockwise_moe_kernel.cu,if (a.size(0) <= 2048)
+L1-E-5ad296bda1,L1,2D parallel uses even number of CPU cores,derived,5ad296bda140:common.h,use even number of CPU cores
+L1-E-1db649ac02,L1,old DeepGEMM compile mode must be restored after precompile,derived,1db649ac0204:compile_utils.py,deep_gemm.set_compile_mode(old_compile_mode)
+L1-E-3fa62da78c,L1,custom runners implement dispatch/combine/core split,derived,PR#9269 body,dispatch -> pre-permute -> core runner -> post-permute -> combine
+L1-E-2286e85e77,L1,a_scale supplied through alpha_ptr replaces constant epilogue alpha,derived,2286e85e7758:w4a8_grouped_mm_c3x.cuh,fusion_args.alpha_ptr = a_scales.data_ptr<float>()
+L1-E-3df05f4d6a,L1,masked_m bound must not exceed m,derived,3df05f4d6ab8:flashinfer_cutedsl_moe.py,Assumes max(masked_m) <= m
+L1-E-258d02c86d,L1,fused gate input and correction bias must share dtype,derived,258d02c86d93:moe_fused_gate.cu,input and bias should have the same dtype
+L1-E-059c13de5c,L1,FlashInfer TRTLLM FP4 correction bias must be BF16 at allocation time,derived,059c13de5cba:deepseek_v2.py,correction_bias_dtype = ( torch.bfloat16
+L1-E-616a3e20df,L1,"input is contiguous [token_num, topk_num, hidden_dim]",derived,616a3e20df5f:moe_sum_reduce.cu,"input must be a 3D tensor like [token_num, topk_num, hidden_dim]"
+L1-E-0b9dfba787,L1,low-latency masked_m equals m after this change,derived,0b9dfba78700:flashinfer_cutedsl_moe.py,Assumes max(masked_m) == m
+L1-E-5e786cca3a,L1,down GEMM overlap starts after optional CUDA event recording,derived,5e786cca3a9a:flashinfer_cutedsl_moe.py,if down_start_event is not None:
+L1-E-12d6818380,L1,hidden_size must be divisible by chosen BLOCK_D,derived,12d681838048:ep_moe/kernels.py,assert hidden_size % BLOCK_D == 0
+L1-E-baee08601b,L1,AITER moe_sorting requires topk_weights to be FP32.,derived,quark_moe.py diff,requires topk_weights to be FP32
+L1-E-3c06b673af,L1,DeepGEMM runner supports silu activation path.,derived,deep_gemm.py diff,"assert self.config.activation == ""silu"""
+L1-E-8fdcd98efe,L1,"Input is shaped [num_tokens, topk, hidden_size].",derived,moe_sum.cu diff,"input,   // [num_tokens, topk, hidden_size]"
+L1-E-cb8ed2c09a,L1,Combine receive must not overlap current stream work.,derived,deepep.py diff,overlap_args.stream.wait_stream
+L1-E-a40229f6f8,L1,Mooncake EP normal mode is not supported yet.,derived,mooncake.py diff,Normal mode is not supported for Mooncake EP yet.
+L1-E-825432fce6,L1,Cutlass W4A8 path requires int8 w1_q and w2_q.,derived,cutlass_w4a8_moe.py diff,assert w1_q.dtype == torch.int8
+L1-E-69fe3c9726,L1,Replay must use the same DeepEP mode captured for the graph.,derived,cuda_graph_runner.py diff,Record DeepEP mode used during capture
+L1-E-ce399e154c,L1,SBO is not implemented for NextN.,derived,ep_moe/layer.py diff,SBO is not yet implemented for NextN
+L1-E-904655c5fd,L1,Elastic EP requires CUDA or CPU device only.,derived,elastic_ep.py diff,Only CUDA and CPU support elastic ep now.
+L1-E-62eff37ba1,L1,Triton-kernel runner expects TritonKernelTopKOutput.,derived,triton_kernels.py diff,Triton-kernel runner expects TritonKernelTopKOutput
+L1-E-14203432b4,L1,int32 hidden_states_scale is valid only with DEEPGEMM_SCALE_UE8M0.,derived,ep_moe/layer.py diff,and hidden_states_scale.dtype == torch.int32
+L1-E-13bf565d60,L1,W4AFP8 low-latency requires BF16 dispatch.,derived,ep_moe/layer.py diff,W4AFP8 does not support FP8 dispatch
+L1-E-6371f7af27,L1,Marlin MoE requires a and b_scales both half or both bfloat16.,derived,PR body,a and b_scales are both half or both bfloat16
+L1-E-fdd00295b5,L1,DeepEP backend expects a standard topk output.,derived,PR body,DeepEP backend expects a standard topk output
+L1-E-77225d602a,L1,"FlashInfer TRTLLM MoE requires modelopt_fp4, modelopt_fp8 or fp8 quantization.",derived,server_args.py diff,"modelopt_fp4, modelopt_fp8 or fp8 quantization is required"
+L1-E-d2b8c4123e,L1,TMA path applies only when down config has USE_TMA and runtime supports it.,derived,fused_moe.py diff,"down_config.pop(""USE_TMA"", False)"
+L1-E-c143f416ce,L1,FlashInfer FP8 MoE kernel currently only supports FP8 quantization input.,derived,PR body,only support fp8 quantization input
+L1-E-7a21d8b276,L1,Symmetric memory is incompatible with DeepGEMM in this change.,tested_only,PR body,symmetric memory is not compatbile with deepgemm
+L1-E-dbcf85b7f0,L1,FP8 Cutlass MoE is supported only with ep_size == 1.,derived,server_args.py diff,FP8 Cutlass MoE is only supported with ep_size == 1
+L1-E-44f594d832,L1,routed_scaling_factor None is equivalent to 1.0.,derived,fused_moe.py diff,if routed_scaling_factor is None
+L1-E-7ea5b42d70,L1,Expert specialization path requires SM90 support.,derived,cutlass_moe.py diff,if is_sm90_supported() and es_up
+L1-E-a1cb717d0b,L1,Kimi fast path assumes 384 experts and one expert group.,derived,topk.py diff,num_experts == 384 and num_expert_group == 1
+L1-E-4edb240112,L1,Scaling inside fused_marlin_moe is equivalent to model-side multiply.,derived,deepseek_v2.py diff,final_hidden_states *= self.routed_scaling_factor
+L1-E-1d3d42bda0,L1,Kimi K2 fused gate assumes exactly 384 experts.,derived,kimi_k2_moe_fused_gate.cu diff,static constexpr int NUM_EXPERTS = 384
+L1-E-820e13c9c1,L1,Kimi kernel remains specialized to 384 experts.,derived,kimi_k2_moe_fused_gate.cu diff,static constexpr int NUM_EXPERTS = 384
+L1-E-e72cf13693,L1,Fast topkGatingSigmoid expects power-of-two expert count and small k.,derived,moe_topk_sigmoid_kernels.cu diff,NUM_EXPERTS must be power of 2
+L1-E-bfcf15a129,L1,Fused padding path is valid for sorted_ids larger than previous 4096 threshold.,derived,moe_align_block_size.py diff,"fuse_sorted_ids_padding, True"
+L1-E-1b48e1b974,L1,DeepGEMM runner still requires gated silu.,derived,deep_gemm.py diff,assert self.config.is_gated
+L1-E-91e8dc371a,L1,FlashInfer TRTLLM FP4 path requires routing_method_type for adapted MoE layers.,derived,layer.py,routing_method_type is not None
+L1-E-6330d6641b,L1,x_sf presence identifies FP4-packed hidden states.,derived,modelopt_quant.py,"If x_sf is not None, x is FP4 packed"
+L1-E-7ab548ef64,L1,DeepGEMM MoE weights/scales must be ue8m0 for supported FP8 kernels.,derived,fp8.py,need be requantized to ue8m0
+L1-E-848ee57067,L1,Autotune only runs on CUDA FlashInfer/TRTLLM backends with capability major >= 9.,derived,848ee57067f5:model_runner.py,if major < 9: return False
+L1-E-3339c81072,L1,FlashInfer TRTLLM FP4 routing logits are expected as float32.,derived,layer.py,router_logits = router_logits.to(torch.float32)
+L1-E-3de09aadbc,L1,Generated kernels are specialized by activation dtype and quantization layout.,derived,generate_kernels.py,kernel_bf16_ku4
+L1-E-3dabd609fb,L1,scoring_func selects sigmoid kernel path only for supported routing semantics.,derived,topk.py,support the `scoring_func` parameter
+L1-E-c5947ecd85,L1,Small-batch path is selected when token count is less than expert count.,derived,PR body,number of tokens is less than the number of experts
+L1-E-20aad5b5ab,L1,Hopper WGMMA block_m 64 makes TBO inefficient at small decode batch size.,derived,PR body,"on the Hopper architecture, the WGMMA block_m is 64"
+L1-E-879ddb09c3,L1,Invalid experts are represented by expert_map entries equal to -1.,derived,879ddb09c3b7:moe_align_sum_kernels.cu,if (expert_id == -1) continue
+L1-E-879ddb09c3,L1,Separate fill threadblock is safe because the main count kernel does not read sorted_token_ids.,derived,879ddb09c3b7:moe_align_sum_kernels.cu,This is safe since the current kernel does not use sorted_token_ids.
+L1-E-8642dbe416,L1,Marlin fused runner supports only SiLU activation.,derived,marlin.py,Only SiLU activation is supported.
+L1-E-e54307f26a,L1,"Under DeepEP dp<tp, local DP token size overestimates tokens.",derived,PR body,tokens are sharded across the DP group under DeepEP
+L1-E-5b5571a8da,L1,"When no routed scaling factor is supplied, scale 1.0 preserves semantics.",derived,fused_marlin_moe.py,if routed_scaling_factor is None
+L1-E-d7ed8a8c24,L1,Requires flashinfer-python at least 0.5.3.,derived,PR body,flashinfer-python >= 0.5.3
+L1-E-a9ce1623cd,L1,In-place masking is safe because routing scores are unused afterward.,derived,PR body,safe since these inputs are not used after kernel execution
+L1-E-b399e3ac4f,L1,Fake implementation returning empty_like(hidden_states) matches fused_marlin_moe output shape.,derived,fused_marlin_moe.py,return torch.empty_like(hidden_states)
+L1-E-56d12b4aea,L1,Invalid or absent experts must still write deterministic indices before moe_align_block_size consumes them.,derived,PR body,garbage values that propagate to `moe_align_block_size_kernel`
+L1-E-793c96c3d2,L1,Optimization targets DeepSeek-V3-0324 W4AFP8 decode batches below 32.,derived,PR body,when decode batch size < 32
+L1-E-ef908aeb40,L1,NVFP4 weight scales must follow a per-16 block layout for FlashInfer TRTLLM backend.,derived,PR body,weight scale handling ensures per-16 block layout
+L1-E-9d0347b33a,L1,PCG MoE wrapper primarily supports standard top-k output.,derived,PR body,we primarily support standard top-k output
+L1-E-fc05acc2c7,L1,Fused w13 tensor consists of [w1; w3] halves along the sharded dimension.,derived,fc05acc2c7b7:fused_moe_triton/layer.py,For fused w13 weights [w1; w3]
+L1-E-061f41affc,L1,filter_expert uses expert_id == -1 to mark routes whose activation should be skipped.,derived,PR body,routed to masked experts (`expert_id == -1`)
+L1-E-f6f7af4068,L1,"Torch dependency supports custom ops, so supports_custom_op is always true and removable.",derived,PR body,torch version in sglang dependency is greater than 2.4.0
+L1-E-24b30f7757,L1,FlashInfer TRTLLM runner supports SiLU and combined output path only.,derived,24b30f7757:flashinfer_trtllm.py assertions,Only silu is supported
+L1-E-ee4d2287ab,L1,"SwapAB is enabled only for H20 SM90 and block shapes M<64,N>=64.",derived,ee4d2287ab:fused_moe_triton_kernels.py,BLOCK_SIZE_M < 64 and BLOCK_SIZE_N >= 64
+L1-E-34cd32fe30,L1,Fused path expects gate||up layout with doubled input width.,derived,34cd32fe302f:nvfp4_experts_quant.cu,expects input with gate||up layout
+L1-E-67b61a4e8d,L1,"SwapAB path is only enabled on CUDA H20 SM90, not HIP.",derived,67b61a4e:fused_moe_triton_kernels.py,if not _is_cuda: return False
+L1-E-2c2c4e446b,L1,FlashInfer A2A dispatch requires at least one token per rank.,derived,2c2c4e:flashinfer.py,moe_a2a.dispatch requires at least one token
+L1-E-c35aa0238c,L1,INT4 W4A8 VNNI CPU path expects four-dimensional packed weights.,derived,c35aa0238:sgl-kernel/csrc/cpu/moe.cpp,"CHECK_DIM(4, w1)"
+L1-E-368936a62b,L1,XPU MoE path is experimental and gated by SGLANG_USE_SGL_XPU.,derived,PR#13561 body,This is an experimental feature
+L1-E-fa0ef6e4f7,L1,B is persistent weight tensor suitable for descriptor cache; A is not cached because it changes per call.,derived,PR#18782 body,B is a persistent weight tensor
+L1-E-5ddc84e33e,L1,InterNodeV1LL is beneficial only for token counts per rank below threshold.,tested_only,PR#18437 body,better performance than the existing `InterNodeV1` when the number of tokens per rank is below 256
+L1-E-0d30896015,L1,SM12x variants should use the same NVFP4 MoE dispatch path for getSMVersion >= 120.,tested_only,PR#18750 body,Changed `== 120` to `>= 120`
+L1-E-fbb6098487,L1,Low-latency mode selects MoRI AsyncLL kernel type.,derived,fbb60984872e:moriep.py,EpDispatchCombineKernelType.AsyncLL
+L1-E-a0c7081695,L1,FlashInfer autotuner expects the first dimension of MoE tensors to be num_tokens.,derived,PR#35088 body,expects the first dimension of the MoE tensors to be num_tokens
+L1-E-60eeef7370,L1,TBO support depends on MORI mode and server argument combination.,derived,PR#19216 body,The relation between sglang arguments and the underlying configs are shown
+L1-E-f1088beb6a,L1,npu_moe_init_routing_v2 expert_tokens output uses group_list_type=1 for grouped matmul.,derived,f1088beb:unquant.py,group_list_type=1
+L1-E-af3eccc9ab,L1,FlashInfer trtllm_fp4_block_scale_moe supports unpadded hidden-size output.,derived,PR body,has supported output with unpadded hidden dim
+L1-E-9469ad089b,L1,CUDA graph stability requires in-place weight update where possible.,derived,PR body,in-place weight update to keep CUDA graph stable
+L1-E-ee5ccde0ad,L1,Fused sum/all-reduce is only used for topk > 2 and non-GPTQ/AWQ kernels.,derived,fused_moe.py diff,curr_topk_ids.shape[1] > 2
+L1-E-46dced64ea,L1,triton_kernels MXFP4 intermediate partition must align to 64.,derived,mxfp4.py diff,triton_kernels_padding_alignment = 64
+L1-E-84aaa69795,L1,AITER dsv3 router logits are bfloat16 on this path.,derived,PR body,aiter_dsv3_router_gemm returns logits in bfloat16
+L1-E-759700c808,L1,block_k=128 is largest power-of-two fitting SM120 shared-memory limit.,derived,PR body,largest power-of-two tile that fits
+L1-E-5a7c1b8ec6,L1,Custom swiglu_quant can run with need_quant=False for BF16 path.,derived,fused_moe_method_npu.py diff,need_quant=False
+L1-E-9991debde3,L1,NIXL low-latency mode requires num_max_dispatch_tokens_per_rank and evenly sharded experts.,derived,nixl.py diff,assert num_experts != -1 and num_experts % group.size() == 0
+L1-E-af2807e146,L1,Warp size is 32 in the CUDA alignment kernel.,derived,moe_lora_align_kernel.cu diff,#define WARP_SIZE 32
+L1-E-0eea80bc00,L1,MTP MoE BF16 weights need dequantized BF16 activations when MORI dispatch quantizes main-model activations.,derived,PR body,MTP layer's MoE weights are BF16
+L1-E-574dbe23b2,L1,Kernel call must be outside symmetric_memory context to avoid graph break.,derived,PR body,Fixed by move the kernel call outside the context manager
+L1-E-385a35bd11,L1,is_nextn metadata must be passed only for MORI backend.,derived,PR body,only passing `is_nextn` ... when `a2a_backend.is_mori`
+L1-E-f0d7a3f427,L1,Each dual-stream MORI op must be paired with its corresponding stream.,derived,PR body,pair the mori op to according stream
+L1-E-532470bcca,L1,Mode 2 selects dispatch_ffn_combine rather than dispatch_gmm_combine_decode.,derived,PR body,When SGLANG_NPU_FUSED_MOE_MODE is set to 2
+L1-E-61a902ce88,L1,MXFP4 weights are semantically float4_e2m1fn_x2 even when stored as uint8.,derived,PR body,weights are stored as `torch.uint8` but semantically MXFP4
+L1-E-af62bd9486,L1,MXFP4 CPU path requires AVX512 capability; scalar unpack path is not implemented.,derived,af62bd94868b:gemm_fp8.cpp,"TORCH_CHECK(false, ""unpack_B: scalar path not implemented!"")"
+L1-E-7119d59747,L1,K dimension is divisible by the FP8 scale block size,derived,diff,assert len(x.shape) == 3 and x.size(2) % K_SCALE_BLOCK_SIZE == 0
+L1-E-991f3aa5b3,L1,FP4 path is gated so existing INT4/INT8/FP8 paths are unaffected,derived,PR body,All kernel changes are gated by `w_type == kFE2M1f`
+L1-E-44e5d35703,L1,Input activation tensor second dimension is twice hidden size,derived,diff,"RuntimeCheck(hidden_size * 2 == D_in.unwrap(), ""invalid activation dimension"")"
+L1-E-db30a63a13,L1,Large-expert v2 path is bounded at 4096 experts,derived,PR body,A `TORCH_CHECK` enforces the 4097 upper bound.
+L1-E-db30a63a13,L1,Warp-level scans assume 32 lanes,derived,diff,#define WARP_SIZE 32
+L1-E-57ffc55fb6,L1,DeepEP treats negative local shared marker as ignored invalid expert,derived,PR body,DeepEP ignores `expert_id < 0`
+L1-E-57ffc55fb6,L1,Shared weight compensates later routed scaling,derived,diff,Shared weight: 1 / routed_scaling_factor
+L1-E-1df9f4e2f6,L1,User-configured preallocation must match MoriEP receive-token needs,tested_only,PR body,allow user to configure the mori ep token preallocation
+L1-E-c554dc5c64,L1,CuteDSL moe_sort handles EP global expert IDs internally,derived,PR body,CuteDSL's `moe_sort` handles EP with global expert IDs internally
+L1-E-18f41ac427,L1,K dimension is divisible by FP8 scale block size,derived,diff,assert x_scale.size(2) == x.size(2) // K_SCALE_BLOCK_SIZE
+L1-E-f4f9e68189,L1,AITER MoE requires weights and scales aligned to a fixed number,derived,PR body,Aiter MoE requires weights and scales to align with a fixed number
+L1-E-657945c338,L1,Optimization applies when EP size equals DP attention size and DeepEP/FP4 allgather are inactive,derived,diff,get_moe_expert_parallel_world_size() == get_attention_dp_size()
+L1-E-b2af34be54,L1,Qwen3.5 requires per-token shared weights from learned shared_expert_gate,derived,PR body,Qwen3.5 requires per-token shared weights from learned `shared_expert_gate`
+L1-E-8c190f6b91,L1,Configured max input tokens must be at least totalRecvTokenNum,derived,PR body,must not be smaller than the actual received token count
+L1-E-45232a454e,L1,Triton routing uses BLOCK_E as next power of two over expert count.,derived,45232a454e4c:gemma4.py,BLOCK_E = triton.next_power_of_2(E)
+L1-E-1cff871c67,L1,Compile-time barrier overhead is avoided at runtime,derived,PR body,only active during the compile stage to avoid extra overhead at runtime
+L1-E-917d2aa1dc,L1,Triton/DeepGEMM/Marlin runners remap topk_ids to local IDs before base and LoRA kernels index weights,derived,PR body,active runner remaps to local IDs
+L1-E-d9c72bdd2b,L1,FlashInfer TRTLLM backend can safely ignore packed -1 expert ids without explicit zero masking,unclear,diff,Removed masking of packed tokens with -1 expert ids.
+L1-E-74c2e5bacd,L1,Port assumes MUSA warp-size style collectives with 32 lanes,derived,diff,static constexpr int WARP_SIZE = 32
+L1-E-b35213be11,L1,MUSA SM detection through torchada is compatible with torch.cuda.get_device_capability,derived,PR body,works through torchada
+L1-E-6d03861476,L1,Kernel supports one expert group and topk group equal to one,derived,diff,"This kernel only supports num_expert_group=1, topk_group=1"
+L1-E-6d03861476,L1,Top-k is bounded at 8 and experts at 512,derived,diff,RuntimeCheck(topk <= MAX_TOPK
+L1-E-fb272d27db,L1,Only models using sigmoid scoring with correction bias use the AITER route,derived,PR body,models using sigmoid scoring with correction bias
+L1-E-82254bd9c5,L1,Zero-token activation calls must return without launching the kernel,derived,diff,if (num_tokens == 0) return;
+L1-E-c7878dbb6d,L1,HIP/XPU unfiltered activation is harmless because downstream down kernel zeros filtered rows before reading input,derived,PR body,writing real output to those rows is harmless
+L1-E-ddcacaf1bd,L1,All lanes in full-warp shuffle mask must execute warp_sum_f32 together,derived,diff,All lanes named by the full-warp shuffle mask must execute warp_sum_f32 together
+L1-E-8327270c72,L1,Non-gated FlashInfer TRTLLM kernels need 128 alignment,derived,PR body,non-gated needs 128 alignment
+L1-E-08699bb1b2,L1,NPU grouped matmul does not support INT8 input with BF16 weights,derived,PR body,npu_grouped_matmul does not support INT8 input with BF16 weights
+L1-E-3f7c95d6cc,L1,SM100 expert-specialized path supports at most 1024 experts.,derived,diff,num_experts <= 1024
+L1-E-692979a8d9,L1,SDMA mode requires MORI_ENABLE_SDMA runtime flag.,derived,diff,MORI_ENABLE_SDMA
+L1-E-71e89e9003,L1,MUSA top-k pads expert width to a power-of-two block.,derived,diff,mask_expert = offset < num_experts
+L1-E-108bfd8b6a,L1,AITER runner does not support no_combine mode.,derived,diff,no_combine=True is not supported by AITER
+L1-E-4a279d9c36,L1,CPU token counts preserve existing DP slice semantics.,derived,PR body,preserving the existing indexing semantics
+L1-E-3b2c730320,L1,Alt-stream overlap requires AsyncLL low-latency mode to avoid CU contention.,derived,diff,Pass --deepep-mode low_latency
+L1-E-35870d55ac,L1,HashTopK uses one warp per token and lanes below topk handle routed experts.,derived,diff,if (warp_id >= num_tokens) return
+L1-E-8e2142c15a,L1,Downstream TRTLLM MoE ignores or masks expert id -1 padding slots.,derived,PR body,expert ID -1
+L1-E-e9dea79755,L1,LoRA virtual expert count including sentinel must be <=8192.,derived,diff,num_experts <= 8192
+L1-E-e9dea79755,L1,JIT path maps -1 sentinel to bucket 0 using +1 offset convention.,derived,diff,-1 -> bucket 0
+L1-E-66a9234246,L1,FP8 dispatch scale groups have 128 elements; MXFP4 groups have 32.,derived,diff,FP8_BLOCK_SIZE = 128
+L1-E-409d350fb6,L1,Symmetric-memory registration group must match the collective communication group.,derived,PR body,the two groups are inconsistent
+L1-E-28758d37dd,L1,SM90 mixed-input helpers must exist in FlashInfer or backend is gated off.,derived,diff,_FI_HAS_SM90_CUTLASS_MXFP4 = False
+L1-E-37f18438c5,L1,MXFP4 Marlin E8M0 scale path is only instantiated for BF16 activations.,derived,diff,only instantiated for bfloat16 activations
+L1-E-c701a08765,L1,Expert ids map to ranks by integer division with experts_per_rank.,derived,diff,target_rank = expert_id // experts_per_rank
+L1-E-c701a08765,L1,Local rank gets a 1.1x preference in waterfill tie-breaking.,derived,diff,local-rank preference = 11/10
+L1-E-9e00b7ca95,L1,"ZBAL takes control of visible memory, so get_mem_info must be mocked.",derived,PR body,zbal already take control all visible memory
+L1-E-0c19540550,L1,triton_kernels 3.6.0 routing wrapper does not support simulated_ep != 1.,derived,diff,simulated_ep routing is not supported
+L1-E-8d5b347edd,L1,Qwen3.5 DeepEP low-latency dispatch requires kNumMaxTopK >= 10.,tested_only,PR body,needs a build with `kNumMaxTopK >= 10`
+L1-E-54221dd998,L1,Previous layer MoE output is stale by the time current MoE kernel runs.,derived,PR body,is stale by the time the MoE kernel runs
+L1-E-bda01d2435,L1,mega_moe_pre_dispatch JIT kernel accepts int32 topk_ids but rejects int64.,derived,PR body,only accepts `int32`
+L1-E-be3c425788,L1,Invalid -1 DeepEP topk ids are rewritten to sink slot num_local_experts for AITER.,derived,PR body,rewrites the invalid ``-1`` topk_ids
+L1-E-7158a255eb,L1,DeepEPLLDispatchOutput has no topk_output; reads must stay branch-local.,derived,PR body,has no `topk_output` attribute
+L1-E-6a21dd20b1,L1,biased_topk paths should return logical expert ids until _post_process_topk_ids applies EPLB once.,derived,PR body,returning logical expert ids
+L1-E-1f9eda4ea1,L1,Target case is unquantized DeepEP low-latency MoE on non-NPU/non-HIP with deep_gemm runner.,derived,PR body,narrow unquantized DeepEP LL case
+L1-E-a080358cac,L1,"Dispatcher dtype can be inferred from quant_config, input_global_scale, and backend unless explicit override is set.",derived,PR body,Automatic detection logic
+L1-E-878e6b8886,L1,"When dp_size==1 or SP is active, x.shape[0] is the correct post-scatter token count for workspace sizing.",derived,PR body,uses `x.shape[0]`
+L1-E-745abd6cc0,L1,No-combine mode must return per-expert outputs before applying topk_weights and sum.,derived,diff,if no_combine: return c2
+L1-E-78cb38ed5e,L1,Per-token activation path should ignore checkpoint fp32 input activation scale.,derived,PR body,ignore fp32 input activation scale
+L1-E-2df9e8b4b3,L1,FlashInfer >=0.6.8 accepts BF16 router_logits,derived,PR body,flashinfer ≥ 0.6.8 ... accept BF16 `router_logits` directly
+L1-E-e27d4fb70f,L1,fast path covers power-of-two expert counts up to 512,derived,diff,num_experts > 512
+L1-E-59cad671e2,L1,Waterfill with fused shared experts requires ModelRunner preparation before HashTopK forward,derived,hash_topk.py diff,must be prepared by ModelRunner before forward
+L1-E-6c8128650e,L1,FlashInfer CUTLASS MoE requires intermediate_size_per_partition multiple of 16,derived,PR body,requires intermediate_size_per_partition to be a multiple of 16
+L1-E-716e670d3d,L1,speculative decoding may require cuda_graph_max_bs * speculative_num_draft_tokens tokens,derived,server_args.py diff,num_tokens_per_bs is speculative_num_draft_tokens under speculative decoding
+L1-E-524ba10eda,L1,SM120 lacks TMEM/tcgen05 and uses Triton mma.sync fallback,derived,mxfp4_moe_sm120_triton.py,No TMEM/tcgen05 — uses mma.sync.aligned via Triton
+L1-E-5700790c05,L1,CP-only fused MoE path asserts attn_dp_size == 1 and attn_tp_size == 1,derived,PR body,asserts `attn_dp_size == 1` and `attn_tp_size == 1`
+L1-E-ff642ed936,L1,Kimi fused gate only supports topk <= 8,derived,PR body,Added `TORCH_CHECK(topk <= 8)`
+L1-E-4226a6f13a,L1,AITER GPT-OSS MXFP4 kernels expect separated gate/up layout,derived,mxfp4.py diff,"expect the *separated* layout [gate_0..gate_{N-1}, up_0..up_{N-1}]"
+L1-E-5ae8d286d2,L1,expert count must be <=1024 for fused Gemma4 routing,derived,gemma4_fused_ops.py,gemma4_fused_routing only supports E<=1024
+L1-E-f790674ad8,L1,DeepGEMM masked GEMM only returns block_m/threshold when down-gemm overlap args are passed,derived,PR body,"only returns (block_m, threshold) when it is run with down-gemm overlap"
+L1-E-aa510bda45,L1,"XPU direct topk_sigmoid path requires one group, no fused shared experts, experts<=256, topk<=8",derived,topk.py diff,num_experts <= 256 and topk <= 8
+L1-E-e76d36214b,L1,TRTLLM-GEN MoE kernels are SM100-only,derived,server_args.py diff,trtllm-gen MoE kernels are SM100-only
+L1-E-c9f582a272,L1,experimental path is opt-in and default behavior remains byte-identical,derived,PR body,default **off** ⇒ upstream behavior is byte-identical
+L1-E-9da88e32e0,L1,RoutingMethodType integer values match FlashInfer 0.6.12 and 0.6.11,derived,PR body,verified against **0.6.12**
+L1-E-2495c02c2c,L1,CUDA graph replay uses backend-specific can_run/capture/replay protocol.,derived,PR body,Each method delegates strategy-specific behavior to `self.backend`.
+L1-E-01f10acd06,L1,Initial online NVFP4 scope is Blackwell GPUs and FlashInfer TRTLLM MoE backends.,derived,PR body,"Blackwell GPUs only, MoE only"
+L1-E-0ae27405d0,L1,MORI local expert count is a GPU tensor consumed through DeePEP-style recorder hook.,derived,PR body,mori's count is a GPU tensor
+L1-E-b8376aebd0,L1,AITER FP4 MoE kernel requires per-partition intermediate size to be 256-aligned.,derived,PR body,requires the per-partition intermediate size to be 256-aligned
+L1-E-f23f48df98,L1,EP fixed-geometry FlashInfer A2A requires identical runtime_max_tokens_per_rank on every rank.,derived,PR body,fixed-geometry `MoeAlltoAll`
+L1-E-82eedd5bd0,L1,use_fabric is only valid when Buffer exposes the keyword and FlashInfer reports fabric support.,derived,PR body,when FlashInfer reports MNNVL fabric support
+L1-E-d1a39b0c74,L1,Deferred finalize path requires BF16 gemm2_out and top-k expert weights.,derived,moe_finalize_fuse_shared.py diff,assert gemm2_out.dtype == torch.bfloat16
+L1-E-60d4bd4c70,L1,AITER dynamic_per_group_scaled_quant_kernel is not implemented for dtype fp4x2.,derived,PR body,not implemented for dtype fp4x2
+L1-E-171037c3e7,L1,Deterministic batch-invariant mode requires identical final reduce implementation across batch sizes.,derived,PR body,different final reduce implementations
+L1-E-441b75ee69,L1,"Some NVFP4 MoE checkpoints store w1/w3 global scales as [num_experts, 2].",derived,PR body,"stored as `[num_experts, 2]`"
+L1-E-63df86f5e7,L1,Identity-only expert-location map is not safe to index with arbitrary padded topk_ids.,derived,PR body,not safe to index it with arbitrary `topk_ids`
+L1-E-92b42c8d8a,L1,Fused LPLB backend requires CUDA SM >= 9.0 and Math-DX availability.,derived,PR body,"no CUDA, SM < 9.0, missing Math-DX"
+L1-E-9c53853ea3,L1,Routed FlashInfer TRTLLM requires packed int32 topk id/weight representation.,derived,diff,PackTopkIds.execute
+L1-E-66ac385f52,L1,BF16 dispatch must use payload dtype params_dtype and no scale dimension.,derived,PR body,"data_type=params_dtype, scale_dim=0"
+L1-E-6309fb9abb,L1,AITER MoE/MXFP4 indexer kernels read topk_ids before zero-weighted sum.,derived,PR body,read `topk_ids` directly to index expert weight tables
+L1-E-792cb3a5d0,L1,JIT EP activation shape requires D / 8 >= E for the asserted path.,derived,PR body,64 < 128
+L1-E-05ee93c44f,L1,trtllm_fp8_block_scale_moe accepts FP32 correction bias directly.,derived,PR body,kernel can actually accept fp32 directly
+L1-E-c7397de571,L1,GPT-OSS Marlin activation requires clamp_limit when gemm1_alpha is set.,derived,fused_marlin_moe.py diff,GPT-OSS Marlin activation requires clamp_limit.
+L1-E-1115373668,L1,AITER CK a16w16 MoE supports unquantized intermediate partitions only when divisible by 128.,derived,PR body,intermediate_size_per_partition % 128 == 0
+L1-E-8dc27f6326,L1,With-bias triton_kernels MoE weights must be BF16 or FP4.,derived,PR body,assert each of `w1`/`w2` is `torch.bfloat16` or `FP4`
+L1-E-7c23d2255a,L1,MXFP8 Triton runner branch is guarded off by default.,derived,PR body,guarded by `use_mxfp8=False` default
+L1-E-e0dc8b7137,L1,Fused padded-row mask requires row-major contiguous 2D tensors with contiguous columns.,derived,topk.py diff,assumes a row-major 2D tensor
+L1-E-cedb43d522,L1,MNNVL requires same fabric availability checked before use_fabric.,derived,PR body,when the same fabric support check
+L1-E-e4bf0043fe,L1,"RoutedExpertsCapturer is process-global and target-sized, so draft workers must not write it.",derived,PR body,process-global singleton: one target-sized buffer
+L1-E-de2d01c8da,L1,"AITER path has already folded routed_scaling_factor into routed weights, so shared expert weight must be 1.0.",derived,topk.py diff,shared-expert weight on the aiter path
+L1-E-3d3a7ec031,L1,AITER biased_grouped_topk folds routed_scaling_factor into routed weights and forward_deepep skips post-MoE multiply.,derived,PR body,folds `routed_scaling_factor` into each routed topk weight
+L1-E-212c30d008,L1,"FlashInfer CUTLASS runner supports only fused path, no runner_core.",derived,runner.py diff,FlashInfer CUTLASS only supports fused path
+L1-E-999199f9ff,L1,Optimization only affects dual-stream path with num_fused_shared_experts == 0 capture mode.,derived,PR body,only affects the dual-stream path
+L1-E-43435a2f8e,L1,Default combine kwargs and external input buffer setting preserve behavior when subclasses do not override.,derived,PR body,Default behavior is unchanged.
+L1-E-828411e6f1,L1,Captured FlashInfer A2A graph uses fixed geometry and must not query runtime token counts during capture.,derived,PR body,captured graph uses fixed geometry
+L1-E-6bdecb8206,L1,"Routed DeepGEMM pre-permute can dispose_tensor(hidden_states), so later graph-captured kernels may record data_ptr()==0.",derived,PR body,any later kernel launch consuming `hidden_states` then captures `data_ptr() == 0`
+L1-E-b8c25bfaa7,L1,FlashInfer A2A now supports zero local tokens so dummy-token workaround can be removed.,derived,PR body,flashinfer a2a now supports this
+L1-E-a6bc432fd8,L1,Fused packed NVFP4 quant requires SM100+ and k multiple of 16.,derived,nvfp4_expert_quant.cuh diff,fp4_quant is only supported on sm100+
+L1-E-a5e6dd3767,L1,Quark checkpoint carries pre-calibrated FP8 activation scaling for W4A8 MXFP4 MoE.,derived,PR body,checkpoint carries fp8 scaling for activation - pre-calib
+L1-E-cf36dca6d4,L1,Triton fused gate requires topk > num_fused_shared_experts and 2D scores/1D bias.,derived,moe_fused_gate.py diff,topk must be > num_fused_shared_experts
+L1-E-8ee200972e,L1,Top-k must not raise invalid argument when DP tokens per rank equals zero.,derived,PR body,DP tokens/rank = 0
+L1-E-779ea4a9b5,L1,Cached shuffle row indices live in pauseable weights memory and may point at stale memory after RL reload.,derived,PR body,left pointing at stale memory
+L1-E-d364cd8ead,L1,DeepEP-class and MegaMOE use per-rank physical shared slots.,derived,d364cd8:layer.py,per-rank physical shared slots
+L1-E-a2d7eb303e,L1,Grouped Triton router is opt-in for DeepSeek-V3 grouped path.,derived,PR #29771 body,new opt-in SGLANG_OPT_USE_JIT_KERNEL_GROUPED_TOPK
+L1-E-c21f6f19cf,L1,All-NaN padding rows may be generated during EAGLE3 + DP-attention graph capture.,tested_only,PR #30079 body,all-NaN gating row
+L1-E-9ddea8d9ef,L1,Noop recorder means LocalExpertCount output is dead work during decode capture.,derived,9ddea8d: moriep.py,"not isinstance(recorder, _ExpertDistributionRecorderNoop)"
+L1-E-4b5c612257,L1,Bypass is valid only when topk is one and routed_scaling_factor equals 1.0.,derived,4b5c612: fused_moe.py,topk == 1 and routed_scaling_factor == 1.0
+L1-E-96368a5f77,L1,Fused path is used only when apply_sigmoid is explicitly true.,derived,96368a5:fused_moe_triton_kernels.py,APPLY_SIGMOID: tl.constexpr
+L1-E-ca8f15cd70,L1,DP attention with EP needs cross-rank max token bucket.,derived,PR #30450 body,cross-rank max
+L1-E-b8ca06fdad,L1,Zero scale makes expert id 0 mathematically equivalent for routed contribution.,derived,PR #30387 body,mathematically equivalent
+L1-E-87992eeec4,L1,Shared expert can read storage alias taken before deep_gemm dispose_tensor.,derived,PR #30460 body,take a storage alias shared_in = hidden_states[:]
+L1-E-f49cbbd67d,L1,FlashInfer routing_bias contract requires bfloat16 but kernel does not validate dtype.,derived,PR #31001 body,documented contract requires `bfloat16`
+L1-E-2cf2920d07,L1,FlashInfer 0.6.13 has CuTe DSL support for needed NVFP4 modes.,tested_only,PR #28220 body,now that it supports the needed NVFP4 modes
+L1-E-423b8485fb,L1,EP negative sorted expert ids are skipped by subtracting neg_count.,derived,423b8485:moe_permute_prepare.cu,if (is_ep) neg_count = lower_bound
+L1-E-ec32590025,L1,MoRI companion fp4_blockwise combine kernels are available.,tested_only,PR #30706 body,Requires the companion MoRI change
+L1-E-980acd6eca,L1,"If runner output data_ptr differs, copying into symm_output preserves correctness and enables fast allreduce.",derived,PR #29007 body,if the result is not backed by symm_output
+L1-E-5d004a20c5,L1,FlashInfer 0.6.12 MoeAlltoAll.dispatch ABI requires int32 token_selected_experts.,derived,PR #29929 body,specifies that `token_selected_experts` is an `int32` tensor
+L1-E-3a8ddd3fd0,L1,sgl-kernel-xpu PR #285 aligns topk_sigmoid with post-#28715 CUDA signature.,tested_only,PR #31038 body,no shim needed
+L1-E-bff489284b,L1,Wint4AFP8 CUTLASS implementation supports only group size 128.,tested_only,PR #25763 body,only supports the quantization configuration with a group size of 128
+L1-E-0a64139c94,L1,Low-latency DeepEP for LongCat top-k=12 separately requires kNumMaxTopK >= 12.,tested_only,PR #30975 body,requires UCCL/DeepEP `kNumMaxTopK >= 12`
+L1-E-77d23a796e,L1,Scale-up is monotonic and bounded by launch reserved max_ep_size.,derived,PR #30164 body,repeated monotonic scale-up
+L1-E-d67aa05697,L1,CuTeDSL wrapper supports only silu or relu2 activation names.,derived,d67aa0569727:flashinfer_cutedsl.py,supports 'silu' (gated) or 'relu2' (non-gated) activation
+L1-E-faf6894093,L1,"Sparse prefill kernel supports SM90a/SM100f, not SM120, so wrapper must avoid it.",tested_only,PR #30272 body,"supports SM90a/SM100f, not SM120"
+L1-E-02236fa38c,L1,"Inkling route kernel assumes 256 routed experts, 2 shared experts and top-k 6.",derived,02236fa:inkling_gate_topk_renorm.cuh,kInklingRoutedExperts = 256
+L1-E-1843384c7a,L1,DeepEPMoE combine already reduces expert outputs across EP ranks.,derived,PR #31311 body,combine reduces expert outputs across EP ranks
+L1-E-91b210f7b0,L1,Pinned FlashInfer 0.6.14 exposes output tensor APIs for routed and non-routed FP8 block-scale MoE.,tested_only,PR #28416 body,release exposes an `output` tensor
+L1-E-01f558d905,L1,Persistent tile scatter path is unsupported on SM120 devices.,tested_only,PR #31669 body,not supported for sm120 devices
+L1-E-37a830b667,L1,Routed expert count is divisible by dwdp_size.,derived,diff,num_routed % self.dwdp_size != 0
+L1-E-37a830b667,L1,MoE layers have uniform routed expert count.,derived,diff,DWDP requires a uniform routed expert count
+L1-E-e4eea7ce2f,L1,HPC path requires CUDA Hopper and contiguous bf16 activations/fp32 weights.,derived,diff,major == 9
+L1-E-40b2119b23,L1,Local expert mapping is fixed for dispatcher lifetime.,derived,pr_body,The local expert mapping is fixed for the lifetime of the dispatcher
+L1-E-8bb0d8d005,L1,Scale-store offsets fit uint32 host-verified bounds.,derived,diff,ScaleStoreArgs overflow
+L1-E-3d91a569ce,L1,HPC-Ops kernels are tuned primarily for H20 despite sm90+ availability.,tested_only,pr_body,tuned primarily for H20
+L1-E-f05c92fb6d,L1,Fused MoE MX kernels are A5-only.,tested_only,pr_body,Requires Ascend A5 (Ascend 950)
+L1-E-a55e1764a2,L1,FlashInfer SM120 CUTLASS expects [up; gate] contiguous halves with 128-element padding.,derived,diff,FlashInfer's fused MoE consumes two contiguous halves
+L1-E-fc007e1f00,L1,SM90 path only runs when DeepGEMM exposes fp8_mega_moe and prepared SM90 weights exist.,derived,diff,"hasattr(deep_gemm, ""fp8_mega_moe"")"
+L1-E-e4a40a71f8,L1,Pre-quant input is reused only when standard dispatch is a pure passthrough and no scale exists.,derived,diff,standard dispatch was a pure passthrough
+L1-E-a1c30701aa,L1,pplx backend requires EP group to span the whole world.,derived,diff,requires the EP group to span the whole world
+L1-E-fb207b72b0,L1,"route_quant_fused is specialized for 896 experts, top-16, and 3584-wide bf16 activation row.",derived,diff,"specialized for N=896, K=16"
+L1-E-abddb1c7e9,L1,Single-token align requires M == 1 and topk <= 32.,derived,diff,moe_align_single_token requires M == 1
+L1-E-abddb1c7e9,L1,"For one token, top-k expert ids are distinct.",derived,diff,top-k expert ids are distinct
+L1-E-02cd44c59a,L1,sm_121 has less shared-memory headroom than larger GPUs.,tested_only,pr_body,sm_121 has less shared-memory headroom
+L1-E-7bc90ab394,L1,Masked workspace grows approximately linearly with captured M and local expert count.,derived,pr_body,workspace grows approximately linearly with both `Captured M` and the local expert count
+L1-E-beabc5949b,L1,Deferred-finalize TRTLLM path feeds bf16 expert weights after FlashInfer fix.,derived,diff,trtllm deferred-finalize path always feeds bf16
+L1-E-4020bc95a7,L1,W4A16_NVFP4 MoE cannot use A2A backend,derived,4020bc95a7b5:overrides.py,require --moe-a2a-backend=none
+L1-E-afb4f37ca5,L1,"Interleaved kernel expects rows [g0, u0, g1, u1, ...]",derived,afb4f37ca509:inkling_moe.py,"rows are [g0, u0, g1, u1, ...]"
+L1-E-5fdf6cd18f,L1,Fast path selected only for topk_ids.numel() <= 64,derived,5fdf6cd18f97:moe_align_block_size.py,topk_ids.numel() <= SMALL_NUMEL_LIMIT
+L1-E-5fdf6cd18f,L1,ignore_invalid_expert is false for this +1 offset contract,derived,5fdf6cd18f97:moe_align_block_size.py,and not ignore_invalid_expert
+L1-E-b498f46271,L1,Alias wins over conflicting target A2A backend,derived,b498f46271a5:server_args.py,"self.moe_a2a_backend = ""megamoe"""
+L1-E-dd20826e0a,L1,Only ROCm/AITER dispatchers create expert_mask_gpu,derived,PR#34220 body,This change only affects ROCm/AITER.
+L1-E-a58fa0388e,L1,W4AFP8 normal/prefill DeepEP payload must remain BF16,derived,PR#33669 body,DeepEP payload must remain BF16
+L1-E-a58fa0388e,L1,W4AFP8 low-latency/decode payload must remain FP8,derived,PR#33669 body,payload must remain FP8
+L1-E-6f3fe13a9c,L1,Install Triton after torch metadata patch to avoid CUDA torch swap,derived,PR#34364 body,It has to stay the last pip step
+L1-E-ef7208d41d,L1,Up TMA requires retuned config carrying USE_TMA=true,derived,ef7208d41d8e:fused_moe.py,requires a config produced by the updated tuning script
+L1-E-9d34c2809f,L1,"DeepEP low_latency remains per-tensor CuTe DSL v1, not nvfp4_online",derived,PR#28354 body,DeepEP `low_latency` remains a per-tensor CuTe DSL v1 path
+L1-E-240a12b302,L1,Optimization only active on _use_aiter path,derived,PR#28666 body,"on `_use_aiter`, call the kernel with `fuse_gate=True`"
+L1-E-6eb941a34c,L1,Compact ragged verify remains rejected with A2A backends,derived,PR#34844 body,Compact ragged verify stays rejected.
+L1-E-3adbbec2fd,L1,PDL can hang when another stream overlaps launch above token threshold,derived,PR#34789 body,can leave its grid-dependency wait unreleased
+L1-E-b95a746948,L1,Fuse path requires interleaved BF16 gated SiLU without quant/bias/hooks,derived,b95a74694842:fused_moe.py,fuse_swiglu_interleaved set on an incompatible fused_moe call
+L1-E-8d44091326,L1,CUDA 13 wheel builder requires NCCL 2.30.7,derived,PR#34914 body,requires NCCL Gin from NCCL 2.30.7
+L1-E-66de161976,L1,dispatch/combine frame waits cover tensor lifetime without record_stream,derived,PR#32746 body,existing event ordering already covers both directions
+L1-E-56a759cffc,L1,JIT builds one runtime variant for the running arch,derived,PR#34509 body,one instantiated runtime variant
+L1-E-8e0499bd50,L1,Fast path only non-EP AITER with fused shared experts and token within persistent buffer,derived,8e0499bd5012:topk.py,and get_parallel().moe_ep_size == 1
+L1-E-24d625698d,L1,Fold only when fused append+remap will run and EPLB remap is off,derived,24d625698d44:topk.py,and not _eplb_remap_enabled()
+L1-E-cfc6dfb364,L1,DeepEP v2 requires QP depth at least 2*(dispatch tokens per rank+1),derived,PR#34923 body,at least twice the low-latency dispatch capacity plus two
+L1-E-5f12839591,L1,Kimi-K3 fused-front must pass row-strided FP32 router output,derived,PR#35077 body,row-strided FP32 router output
+L1-E-03cf2de2e3,L1,Path remains opt-in and limited by existing SM100+/FlashInfer checks,derived,PR#35545 body,explicitly opt-in and limited by the existing SM100+
+L1-E-4f8ecf6ae9,L1,Only deep_gemm runner is supported for deepep_v2,derived,PR#29525 body,deep_gemm is the only supported runner
+L1-E-4f8ecf6ae9,L1,Static shapes make decode CUDA-graph capturable,derived,PR#29525 body,"static shapes, graph-capturable"
+L1-E-d216737e47,L1,Wide tail must not split a warp-level reduction,derived,PR#35372 body,Reject wide shapes whose tail would split a warp-level reduction.
+L1-E-b6dcd393d6,L1,w1_scale still requires 512-aligned hidden size,derived,PR#35593 body,512-alignment is genuinely required
+L1-E-50dae2d99d,L1,"DeepSeek-V4 uses top-6, a non-power-of-two K",derived,50dae2d99d70:fused_moe_triton_kernels.py,DeepSeek-V4 uses top-6
+L1-E-a5a9d66baf,L1,XPU grouped-topk kernels require fp32 gating output,derived,PR#34546 body,grouped-topk kernels ... require fp32
+L1-E-edd675cecf,L1,CDNA wave64/DPP kernel only.,derived,route_radix4_hip.cuh,targets CDNA; it uses amdgcn DPP and wave64 ballots
+L1-E-2d8484740d,L1,MXFP4 kernel uses 32-element quant blocks.,derived,expert_pack_mxfp4.cu,constexpr int kQuantBlock = 32
+L1-E-2935bb8e79,L1,Hopper MXFP4 block_k=128 can walk past hidden_size 2880 scale rows.,derived,PR body,walks 23 * 128 = 2944
+L1-E-aa0a0aa3c3,L1,Bound is safe only under graph-tier bookkeeping for same captured bucket.,derived,aiter.py diff,value is baked into a captured graph
+L1-E-3254f9b47c,L1,Blackwell clustered grid barrier needs all clusters resident despite side-stream SM occupancy.,derived,PR body,not all clusters can become resident
+L1-E-a8b2f36dee,L1,"Fast path requires CUDA blockwise FP8, BF16/FP16 activation and hidden divisible by group size.",derived,PR body,valid positive K-group size
+L1-E-5aa913e156,L1,GLM-5.2 bias near 7 loses distinctions in bf16,derived,PR body,bf16's smallest step is 0.03125
+L1-E-5177a3ec08,L1,"bf16 contiguous gfx950, M<=64, N/K divisible by block sizes",derived,diff,and m <= _MAX_M
+L1-E-76eea36e38,L1,Kimi-K3 fused finalize kernel declares expert weights as BF16.,derived,PR#38588 body,Kimi-K3's fused finalize still declares them bf16
+L1-E-6657f7d844,L1,feature is opt-in behind env flag,derived,PR body,off by default
+L1-E-cebca698e2,L1,PDL router reads depend on producer completion,derived,PR body,read bias before waiting
+L1-E-f920be4b09,L1,only GLM model_type has matching scheme,derived,PR body,requires a GLM `model_type`
+L1-E-fc5a979f21,L1,MXFP4 shards require 128-wide kernel alignment,derived,PR body,128-wide kernel alignment
+L1-E-a3bf25dc62,L1,grid-wide software barrier needs all blocks resident,derived,PR body,requires every block to become resident
+L1-E-fa8d22e665,L1,MoRI expects dense uniform static verify layout,derived,PR body,"dense, uniform verify layout"
+L1-E-1e8699fda3,L1,both reductions needed to cover TP world,derived,PR body,both reductions are needed
+L1-E-0e5347db82,L1,activation scale groups independent of weight scale groups,derived,PR body,tracked independently
+L1-E-d6090f92bf,L1,fused op returns gmm2-ready activations and scales,derived,diff,"Returns (e4m3 activations, e8m0 block scale)"
+L1-E-81363bf8cb,L1,vector copies require stride/pointer alignment,derived,PR body,validates the data pointer and every stride
+L1-E-7714b182f2,L1,unit scaling top-1 fast path remains valid,derived,PR body,unit-scaling top-1 fast path
+L1-E-9cc7da2ab0,L1,MegaMoE scale rows need dimension alignment,derived,diff,multiples of
+L1-E-90b3f8544c,L1,only validated Qwen3.5 gfx95 BF16 rows<=128 top-10 no bias,tested_only,PR body,measured Qwen3.5 decode envelope
+L1-E-56fee88e23,L1,top-k>1 needs differently scaled input copies,derived,PR body,differently scaled copy
+L1-E-de123f38bb,L1,primary and joiner use identical graph settings,derived,PR body,same resolved CUDA graph configuration
+L1-E-2d25767759,L1,NPU PCG remains opt-in,derived,PR body,behind the opt-in
+L1-E-16e353d93e,L1,Fused NPU gmm1 applies plain SiLU and cannot preserve swiglu_limit clamp.,derived,16e353d93e4e:ascend.py,applies plain SiLU with no clamp
+L1-E-32290dda2c,L1,Dispatch only supports gfx950 ROCm >=7.2 with hipcc available.,derived,32290dda2cea:smallm_moe_gfx950/__init__.py,"arch == ""gfx950"" and _hip_version() >= (7, 2, 0)"
+L1-E-32290dda2c,L1,Kernel covers only Qwen3.5 TP4 shape with intermediate 256.,derived,32290dda2cea:smallm_moe_gfx950/__init__.py,"per-rank intermediate 256, top-10 plus the optional fused shared expert"
+L1-E-3177d10ca6,L1,Fused path supports only decode/extend/target-verify modes and prepared workspace bounds.,derived,3177d10ca6f7:cutedsl_ar_fusion.py,"ForwardMode.DECODE, ForwardMode.EXTEND, ForwardMode.TARGET_VERIFY"
+L1-E-0b53305f48,L1,AITER MXFP8 quant info is built only when AITER is enabled.,derived,0b53305f480d:overrides.py,"if envs.SGLANG_USE_AITER.get(): allowed.append(""aiter"")"
+L1-E-36f59982fa,L1,Small sort fast path is limited to P <= 64 token-expert pairs.,derived,36f59982faaa:moe_sorting_small.py,P <= 64: one sort CTA does the whole P x P rank compare
+L1-E-9c8340a2e5,L1,Model registry calculation bounds largest prefill dispatch on one rank.,derived,9c8340a2e57e:moe_hook.py,"Largest prefill dispatch on one rank, after model-specific sharding."
+L1-E-515f5be77e,L1,ROCm MegaMoE path is selected only when platform is HIP and env gate is enabled.,derived,515f5be77e74:mega_moe.py,return _is_hip and envs.SGLANG_AMD_USE_FLYDSL_MEGA_MOE.get()
+L1-E-425a1f8f24,L1,Other MXFP8 backend choices are CUDA-only on HIP except explicit Triton/gfx95 AITER cases.,derived,425a1f8f247:overrides.py,Every other entry is CUDA-only. Honor an explicit triton request on ROCm
+L1-E-effb752188,L1,Router gate supports exactly 384 experts and top-k up to 16.,derived,effb75218808:rocm_router_gate.py,_GATE_NUM_EXPERTS = _WARP * 6; _MAX_TOPK = 16
+L1-E-85be04978d,L1,"On per-rank fused shared-slot/AITER path, the gate must not emit a shared marker.",derived,85be04978d76:topk.py,the gate must not emit a shared marker as well
+L1-E-fa443412c5,L1,"HIP shared-expert fusion is limited to AITER gfx950, TP4/TP8, no A2A backend, and validated GLM-5.3 geometry.",derived,fa443412c558:glm5_next.py,HIP shared experts fusion requires AITER on a gfx950 device.
+L2-E-e1eae1fd15,L2,MLA cache last dimension is kv_lora_rank + qk_rope_head_dim,derived,memory_pool.py,kv_lora_rank + qk_rope_head_dim
+L2-E-df191254ab,L2,One block handles BLOCK_H query heads sharing one K/V head,derived,PR body/diff,One block handle `BLOCK_H` q heads with shared k/v head
+L2-E-f414352ae6,L2,Offline transposition preserves absorbed-value GEMM semantics,derived,deepseek_v2.py diff,"w_vc.transpose(1, 2).contiguous()"
+L2-E-c77762d57f,L2,Grouped decode BLOCK_H needs upper bound to avoid OOM,derived,PR body,Set upper-bound limit for BLOCK_H
+L2-E-ec52464dde,L2,No-prefix extend/prefill may use normal computation,derived,deepseek_v2.py diff,Use normal computation for prefill
+L2-E-7dc66fcb40,L2,Higher num_kv_splits improves long contexts,tested_only,PR benchmark,increase the `--triton-attention-num-kv-splits`
+L2-E-70f894b810,L2,Initial FlashInfer MLA requires radix cache disabled,derived,PR body,--enable-flashinfer-mla --disable-radix-cache
+L2-E-b110084654,L2,Yarn RoPE scaling must be applied correctly for accuracy,derived,PR body,correctly handling rope scaling with yarn
+L2-E-6ce9dbe828,L2,RoPE fusion must output k_pe tokens with RoPE applied,derived,rocm_mla_decode_rope.py,fusing MLA rope into the grouped attention
+L2-E-90a4b7d98a,L2,Ragged prefill selected when cache is empty,derived,PR body,prefilling with empty cache
+L2-E-fa56106731,L2,GPU-to-CPU indptr transfer during CUDA graph replay can hang or synchronize,derived,PR body,transmission of indptr tensors between cpu and gpu
+L2-E-fc91d08a8f,L2,Fast plan avoids stream synchronization in original plan during CUDA graph replay,derived,flashinfer_mla_backend.py diff,for skipping the stream synchronization
+L2-E-9fb48f951f,L2,FlashInfer MLA EAGLE requires topk=1 and draft tokens power of two,derived,PR body,`speculative-eagle-topk` should be set to 1
+L2-E-8e66fbecee,L2,DP should be smaller than TP for TP != DP mode,derived,PR body,`--dp` should be smaller than `--tp`
+L2-E-a53fe428f9,L2,FlashMLA launch requires page_size 64,derived,PR body/command,--page-size 64
+L2-E-c0e9a36c5f,L2,Actual num_kv_splits can be limited for shorter contexts,derived,PR body,limiting the actual `num_kv_splits` for shorter contexts
+L2-E-b6944f97a6,L2,FlashMLA page is automatically set to 64,derived,PR body,Automatically set page=64 when launching FlashMLA
+L2-E-df7014a8d2,L2,Reading GPU extend_prefix_lens causes D2H synchronization bubble,derived,PR body,caused by D2H copy in DeepSeekV2AttentionMLA
+L2-E-20c90be23d,L2,Initial FA3 MLA tests use page_size 1,tested_only,PR body,Currently `page_size` is set to 1
+L2-E-e62d60fe6d,L2,.item() in init_forward_metadata causes CUDA stream synchronization,derived,PR body,`.item()` operation in `init_forward_metadata`
+L2-E-f65b8d5c89,L2,Requires Blackwell/CUTLASS 3.9 family.,tested_only,PR body,Requires cutlass 3.9
+L2-E-57de7c6b5f,L2,FA3 default is guarded by Hopper CUDA 12.3 helper.,derived,model_runner.py,if is_hopper_with_cuda_12_3():
+L2-E-e8f62b20ca,L2,Non-128 page sizes require block_num divisibility.,derived,PR body,block_num % (128 / PAGE_SIZE) == 0
+L2-E-a42736bbb8,L2,Initial design disables chunked prefix cache for page_size > 1.,derived,PR body,unless page_size > 1
+L2-E-a42736bbb8,L2,Activation threshold is 8192 prefix tokens.,derived,PR body,"threshold (currently set to 8,192 tokens)"
+L2-E-613b197e57,L2,Scale output is one float32 element on input device.,derived,fp8_kernel.py,"x_s_out.shape == (1,)"
+L2-E-99456bcacb,L2,Path is gated to SM90 and SGL_ENABLE_JIT_DEEPGEMM_BMM.,derived,fp8_kernel.py,if sm_version == 90
+L2-E-799c4bb502,L2,Initial fused path only verified for FA3.,tested_only,PR body,Currently only support FA3 backend
+L2-E-2e4babdb0a,L2,FlashMLA FP8 support had an upstream issue note.,unclear,flashmla_backend.py,FlashMLA FP8 issue
+L2-E-b819381fec,L2,AITER MLA requires AMD aiter library.,derived,aiter_backend.py,aiter is AMD specific kernel library
+L2-E-18efb5e8e0,L2,Dynamic split_kv is not CUDA-graph compatible.,derived,PR body,Auto dynamic split_kv is not compatitable with cuda graph
+L2-E-ab1a4fa5cb,L2,CUDA graph path forces num_kv_splits=1.,derived,attention.py,Set to 1 to avoid cuda_graph issue by default.
+L2-E-5f1ab32717,L2,Other page_size>1 backends still had remaining TODO.,unclear,PR body,remaining todo item to support page size >1
+L2-E-b1286a116a,L2,Draft req_to_token layout is topk-major after reland.,derived,PR #7213 body,"changed from (bs, num_speculative_steps, topk) to (bs, topk, num_speculative_steps)"
+L2-E-50f1b6d6b1,L2,bmm out view layout matches flattened projection input.,derived,50f1b6d6b164:deepseek_v2.py,out=attn_bmm_output.view
+L2-E-1e0e549766,L2,Ascend paged attention supports page size 128 only.,derived,PR #7722 body,support paged attention with page size 128 only
+L2-E-194841e329,L2,kv_a_layernorm accepts strided kv_a input.,derived,PR #8058 body,rmsnorm has already support stride input
+L2-E-4b04998d38,L2,TRT-LLM block tables satisfy divisibility by 128/page_size.,derived,4b04998d3854:trtllm_mla_backend.py,block_num % (128 / block_size) == 0
+L2-E-3cc3d9b950,L2,KV indices store page numbers by integer-dividing token locations by page size.,derived,3cc3d9b950e4:utils.py,write the page numbers to kv_indices_ptr
+L2-E-f92b729d52,L2,FIA path supports paged attention only with page size 128.,derived,PR #8328 body,currently ONLY support page size 128
+L2-E-0096798ed6,L2,"Kernel specializes DeepSeek V3 shapes: 128 heads, 128 nope dim, 64 RoPE dim.",derived,0096798ed60b:concat_mla.cu,constexpr int NUM_LOCAL_HEADS = 128
+L2-E-8085aca791,L2,Aclgraph MLA operator requires contiguous query input to avoid auto-contiguous bug.,derived,PR #9925 body,manually contiguous query input to avoid autocontiguous bug
+L2-E-70c0c1f926,L2,TRTLLM Gen MLA workspace contents must be zero-initialized for accuracy.,derived,PR #10330 body,took empty-init decode_cuda_graph_workspace. Replaced by zero_init
+L2-E-3b25dc127a,L2,Kernel specializes to BF16 last dims 512 and 64 with 16-byte alignment.,derived,3b25dc127ae7:concat_mla.cu,"TORCH_CHECK_EQ(((int64_t)t.data_ptr()) % 16, 0)"
+L2-E-a2f7218a2e,L2,"FA4 support is limited to MLA model prefill, not decode or generic MHA.",derived,a2f7218a2e23:model_runner.py,only MLA model supported now
+L2-E-f35def8652,L2,"FP8 fused path requires q_rope, k_rope and cos_sin_cache non-null.",derived,f35def8652a2:trtllm_mla_backend.py,"we need all of q_rope, k_rope and cos_sin_cache"
+L2-E-3b80232d06,L2,Top-k size is 2048 for DeepSeek V3.2 fast path.,derived,top_k.py,topk == 2048
+L2-E-c23eda8589,L2,FlashMLA KV-index loop keeps 4096 tokens per iteration.,derived,utils.py,_FLASHMLA_CREATE_KV_BLOCK_SIZE = 4096
+L2-E-8d6ab1cb88,L2,Padded draft queries require seq_lens = prev_context + max_draft_tokens.,derived,trtllm_mla_backend.py comment,To account for pad_draft_extend_query
+L2-E-15ed27d7d4,L2,Long inputs can exceed int32 address arithmetic.,derived,PR body,"exceeds int32 limit (2,147,483,647)"
+L2-E-18403f6bfe,L2,"torch.tensor([0], device=...) caused a CPU-to-GPU copy and synchronization point.",derived,PR body,caused a CPU-to-GPU copy
+L2-E-c72f0756d2,L2,"For FP8 KV cache, q_scale/descale_k use layer.k_scale when present",derived,c72f0756d2:flashmla_backend.py,we use layer.k_scale for both q and k scales
+L2-E-d122e32467,L2,NPU batch_matmul_transpose requires contiguous w_vc,derived,PR body,NPU batch_matmul_transpose ops need w_vc to be contiguous.
+L2-E-d36299ad77,L2,FIA NZ format groups head_dim into 16-wide tiles,derived,d36299ad77:ascend_backend.py,"num_heads * head_dim // 16, page_size, 16"
+L2-E-99401e7b1a,L2,Persistent a16w16 mla_decode kernel does not support head_num=128,derived,99401e7b1a:aiter_backend.py,current persist a16w16 mla_decode kernel does not support head_num = 128
+L2-E-9d878c1f3e,L2,FP8 MLA quantization expects dim_nope=512 and dim_rope=64,derived,9d878c1f3e:quant_k_cache.py,Expected dim_nope=512 for FP8 MLA
+L2-E-4935344fcd,L2,"AITER MLA metadata must use selected page_size, not hard-coded 1",derived,PR body,aiter MLA metadata creation was effectively hard-coding `page_size=1`
+L2-E-3fd88ea9b5,L2,draft_extend uses accept_length + 1 query tokens per sequence,derived,3fd88ea9b5:trtllm_mla_backend.py,draft_extend uses (accept_length + 1) query tokens per sequence
+L2-E-6988a0f570,L2,AITER MLA persistent kernel is beneficial only with FP8 KV cache,derived,6988a0f570:aiter_backend.py,only use mla_ps_kernel when fp8 kv_cache
+L2-E-031a652b93,L2,"For BF16/FP16 KV cache, k_scale must be 1.0 because values are unscaled",derived,031a652b93:trtllm_mla_backend.py,"For BF16/FP16 KV cache, k_scale must be 1.0"
+L2-E-fbb6098487,L2,MLA persistent-split metadata uses one query token per decode item during replay.,derived,diff,max_q_len = 1
+L2-E-c193a52fa2,L2,gfx942 FP8 path is CUDA-graph/capture-only to hide launch overhead,derived,c193a52fa2:deepseek_v2.py,cudagraph-only on gfx942 (hides launch overhead)
+L2-E-e138f7960a,L2,Persistent kernel unsupported for head_num=128 in DP attention,derived,e138f7960a:aiter_backend.py,"head_num=128 (unsupported, like tp1 or --enable-dp-attention with tp8-dp8)"
+L2-E-b2c46fc60b,L2,"For MLA models, v_head_dim must come from model config, not layer 0 value buffer",derived,b2c46fc60b:aiter_backend.py,"For MLA models, get v_head_dim from model config"
+L2-E-b22d3cd606,L2,AITER MLA prefill requires v_head_dim 128 and num_heads divisible by 8,derived,PR body,v_head_dim == 128 and num_heads % 8 == 0
+L2-E-cadfa2d025,L2,Piecewise CUDA graph support is limited to CUDA and not context parallel in this change.,derived,PR body,is not context parallel
+L2-E-fd3e11973b,L2,KV-index sizing must account for page_size greater than one,derived,PR body,under page_size>1
+L2-E-19663aafcd,L2,Round-robin CP padding must match ForwardBatch prepare_mlp_sync_batch two-times-CP chunking.,derived,diff,pads to attn_cp_size * 2
+L2-E-ab7c4ab6bb,L2,[AMD] Fix correctness for AITER MLA backend with `--page-size > 1` (#25556),derived,PR body/diff,# Fix correctness for AITER MLA backend with `--page-size > 1` ## Summary With the AITER attention backend
+L2-E-8e77af1afc,L2,[AMD] fix(triton-mla): cap max_kv_splits at 256 on gfx942 (Kimi-K2.6 hang) (#24762),derived,PR body/diff,"## Motivation Fix the `nightly-8-gpu-kimi-k26` MI325X hang reproduced in https://github.com/sgl-project/sglang/actions/runs/25513282022/job/74877480809 (scheduler watchdog at 300 s, MLA decode kernel"
+L2-E-7aee2ff31b,L2,[AMD] Remove BF16-to-FP32 elementwise cast from compressor GEMM on HIP (#26914),derived,PR body/diff,"Merged on amd/deepseek_v4 (https://github.com/sgl-project/sglang/pull/26272), submit a PR for main as well. ## Motivation On MI355/HIP, `Compressor.forward()` calls `linear_bf16_fp32()`"
+L2-E-0aa72a9e76,L2,Replace skip_attn_backend_init with a batch-carried attention plan marker (+ staleness re-plan) (#27193),derived,PR body/diff,## Motivation `skip_attn_backend_init` is a control-coupling boolean threaded through ~6 layers (`TpModelWorker.forward_batch_generation` → `ModelRunner.forward` → `_forward_raw` → `forward_decode`
+L2-E-7dc7376697,L2,fix(attn): delegate init_mha_chunk_metadata in HybridLinearAttnBackend (#27316),derived,PR body/diff,## Motivation Serving a hybrid linear-attention MLA model (e.g. `inclusionAI/Ring-2.5-1T`) with the FlashInfer MLA backend crashes during prefill:
+L2-E-2e7523ddbe,L2,fix(spec-dec): treat `num_nextn_predict_layers=0` the same as absent for EAGLE3 drafts (#26726),derived,PR body/diff,"## Issue When using `nvidia/Kimi-K2.5-Thinking-Eagle3` as the EAGLE3 draft for `nvidia/Kimi-K2.5-NVFP4`, sglang crashes during the first draft forward"
+L2-E-2c2a4f243a,L2,Draft kv_indices packing requires topk per-branch sequences per row.,derived,diff,packs topk per-branch sequences per row
+L2-E-9097647090,L2,Eager registry reallocation is safe because eager has no graph address burn-in.,derived,PR body,eager has no graph address burn-in
+L2-E-5160f7914e,L2,Fix MLA EAGLE draft CUDA-graph `kv_indices` under-allocation for `topk > 1` (#27460),derived,PR body/diff,## Summary - Widen the multi-step MLA draft CUDA-graph `cuda_graph_kv_indices` buffer by the missing `topk` factor (`max_bs *
+L2-E-303757ccd8,L2,[Attn] Fix aiter MLA verify `kv_indices` under-alloc + shared `assert_buffer_fits` guard (#27485),derived,PR body/diff,## Fix (behavior change) aiter MLA `target_verify` writes `kv_lens = seq_len + num_draft_tokens` per row into the cuda-graph
+L2-E-2fef951fe8,L2,[AMD] Replace fp8 mla with fp8 mha kernel for diffusion model aiter backend (#23927),derived,PR body/diff,## Motivation Dependency: https://github.com/ROCm/aiter/pull/2911 (merged) The original FP8 prefill path in the AITer backend temporarily used the MLA
+L2-E-99ab90c5b7,L2,DeepSeek MHA companion is required when attn_mqa layers need correct v_head_dim on AMD PCG.,derived,PR body,MHA attention path sees correct v_head_dim
+L2-E-f4f30d7d23,L2,[Fix] Use int64 seq_lens across all CUDA graph runners and backends (#27840),derived,PR body/diff,## Motivation PR #27407 routed the eager forward path (`forward_decode` / `forward_extend` / `forward_idle`) through the CUDA-graph input-buffer
+L2-E-2e74ff192c,L2,[DSV4] Use int64 for compressor out_loc tensors (#27973),derived,PR body/diff,## Motivation Follow-up to #27091. @merrymercy noted on `compressor_v2.py` that we should **prefer int64 for any indices**. The
+L2-E-8077fb1df7,L2,fix(deepgemm): align PP-parallel warmup bs to CP padding (#27922),derived,PR body/diff,The PP-parallel DeepGEMM warmup ran EXTEND dummy forwards with batch sizes aligned only to attn_cp_size. DSA pads dsa_cache_seqlens
+L2-E-371b96e210,L2,[AMD] Fix DeepSeek-V4-Flash-FP8 on MI300 (#27972),derived,PR body/diff,"## Motivation This PR enabled DeepSeek-V4-Flash-FP8 on Mi300 1. The OPUS paged-prefill kernel (`pa_sparse_prefill_opus`) is gfx950-only, but was"
+L2-E-10d3337048,L2,[AMD] Support unified_kv_triton for disaggregation (#27935),derived,PR body/diff,## Motivation This patch is to add swa_ring state to support the new unified_kv_triton kv layout introduced in
+L2-E-b3be2e7402,L2,[dsv4] Pad MLA decode q-heads to 64 (not full n_heads) for FlashMLA head64 kernel,derived,PR body/diff,"## Motivation On DeepSeek-V4-Pro, MLA decode attention dispatches FlashMLA's slow `fwd_for_small_topk::head128` kernel even under tensor parallelism. With attention-TP"
+L2-E-a362ba9da3,L2,[AMD] Feat: Add prefill context parallel support for deepseek v4 unified kv attention (#27928),derived,PR body/diff,"## Motivation This PR adds and validates prefill context-parallel (CP) support for DeepSeek-V4 on AMD GPUs, focusing on"
+L2-E-8fd1694dd2,L2,Deepseek v4: support mixed dtype compression states (#27277),derived,PR body/diff,"Add BF16 compression-state support for DeepSeek V4 C4/C128 paths, wire the runtime environment flag through memory-pool setup, and"
+L2-E-9b8c41171a,L2,[AMD] Fall back to layer_first layout for kernel write-back on ROCm (#28473),derived,PR body/diff,"## Motivation After #21631 changed the default `hicache_mem_layout` from `layer_first` to `page_first`, AMD/ROCm HiCache CI started failing. On"
+L2-E-f5b041622b,L2,[AMD] Fix deepseek-v4 mtp accept length issue (#28520),derived,PR body/diff,"Waiting CI checking by Bingxche help: https://github.com/sgl-project/sglang/actions/runs/27679583497/job/81863337423 ## Motivation On DeepSeek-V4 with MTP enabled, the `unified_kv_triton` attention backend"
+L2-E-c436a8161a,L2,[AMD] Enable HiSparse on ROCm (#26639),derived,PR body/diff,# Enable HiSparse for DSA models on ROCm ## Summary This change enables HiSparse for DeepSeek-style DSA models
+L2-E-04d952ea10,L2,[AMD] deepseek-v4 clean env vars (#28920),derived,PR body/diff,> **Will fire another PR to update the codebook after this PR is merged.** ## Motivation As raised
+L2-E-af9027f6c9,L2,[AMD] Improve performance of dsv4 in high concurrency (#28938),derived,PR body/diff,"## Motivation DeepSeek-V4 on AMD (MI35X, HIP) under high concurrency (TP8 + DP-attention, c512) trails. Per-layer trace analysis"
+L2-E-5e6d7c1615,L2,[AMD] Fix DeepSeek-V4 fp8 KV path on gfx942 (e4m3fnuz) (#28455),derived,PR body/diff,"## Motivation The DeepSeek-V4 `triton` flashmla fp8 path assumed CUDA / gfx950 (CDNA4) `e4m3fn`, but gfx942 (MI300 /"
+L2-E-7454735be9,L2,[AMD] [GLM5] Add opt-in Triton fp8 sparse-MLA prefill kernel for gfx950 (#28975),derived,PR body/diff,## Motivation This affects HIP serving of DSA (DeepSeek Sparse Attention) models; it was found and validated on
+L2-E-ea8f4e9f3f,L2,DCP allocator aligns request KV indices to dcp_world_size * original_page_size.,derived,PR body,aligns each request with dcp_world_size * original_page_size
+L2-E-e4253b39e2,L2,JIT fused A GEMM accepts row-major bf16 input with hd_in multiple of 256 and num_tokens 1-16.,derived,dsv3_fused_a_gemm.py docstring,"hd_in must be a multiple of 256 and num_tokens in [1, 16]"
+L2-E-abaee4664e,L2,FA3 kernel does not read max_seq_len_k on device-build paths.,derived,PR body,fa3 kernel never reads it
+L2-E-fc96edd297,L2,At page_size=1 the page-aware Triton math folds to legacy addressing.,derived,PR body,page_size=1 path is a verified no-op
+L2-E-f0bf96390b,L2,FlashInfer decode_dsv4 expects per-64-token pages with footer layout.,derived,flash_mla_sm120.py comment,FlashInfer decode_dsv4 expects per 64-token page
+L2-E-bc8b3ab1f5,L2,Kernel is specialized around d_v=512 and sparse MLA prefill shapes.,derived,PR body,Specialized for the sparse MLA prefill shape
+L2-E-56f22cd520,L2,Online C128/MTP state can be keyed by request index across verify-token slots.,derived,diff,const int64_t slot = req_idx
+L2-E-3cbb7568bd,L2,FlashAttention full prefill graph path is page_size=1 only initially.,derived,PR body,page_size=1 only for now
+L2-E-26ba3458d3,L2,Large max_kv_splits and batch can exceed 2**31 in flat scratch offsets.,derived,PR body,can exceed 2**31
+L2-E-2ab531cfcf,L2,Static max_context_len bound is safe because cache_seqlens caps real reads.,derived,PR body,cache_seqlens caps real reads
+L2-E-24a8944e15,L2,Non-zero-prefix Kimi multimodal chunks remain eager until their KV-materialization path has a graph.,derived,PR body,retaining the eager fallback for the unsupported non-zero-prefix branch
+L2-E-7a896215e7,L2,k/k_rope are rank-local under CP-v2 before strategy materialization,derived,diff,CP-v2: k/k_rope are rank-local
+L2-E-72c4ed1a3f,L2,static context bound is safe for TRTLLM MLA scheduling hint,derived,diff,static context bound is a safe fallback
+L2-E-b8ec544946,L2,requires fp8_e4m3 KV for flashmla_sparse_q8 backend,derived,PR body,requires `fp8_e4m3` KV
+L2-E-ebe3ab29e4,L2,decode only needs local TP head partition while prefill needs all heads,derived,PR body,detects whether the batch is prefill ... or decode
+L2-E-dd72658e7d,L2,Blackwell GEMM boundaries are tied to B300/B200 graph replay and single-wave geometry.,derived,diff,Blackwell-only: the boundaries and the fused_a tile choices
+L2-E-35e25f5356,L2,FlashInfer MNNVL backend requires MNNVL fabric,derived,PR body,hardware-gated to MNNVL fabric
+L2-E-71015f3fea,L2,TileLang fp8 KV path exists only under ROCm/HIP branch,derived,PR body,only has an fp8_e4m3 KV path under ROCm/HIP
+L2-E-4e5a05148a,L2,Backends must explicitly opt in to chunked-prefix FullCG,derived,diff,Backends must opt in explicitly
+L2-E-7f438a6031,L2,"backend restricted to GLM DSA, SM120/121, FP8 E4M3 KV, page size 64",derived,PR body,Restrict this backend to `GlmMoeDsaForCausalLM`
+L2-E-983e4aa18d,L2,every CP rank holds full DSA state before transfer when layer split disabled,derived,diff,every CP rank holds the full state
+L2-E-e4a40a71f8,L2,SM90 qprep kernel is Hopper-only,derived,diff,device_capability()[0] != 9
+L2-E-425349b799,L2,"valid sparse indices occupy first min(seqlen, topk) slots and tail is -1 padded",derived,PR body,tail-padded with -1
+L2-E-e23ccb15f0,L2,MLA layers have uniform entry width kv_lora_rank+qk_rope_head_dim=576,derived,PR body,MLA layers have uniform entries
+L2-E-5c6635d8f3,L2,FlashMLA and TRTLLM-MLA never read custom_mask in target verify,derived,PR body,reference `custom_mask` nowhere
+L2-E-2573190b93,L2,prefill and decode must use matching page size and KV-cache dtype,derived,PR body,Matching page size and KV-cache dtype are required
+L2-E-1496bfee93,L2,DSpark state commit applies to chain layout mambaish target only,derived,PR body,chain layout only
+L2-E-1685d29f21,L2,"AITER transpose_scale physical storage for [M,G] needs stride (1,M), not contiguous metadata.",derived,PR body,"it needs stride `(1, M)`"
+L2-E-204e0fbac0,L2,untouched split destination pages are never referenced by sparse indices,derived,PR body,only ~2*batch pages are actually referenced
+L2-E-1e64fc1563,L2,FlashMLA LSE is natural log; FlashInfer MLA remains base-2,derived,diff,FlashMLA exposes natural-log softmax LSE
+L2-E-971932d661,L2,requires FlashInfer >=0.6.15 because older builds reject q_len>=5,derived,diff,Needs flashinfer >= 0.6.15
+L2-E-18e6c61c21,L2,Optimization is HIP-only and falls back to legacy grid when compacting does not reduce launch work.,derived,diff,Returns `None` (keep the legacy grid) when compacting would not reduce launch work
+L2-E-62a28197c0,L2,serving must survive a real forward at max_prefill_tokens shape,derived,PR body,serving must survive a real forward
+L2-E-6679d9b60c,L2,topk==1 causal verify case matches extend_attention_fwd,derived,diff,topk==1 causal verify case
+L2-E-7120f3ee13,L2,FA4 packed kernel requires head ratio compatible with 128-row tile.,derived,PR#33436 body,requires the ratio to be compatible with its 128-row tile
+L2-E-7738062294,L2,Unified-memory DSPARK support is limited to chain topk 1.,derived,PR#33974 body,"chain only (`speculative_eagle_topk in (None, 1)`)"
+L2-E-0967885121,L2,Verify draft_token_num equals server speculative_num_draft_tokens on supported paths.,derived,PR#34240 body,it does not on the EAGLE / DFLASH / DSpark verify paths
+L2-E-e74ea5b1d7,L2,Block-scale fused kernels require weight_scale.shape[-1] > 1.,derived,PR#31105 body,"block-scale fp8 layers have weight_scale shape [N, K/128]"
+L2-E-4f883636a2,L2,Target-verify CUDA graph replay requires host-resident seq_lens_cpu.,derived,flashinfer_mla_backend.py diff,target-verify cuda-graph replay requires host-resident seq_lens_cpu
+L2-E-b501311fa1,L2,Fusion applies only to unquantized BF16/FP16 QKV-A and gate projection weights; quantized and LoRA paths fall back.,derived,PR body,preserving quantized and LoRA fallback paths
+L2-E-6cbfa791d6,L2,Grouped-head path requires exactly one TP-local KV head.,derived,verify_mla.py diff,Requires exactly one TP-local KV head.
+L2-E-4d0c5a89af,L2,The padded kernel is needed when head count is not a power of two.,derived,cache_ops.py diff,tl.arange needs a power-of-two extent
+L2-E-d22c4cc177,L2,128-bit gather uses aligned addresses; otherwise falls back.,derived,transfer.cu diff,if ((addr_or & 0xF) == 0)
+L2-E-4c0e85524d,L2,Dense path triggers only at or below SGLANG_DSA_PREFILL_DENSE_ATTN_KV_LEN_THRESHOLD.,derived,PR#30808 body,triggers only when `max_kv_len <= SGLANG_DSA_PREFILL_DENSE_ATTN_KV_LEN_THRESHOLD`
+L2-E-0fb040cbeb,L2,HiCache DCP translation expects runs of whole widened pages.,derived,base.py diff,HiCache DCP translation expects runs of whole widened pages
+L2-E-eb61cb2823,L2,"CP+TBO limited to HIP, DSA prefill CP round-robin, CP-v1, non-EP TP-MoE, single PP.",derived,PR#33480 body,"Enable CP+TBO only for HIP, DSA prefill CP with round-robin split"
+L2-E-92bce3d7bb,L2,Optimization applies only to GLM-5.2 on gfx950 with aiter path.,derived,PR#30519 body,Gated to `_use_aiter_gfx95` + `GlmMoeDsaForCausalLM`
+L2-E-f446e853e7,L2,Reroute is restricted to decode on HIP gfx95 with SGLANG_USE_AITER and opt-in flag.,derived,deepseek_v4.py diff,return bool(flag and use_aiter and is_hip and is_gfx95)
+L2-E-9db4ba8da1,L2,Q8KV8 path requires fp8_e4m3 KV cache and validated kernel input contract.,derived,PR#32327 body,When the KV cache uses `fp8_e4m3`
+L2-E-bda9952377,L2,No-copy scale path is used only when M >= 2 on bpreshuffle gfx95.,derived,fp8_utils.py diff,return on_bpreshuffle_gfx95 and m >= 2
+L2-E-34180a0d35,L2,Every query-head block maps to one KV head; block_h must divide kv_group_num.,derived,verify_mla.py diff,block_h must divide it so a head block maps to one KV head
+L2-E-44c90c6282,L2,Target-verify attention must keep current draft chunk separate from history until after attention.,derived,PR#34973 body,attention reads history from the ring and takes the current chunk as `k`/`v`
+L2-E-91e7e84ee5,L2,"Persistent split buffers are allocated once and reused across autotune, graph capture, and serving.",derived,PR#35116 body,"allocated once on first use, reused across autotune, CUDA graph capture"
+L2-E-04c1036bb3,L2,Physical KV-cache slot 0 is reserved as finite padding source.,derived,PR#36003 body,reserves physical KV-cache slot 0 as a finite padding source
+L2-E-2d8484740d,L2,SSD path is opt-in through expert_pack load format only.,derived,PR#35314 body,enabled only through the explicit `expert_pack` path
+L2-E-20621aa14b,L2,FlashInfer fast verify plan applies only when host plan inputs are derivable and non-DFLASH.,derived,flashinfer_mla_backend.py diff,for non-DFLASH spec inputs
+L2-E-de2fb50120,L2,aiter mla_reduce_v1 supports only head shapes in MLA_REDUCE_ROUTER table.,derived,aiter_backend.py diff,only has instantiations for the head shapes in _MLA_REDUCE_V1_HEADS
+L2-E-2a96ebf648,L2,Split-K heuristic may depend only on capture-stable sequence length inputs.,derived,test_dsv4_kv_splits_heuristic.py diff,runs at CUDAGraph capture time
+L2-E-4944e50e2c,L2,Lean grid defaults to one program per CU.,derived,lean_kernel_sweep.py diff,default 1.0 = one
+L2-E-cdbfe90b4a,L2,"- Cover MHA, MLA, DSA, Mamba, DeepSeek V4, K-only MHA, and asymmetric K/V page-first/page-first-direct layouts; keep layer-first behavior unchanged.",derived,PR #36798 body,"- Cover MHA, MLA, DSA, Mamba, DeepSeek V4, K-only MHA, and asymmetric K/V page-first/page-first-direct layouts; keep layer-first behavior unchanged."
+L2-E-22337e9c56,L2,"The MLA chunked-prefix-cache path is one: ForwardBatchDeepseekMHAMixin.preparechunkedkvindices reads getattnbackend.kvindextranslator and translates only if src is not None, so it hands the kernel raw virtual",derived,PR #37307 body,"The MLA chunked-prefix-cache path is one: ForwardBatchDeepseekMHAMixin.preparechunkedkvindices reads getattnbackend.kvindextranslator and translates only if src is not None, so it hands the kernel raw virtual"
+L2-E-8a191554e3,L2,"If aiter is not updated to the target version, fall back to use the existing zero-pad + mladecodefwd.",derived,PR #34647 body,"If aiter is not updated to the target version, fall back to use the existing zero-pad + mladecodefwd."
+L2-E-44a92e54b9,L2,We will disable ps only when gluon kernel is selected to avoid falling back to incorrect aiter kernel Accuracy Tests gsm8k1300 is ok bash,derived,PR #37438 body,We will disable ps only when gluon kernel is selected to avoid falling back to incorrect aiter kernel Accuracy Tests gsm8k1300 is ok bash
+L2-E-d9848b9ecd,L2,Depends on 37511 its base branch; review only the commits above Test the fused tombstone by what it must do.,derived,PR #37512 body,Depends on 37511 its base branch; review only the commits above Test the fused tombstone by what it must do.
+L2-E-7825e5ffca,L2,- Strip the FlashMLA-only zero padding so the unified backend receives exactly nlocalheads values.,derived,PR #35092 body,- Strip the FlashMLA-only zero padding so the unified backend receives exactly nlocalheads values.
+L2-E-1bda9694b7,L2,"sglang already has an fp8 woa path behind SGLANGOPTFP8WOAGEMM on by default, but it is built on DeepGEMM's fp8einsum, which is CUDA-only.",derived,PR #37423 body,"sglang already has an fp8 woa path behind SGLANGOPTFP8WOAGEMM on by default, but it is built on DeepGEMM's fp8einsum, which is CUDA-only."
+L2-E-3c2724c48d,L2,- Preserve current compact ragged-grid scheduling and the generic Triton-3.7 fallback.,derived,PR #35770 body,- Preserve current compact ragged-grid scheduling and the generic Triton-3.7 fallback.
+L2-E-514b45fd34,L2,"The two pieces must land together: with only the original pool-sizing commits, the DSV4 Flash and Pro MI35x jobs hit GPU memory access faults",derived,PR #30315 body,"The two pieces must land together: with only the original pool-sizing commits, the DSV4 Flash and Pro MI35x jobs hit GPU memory access faults"
+L2-E-09daea94ac,L2,"Kimi Linear is hybrid KDA/MLA, so prefill used to resolve to the wrapper, which has no prepareprefillqkv hook, and took the BF16 path guarded",derived,PR #38152 body,"Kimi Linear is hybrid KDA/MLA, so prefill used to resolve to the wrapper, which has no prepareprefillqkv hook, and took the BF16 path guarded"
+L2-E-15aa2fb843,L2,Three ROCm-only changes on the DSA decode path.,derived,PR #37124 body,Three ROCm-only changes on the DSA decode path.
+L2-E-e9e9e37ddc,L2,"It shipped as a SWARadixCache.swareprefilltailtokens override, gated only on the backend: swaradixcache.py, from 30339 if self.slidingwindowsize and isunifiedkvtriton: return self.slidingwindowsize return 0 At the",derived,PR #32759 body,"It shipped as a SWARadixCache.swareprefilltailtokens override, gated only on the backend: swaradixcache.py, from 30339 if self.slidingwindowsize and isunifiedkvtriton: return self.slidingwindowsize return 0 At the"
+L2-E-8a0863c728,L2,Deduplicating the host copy needs two reusable building blocks before the feature can be wired into Unified HiCache: an allocator-only peer host pool and,derived,PR #36800 body,Deduplicating the host copy needs two reusable building blocks before the feature can be wired into Unified HiCache: an allocator-only peer host pool and
+L2-E-1ad3eb09a9,L2,"FlashInferMLAAttnBackend sized kvindptr, qoindptr and qindptrdecode to the raw pool size and the cuda-graph buffers are clones of those, so the server died at",derived,PR #38590 body,"FlashInferMLAAttnBackend sized kvindptr, qoindptr and qindptrdecode to the raw pool size and the cuda-graph buffers are clones of those, so the server died at"
+L2-E-295132c4a5,L2,The feature is disabled by default.,derived,PR #33089 body,The feature is disabled by default.
+L2-E-8a6ab89bf0,L2,- Adds startup validation in both server-args paths so Triton DSA is only used with --kv-cache-dtype fp8e4m3.,derived,PR #30575 body,- Adds startup validation in both server-args paths so Triton DSA is only used with --kv-cache-dtype fp8e4m3.
+L2-E-d076eec427,L2,"Unprofiled decode-only A/B used DeepSeek-V4-Flash, pure TP4, FP8 KV, page size 256, FlashInfer sparse MLA and flashinfermxfp4 M …truncated",derived,PR #36655 body,"Unprofiled decode-only A/B used DeepSeek-V4-Flash, pure TP4, FP8 KV, page size 256, FlashInfer sparse MLA and flashinfermxfp4 M …truncated"
+L2-E-209654c420,L2,Host memory not AIV-de-referencable: The default torch.pinmemory host buffers are only reachable by the SDMA engine; the fused AIV sparse-copy kernel offload.kvexchangecopy from the,derived,PR #38826 body,Host memory not AIV-de-referencable: The default torch.pinmemory host buffers are only reachable by the SDMA engine; the fused AIV sparse-copy kernel offload.kvexchangecopy from the
+L2-E-21289cfd50,L2,Batches exceeding MAXFUSEDROWS retain eager metadata construction to avoid capturing the unsafe scheduler fallback.,derived,PR #39116 body,Batches exceeding MAXFUSEDROWS retain eager metadata construction to avoid capturing the unsafe scheduler fallback.
+L2-E-a66451c058,L2,Each PR has a separate feature diff; dependent PRs must be rebased and retargeted to main after their parent merges.,derived,PR #38845 body,Each PR has a separate feature diff; dependent PRs must be rebased and retargeted to main after their parent merges.
+L2-E-5a132c061b,L2,The pool's writer is a stand-in that refuses on the fused branch and writes on the fallback.,derived,PR #39232 body,The pool's writer is a stand-in that refuses on the fused branch and writes on the fallback.
+L2-E-5200508b0f,L2,"Below, the ledger spends 16384 while the forward runs 16328 pagesize=64, 8100-token prompts — only whole admissions leak.",derived,PR #32888 body,"Below, the ledger spends 16384 while the forward runs 16328 pagesize=64, 8100-token prompts — only whole admissions leak."
+L2-E-5aa9b8fb3e,L2,Off by default behind SGLANGDSV4UNIFIEDKVFP8; it requires gfx950 and implies isunifiedkvtriton.,derived,PR #37413 body,Off by default behind SGLANGDSV4UNIFIEDKVFP8; it requires gfx950 and implies isunifiedkvtriton.
+L2-E-a813224e78,L2,BCG remains opt-in via --cuda-graph-backend-prefill breakable.,derived,PR body,BCG remains opt-in through `--cuda-graph-backend-prefill breakable`.
+L2-E-e7f7447333,L2,Feature is unreachable until later control-plane PR constructs these pools.,derived,PR body,Still unreachable at runtime: nothing constructs these pools
+L2-E-5e9342d16f,L2,SM120 fast paths require explicit opt-in or compatible DeepGEMM APIs.,derived,PR body,"The new paths are disabled by default, or require an explicit SM120 opt-in"
+L2-E-81363bf8cb,L2,Vectorized copy requires data pointer and non-inner strides aligned to chosen width.,derived,PR body,"Alignment becomes a stated precondition, not an assumption."
+L2-E-c5326d28a3,L2,compress_ratio identifies the sparse stream at graph capture time.,derived,PR body,The discriminator is static and available at capture time: `compress_ratio`.
+L2-E-e9300f643e,L2,Only replicated MLA KV cache pages may be deduplicated across TP ranks.,derived,PR body,load replicated MLA KV caches from Mooncake on TP rank 0
+L2-E-59dd2fc734,L2,Negative locations are padding and must remain unchanged.,derived,PR body,Negative locations represent padding and must remain unchanged
+L2-E-7ad55e4386,L2,Requires sm_90+ and row/stride multiples compatible with TMA bulk copies.,derived,diff,HiCache TMA: row bytes must be a multiple of 16
+L2-E-11e661fd45,L2,Captured CUDA graph buffers must retain address identity across replay.,derived,PR body,the assignment frees the buffer the decode CUDA graphs captured
+L2-E-ddebc52f23,L2,Flag is off by default and not usable end-to-end until part 4 send filter.,derived,PR body,the flag is not usable end to end until then
+L2-E-a89f849158,L2,"Fusion only when gfx95, fp8 absorbed weight, rope, compatible backend, and no q-rep/LoRA/deep-gemm path.",derived,PR body,_can_fuse_bmm_rope_cat_and_cache enumerates the conditions
+L2-E-4cd63da996,L2,MLA latent plus DSA indexer are replicated across attention TP ranks in this topology.,derived,PR body,MLA latent plus the DSA indexer are replicated across attention TP ranks
+L2-E-d94d784441,L2,Changing split-K accumulation order can flip greedy answers without changing reduction correctness.,derived,PR body,tl.dot accumulates in a different order
+L2-E-1446e24d13,L2,"Grouped path is off by default and limited to compress_ratio 128, head=16.",derived,diff,SGLANG_DSV4_GROUPED_ASM
+L2-E-f5ae989a0e,L2,Dense MLP on every rank owes no sum like MoE per DP shard.,derived,PR body,A dense MLP on every rank (`moe_dense_tp_size=1`) runs on each rank's own slice
+L2-E-e581520c67,L2,Load-back is per-layer and unstaged because L2 transfer unblocks forward layer by layer.,derived,PR body,Load-back is walked layer by layer by the L2 transfer engine
+L3-E-c413c41cda,L3,slot_mapping maps each token to a cache slot,derived,csrc/cache_kernels.cu at c413c41cda,slot_idx = slot_mapping[token_idx]
+L3-E-0deacbce6e,L3,block_tables cover each sequence context,derived,csrc/attention_kernels.cu at 0deacbce6e,"block_tables // [num_seqs, max_num_blocks_per_seq]"
+L3-E-897cb2ae28,L3,query stride represents first dimension spacing,derived,csrc/attention_kernels.cu at 897cb2ae28,int query_stride = query.stride(0)
+L3-E-21b3671bbc,L3,seq_prompt_mapping maps sequence rows to prompt rows,derived,csrc/attention_kernels.cu at 21b3671bbc,seq_prompt_mapping // [num_seqs] mapping
+L3-E-0f40557af6,L3,block_mapping supplies source and destination block pairs,derived,csrc/cache_kernels.cu at 0f40557af6,block_mapping[2 * pair_idx]
+L3-E-e3cec88aa5,L3,paged layout is not ideal for raw memory throughput,derived,PR #29 body,memory layout is not ideal
+L3-E-436e523bf1,L3,reduced precision logits*V is intended compatible with FasterTransformer,derived,PR #53 body,compatible with the FasterTransformer's implementation
+L3-E-79af7e96a0,L3,shared block load reduces 64x repeated query memory reads,derived,PR #420 body,causes 64x memory to be read
+L3-E-cf5cb1e33e,L3,compute capability >=7.0 exposes additional shared memory for the kernel,derived,PR #1154 body,compute capability >=7.0 cards
+L3-E-928de46888,L3,PARTITION_SIZE zero disables partitioning,derived,csrc/attention/attention_kernels.cu at 928de46888,Zero means no partitioning
+L3-E-dacaf5a400,L3,query heads are evenly grouped by num_kv_heads,derived,csrc/attention/attention_kernels.cu at dacaf5a400,num_queries_per_kv = num_heads / num_kv_heads
+L3-E-37ca558103,L3,CUDA graph attention inputs must use padded block tables,derived,vllm/worker/model_runner.py at 37ca558103,input block tables must be padded
+L3-E-d10f8e1d43,L3,automatic prefix caching was planned against SGLang RadixAttention,unclear,PR #1669 body,Automatic Prefix Caching Support -- SGLang RadixAttention
+L3-E-9090bf02e7,L3,FP8 E5M2 trades accuracy for throughput and memory reduction,tested_only,PR #2279 body,Baseline(KV Cache FP16) | KV Cache FP8 E5M2
+L3-E-e4a28e5316,L3,warp reduction width must match platform warpSize,derived,csrc/cuda_compat.h diff,#define WARP_SIZE warpSize
+L3-E-2ff767b513,L3,FP8 E4M3 KV entries require scale conversion before attention math,derived,attention_kernels.cu diff,"scaled_vec_conversion<K_vec, Quant_vec>(k_vec_quant, kv_scale)"
+L3-E-e8cc7967ff,L3,Triton block dimension must be power-of-two while logical head size may be smaller,derived,prefix_prefill.py diff,Lk_padded = 2**((Lk - 1).bit_length())
+L3-E-32881f3f31,L3,fully masked sliding-window rows must avoid -inf - -inf softmax NaNs,derived,prefix_prefill.py diff,sliding window may lead to the entire row being masked
+L3-E-43c413ec57,L3,FlashInfer decode uses NHD paged KV cache layout,derived,flashinfer.py diff,"get_kv_cache_shape ... (num_blocks, 2, block_size, num_kv_heads, head_size)"
+L3-E-8e192ff967,L3,block-sparse local/vertical stride parameters identify attended blocks,derived,attention_kernels.cu diff,if (!is_remote && !is_local)
+L3-E-978aed5300,L3,old kv_scale checkpoints map same scale to both K and V,derived,PR #6081 body,duplicates that scale for both key+value
+L3-E-ef527be06c,L3,pinned memory enables non-blocking host-to-device copies,derived,PR #7172 diff,async_tensor_h2d(... self.runner.pin_memory)
+L3-E-e02ac55617,L3,most runs have one sequence per group,derived,PR #7162 body,most of the time we simply have one sequence per group
+L3-E-999ef0b917,L3,numpy overhead outweighs benefit for fewer than 256 elements,derived,PR #7377 diff,if we have at least this many elements
+L3-E-a046f86397,L3,FP8 cache tensors are stored as uint8 before Triton dtype view,derived,prefix_prefill.py diff,assert (k_cache.dtype == torch.uint8)
+L3-E-53328d7536,L3,"FlashInfer decode supports group sizes 1,2,4,8 without tensor cores",derived,PR #7509 body,"it only support group_size [1,2,4,8]"
+L3-E-b98cc28f91,L3,FlashInfer API requires fp8_e4m3/fp8_e5m2 cache view,derived,PR #7798 diff,requires data to be in fp8_e4m3 or fp8_e5m2
+L3-E-1ef0d2efd0,L3,kernel is limited to MI300/MI250-era HIP architectures initially,derived,csrc/rocm/attention.cu diff,defined(__gfx90a__) || defined(__gfx940__)
+L3-E-1ef0d2efd0,L3,AMD wavefront size is 64 in kernel mapping,derived,csrc/rocm/attention.cu diff,#define WARP_SIZE 64
+L3-E-1009e93c5d,L3,encoder input longer than max_seq_len_to_capture falls back to eager,derived,PR #7631 body,if the sequence length of the encoder input exceeds this then we will fallback
+L3-E-9cc373f390,L3,FP8 K and V cache loads must be scaled separately,derived,csrc/rocm/attention.cu diff,"scaled_convert_b8x8<scalar_t, KV_DTYPE>(Klocalb8[d], k_scale)"
+L3-E-c2ec430ab5,L3,FlashInfer still cannot turn prefills into decodes in this path,derived,flashinfer.py diff,Chunked prefill is not supported with flashinfer yet.
+L3-E-1570203864,L3,MQA scorer supports FlashAttention backend only in this change,derived,PR #8839 body,MQA scorer is only enabled for flash attention backend
+L3-E-0c9a5258f9,L3,num_qo_heads // num_kv_heads heuristic controls tensor-core use unless override is set,derived,vllm/attention/backends/flashinfer.py at 0c9a5258,VLLM_FLASHINFER_FORCE_TENSOR_CORES or
+L3-E-6c5af09b39,L3,V1 selection is gated by VLLM_USE_V1,derived,vllm/attention/selector.py at 6c5af09b,if envs.VLLM_USE_V1
+L3-E-55137e8ee3,L3,ROCm custom paged attention is supported only on MI250/MI300-class architectures,derived,rocm_flash_attn.py at 55137e8e,"for arch in [""gfx90a"", ""gfx940"", ""gfx941"", ""gfx942""]"
+L3-E-598b6d7b07,L3,FP8 KV cache scales can differ for key and value tensors,tested_only,tests/kernels/test_cache.py at 598b6d7b,k_scale = key.amax().item() / 256
+L3-E-4dbcbbeb09,L3,CPU-computed query_start_loc can be copied asynchronously to device,derived,PR #9447 body,allow h2d async
+L3-E-4089985552,L3,piecewise CUDA graphs are not compatible with custom ops in this implementation,derived,PR #10058 body,not compatible with custom ops
+L3-E-b6dde33019,L3,block table mapping must fit available GPU thread mapping,derived,PR #10282 body,not enough threads to map block_table
+L3-E-4a18fd14ba,L3,Roberta/BGE-M3 models need head size 32,tested_only,PR #9387 body,we also need head size 32
+L3-E-c2170a5b39,L3,masked tl.load without other may return invalid values,specified_guarantee,Triton tl.load documentation cited in PR #9014,"If `other` is not specified, there is no guarantee"
+L3-E-c27df94e1f,L3,Turing devices have a limitation performing Triton matmul with float32,undocumented_behavior,PR #9850 body,limitation of Turing devices to perform matmul with float32
+L3-E-98f47f2a40,L3,view and slice operations add CPU overhead in eager non-CUDA-graph regions,derived,vllm/v1/attention/backends/flash_attn.py at 98f47f2a,view and `slice` (or `[:n]`) operations are surprisingly slow
+L3-E-073a4bd1c0,L3,flash_attn_varlen_func out argument writes up to num_actual_tokens,derived,vllm/v1/attention/backends/flash_attn.py at 073a4bd1,out=output[:num_actual_tokens]
+L3-E-3b61cb450d,L3,slot_mapping.size(0) is the number of actual tokens before CUDA-graph padding,derived,csrc/cache_kernels.cu at 3b61cb45,slot_mapping.size(0) represents the actual number of tokens
+L3-E-73001445fb,L3,cascade attention is only used when every running request shares the same KV cache,tested_only,PR #11635 body,only uses cascade attention when every running request shares the same KV cache
+L3-E-73001445fb,L3,common prefix length must be block-aligned,derived,vllm/v1/attention/backends/flash_attn.py at 73001445,assert common_prefix_len % block_size == 0
+L3-E-66818e5b63,L3,FlashInfer 0.2 plan needs global sliding-window/config before wrapper use,derived,PR #12253 body,needs to access some global information
+L3-E-978b45f399,L3,SM90+ prefers FA3 if support probe succeeds,derived,978b45f399 diff,self.fa_version = 3 if is_fa_version_supported(3) else 2
+L3-E-e97f802b2d,L3,scale tensors can change after graph capture,derived,PR #11906 body,allow changing their values after the graph has been captured
+L3-E-2bc3fbba0c,L3,FlashInfer 0.2 encourages host tensors for plan metadata,derived,2bc3fbba diff,FlashInfer 0.2 encourages passing host tensors
+L3-E-cabaf4eff3,L3,MLA uses latent vectors instead of full MHA KV,derived,PR #12528 body,computing MQA using latent vectors instead of MHA
+L3-E-75e94309e8,L3,NVIDIA hardware benefits from 256-byte-aligned cache entries,unclear,PR #12676 body,Nvidia hardware likes 256 byte alignment
+L3-E-288cc6c234,L3,chunked prefill requires preserving softmax LSE for merge,derived,288cc6c234 diff,"merge_attn_states(prefix_lse, suffix_lse)"
+L3-E-1d35662e6d,L3,upstream flash-attn on non-CUDA lacks return_softmax_lse,derived,PR #13844 body,does not support the `return_softmax_lse` argument
+L3-E-f95903909f,L3,FlashMLA requires block_size=64,tested_only,PR #13747 body,block_size=64
+L3-E-58d1b2aa77,L3,V1 MLA distinguishes prefill vs decode scheduler labels,derived,58d1b2aa diff,labelled prefill or decode by the scheduler
+L3-E-8294773e48,L3,HIP path requires VLLM_USE_TRITON_FLASH_ATTN to select Triton FA,derived,8294773e diff,is_hip and envs.VLLM_USE_TRITON_FLASH_ATTN
+L3-E-848a6438ae,L3,optimized CPA requires MI300X-class MFMA support,tested_only,PR #12348 body,GPU: MI300X
+L3-E-6bd1dd9d26,L3,test batch includes a decode sequence,tested_only,PR #14152 diff,ensure one sequence in batch is a decode
+L3-E-dae6896977,L3,optimization applies only on CUDA,derived,PR #14384 diff,if current_platform.is_cuda()
+L3-E-b0d541947a,L3,FlashMLA requires block size 64,derived,PR #14451 diff,Forcing kv cache block size to 64
+L3-E-fb0acb6c72,L3,GPU to CPU synchronization blocks previous kernels,derived,PR #14540 diff,it blocks on all previous kernels
+L3-E-fb4c7f8ef0,L3,query heads per KV are padded and masked,derived,PR #14431 diff,num_queries_per_kv_padded
+L3-E-33437bc6e7,L3,inf LSE indicates FA2 zero-length behavior,derived,PR #15492 diff,If we see an inf assume FA2
+L3-E-e73ff24e31,L3,prefill queries are handled by another kernel,derived,PR #15720 diff,prefills and taken care by another kernel
+L3-E-e9528f6dc6,L3,head_size permits 128-bit packed load path,derived,PR #16173 diff,const uint pack_size = 16 / sizeof
+L3-E-e82ee40de3,L3,kernel must launch on current CUDA stream for graph capture,derived,PR #16693 diff,auto stream = at::cuda::getCurrentCUDAStream()
+L3-E-183dad7a85,L3,unpadding is unnecessary on Hopper FA3,derived,PR #13111 diff,self.vllm_flash_attn_version == 3
+L3-E-0377b8310b,L3,MLA separates compute-bound prefill from memory-bound decode,derived,PR #16673 diff,compute-bound or memory-bound
+L3-E-986537f1c3,L3,decode tokens are contiguous before prefill tokens,derived,PR #16684 body,all decode tokens are at the front
+L3-E-bc7c4d206b,L3,K cache shape drives context-loop vectorization complexity,derived,PR #13305 body,k cache shape is very specific
+L3-E-d0da99fb70,L3,FA3 AOT scheduler metadata shape must match virtual local batch,derived,PR #16998 diff,local_scheduler_metadata = schedule
+L3-E-8e4b351a0c,L3,Varlen only supports THD layout,derived,triton_flash_attention.py diff,Varlen only implemented for thd layout
+L3-E-8e4b351a0c,L3,Only 8-bit FP8 quantization is supported,derived,triton_flash_attention.py diff,Only 8-bit quantization supported
+L3-E-ed7a29d9f8,L3,compiled only when ENABLE_CUTLASS_MLA is set,derived,csrc/attention/mla/cutlass_mla_entry.cu,No compiled cutlass MLA
+L3-E-2f925e5777,L3,HEAD_SIZE_PADDED must be power of two,derived,triton_unified_attention.py signature,HEAD_SIZE_PADDED ... must be power of 2
+L3-E-7ea2adb802,L3,full graph only works with V1 plus FA3,derived,PR body limitations,only works with V1 + FA3
+L3-E-3c9396a64f,L3,AITER MLA V1 tested with block_size=1,tested_only,PR body lm_eval command,"max_model_len=32768,block_size=1"
+L3-E-60f7624334,L3,requires sparse attention kernel from vllm-flash-attention,derived,PR body,requires the [sparse attention kernel]
+L3-E-e60f550b38,L3,AITER MLA still requires block size 1 from its KV cache spec,derived,rocm_aiter_mla.py diff,only supports block size 1
+L3-E-dd5fa7e04f,L3,only head_size 128 and block_size 16 are supported,derived,PR body,head_size == 128 and block_size == 16
+L3-E-94d8ec8d2b,L3,mla_decode_fwd requires either 128 or 16 heads,derived,PR body,requiring either 128 or 16 heads
+L3-E-ce75efeecb,L3,merge_attn_states inputs must not be sliced,derived,PR body,doesnt support tensor slices
+L3-E-269d901734,L3,Triton tl.arange range must be power of two,derived,PR body,requires the parameter is a power of 2
+L3-E-41aa578428,L3,unsupported alibi/sliding-window/blocksparse/logits soft cap,derived,cutlass_mla.py,does not support one of the following
+L3-E-cf02f9b283,L3,head sizes limited to fixed supported list,derived,flex_attention.py,"return [16, 32, 64, 96, 128, 160, 192, 224, 256]"
+L3-E-f98548b9da,L3,fusion only used for backends declaring support,derived,AttentionImpl diff,only fuse output quantization onto implementations that support it
+L3-E-3597b06a4f,L3,FlashMLA full CUDA graph capture is decode-only,derived,diff comment,only supports decode-only full CUDAGraph capture
+L3-E-4c8f64faa7,L3,only NHD and HND layout names are accepted,derived,FlashInferBackend.get_kv_cache_stride_order,Unknown cache layout format
+L3-E-ccd7c05089,L3,split-KV selected only for decode with limited grid parallelism,derived,diff heuristic,max_seqlen_q > 1 or total_num_q_blocks * num_kv_heads > 128
+L3-E-a1aafc827a,L3,full graph support applies to decode only,derived,PR title/body,Decode Phase only
+L3-E-32c9be2200,L3,FP32 FlexAttention uses smaller M/N blocks to fit shared memory,derived,diff comment,may run out of shared memory on some GPUs with fp32
+L3-E-7bd4c37ae7,L3,TRTLLM decode requires SM100 and head_dim 128/GQA ratio <=8,derived,use_trtllm_decode_attention diff,num_qo_heads // num_kv_heads > 8 ... attn_head_size != 128
+L3-E-76b494444f,L3,metadata refactor preserves backend-specific plan/run semantics,tested_only,PR test result tables,Test correctness with all attention backends
+L3-E-8dfb45ca33,L3,TRTLLM decode API requires contiguous tensors,derived,diff assertions,assert decode_query.is_contiguous()
+L3-E-9a9fda1423,L3,cascade attention remains disabled for local attention,derived,flash_attn.py diff,or use_local_attention
+L3-E-59f935300c,L3,padded CUDA-graph metadata must use invalid sentinel slots,derived,PR #21196 body,it's safer to -1 fill here
+L3-E-90eeea8f85,L3,ROCm host code cannot assume a compile-time WARP_SIZE,derived,PR #21205 body and cuda_compat.h diff,same compiled image can be used on different platforms
+L3-E-61b8cea3b4,L3,FlashInfer plan APIs prefer host-side CPU metadata buffers,derived,PR #21137 body,Flash infer prefers host side CPU buffers
+L3-E-b3caeb82e7,L3,latest AITER supports fp8 kv cache for this backend,tested_only,PR #20295 body,could support fp8 kv cache with latest aiter
+L3-E-8f605ee309,L3,CutlassMLA requires block_size 128 on selected path,derived,cuda.py diff,Forcing kv cache block size to 128
+L3-E-139a7f07bd,L3,Temporary workaround only applies when attention_chunk_size is set and hybrid KV cache is disabled,derived,gpu_model_runner.py diff,disable_hybrid_kv_cache_manager
+L3-E-555e7225bc,L3,FlashInfer cannot handle mixed sliding-window/full layers without hybrid allocator,derived,PR #21412 body,flashinfer cannot handle this case
+L3-E-ad510309ee,L3,logits_indices are padded to CUDA graph captured batch sizes,derived,PR #21590 body,padded to align with cudagraph captured batch sizes
+L3-E-f81c1bb055,L3,cubin kernels require network access to NVIDIA artifactory unless predownloaded,derived,PR #21893 body and flashinfer.py diff,required for downloading certain cubin kernels
+L3-E-eefbf4a68b,L3,NHD layout has contiguous heads when head_stride == head_size,derived,csrc/cache_kernels.cu diff,this is true for the NHD layout
+L3-E-0edaf752d7,L3,initial splitting tests cover decode-only batches first,tested_only,PR #21153 body,focused on decode-only batches for now
+L3-E-23322431c8,L3,FlashInfer full CUDA graph support is pure-decode only in this change,derived,PR #21367 body and diff,pure decode only
+L3-E-4abfd8796f,L3,only compatible backend reorderings can coexist in hybrid attention setup,derived,PR #21557 body,verify that the attention backends reorder the batch
+L3-E-aa7012eb6d,L3,tree attention only changes behavior when qq_bias is non-None,derived,PR #20401 body,only enabled if a non-None value is provided
+L3-E-83156c7b89,L3,TRTLLM prefill does not support Q-BF16 KV-FP8 O-BF16 in this release,derived,PR #22095 body,does not support Q-BF16 KV-FP8 O-BF16
+L3-E-469b3ffaaa,L3,xFormers dependency is importable for backend use,derived,xformers.py diff,XFORMERS_AVAILABLE = True
+L3-E-2435ea7ed5,L3,Triton branches on pointer None must be constexpr to avoid compiling load from None,derived,PR #22370 body,"if the pointer is None, the else branch will still get executed"
+L3-E-f825c6bd22,L3,FlexAttention needed for fp32 encoder-only use where FlashAttention supports only fp16/bf16,derived,PR #22273 body,flash attention only supports float16 and bfloat16
+L3-E-af473f0a85,L3,FlashInfer 0.2.10 lacks BF16-Q FP8-KV prefill kernels,derived,PR #22426 body,no BF16-Q FP8-KV prefill kernels
+L3-E-6d729c43fb,L3,FlexAttention still lacks sliding-window support for this case,derived,PR #22637 body,FlexAttention does not support sliding window yet
+L3-E-007dd90859,L3,Hopper GPT-OSS without/with attention sink needs Triton attention selection guard,derived,PR #22714 body and diff,Hardcode to use triton attention on hopper
+L3-E-6bd8ebf026,L3,prefill path is identified by max_query_len > 1,derived,PR body/diff,if max_query_len > 1
+L3-E-c6b928798e,L3,attention sinks require TRTLLM attention,derived,PR body/diff,only backend that supports them
+L3-E-1d353b6352,L3,latest GPU tensor cores are at least as good as CUDA cores,derived,PR body/diff,atleast as good as cuda cores
+L3-E-04d1dd7f4a,L3,AITER FP8 BMM operates on non-padded inputs,derived,PR body/diff,kernel operates on non-padded inputs
+L3-E-402759d472,L3,"FlashAttn MLA supports FA3 decoder path, not FP8 KV cache",derived,PR body/diff,fa_version=3
+L3-E-ac201a0eaf,L3,TP size must be divisible by DCP size,derived,PR body/diff,tp_size needs to be divisible by dcp_size
+L3-E-ac201a0eaf,L3,DCP path does not support FP8 KV cache,derived,PR body/diff,DCP not support fp8 kvcache now
+L3-E-bba1042c6f,L3,FlashInfer 0.3.0 is required for this kernel path,derived,PR #23647 body,This requires Flashinfer 0.3.0 to land
+L3-E-dc625ea6b8,L3,batch_indices and block_indices can be converted to torch tensors for block_table indexing,derived,diff PR #24474,convert numpy arrays to torch
+L3-E-a0933c3bd6,L3,non-TRTLLM FlashInfer must not force query dtype to KV dtype,derived,diff PR #24577,if supports_trtllm_attention()[0]
+L3-E-9a161307f5,L3,full CUDA graph capture is required to perform the fusion,derived,PR #19767 body,full graph capture for this backend
+L3-E-b5e383cd8b,L3,FlashInfer attention sinks require TRTLLM or another backend,derived,diff PR #24482,does not support attention sinks
+L3-E-fba7856581,L3,model has FlashInfer attention groups before warmup runs,derived,diff PR #23439,Only warmup if the model has FlashInfer attention groups
+L3-E-dcb28a332b,L3,FlashInfer MLA uses HND KV cache layout,derived,diff PR #21078,"set_kv_cache_layout(""HND"")"
+L3-E-0ae43dbf8c,L3,DCP custom masking restricts decode to q_len == 1,derived,diff PR #24453,restrict decodes to q_len == 1
+L3-E-e42af78b18,L3,TRTLLM prefill attention does not support BF16 Q plus FP8 KV directly,derived,PR #24197 body,does not support bf16 Q + fp8 kv
+L3-E-d4fd2768ef,L3,FlashInfer MLA supports only block sizes 32 or 64,derived,PR #24692 body,only supports 32 or 64
+L3-E-01413e0cf5,L3,target accelerators support FP8 MFMA instructions,derived,PR #22222 body,MI300x or later accelerators
+L3-E-aae725af7c,L3,strides remain correct without pre-attention clone calls,derived,diff PR #24891,Clone q_nope and q_pe
+L3-E-3053a22b33,L3,q_scale may be a tensor during torch.compile graph capture,derived,diff PR #22758,"q_scale, torch.Tensor"
+L3-E-e67a79db03,L3,not every FP8 KV case supports TRTLLM attention,derived,PR #24600 body,lots of cases that do not support TRTLLM attention
+L3-E-fedb75fa27,L3,large batch with high kv_splits can hang the SM100 CUTLASS MLA reduction path,derived,PR #24966 body,batch size is sufficiently large and kv_splits is high
+L3-E-1a456c7c90,L3,FP8 cache view must use current platform FP8 dtype,derived,diff PR #24991,current_platform.fp8_dtype()
+L3-E-01a583fea4,L3,TILE_SIZE must be power of two,derived,diff PR #21197,"TILE_SIZE: tl.constexpr,  # int must be power of 2"
+L3-E-bbdc0f2366,L3,AITER FA prefill invokes two kernels and is not safe for FULL graph mode,derived,PR #25104 body,calls two AITER kernels for prefill
+L3-E-a2a5f79e09,L3,SLIDING_WINDOW > 0 bounds tile_start/tile_end safely,derived,diff PR #24390,if SLIDING_WINDOW > 0
+L3-E-b1a63d1b3b,L3,gpu_model_runner synchronization makes non-blocking metadata copy safe,derived,PR #25040 body,correctness is ensured by vllm/v1/worker/gpu_model_runner.py
+L3-E-ee7a66dd9a,L3,GB200 FlashInfer prefill is incompatible with CutlassMLA FP8,derived,PR #25276 body,not compatible with CutlassMLA FP8
+L3-E-0b7bed9c38,L3,underlying kernel still requires padded head dim when necessary,derived,diff PR #25184,Pads the head_dim if necessary
+L3-E-78237e43bf,L3,context-parallel MLA output need not be contiguous,derived,PR #25414 body,This doesn't seem to be required
+L3-E-4741239db7,L3,long-context allocation should size for actual query/output need rather than full context,derived,PR #25290 body,"128k input, 1 output token"
+L3-E-100b630a60,L3,Triton implementation does not support HND layout yet,derived,diff PR #24503,Triton does not support HND layout yet
+L3-E-1210e4d95b,L3,kv_split==1 disables the SM100 CUTLASS reduction kernel,derived,PR #25509 body,1 disables the sm100 cutlass reduction kernel
+L3-E-9df8da548e,L3,CUTLASS MLA block_size can be 128 while default max_num_seqs is 1024,derived,PR #25478 body,Cutlass MLA has a block_size of 128
+L3-E-c30b405b8f,L3,TRTLLM spec decode requires GQA-compatible head counts,derived,vllm/utils/flashinfer.py diff,num_qo_heads % num_kv_heads == 0
+L3-E-1983609239,L3,TRTLLM-gen workspace state must be zero-initialized and invariant,derived,PR #25520 body,require their workspace buffer to be zero-initialized
+L3-E-2338daffd3,L3,CUDA graph replay requires scheduler metadata arguments matching captured FlashAttention metadata,derived,PR #25490 body,arguments to `get_scheduler_metadata` and `FlashAttentionMetadata` are inline
+L3-E-69a8c8e99a,L3,Only FlashAttention supports pre-quantized query input in this change,derived,flash_attn.py diff,supports_quant_query_input: bool = True
+L3-E-fa7e254a7f,L3,fp8_ds_mla cache path requires kv_lora_rank 512 and pe_dim 64,derived,csrc/cache_kernels.cu diff,kv_lora_rank must be 512 for fp8_ds_mla
+L3-E-1726e93ef1,L3,all compute and load warps must observe epilogue named barrier before loop repeats,derived,PR #26026 body,didn't have any barrier before looping around
+L3-E-47b9339546,L3,DS MLA FP8 cache shape uses 512 NoPE and 64 RoPE elements,derived,csrc/cache_kernels.cu comments,The RoPE part (last 64 elements)
+L3-E-eb0fa43868,L3,head_size is divisible by x for per-head block mapping,derived,csrc/cache_kernels.cu diff,const int h_block_count = head_size / x
+L3-E-127c8b782a,L3,head_dim must be divisible by quant_block_size,derived,csrc/cache_kernels.cu diff,head_dim must be divisible by quant_block_size
+L3-E-d24cf322e1,L3,physical block size must be divisible by kernel_block_size,derived,vllm/v1/worker/block_table.py diff,kernel_block_size {kernel_block_size} must divide
+L3-E-3b736e1c38,L3,"FA3 backend must receive DCP world size, rank, and total sequence lengths",derived,flashattn_mla.py diff,cp_world_size=self.dcp_world_size
+L3-E-44f633dba1,L3,attention sinks may be present or absent,tested_only,test_flashinfer_trtllm_attention.py diff,"HAS_SINKS = [True, False]"
+L3-E-6e783bc54b,L3,speculative decoding expands decode tokens per request,derived,flashinfer.py diff,(1 + num_spec_tokens) * max_num_reqs
+L3-E-0cd103e7cb,L3,out and lses may be 4-D views in CP path,derived,PR body,out and lses can arrive as 4-D views
+L3-E-3263799056,L3,batch-invariant mode needs fixed split sizes and no split-KV,derived,flashinfer.py diff,self.disable_split_kv = True
+L3-E-ea97940d6c,L3,context KV is distributed across DCP ranks,derived,PR body,"For context, the KV is distributed across different DCP ranks."
+L3-E-a86b4c58e8,L3,real attention kernels fully write the output buffer,derived,layer.py diff,output = torch.empty(output_shape
+L3-E-0a9ef0cfce,L3,pre-quantized query dtype must match backend metadata dtype,derived,flashinfer.py diff,assert attn_metadata.q_data_type == query.dtype
+L3-E-7d8975de84,L3,batch-invariant mode must use single split in attention kernels,derived,flash_attn.py diff,num_splits=1 if self.batch_invariant_enabled else 0
+L3-E-314fa8abbf,L3,integer wave scheduling improves split choice,derived,sm100_mla.hpp diff,Wave-aware scheduling: ensure integer number of waves
+L3-E-950cf9e58e,L3,TRTLLM attention cannot support max_model_len >=131072 on Blackwell,derived,vllm.py diff,TRTLLM attention cannot support max_model_len >= 131072
+L3-E-250fb1b8ea,L3,dense FP8 KV cache needs separate FlashMLA metadata kernel,derived,flashmla.py diff,get_mla_decoding_metadata_dense_fp8
+L3-E-5beacce2ea,L3,full CUDA graph replay requires scheduler metadata and max_num_splits agreement,derived,PR body,different `max_num_splits` than what was being passed
+L3-E-dbfbf9f324,L3,all query lengths are uniform for this FlashMLA metadata path,derived,flashmla.py diff,all should be the same due to uniform length requirement
+L3-E-0f67d4d962,L3,TRTLLM ragged DeepSeek prefill is SM100-only,derived,common.py diff,current_platform.is_device_capability(100)
+L3-E-141e6a0505,L3,extend requests have existing context while prefill requests have none,derived,utils.py diff,extend: non-decode request with existing context
+L3-E-a8c02fb5bf,L3,kernel BLOCK_M/BLOCK_N must divide logical block dimensions when adjusted,derived,flex_attention.py diff,Pick a kernel block size that divides the logical block.
+L3-E-b5d70751d8,L3,"extend means existing computed context, not computed tokens greater than current schedule length",derived,utils.py diff,is_extend = (~is_decode) & (num_computed_tokens_np > 0)
+L3-E-3933f18a5e,L3,encoder-only FlexAttention fails when selected kernel block sizes are too small,derived,PR body,too small BLOCK_M/BLOCK_N (BLOCK_M=8)
+L3-E-18961c5ea6,L3,FlashAttention can read partial block data containing NaNs when block_size >=128 in hybrid fp32 mamba state,derived,PR body,"for block_size >= 128, FA will read partial block data"
+L3-E-7e4be74104,L3,batch-invariant FlashAttention MLA requires scheduler_metadata shape metadata_size,derived,PR body,scheduler_metadata must have shape (metadata_size)
+L3-E-dc937175d4,L3,AITER MHA enabled flags turn on split_prefill_from_chunk,derived,PR body,turned on if both `VLLM_ROCM_USE_AITER` and `VLLM_ROCM_USE_AITER_MHA` are set
+L3-E-c765f0b443,L3,FlashInfer block_size 16 head_size 256 is unsupported on Blackwell,derived,flashinfer.py diff,head size 256 and block size 16 is not supported
+L3-E-faedbb4d4f,L3,TRTLLM attention on B200 with cudagraphs causes batch-invariance issues,derived,PR body,`trtllm_attention` on B200 + cudagraphs causes issues
+L3-E-6cae1e5332,L3,"after remapping, AITER MLA treats block size as one",derived,rocm_aiter_mla.py diff,"after remapping, we assume the block size already equals to 1"
+L3-E-d43ad5a757,L3,DCP previously asserted on reorder_batch_threshold > 1,derived,PR body,DCP not support reorder_batch_threshold > 1 now.
+L3-E-16b37f3119,L3,DCP local length remainder handling must not add one when divisible,derived,PR body,exactly divisible by the `dcp_world_size`
+L3-E-981cadb35c,L3,prefix_output is all zeros in the empty-prefix/suffix edge case,derived,merge_attn_states.cu diff,prefix_output (expected to be all zeros)
+L3-E-4a36681f85,L3,pre-downloaded FlashInfer cubins can be used without nvcc,derived,PR title/body,do not check nvcc availability when using pre-downloaded cubins
+L3-E-2108a571d7,L3,cp_kv_cache_interleave_size equal to block_size enables block-level interleave for disaggregate decode,derived,PR body,By setting cp_kv_cache_interleave_size to block_size
+L3-E-f080a83511,L3,AITER kernel availability and device compatibility checks should be centralized,derived,PR body,Centralized kernel registration
+L3-E-a7ef3eb0cd,L3,FlashInfer-like layout stores num_blocks before K/V axis,derived,PR body,"num_blocks, 2, N, H, D"
+L3-E-304419576a,L3,TRTLLM full CUDA graphs only when selected FlashInfer Blackwell conditions hold,derived,PR body,only used with FlashInfer on Blackwell under certain conditions
+L3-E-968060c15a,L3,long DCP contexts can be split into multiple chunks,derived,PR body,long contexts were split to multi-chunks
+L3-E-15ae8e0784,L3,num_tokens may exceed slot_mapping size in spec decode launch,derived,PR body,num_tokens ... may be slightly larger than the slot_mapping size
+L3-E-4516d44b7f,L3,TRTLLM attention cannot return LSE for DCP,derived,vllm/utils/flashinfer.py diff,does not support returning LSE
+L3-E-db56a59970,L3,cascade_attention must receive the same num_splits captured in full CUDA graph,derived,PR body,matches what the cudagraph was captured with
+L3-E-96b23b8e3b,L3,Kernel block size can differ from user logical block size,derived,nixl_connector.py diff,logical block size does not match the kernel block size
+L3-E-173b356abf,L3,TRTLLM-Gen full attention works for any max_seq_len tested,tested_only,PR body,functionally works well for any `max_seq_len`
+L3-E-60e089f0b9,L3,CK fmha kernel returns without execution for wrong min_seq_len,derived,PR body,will trigger following pre-condition check
+L3-E-64e39d667c,L3,spec-decode full-cg shapes must divide by num_speculative_tokens + 1,derived,PR body,evenly divisible by `1 + num_speculative_tokens`
+L3-E-2fd893b4ce,L3,PCP backend support was not complete at landing,derived,PR body,Temporarily disabled PCP parameters until backend support is complete
+L3-E-ac10fd3c69,L3,AITER Triton MHA returns LSE transposed relative to vLLM MLA convention,derived,aiter_triton_mla.py diff,Transpose the LSE if Triton MHA is used
+L3-E-fb8851f254,L3,seq_starts can place block-table offset near the table end,tested_only,PR body,seq_starts causes the offset to point near the end
+L3-E-06c20c9904,L3,ROCm Sparse MLA backend requires block_size == 1,derived,vllm/platforms/rocm.py diff,only supports block size 1 for now
+L3-E-06c20c9904,L3,ROCm Sparse MLA rejects fp8 kv_cache_dtype at selection,derived,vllm/platforms/rocm.py diff,doesn't support fp8 kv_cache_dtype
+L3-E-647464719b,L3,cross-layer layout only enabled when connector explicitly prefers it,derived,PR body,only be enabled when using a connector which explicitly prefers this new layout
+L3-E-647464719b,L3,layout currently only supports uniform non-HMA models,derived,PR body,only supported for uniform (non HMA) models
+L3-E-30b44a1598,L3,CPU no longer owns V2 block tables,derived,PR body,The CPU does not have the block tables at all
+L3-E-5253f4276f,L3,Whisper v1 on ROCm AITER requires latest AITER commit 7639e55,tested_only,PR body,"requires the latest Aiter version, tested with commit 7639e55"
+L3-E-77e10c9cab,L3,ENTRY_SIZE is compatible with vectorized float4 chunking plus scalar tail,derived,csrc/cache_kernels.cu diff,constexpr int vec_size = sizeof(float4) / sizeof(scalar_t)
+L3-E-cb7214d8ea,L3,AITER decode supports q_scale and kv_scale parameters,derived,_aiter_ops.py diff,"q_scale=q_scale, kv_scale=kv_scale"
+L3-E-d9d342d214,L3,output head stride can differ from prefix/suffix head stride,derived,triton_merge_attn_states.py diff,output_head_stride = output.stride(1)
+L3-E-9726e64530,L3,FlashInfer attention LSE is base 2,derived,PR body,flashinfer attention use 2 as base of lse
+L3-E-3e41992fec,L3,MLA upconverted workspace head_dim is 576,derived,cache_kernels.cu diff,head_dim must be 576 for MLA
+L3-E-11a89cf95c,L3,latest/newly allocated reused block is active,derived,PR body,latest/newly allocated block must be the one in use
+L3-E-de71747655,L3,DCP local max tokens follow ceil(L/(N*I))*I,derived,common.py diff,ceil(L / (N * I)) * I
+L3-E-b10f41c894,L3,FP8 prefill is triggered only by fp8 KV-cache dtype,derived,common.py diff,"if (kv_cache_spec is not None and ""fp8"" in kv_cache_spec.cache_dtype_str)"
+L3-E-b10f41c894,L3,CUDNN and FlashAttention chunk prefill do not support this fp8_attention path,derived,common.py diff,Cudnn prefill does not support fp8 attention
+L3-E-369f47aa0f,L3,__shfl_xor_sync provides the needed synchronization for the amax reduction,derived,PR body,synchronization is already guaranteed by `__shfl_xor_sync`
+L3-E-3f52fa5aa2,L3,sink blocks are reserved and not returned to the scheduler free pool,derived,PR body,remove these blocks from the free blocks
+L3-E-3f52fa5aa2,L3,FlashAttention can handle different key and value head sizes,derived,PR body,flash_attn kernel can handle the different kv head size
+L3-E-825c2dc133,L3,AITER MLA decode pages contain exactly one token,derived,PR body,each page contains exactly 1 token
+L3-E-d8e38d4939,L3,num_layers dimension precedes block dimension in cross-layer layout,derived,triton_attn.py diff,"(num_blocks, num_layers, 2, block_size, num_kv_heads, head_size)"
+L3-E-6aa5b18e1d,L3,ported prefill kernel supports page size one,derived,triton_prefill_attention.py diff,It supports page size = 1.
+L3-E-1fb0209bbc,L3,"AITER absence/incompatibility is represented by import, attribute, value, or type errors",derived,PR body,specific exceptions that are expected
+L3-E-107cf8e92f,L3,ROCm paged attention kernel only supports block sizes 16 and 32,derived,rocm_attn.py diff,only supports block sizes 16 and 32
+L3-E-80fead8bf6,L3,slot_idx negative marks padded token and should skip cache write,derived,cache_kernels_fused.cu diff,slot_idx can be -1 if the token is padded
+L3-E-1a19e9cd87,L3,non-power-of-2 Qwen3 block size 544 must use generalized arithmetic addressing,derived,chunked_prefill_paged_decode.py diff,If it's not a power of 2 (such as Qwen3's 544)
+L3-E-e15a5ff07b,L3,PyTorch is_contiguous can report degenerate-stride tensors as contiguous,derived,PR body,degenerate strides  that PyTorch's `is_contiguous()` reports as contiguous
+L3-E-b8bf5c45bb,L3,sliding-window tile pruning is skipped for multimodal prefix path,derived,triton_unified_attention.py diff,if SLIDING_WINDOW > 0 and not USE_MM_PREFIX
+L3-E-a5bbbd2f24,L3,eye-based dequantization is unsafe with static scaling factors,derived,PR body,Don't use that method when there's static scaling factors.
+L3-E-e27078ea80,L3,block size 544 is a specialized supported ROCM_ATTN model size,derived,rocm_attn.py diff,"return [16, 32, 544]"
+L3-E-6218034dd7,L3,FlashInfer metadata builder still has race conditions after this support change,unclear,PR body,attention metadata builder has race conditions
+L3-E-8ebfacaa75,L3,Blackwell default switch excludes sparse MLA DeepSeek v3.2 case,derived,cuda.py diff,"unless sparse, i.e. DSv3.2"
+L3-E-8c11001ba2,L3,FP4 BMM optimization applies only when kv_b_proj weights are bfloat16 and AITER FP4BMM enabled,derived,mla_attention.py diff,and self.kv_b_proj.weight.dtype == torch.bfloat16
+L3-E-130d6c9514,L3,shuffle layout remains opt-in to avoid unexpected behavior,derived,PR body,set it False by default
+L3-E-047413375c,L3,non-flash-attn ROCm workflows should run without flash-attn installed,tested_only,PR body,Uses triton attention by default
+L3-E-8cc26acd8b,L3,-1e8 sentinel is sufficiently negative for the attention mask in supported dtypes,derived,PR body,replaces it with extremely large values $-10^8$
+L3-E-c826c72a96,L3,only backends declaring supports_alibi_sqrt may receive use_alibi_sqrt,derived,attention/layer.py diff,is not supported by backend
+L3-E-6101a26dc9,L3,.contiguous() alone may not fix degenerate singleton-dimension strides,derived,PR body,`.contiguous()` call alone doesn't fix degenerate strides
+L3-E-4a5299c93f,L3,non-greedy spec decode acceptance remains degraded until probability-based rejection sampling lands,derived,PR body,spec-decode with probabilities is not yet implemented
+L3-E-1a1fc3bbc0,L3,Blackwell default switch excludes sparse MLA DeepSeek v3.2 case,derived,cuda.py diff,"unless sparse, i.e. DSv3.2"
+L3-E-808d6fd7b9,L3,FlashInfer v0.6.x removed tile_tokens_dim from TRTLLM MoE kernels,derived,PR body,argument `tile_tokens_dim` has been removed
+L3-E-24dc30f7ff,L3,ModelRunnerV2 lacks explicit synchronization between async copies and next-step CPU buffer updates,derived,PR body,we do not have explicit synchronization in ModelRunnerV2
+L3-E-6c20e89c02,L3,profiling run lacks real DeepseekV32IndexerMetadata and must reserve workspace/fake output,derived,sparse_attn_indexer.py diff,this will be None in dummy run
+L3-E-44f08af3a7,L3,per-head KV scales are addressed by a head stride,derived,csrc/cache_kernels.cu diff,k_scale[head * kv_scale_stride]
+L3-E-a28b94e6ef,L3,backends declare whether forward includes KV cache update,derived,backend.py diff,forward_includes_kv_cache_update: bool = True
+L3-E-da5e7b12be,L3,fusion applies to MLA FP8 decode query pieces,derived,mla_attention.py diff,concatenates decode_ql_nope and decode_q_pe before quantization
+L3-E-58996f3589,L3,gfx942 needs a 224.0 scale divisor in concat_and_cache_ds_mla_kernel,derived,PR #32976 body,updates the divisor to be `224.0 `on `gfx942`
+L3-E-2267cb1cfd,L3,FA3 AOT scheduler needs four metadata slots per batch element,derived,flash_attn.py diff,Times 4 due to:
+L3-E-bbe0574d8e,L3,TRTLLM attention requires strictly contiguous KV cache tensors,derived,flashinfer.py diff,TRTLLM attention requires strictly contiguous KV cache tensors
+L3-E-59a5cb387a,L3,FlashInfer concat_mla_k is only used for DeepSeek V3 dimensions,derived,mla_attention.py diff,"num_heads=128, nope_dim=128, rope_dim=64"
+L3-E-81e217fe6b,L3,TRTLLM attention requires num_decode_tokens divisible by num_requests,derived,PR #34187 body,num_decode_tokens be divisible by num_requests
+L3-E-afdce12c89,L3,optimized path targets large-K long-context decode only,derived,PR #33680 body,Long-context decode (e.g. seq_len > 8192)
+L3-E-578977bb5e,L3,FP8 prefill is guarded because serving perf may be lower than BF16,derived,PR #31195 body,currently guarded because it shows slightly lower perf than BF16 Prefill
+L3-E-c7914d30f9,L3,FA3 scheduler_metadata size is 1 plus rounded batch size times four,derived,flash_attn.py diff,"FA3 scheduler_metadata size: 1 + round_up(batch_size, 4) * 4"
+L3-E-64f570ab56,L3,AITER FA supports both flash and shuffled KV cache layouts,derived,PR #33681 body,supports both flash and shuffled KV cache layouts
+L3-E-9ea1f598ce,L3,paged_attention_v1 supports sliding window through sliding_window parameter,derived,PR #34378 body,paged_attention_v1 already supports sliding window natively
+L3-E-f2c47886fd,L3,FlashInfer sparse MLA is preferred for low head counts because FlashMLA pads,derived,cuda.py diff,Prefer FlashInfer at low head counts (FlashMLA uses padding)
+L3-E-dc5fa77a4e,L3,DeepGEMM fp8_paged_mqa_logits supports next_n <= 2 only,derived,indexer.py diff,does not support next_n > 2
+L3-E-8de7c636cc,L3,single-token paged_attention_v1 path cannot handle speculative multi-token query length,derived,PR #32877 body,"max_seqlen_q=1, causing incorrect results"
+L3-E-cf93c1a128,L3,ll4mi paged_attention_v1 requires head_size >= 64 on ROCm,derived,diff comment,HEAD_SIZE >= 16 * NWARPS (= 64 on ROCm
+L3-E-2aab2bb543,L3,EAGLE drafting batches are uniform decodes,derived,diff comment,During EAGLE drafting all requests are uniform decodes
+L3-E-74d90b1ce4,L3,MLA DecodeConcatQuantFP8 head/dim dimensions are model constants,derived,PR body,"model-constant dimensions (num_heads, kv_lora_rank, qk_rope_head_dim)"
+L3-E-9fa6c68fa6,L3,encoder attention uses direct Q/K/V without KV cache,derived,diff comment,"we use direct Q, K, V tensors without caching"
+L3-E-6d4f9d3ad5,L3,FA3 scheduler metadata size depends on num_splits,derived,PR body,computes different `metadata_size` for `num_splits=0` vs `num_splits=32`
+L3-E-8b5014d3dd,L3,FA4 compile-from-specs path is CUDA-only,derived,move catalog,FA4 compile-from-specs API is CUDA-only
+L3-E-d9c7730877,L3,compile data dependency preserves ordering between update and forward,derived,diff comment,creates a data dependency that ensures torch.compile preserves ordering
+L3-E-6cb901093f,L3,partial attention outputs carry LSE values sufficient for local combination,derived,PR body,exchanges partial attention outputs and their LSE values
+L3-E-a57c877f18,L3,FA4 scheduling is batch-shape dependent,derived,diff comment,uses batch-shape-dependent scheduling heuristics
+L3-E-1a9718085c,L3,AITER unified_attention wrapper is not CUDA-graph-capture safe,derived,PR body,performs dynamic memory allocations (`torch.empty`)
+L3-E-c188749bcd,L3,existing optimized gqa_ratio=16 ASM kernel can serve smaller head counts after repeat/contract,derived,PR body,reuses the existing optimized gqa_ratio=16 ASM kernel
+L3-E-24a03915f5,L3,dummy/profile forwards have attn_metadata is None,derived,diff comment,Dummy/profile forwards should not update live KV cache pages
+L3-E-2b28b9b269,L3,DeepSeek V3 MLA cache entry is 656 bytes with block size 64,tested_only,benchmark body,Cache entry: 656 bytes
+L3-E-580864d81e,L3,real code path supplies non-contiguous transposed q_nope input,derived,benchmark diff comment,simulate the transposed BMM output
+L3-E-4ff8c3c8f9,L3,attention kernels use multiply-by-zero masking that does not clear NaNs,derived,PR body,0 * NaN = NaN
+L3-E-9c34e9d24f,L3,cascade attention may have numerical issues despite mathematical equivalence,unclear,PR body,avoid potential numerical issues by default
+L3-E-eac2dc2b41,L3,block_table_tensor[mask] has data-dependent output size causing sync,derived,diff comment,data-dependent output size
+L3-E-a1257fd1ea,L3,Triton MLA is the only MLA backend available on sm120,derived,PR body,only MLA backend available on sm120 GPUs
+L3-E-f444c05c32,L3,FA4 upstream PRs #123 and #126 provide needed MLA prefill support,derived,PR body,Depends on https://github.com/vllm-project/flash-attention/pull/123
+L3-E-a4ad9db541,L3,fusion only when shuffle KV cache layout is disabled,derived,rocm_aiter_fa.py diff,not rocm_aiter_ops.is_shuffle_kv_cache_enabled()
+L3-E-5ae685c1c8,L3,TRTLLM kernels read actual KV tensor strides,derived,PR body,read actual tensor strides
+L3-E-ca1954d58c,L3,MLA kernels require contiguous per-layer KV cache views,derived,mla_attention.py diff,MLA kernels require contiguous per-layer KV cache views
+L3-E-e6c4797704,L3,AITER fp8xfp8 kernel lacks Q-scale support,derived,PR body,Q scales are not supported in the kernel
+L3-E-ef2c4f778d,L3,MLA decode kernels skip rows with seq_lens=0,derived,PR body,The kernel writes nothing for padding rows
+L3-E-4ca3fa6bb4,L3,AITER_UNIFIED_ATTENTION uses cache block size 64,derived,PR body,cache block size of `64`
+L3-E-e1d85e5c24,L3,"short extends are chunked prefills, not decodes",derived,PR body,short_extend:  (num_scheduled <= threshold AND is chunked prefilling)
+L3-E-4a76ad12e0,L3,SM12x FP4 kernels need family-specific a/f gencode suffix,derived,PR body,`__CUDA_ARCH_FAMILY_SPECIFIC__` is not defined
+L3-E-978fc18bf0,L3,persistent kernel consumes pre-computed scheduling metadata buffers,derived,PR body/diff,pre-computed scheduling metadata
+L3-E-a4cf9b22ba,L3,shuffle KV path may still have same stride issue,unclear,PR body TODO,shuffle KV path also have the same issue
+L3-E-0aac2048bf,L3,full CUDA graph replay requires stable metadata tensor addresses,derived,PR body,graph captures tensor addresses during recording
+L3-E-7cc302dd87,L3,"canonical tensors are int8 shaped (num_blocks, page_size)",derived,PR body,"dtype int8 and shape `(num_blocks, page_size)`"
+L3-E-b4a2f3ac36,L3,CUTLASS v4.2.2 lacks SM12x NVFP4 tile constraints,derived,PR body,CUTLASS v4.2.2 lacks SM12x NVFP4 tile constraints
+L3-E-bcc6f67447,L3,Block 0 is reserved as null block,derived,PR body,Block 0 is already reserved as the null block
+L3-E-494636b29d,L3,FlashAttention is used because Triton and FlashInfer TRTLLM do not support non-causality,derived,PR body,do not support non-causality
+L3-E-3b1dbaad4e,L3,SSM page size must divide by FA page size,derived,PR body,SSM_page_size will not be evenly divided by FA_page_size
+L3-E-4ac227222f,L3,FULL CUDA graph captures tensor addresses and can replay stale DCP tensors,derived,PR body,tensor address gets baked into the graph
+L3-E-598190aac3,L3,TRTLLM ragged MLA prefill writes only tokens having history,derived,PR body,reads and writes only tokens having history
+L3-E-dc0428ebb8,L3,Triton can use same KV layout as FlashInfer for cross-layer TP disaggregation,derived,PR body,same KV cache layout as FlashInfer
+L3-E-2ce3d0ce36,L3,per-token-head scale fits in padded head dimension,derived,diff get_kv_cache_shape,scale_pad = get_dtype_size(torch.float32)
+L3-E-d9408ffba3,L3,low-batch long context benefits from more KV splits for SM occupancy,derived,PR body and diff,suboptimal kv splitting during low batch count
+L3-E-8b141ed8c3,L3,capture and replay must not use stale non-persistent metadata tensors,derived,PR body,"When we replay, we were using stale data."
+L3-E-1f5ec2889c,L3,temporary BF16 output buffer is quantized after compute until kernels support fp8 output,derived,diff mla_attention.py,temporary until kernels support fp8 output
+L3-E-4a06e1246e,L3,cuMemcpyBatchAsync is used only on CUDA 12.8 or newer,derived,cache_kernels.cu diff,CUDA_VERSION >= 12080
+L3-E-4a06e1246e,L3,Pointer and size tensors must be int64 CPU tensors,derived,cache_kernels.cu diff,src_ptrs must be on CPU
+L3-E-1b117cb0ac,L3,AITER MLA pads q tensors with 4 or 8 heads to 16 heads before kernel call,derived,PR body,q tensor is padded to 16 heads
+L3-E-f976e3b98b,L3,AITER MLA pipeline overwrites every output element before any read,derived,PR body,unconditionally overwrites every element of o
+L3-E-f4b42df048,L3,TurboQuant backend supports decoder attention only,derived,diff turboquant_attn.py,return attn_type == AttentionType.DECODER
+L3-E-6b2b7bd0eb,L3,NVFP4 per-page data/scale contiguity is required by the kernel,derived,PR body,"contiguous, which is a requirement of the kernel"
+L3-E-6ef1efd51f,L3,large KV caches need int64 block indices and slot offsets to avoid overflow,derived,PR body,prevent int32 overflow on large KV caches
+L3-E-7243e02aa1,L3,AITER MLA decode kernel internally operates with page_size=1,derived,PR body,always operates with `page_size=1` internally
+L3-E-fb5635d3f9,L3,AITer fused_qk_rmsnorm kernel is installed and available,derived,PR body,Requires AITer PR #2442
+L3-E-f95c11a848,L3,AITER flash_attn_with_kvcache could not support CUDA graph at merge time,derived,PR body,couldn't support cuda graph
+L3-E-4b7869d6bc,L3,compiler-provided __GFX11__/__GFX12__ umbrella macros cover future targets,derived,PR body,compiler-provided __GFX11__ / __GFX12__ umbrella macros
+L3-E-fe85a92e86,L3,seq_lens_cpu_upper_bound is exact for prefill rows,derived,diff comment in mla_attention.py,Upper bound is exact for prefill rows
+L3-E-7d3195ea9f,L3,num_tokens can be an allocation upper bound and only cu_seq_lens-covered tokens are valid,derived,diff comment in csrc/cache_kernels.cu,Only tokens covered by the exact device-side cu_seq_lens are valid
+L3-E-e8ee2a78db,L3,FA3 rejects sinks with differing q/k and v head dimensions; FA4 available on SM90 fixes it,derived,fa_utils.py diff,FA3 kernel rejects s_aux (sinks) when hdim != hdim_v
+L3-E-095d2f87e8,L3,AITER MLA requires num_heads >= 16 or divisor padding to 16,derived,diff comment in rocm_aiter_mla.py,AITER MLA implementation requires num_heads >= 16
+L3-E-2cc008e7b4,L3,trailing dequant buffer positions are never read after cached_len slicing,derived,PR body,The trailing positions are never read
+L3-E-7fd05e05ae,L3,batch-invariant FlexAttention replay must use persistent buffer stride metadata,derived,PR body,memory layout matches what was captured by the cuda graphs
+L3-E-2ae73c758c,L3,DeepSeek V4 fused inv-RoPE FP8 op must be compatible with torch.compile Inductor custom ops,tested_only,PR test command,"compilation-config {""cudagraph_mode"":""FULL_AND_PIECEWISE"""
+L3-E-faab189554,L3,model enables use_index_cache and index_topk_freq in HF overrides,tested_only,PR test command,"use_index_cache"": true, ""index_topk_freq"": 4"
+L3-E-296741d025,L3,target GPU supports cvt.rn.satfinite.e2m1x2.f32 PTX instruction,tested_only,PR test plan,switches to inline PTX `cvt.rn.satfinite.e2m1x2.f32`
+L3-E-947138b6c2,L3,NVFP4 TRTLLM kernel only supports FP8 output,derived,PR body,only produces FP8 output
+L3-E-4f7bde572a,L3,output and fp32 LSE can be packed/unpacked without changing exact LSE-weighted reduction,tested_only,PR body tests,"fp16, bf16, fp32 Triton pack/unpack parity"
+L3-E-bc635fad23,L3,ROCm can use block sizes 1 and 64 for DeepseekV32IndexerBackend,derived,diff in indexer.py,"return [1, 64] if current_platform.is_rocm() else [64]"
+L3-E-66dfee7121,L3,size-1 dimension stride can be metadata-patched without changing addressed elements,derived,PR body,0 × stride = 0 regardless of stride value
+L3-E-66dfee7121,L3,CUDA TMA non-outermost strides must be multiples of 16 bytes,derived,PR body,requires all non-outermost strides to be multiples of 16 bytes
+L3-E-e1e4646b06,L3,MLA attention metadata builders have position-dependent state updated when position advances,derived,PR body,position-dependent state that must be updated whenever the position is advanced
+L3-E-2228fe6868,L3,FA version selection utility receives head_size_v and has_sinks context,derived,diff in fa_utils.py,head_size_v: int | None = None
+L3-E-38e16678ba,L3,TRTLLM MLA requires block_num % (128 / block_size) == 0,derived,PR body,Expected block_num % (128 / block_size) == 0
+L3-E-22a3cbe152,L3,installed AITER kernel natively handles q_scale,derived,PR body,aiter kernel now has support for q_scale
+L3-E-c936548ce6,L3,runtime AITER build includes num_heads=32 MLA kernel support,tested_only,PR validation matrix,runtime image includes AITER MLA kernel support for local `num_heads=32`
+L3-E-989c176c0a,L3,attention metadata reads can remain on device without changing backend semantics,tested_only,benchmark/test body,"completed/run: 384 ±0, failed/run: 0 ±0"
+L3-E-baf068d8be,L3,sparse MLA ROCm path needs persistent metadata allocation rather than transient runtime allocation,derived,PR body,properly implement the metadata allocation
+L3-E-530d371302,L3,CuTeDSL availability is platform-guarded and Triton fallback remains for unsupported platforms,derived,PR body,keep the original Triton implementation for fallback
+L3-E-00b0618a03,L3,source data is fully written before batch copy begins,derived,PR body,source data is always fully written before the batch copy begins
+L3-E-0a309b5ee9,L3,kernel decouples tile size from physical block size via l_block_idx/internal_offsets,derived,PR body,decouples tile size from physical block size
+L3-E-b1b59720b2,L3,new-token key/value tensors arrive in NHD format even when HND KV cache layout is configured,derived,PR body,key/value tensors received by the wrapper during runtime were being input in NHD format
+L3-E-724ed2fc35,L3,first 448 FP8 elements are dequantized and last 64 BF16 elements copied unchanged,derived,PR body,first 448 FP8 elems are dequantized
+L3-E-7f95e66a11,L3,"for MLA, Lv rather than total Lk determines compatible tl.dot BLOCK_DMODEL",derived,PR body,align BLOCK_DMODEL with the local latent rank (Lv)
+L3-E-a51376b3f0,L3,fusion pass is explicitly enabled by pass_config fuse_rope_kvcache_cat_mla,tested_only,PR test command,fuse_rope_kvcache_cat_mla=True
+L3-E-5f1b313900,L3,decode-only batches do not need seq_lens copied from GPU to CPU,derived,PR body,when batch contains decode only
+L3-E-3d635c58c0,L3,only previous merged state and next output buffer are live across chunk merges,derived,PR body,Only two allocations for the whole process
+L3-E-3c413a5481,L3,TD path requires BLOCK_SIZE % TILE_SIZE == 0,derived,PR body,tl.static_assert(BLOCK_SIZE % TILE_SIZE == 0)
+L3-E-3c413a5481,L3,Q/O TD requires power-of-two num_queries_per_kv and unpadded head size,derived,PR body,gated on both `is_pow2(num_queries_per_kv)`
+L3-E-0d2732dd91,L3,decode kernel requires num_heads times q_len <= 128,derived,PR body,requires `num_heads × q_len ≤ 128`
+L3-E-0d2732dd91,L3,backend supports only SM100 and R1 MLA dimensions with FP8 KV where constraints pass,derived,diff comment in cuda.py,R1 dims + FP8 KV only
+L3-E-2317682f95,L3,workspace growth is disallowed after CUDA graph workspace lock,derived,PR body,Workspace growth is not allowed after locking
+L3-E-3b6a204789,L3,FlashMLA scheduler metadata is lazily initialized on first call,derived,PR #42444 body,if `tile_scheduler_metadata` is `None`
+L3-E-4b364f810e,L3,Hybrid cache hits are always lcm_block_size aligned,derived,kv_cache_coordinator.py diff,always a multiple of ``lcm_block_size`` tokens
+L3-E-4b364f810e,L3,SWA managers only cache tail blocks when alignment exceeds block size,derived,single_type_kv_cache_manager.py diff,tail = cdiv(self.sliding_window - 1
+L3-E-46a95815d3,L3,AITER must provide mla_prefill_ps_asm_fwd and mla_reduce_v1,derived,PR #42509 body,When AITER ships `mla_prefill_ps_asm_fwd` + `mla_reduce_v1`
+L3-E-8a56da3845,L3,breakable CUDA graph and torch.compile fullgraph are mutually exclusive,derived,PR #42304 body,make breakable cudagraph and torch.compile fullgraph exclusive
+L3-E-998714b21b,L3,num_tokens variation should not specialize the Triton kernel,derived,PR #42849 body,when num_tokens are seen for the first time
+L3-E-0191354827,L3,worst-case max_seq_len makes inline torch.empty and data-dependent num_kv_splits replay-safe,unclear,PR #42885 body,Capture uses worst-case `max_seq_len`
+L3-E-fba010dd74,L3,FlashInfer backend may use kernel_block_size=64 with logical block_size=128,derived,PR #42766 body,block_size=128 and kernel_block_size=64 on FI backend
+L3-E-d247a931cc,L3,Q_IS_FP8 constexpr can eliminate descale path for bf16/fp16 query paths,derived,PR #42080 body,compile-time elimination of the Q descale path
+L3-E-c7624bea5e,L3,all layers in an attention group must share num_heads,derived,PR #42650 body,asserts uniformity within the attention group
+L3-E-1223732dda,L3,attention kernels may require kernel block size distinct from logical block size,derived,PR #38831 body,attention kernel could use the correct block size
+L3-E-a583c84e2b,L3,fast rotary path requires RoPE implementation mutating inputs in-place,derived,PR #43781 body,relies on the RoPE implementation mutating the input arguments in-place
+L3-E-0b56815a24,L3,"metadata schedule deterministic from num_tokens, max_query_len, num_heads and min(seq_lens, topk_tokens)",derived,PR #42982 body,"deterministic function of `(num_tokens, max_query_len, num_heads"
+L3-E-ab7521d77c,L3,downstream sparse kernels do not read flat beyond indptr ranges,derived,PR #43898 body,doesn't read past `indptr[-1]`
+L3-E-035733515f,L3,change scoped to legacy FlashMLA packed FP8 + UE8M0 scale + BF16 RoPE layout,derived,PR #44161 body,scoped to the legacy FlashMLA packed FP8
+L3-E-8a9eb40808,L3,FlashInfer TRTLLM attention reads the whole KV page past written tokens,derived,PR #43990 body,reads the whole KV page (past the written tokens)
+L3-E-fe32e7830b,L3,trtllm-gen FP4 FMHA kernels only exist for sm_100/sm_103,derived,PR #43669 body,only exist for sm_100/sm_103
+L3-E-91945b6e4a,L3,CUDA graph capture records kernels without executing them,derived,PR #44253 body,records kernels without executing them
+L3-E-128adabfe0,L3,FlashAttention requires page_table batch dimension equal cu_seqlens_q batch size,derived,PR #43982 body,batch_size must be equal to batch_size_k
+L3-E-b5235fca2e,L3,FlashInfer full-cache path stores Q/KV as contiguous 512-wide rows,derived,fused_deepseek_v4_qnorm_rope_kv_insert_kernel.cu diff,KV is written as a *contiguous* 512-wide row per token
+L3-E-b4a6f26c90,L3,Workspace sizes cover max_num_batched_tokens and configured logits MB,derived,rocm_aiter_mla_sparse.py diff,batch_size * next_n <= hidden_states.shape[0]
+L3-E-baacbfcebf,L3,Maximum FP8 prefill scratch can be sized from AITER metadata capacity,derived,rocm_aiter_mla.py diff,max_num_partial_tiles * _FP8_PREFILL_TILE_Q
+L3-E-6deb05e0e4,L3,Gemma4 mm_prefix requires FlashAttention v4,derived,flash_attn.py diff,return is_fa_version_supported(4)
+L3-E-e2db0222e9,L3,Non-blocking H2D requires pinned host tensors,derived,mla_attention.py diff,pin_memory=True
+L3-E-f81daf8880,L3,DiffKV means hdim_qk differs from hdim_v,derived,mimo_v2.py diff,Use DiffKV backend when V has a different head dim than K.
+L3-E-fcf5115c45,L3,DSV4 TP-local heads can collapse to one head block,derived,PR body,16 TP-local heads collapse to a single head-block
+L3-E-badddd254f,L3,Fused inverse RoPE mirrors GPT-J non-neox layout,derived,rocm_aiter_mla_sparse.py diff,Mirrors DeepseekV4ScalingRotaryEmbedding.forward_native(inverse=True)
+L3-E-e18fe932ca,L3,Chunk plan is non-empty when num_prefills is positive,derived,sparse_swa.py diff,prefill chunk plan must be non-empty
+L3-E-0a1c5034f5,L3,fmha_sm100 is fetched or supplied by FMHA_SM100_SRC_DIR,derived,fmha_sm100.cmake diff,If FMHA_SM100_SRC_DIR is set
+L3-E-bf5149b516,L3,Padding must be zero-initialized for BF16 head padding,derived,PR body,use new_zeros instead of new_empty
+L3-E-eb04c769d3,L3,Quant output is only used without chunked context and DCP,derived,mla_attention.py diff,attn_metadata.prefill.chunked_context is None
+L3-E-9d4dc4ca2f,L3,FlashInfer and TokenSpeed remain limited to DeepSeek-R1 dimensions,derived,PR body,FLASHINFER and TOKENSPEED_MLA stay limited
+L3-E-4c62663315,L3,FlashAttention unsupported and FlashInfer FP8 unsupported for page size 128,derived,PR body,FlashInfer FP8 doesn't support page size 128
+L3-E-a52205bccf,L3,Single-token decode with causal=False is a no-op,derived,prefill_prefix_lm_attention.py diff,Single-token decode: causal=False is a no-op
+L3-E-efd15e192a,L3,gfx942 platform FP8 dtype is torch.float8_e4m3fnuz,derived,PR body,current_platform.fp8_dtype() is torch.float8_e4m3fnuz
+L3-E-0a7bacdcac,L3,C4A sparse indices stay uncached,derived,flashinfer_sparse.py diff,C4A stays uncached
+L3-E-d537122398,L3,gfx942 sparse MLA AITER ops are numerically unreliable for listed models,tested_only,PR body,accuracy collapse (dropping to ~55% on GSM8K)
+L3-E-20a5f8b43b,L3,Full cudagraph mode needs mask construction before forward,derived,flex_attention.py diff,if self._uses_full_cudagraphs()
+L3-E-afdcbd5d39,L3,gfx942 uses FNUZ FP8; other ROCm targets use OCP E4M3,derived,kernel diff,gfx942 uses FNUZ FP8; other ROCm targets use OCP E4M3
+L3-E-4583630b56,L3,KV-cache row byte offsets may be only multiples of head_size,derived,vectorization_utils.cuh diff,byte offset is a multiple of head_size
+L3-E-ab66606993,L3,skip_topk layer may not initialize indexer state,tested_only,PR body,fix GLM-5.2 BF16 init Indexer in skip_topk layer
+L3-E-01192139bf,L3,Packed backing tensor block_stride equals total storage bytes divided by num_blocks,derived,base_worker.py diff,block_stride = total_size // self.num_blocks
+L3-E-1bdf9810aa,L3,Packed KV block_id * stride can exceed 32-bit range,derived,rocm_aiter_mla_sparse.py diff,block_id * stride can exceed 32-bit range
+L3-E-7df3d7dada,L3,Pinned memory availability is represented by shared PIN_MEMORY,derived,diff,pin_memory=PIN_MEMORY
+L3-E-2cac89f9da,L3,Padding fallback handles non-divisible page sizes,derived,PR body,padding fallback in unify_kv_cache_spec_page_size
+L3-E-db32b53e30,L3,Non-causal FlashInfer is unsupported with DCP and NVFP4 KV cache,derived,flashinfer.py diff,not supported with DCP yet
+L3-E-aa4990a9a2,L3,MLA cache tensor strides encode page/block layout,derived,sm100_cutlass_mla_kernel.cu diff,Read the token and page strides from the cache tensor
+L3-E-44d95069e9,L3,CUDA 12.8+ is required for SM120/SM12x DeepGEMM path,derived,deepgemm.cmake diff,CUDA 12.8+ for SM120 / SM12x
+L3-E-183b5f27ea,L3,Workspace must be reserved before graph capture locks v1 workspace,derived,PR body,before CUDA graph capture locks the workspace
+L3-E-91ba720b75,L3,ROCm MHA path can use full-precision query with quantized KV cache,derived,PR body,runs attention with a full-precision query tensor
+L3-E-20b5af55c1,L3,Optimization applies only when KV cache dtype starts with fp8,derived,rocm_aiter_mla_sparse.py diff,"fp8_attention = self.kv_cache_dtype.startswith(""fp8"")"
+L3-E-dc0d318177,L3,Hopper sparse path requires q_head padding to 64,derived,PR #46189 body,supports only `q_head = 64` on Hopper
+L3-E-70749fdcca,L3,Only INT4_PER_TOKEN_HEAD variant is supported,derived,PR #40835 body,Changed to only INT4_PER_TOKEN_HEAD
+L3-E-49f2104c53,L3,FP8 query input support gates DCP all-gather,derived,PR #44044 body,when FP8 query input is supported
+L3-E-710ebaa189,L3,Chunk must divide across GPUs and cache blocks,derived,PR #46114 body,divides evenly across GPUs and lands on a clean cache-block boundary
+L3-E-8fa36fbbeb,L3,Skip layers receive shared top-k buffer,derived,PR #46506 body,receive the shared top-k indices buffer via MLAAttention
+L3-E-c63cd4906c,L3,Target is gfx950 MiniMax-M3 MXFP8,tested_only,PR #46546 body,Validated on gfx950 to ensure Perf win
+L3-E-5ecae3266c,L3,Fast AITER fmha path is gfx950-specific,derived,PR #45033 body,dispatches the fast `aiter::fmha_fwd_*` kernel on gfx950
+L3-E-6149187a4c,L3,Workspace can be shared by a layer,derived,PR #46819 body,using a single buffer that layer can share
+L3-E-5b4cb69523,L3,FlashInfer TRTLLM-gen MLA returns LSE in log2,derived,PR #47079 body,returns LSE in **log2**
+L3-E-b153dd3f28,L3,LSE path needs more than 125829120 bytes,derived,PR #47074 body,only 125829120 bytes available
+L3-E-aab7af0bcb,L3,gfx950 FP8 nhead=32 uses fold-to-16 decode path,derived,PR #46997 body,"internal ""fold-to-16"" decode path"
+L3-E-c8f9c156a5,L3,DBO creates metadata builders per ubatch,derived,PR #46993 body,DBO creates metadata builders per ubatch
+L3-E-248d1fbb71,L3,Warmup runs before CUDA graph capture,derived,PR #46182 body,after regular kernel warmup and before CUDA graph capture
+L3-E-8cf7c4d8ad,L3,Backend only supports Hy3-FP8 initially,derived,PR #46020 body,currently supports only the Hy3-FP8 model
+L3-E-c5200d3565,L3,Target is GLM 5.2 TP8/DCP4,tested_only,PR #46076 body,add dcp support for GLM 5.2
+L3-E-f5a8d73377,L3,DSpark uses non-causal sliding-window attention,derived,PR #46995 body,DSpark uses non-causal sliding-window attention
+L3-E-4787f2dd1b,L3,Masked non-finite tail values can poison outputs,derived,PR #47305 body,0 * NaN = NaN still poisons the output
+L3-E-d29125c085,L3,SM90 XQA requires BF16/FP16 Q with FP8 KV,derived,PR #43232 body,SM90 XQA decode requires BF16/FP16 query tensors with FP8 KV cache
+L3-E-09663abde0,L3,Earlier FP8 quant fusion changes the q-side pattern,derived,PR #44977 body,q latent is no longer a bare `rms_norm`
+L3-E-41de1380c2,L3,FP8-Q should only be selected on SM90/SM100,derived,PR #47485 body,only quantize Q on SM90/SM100
+L3-E-1f486d96a1,L3,Prefix globally visible; generated tokens windowed,derived,PR #47102 body,"prefix tokens globally visible, while generated tokens use a causal"
+L3-E-f63dca6838,L3,Self/cross attention can share one raw KV allocation,derived,PR #47035 body,share one raw KV allocation
+L3-E-4c3c17d43b,L3,Persistent path unsafe for continuations,derived,PR #47567 body,persistent MLA work-stealing kernel
+L3-E-67ff0ae30f,L3,Primary spec is smallest bytes per token,derived,PR #42890 body,"Find the ""primary"" by smallest bytes per token"
+L3-E-095adf1fdc,L3,MLA c_kv 576 and page_size 480 create ~276k stride,derived,PR #47671 body,page stride is ~276k
+L3-E-f70caef48b,L3,Avoided cost is two CPU-to-GPU copies,derived,PR #47474 body,save two additional copy from CPU to GPU
+L3-E-04adc8843b,L3,fp8_ds_mla layout is 584 bytes per token,derived,PR #47716 body,custom `fp8_ds_mla` KV layout with 584 bytes per token
+L3-E-8b79971bb9,L3,per-token-head scale pointers are only materialized for KV quant modes 2 or 3,derived,triton_unified_attention.py diff,USE_PER_TOKEN_HEAD_SCALES ... KV_QUANT_MODE <= 3
+L3-E-482e5524fe,L3,AITER DPA tile sizing requires Q and KV dtypes both FP8 for FP8 KV,derived,PR #47276 body,q_dtype == dtypes.fp8 # needs to hit!
+L3-E-2f71b2bd9f,L3,shared decoder and cross-attention KV allocation must use consistent physical byte addressing,derived,PR #47685 body,block IDs addressed different physical bytes
+L3-E-4aceabf8c1,L3,"persistent sparse-MLA metadata depends on per-token KV length distribution, not only min(seq_lens, topk)",derived,PR #47766 body,metadata actually depends on the per-token KV length distribution
+L3-E-3dd910da42,L3,"scaled_fp8_quant only requires contiguous head dimension, not contiguous token stride",derived,flashinfer.py diff,query.stride(2) == 1 and query.stride(1) == head_size
+L3-E-9021589498,L3,sparse_topk_select output has no -1 sentinel padding,derived,sparse_attn.py diff,Valid block count from seq_len (no sentinel)
+L3-E-80eb01e93d,L3,packed block stride must be an integer number of token strides,derived,flashinfer_sparse.py diff,block_stride % token_stride != 0
+L3-E-0d12618e98,L3,Absent per-group causal entry defaults to causal=True,derived,attn_utils.py diff,"causal.get(i, True)"
+L3-E-f05603fa28,L3,dcp_a2a_lse_reduce pack/unpack kernels require fp32 LSE,derived,PR #47801 body,treat the LSE as **fp32**
+L3-E-c2ecd0f888,L3,requires_v_padding backends must preserve padded V through chunked-context merge,derived,PR #42642 body,padded output was kept through the context/suffix `merge_attn_states` path
+L3-E-49abadaedb,L3,speech-to-text warmup can produce num_chunks == 0,derived,PR #47894 body,when `num_chunks == 0`
+L3-E-2c17d33f42,L3,TritonMLA metadata builder supports decode-only max_query_len <= reorder threshold,derived,PR #47144 body,assert m.max_query_len <= self.reorder_batch_threshold
+L3-E-95d6d6f4bb,L3,FlashInfer CuteDSL MLA-decode tactic requires torch.int8 workspace_buffer,derived,PR #48046 body,requires an int8 workspace_buffer
+L3-E-b0dec2a11b,L3,MTP sparse MLA can be treated as decode for reorder threshold 1,derived,rocm_aiter_mla_sparse.py diff,supports_spec_as_decode=True
+L3-E-bbb0f945ff,L3,graph replay may consume stale persistent metadata unless metadata writes are stream-ordered before replay,derived,PR #47404 body,metadata write must be ordered before the graph-captured decode work
+L3-E-e08a915146,L3,causal metadata can be a torch.Tensor or per-group mapping,derived,PR #48135 body,Preserve per-request `torch.Tensor` causal masks
+L3-E-95ed0feaa5,L3,hybrid models contain both DCP-capable full-attention and non-DCP layers,derived,PR #40996 body,both DCP-capable full-attention layers and non-DCP layers
+L3-E-b12cca6a23,L3,Triton convert_custom_float8 supports FP16/FP32 inputs but not BF16,derived,PR #39988 body,only supports FP16/FP32 inputs
+L3-E-735def4fcf,L3,FlashMLA dense FP8 num_sm_parts must be at least one,derived,PR #48045 body,clamps `num_sm_parts` to `>= 1`
+L3-E-9c18e90f6c,L3,"FlashAttention HND caches should be logically shaped [blocks, 2, block_size, heads, dim]",derived,PR #47314 body,"logically shaped as `[blocks, 2, block_size, heads, dim]`"
+L3-E-51878e5b6e,L3,backends agree that K/V are packed in last content dimension for standard attention cache views,derived,backend.py diff,"logical shape [num_blocks, num_heads, block_size, 2 * head_size]"
+L3-E-ee5a89f4d7,L3,AITER sparse PA requires one KV head per rank,derived,sparse_pa.py diff,AITER sparse PA requires num_kv_heads == 1
+L3-E-ee5a89f4d7,L3,speculative decode is initially unsupported for this AITER sparse PA path,tested_only,PR #47287 body,Speculative decode is not supported
+L3-E-bea70c7cfc,L3,each backend must explicitly declare whether it applies sliding window,derived,PR #48011 body,Declare `True` on every backend that actually applies a window
+L3-E-56a357ed33,L3,"DeepSeekV4 packing is needed for differing MLA and sliding-window MLA page sizes, not uniform-page models",derived,PR #48256 body,MLA and sliding-window MLA layers have different page sizes
+L3-E-26587f9519,L3,FlashAttention scheduler metadata buffers are overwritten by subsequent builds and must match capture descriptor,derived,PR #48261 body,every subsequent build overwrites
+L3-E-c4f5cd60da,L3,dense MHA is valid when all sparse-MLA prefill sequence lengths are <= topk,derived,PR #47327 body,when all prefills in a batch have `seq_len <= topk`
+L3-E-95aab66e95,L3,flattened speculative rows map by req_id = row // decode_query_len and local_q = row % decode_query_len,derived,PR #47984 body,req_id = row // decode_query_len
+L3-E-b2f7d2560a,L3,"MLA+SWA invariant applies to the current attention layer backend, not entire model config",derived,PR #48520 body,preserving the real invariant (an MLA layer must not use a sliding window)
+L3-E-7e950521b3,L3,FlashInfer prefill workspace must cover max_num_batched_tokens * num_qo_heads * head_dim,derived,PR #48428 body,Size it to max_num_batched_tokens * num_qo_heads * head_dim
+L3-E-313d01f507,L3,"FA2 and FA3 support GLM-5 dimensions, FA4 does not",derived,PR #48631 body,FA2 and FA3 support GLM-5 dimensions. FA4 does not.
+L3-E-6472131298,L3,"fp8_ds_mla raw page allocation is 656 B/token, not head_size 576 elements/token",derived,PR #48379 body,656 B/token
+L3-E-ecf4aa5ce2,L3,FlashInfer prefill wrapper is graph-replayable only when constructed with use_cuda_graph=True and persistent buffers,derived,PR #48167 body,only CUDA-graph-replayable when constructed with `use_cuda_graph=True`
+L3-E-3c1bc1fc0d,L3,DSv4-Pro TP8 head_dim=512 benefits from fewer K-split waves and less barrier overhead,derived,PR #48519 body,Setting `num_warps` splits the K dimension
+L3-E-6570c9800c,L3,tml-fa4 is installed in a private namespace to avoid shadowing normal flash_attn,derived,tml_fa4.cmake diff,private namespace so this implementation cannot shadow
+L3-E-0becb7486b,L3,MLA cache spec page sizing must use per-layer self.kv_cache_dtype when skip layers are configured,derived,PR #47309 body,global FP8 string
+L3-E-915dffaa5f,L3,native FP8 KV cache requires SM89+ and BF16 KV cache requires SM80+,derived,PR #47060 body,Native FP8 requires SM89+.
+L3-E-b8168e33e0,L3,gfx942 sparse decode split path runs correctly for DeepSeek-V4 sparse MLA,tested_only,PR #46275 body,split path runs correctly on gfx942
+L3-E-2cab53ddee,L3,"fused QK norm/RoPE/KV-cache kernel supports head dims 64, 128 and 256 only",derived,qk_norm_rope_kvcache_fusion.py diff,SUPPORTED_FUSED_QK_NORM_ROPE_KVCACHE_HEAD_DIMS
+L3-E-f17be06fbe,L3,chunk length/start-index tensors are not needed in unclamped form after computation,derived,mla_attention.py diff,chunk_seq_lens.clamp_(min=0)
+L3-E-67f9046e4a,L3,dense MHA may handle prefills while FlashMLA sparse metadata covers decode-only MQA tokens,derived,PR #48642 body,decode-only MQA metadata while dense MHA handles prefills
+L3-E-efed8a1e83,L3,more one-head reducer workgroups lower register pressure and improve occupancy on gfx950,derived,PR #48788 body,exposes up to 16 times more independent workgroups
+L3-E-17fdd42100,L3,CUDA graphs captured before reload retain old W_UV/W_UK_T and sink tensor addresses,derived,PR #48251 body,CUDA graphs captured before a reload continued to reference the old allocations
+L3-E-5784507da4,L3,"KVCacheSpecKind can be derived from use_mla, sliding-window and attention type before spec construction",derived,selector.py diff,def get_attn_spec_kind
+L3-E-ce4bdcbda4,L3,FA2/FA3/FA4 support Mistral Small 4 MLA prefill dimensions listed by selector,tested_only,PR #48855 body,mistral_s4 now routed to FlashAttention MLA prefill
+L3-E-e94243893d,L3,selected tokens per row bound reduction work,derived,PR body or diff,"aim for a minimum work per split, round to a power of two, and cap by the CU count"
+L3-E-b6ff8a2f50,L3,dual-chunk partition can restore global token order after execution,derived,PR body or diff,PCPManager converts that batch into the rank-local virtual batch
+L3-E-7ca017778f,L3,compile keys describe JIT specializations better than representative runtime sizes,derived,PR body or diff,Create shared JIT warmup infrastructure for all JIT backends in vLLM.
+L3-E-4ec199b66a,L3,upper-bound sequence lengths may over-estimate if clamped,derived,PR body or diff,draft decode hit assert seq_lens_cpu_upper_bound is not None
+L3-E-2396a61108,L3,query projection memory is tiny relative to KV cache,derived,PR body or diff,Decode then skips the query all-gather
+L3-E-f3a920a076,L3,DeepSeek V4 uses packed-cache path by default,derived,PR body or diff,reducing the 128-dimensional row from 132 to 68 bytes
+L3-E-fe5145765f,L3,vision inputs cannot occur when every supported vision modality is limited to zero,derived,PR body or diff,stops disabling backends that are valid once vision cannot occur
+L3-E-8061dc26bd,L3,config 0 denotes uncompressed/SWA-only layer,derived,PR body or diff,generated a `COMPRESS_RATIO=0` specialization containing integer division by zero
+L3-E-b2f9e4caa4,L3,active_topk_width is clamped to c128a_max_compressed,derived,sparse_mla.py diff,min(... self.c128a_max_compressed)
+L3-E-b2f9e4caa4,L3,packed views preserve CUDA graph address stability,derived,sparse_mla.py diff,packed views of pre-allocated buffers
+L3-E-02b6ecf07c,L3,consumers read only valid row prefix up to seq_lens,derived,PR body or diff,"Drop `out_logits.fill_(float(""-inf""))`"
+L3-E-6c7e679f04,L3,histogram top-k requires finite orderable inputs,derived,PR body or diff,normalize non-finite values in place
+L3-E-b88916617d,L3,ALiBi is unsupported with cached-K/V path,derived,PR body or diff,derive the head dim and KV head count from the paged KV cache
+L3-E-c27b080d26,L3,PyTorch 2,derived,PR body or diff,Align the runtime and fake-kernel metadata
+L3-E-f1899b2ffd,L3,qlen <= 4 can use native dense layout,derived,PR body or diff,size the decode metadata from the real MTP qlen
+L3-E-65cf1276a2,L3,keys outside sliding window are fully masked,derived,PR body or diff,skip those blocks rather than loading them and discarding the result
+L3-E-3756bf1e2b,L3,SM100 bf16 fixed head dims and quantized MQA required,derived,PR body or diff,Add an SM100 CuTeDSL implementation of the fused query preprocessing
+L3-E-8ae8337ffa,L3,DSpark draft positions are produced in one non-causal forward pass,derived,PR body or diff,forwards `attn_metadata.causal` to `tokenspeed_mla_decode`
+L3-E-c416f15710,L3,Kimi-K3 requires context parallelism disabled,derived,PR body or diff,normalizes the disabled state to the neutral values
+L3-E-66b3c0e61f,L3,video/image placeholders produce variable mm_prefix ranges,derived,PR #50294 body,each frame commonly contributes one range
+L3-E-2dfb8ba590,L3,PDL unavailable architectures are gated out,derived,PR #50230 body,Gated at runtime on current_platform.is_arch_support_pdl()
+L3-E-d8eabdbfbe,L3,appended padded heads do not affect original MLA heads,derived,PR #50578 body,MLA attention is independent per query head
+L3-E-b38e111d3e,L3,uneven request chunking preserves merge semantics,tested_only,PR #50613 validation,test_mla_context_chunks.py -q passes
+L3-E-34c1cd20a5,L3,AITER fused kernel does not support packed layout in shuffle mode,derived,PR #49373 body,doesn't support the packed layout in shuffle mode
+L3-E-1c94e8dc7d,L3,physical cache layout and capacity remain NVFP4,derived,PR #45187 body,physical cache layout and capacity remain NVFP4
+L3-E-9e6be4a72b,L3,power-of-two top-k row can be processed by one program,derived,sparse_utils.py diff,triton.next_power_of_2(NUM_TOPK_TOKENS) == NUM_TOPK_TOKENS
+L3-E-37fbf52084,L3,fp8 padded asm decode needs persistent metadata,derived,PR #51011 body,bf16 tolerates that; fp8 does not
+L3-E-63ac04a61e,L3,query gather buffer reuse is ordered by post-attention DCP combine,derived,PR #50484 body,next gather cannot execute until all ranks have passed
+L3-E-99e62b802c,L3,layers needing deferred lifecycle expose callable process_weights_after_loading,derived,PR #49519 body,it exposes a callable `process_weights_after_loading`
+L3-E-c76a425278,L3,partial pages carry explicit valid token ranges,derived,PR #51739 body,Partial pages carry an explicit valid token range
+L3-E-c3cac8c63d,L3,MiMo reference adds sinks[h] to each sequence's first key logit,derived,PR #49815 body,adds `sinks[h]` to the logit
+L3-E-87668ab69b,L3,Validation runs after CUDA-graph mode resolution,derived,PR body,validation runs after CUDA-graph mode resolution
+L3-E-6c95a641e9,L3,_when predicate uses same simple Python subset as dispatch,derived,PR #49315 body,uses the same simple Python subset as `dispatch(...)`
+L3-E-5426311d91,L3,FlyDSL path requires gfx950/CDNA4 and head_size 128 supported GQA group,derived,PR #47896 body,arch == gfx950
+L3-E-513f83e7ec,L3,one KV cache group may contain both windowed and global layers,derived,PR #51756 body,One KV cache group can hold both windowed and global layers
+L3-E-e3fe212eaf,L3,"AttentionSpec describes physical block dimension, strides and page span",derived,PR #51749 body,derives each cache's physical block dimension
+L3-E-a311916a29,L3,metadata update must emit CUDA graph capture-safe operations,derived,PR #46849 body,must emit CUDA graph capture-safe operations
+L3-E-1d2d83a07f,L3,SM12x XQA requires FlashInfer 0.6.16.post1 dedicated API,derived,PR #49718 body,requires FlashInfer 0.6.16.post1
+L3-E-3e372c5ff2,L3,shared page pool is safe only when all groups map block b to page b bytes,derived,PR #51837 body,block id `b` occupies page `b`
+L3-E-f97e502969,L3,total_num_decode_tokens equals number of logits indices for kv-sharing fast prefill,derived,PR #51738 body,just the number of logits indices
+L3-E-466855a2bf,L3,Triton gfx1100 build may need AMDGCN_USE_BUFFER_OPS=0 workaround,tested_only,PR #47017 body,Triton workaround was used
+L3-E-7f7a32cfec,L3,decode graphs captured on token grid require AttentionCGSupport.ALWAYS,derived,PR #47808 body,Requires `AttentionCGSupport.ALWAYS`
+L3-E-b745d08de1,L3,TRITON_MLA dequantizes fp8 KV on load and takes bf16 query,derived,PR #51860 body,takes a bf16 query
+L3-E-903d2efe7e,L3,cache dtype and kv_b_proj input dtype are independent,derived,PR #51772 body,Cache dtype and `kv_b_proj` dtype are independent
+L3-E-98f86b9c02,L3,only final tile can straddle seq_len,derived,chunked_prefill_paged_decode.py diff,Only the final tile can straddle seq_len
+L3-E-9035151d6c,L3,"Dots3 NOTE stores DSA index keys in NoPE,RoPE order",derived,PR #51255 body,"checkpoints store them in `[NoPE, RoPE]` order"
+L3-E-b652dedd0c,L3,generic FA2 prefill accepts sinks but does not apply them,derived,PR #52148 body,accepts a `sinks` argument but does not apply it
+L3-E-827a2af806,L3,FP8 SWA head_dim 256 should remain FA3 while full head_dim 512 auto-selects FA4,derived,PR #48666 body,SWA FP8 layer should run with version=3
+L3-E-63a9a5010a,L3,"SM90 native decode supports next_n in {1,2,4} but not 3",derived,PR #52164 body,"SM90 implements `{1, 2, 4}`"
+L3-E-9b0ab5dd53,L3,AITER preshuffled kernel is faster for this block-size shape,tested_only,PR #51216 body,preshuffled AITER kernel was more performant
+L3-E-97388c44f9,L3,non-causal draft SWA width must pad to multiple of 64,derived,PR #51538 body,pads to a multiple of 64
+L3-E-acb0f1dcdb,L3,None backend re-runs auto-selection rather than meaning same as target,derived,PR #52288 body,None re-runs backend auto-selection
+L3-E-edd4c8176c,L3,CUDA graph captured consumer reuses capture-time row stride,derived,PR #51318 body,retained the capture-time row stride
+L3-E-8efa13b700,L3,MRV1 needs whole attention body eager; MRV2 can keep narrow region,derived,PR #52401 body,MRV1 wraps the whole attention body
+L3-E-ef43e3101b,L3,new runtime behavior is gated to gfx950,derived,PR #52212 body,explicitly gated by `_ON_GFX950`
+L3-E-fe1c317157,L3,FP8 MLA PS ASM kernel runs only on non-chunked causal prefills,derived,PR #52356 body,only on non-chunked (causal) prefills
+L3-E-6914d60b1e,L3,AITER FlyDSL replacement has identical args and semantics,derived,PR #49544 body,Drop-in replacement (identical args/semantics)
+L3-E-1f0e0bf612,L3,SM100 FA4 2-CTA head_dim=256 rejects seqused_q/seqused_k,derived,PR #52050 body,does not support seqused_q/seqused_k
+L3-E-967e104fad,L3,DSA indexer supports only fp8 and mxfp4 K cache dtypes,derived,967e104fad12 diff,"DSA_INDEXER_KV_DTYPES = (""fp8"", ""mxfp4"")"
+L3-E-d1e3eee6fb,L3,non-causal DSpark blocks are flattened to single-token rows,derived,d1e3eee6fb8e diff,Non-causal DSpark blocks are flattened
+L3-E-58aa1e3d26,L3,SM120 sparse implementation only supports sparse forward_mqa path,derived,PR #51395 body,implements only the sparse `forward_mqa` path
+L3-E-01e56caaf2,L3,DeepseekV32Attention is MQA-only and does not execute dense-MHA backend,derived,PR #52512 body,only invokes `forward_mqa`
+L3-E-5f7a20b316,L3,"PCP sparse MLA needs gathered kv_c, k_pe, indexer_k before cache insertion",derived,PR #52046 body,"needs to gather kv_c, k_pe, indexer_k"
+L3-E-5d8a4cf976,L3,AITER MLA requires positive multiple of 16 or padded unaligned head counts up to 128,derived,5d8a4cf9761e diff,padded to the next multiple of 16
+L3-E-63ff748f65,L3,DCP FlashMLA sparse only validated with ag_rs and fp8 mixed-batch path,derived,63ff748f657a diff,only validated with the default 'ag_rs'
+L3-E-cd5035379c,L3,CPU query offsets are not used by prefix-prefill kernel but shared by later metadata builders,derived,PR #51585 body,CPU offsets are not used by that kernel
+L3-E-5df31ea52d,L3,SM90 adaptive verification uses flattened decode because native varlen DeepGEMM path remains SM100-only,derived,PR #52795 body,native variable-length DeepGEMM paged-MQA path remains restricted to SM100
+L3-E-cd7b7c265a,L3,ROCm 7.13 accepts hipMemcpyBatchAsync numAttrs > 0 while ROCm 7.2.x does not,tested_only,PR #43018 body,ROCm 7.13 will accept numAttrs > 0
+L3-E-fe76112ff2,L3,"AITER v0.1.19 consumes 1-D request lengths, so vLLM MTP rows must be flattened next_n=1",derived,PR #52882 body,flatten the exact bounds and calls AITER with `next_n=1`
+L3-E-574e6a00ef,L3,vLLM merge_attn_states contract uses natural-log LSE,derived,PR #52796 body,use natural `exp` and `log`
+L3-E-e6f35d3c69,L3,active top-k width covers max_seq_len/compress_ratio and is aligned to C128A alignment,derived,e6f35d3c69b2 diff,active_topk_width >= cm.max_seq_len // self.compress_ratio
+L3-E-d9e0ace7a0,L3,"XQA accepts head dimensions in [16,256] divisible by 16",derived,PR #53111 body,"in `[16, 256]` that are divisible by 16"
+L3-E-0ecc284790,L3,FlashInfer MLA may override user block_size 128 to kernel block size 64,derived,PR #51031 body,FlashInfer MLA sets kernel block to 64
+L3-E-6a9c69fa85,L3,Only TRTLLM-gen on SM100 reads query offsets from device; XQA/wrapper plan from CPU,derived,6a9c69fa8513 diff,only trtllm-gen decode (SM100 family) reads query offsets
+L3-E-7de96050c5,L3,adaptive verification changes query boundaries on device without synchronizing to CPU,derived,PR #52783 body,changes those boundaries on device
+L3-E-7156c63bef,L3,FA4 hd256 kernel requires one 128-token page per tile,derived,7156c63bef1f diff,requires one 128-token page per tile
+L3-E-b1fbbc2ade,L3,padded_num_tokens must cover largest rank-local PCP batch,derived,PR #53515 body,raises `ValueError` when `padded_num_tokens` is smaller
+L3-E-1a085dadf2,L3,MLA attention independent per query head so padded heads can be sliced exactly,derived,PR #51040 body,independent per query head
+L3-E-080a66a69c,L3,AITER split-K workspace registry is keyed by stream and must be warmed on capture stream,derived,PR #53818 body,registry keyed by stream
+L3-E-b3af042abd,L3,TRITON_MLA PCP preparation consumes rank-major mapping with pcp_size*num_tokens entries,derived,PR #53869 body,rank-major mapping with `pcp_size * num_tokens` entries
+L3-E-32ad1400d7,L3,fused path only valid when both wq_b GEMMs use AITER block-scaled FP8 kernel,derived,32ad1400d7fa diff,True when both wq_b GEMMs run
+L3-E-07242faa46,L3,FlashInfer MLA native DCP requires cp_kv_cache_interleave_size=1,derived,07242faa4667 diff,requires cp_kv_cache_interleave_size=1
+L3-E-d21c5b50a1,L3,BF16 sparse prefill kernel requires num_local_head padded to 64 on Hopper and 128 on Blackwell,derived,d21c5b50a1d3 diff,multiple of 64 on hopper and 128 on blackwell
+L3-E-de9250ac9e,L3,128 MiB workspace guard limits GLM-5 masked MHA above exact 32K single request despite policy,derived,PR #53785 body,fixed 128 MiB workspace
+L3-E-6d4562c59b,L3,DSpark draft must recompute rank-local lengths from current global draft sequence lengths,derived,PR #54277 body,Reusing target-local lengths is not sufficient
+L3-E-ae5b8e4a8d,L3,"PA gluon decode supports shuffle KV layout, head_size 128, block_size 128 and query-group sizes 8 or 16",derived,ae5b8e4a8d77 diff,"_PA_GLUON_QUERY_GROUP_SIZES = (8, 16)"
+L3-E-7f4793eaa3,L3,"per side, dcp_size is either 1 or tp_size",derived,PR body,"per side, dcp_size is either 1 ... or tp_size"
+L3-E-7f4793eaa3,L3,DCP shards at block granularity when a KV connector is attached,derived,PR body,DCP shards at block granularity when a KV connector is attached
+L3-E-dbf662c9e8,L3,small-head verify graph capture cannot include device-to-host syncs,derived,PR body,device->host syncs and an allocation sized from what it just read back
+L3-E-dbf662c9e8,L3,Gluon verify path assumes cp_interleave == 1 for segmented DCP verify,derived,rocm_aiter_mla.py diff,cp_interleave == 1 and _segmented_mla_decode_supported()
+L3-E-5707355209,L3,BLHNC physical row stride may differ from logical block size,derived,flashinfer_mla_sparse.py diff,"_, block_stride_rows = flat_kv_row_view"
+L3-E-dbb7fffddb,L3,round-robin interleaving other than 1 is excluded for segmented verify,derived,rocm_aiter_mla.py diff,cp_interleave == 1 and _segmented_mla_decode_supported()
+L3-E-07ea9350ba,L3,Gemma4 prefix ranges can clamp to the sliding-window left edge,derived,triton_attention_helpers.py diff,MM_PREFIX_CLAMP_SW
+L3-E-58dace61fa,L3,_paged_kv_cache_offsets resolves tokens against physical blocks individually,derived,prefix_prefill.py diff,resolves context tokens against PHYSICAL_BLOCK_SIZE individually
+L3-E-0d4ad47981,L3,B12X runtime page size must be 64 or 128,derived,b12x.py diff,"_B12X_SUPPORTED_PAGE_SIZES = (64, 128)"
+L3-E-7c5dc571cb,L3,"nvfp4_ds_mla packs NoPE, RoPE and scales into 352 bytes",derived,mla_attention.py diff,"state_content_bytes={""fp8_ds_mla"": 656, ""nvfp4_ds_mla"": 352}"
+L3-E-cee0f92c02,L3,optimized decode score policy applies only gfx950 bf16 head_dim 128 cache/query shapes,derived,index_topk.py diff,is_gfx950 and head_dim == 128
+L3-E-9509fc8ae6,L3,3-warps-per-row split is used only up to 64 decode tokens,derived,kernel diff,kDecodeRowSplitMaxTokens = 64
+L3-E-bc2ee48073,L3,weight load is independent of producer output,derived,fused_qk_rmsnorm.py diff,weight load does not depend on the producer's output
+L3-E-69cf055936,L3,BI decode is one token per request with sparse gather on the critical path,derived,PR body,BI decode is one token per request
+L3-E-3ff4f02dfe,L3,fusion is used only when AITER is enabled and torch is not compiling,derived,mla.py diff,not torch.compiler.is_compiling()
+L3-E-8277c42e4c,L3,FlashInfer cached _get_range_buf CPU tensor may be unpinned,derived,flashinfer.py diff,"cache entry is unpinned, so the copy silently blocks"
+L3-E-9c297e3b8b,L3,PDL path is only enabled on CUDA architectures >= 900,derived,kernel diff,defined(__CUDA_ARCH__) && (__CUDA_ARCH__ >= 900)
+L3-E-755541443f,L3,score masking does not protect against NaNs in V padding,derived,attention.cu diff,0 * NaN is NaN
+L3-E-d29c88f162,L3,backend_per_kind option is required for this block-size selection,derived,PR body,Requires use of the `backend_per_kind` option
+L3-E-1b2c591cd0,L3,no TRTLLM-gen kernel supports NVFP4 output with NVFP4 KV cache,derived,flashinfer.py diff,no such trtllm-gen kernel
+L3-E-d8d53f17c2,L3,MLA DCP decode requires seq_lens on CommonAttentionMetadata,derived,mla_attention.py diff,MLA DCP decode requires seq_lens
+L3-E-83252ea899,L3,AITER MiniMax-M3 score/top-k requires gfx950 and fp8 e4m3 index cache,derived,indexer_aiter.py diff,requires an fp8 (e4m3) index cache
+L3-E-8c87c333b8,L3,TRTLLM ragged prefill requires non-empty CPU query lengths,derived,trtllm_ragged.py diff,requires a non-empty 1D query-length tensor
+L3-E-be1cb9834b,L3,group_size is 32 or 128,derived,per_token_group_quant.cu,static_assert(GROUP_SIZE == 32 || GROUP_SIZE == 128)
+L3-E-b4da4d17ae,L3,MLA reads kv_b_proj weight directly to build W_UK/W_UV,derived,mla_attention.py diff,MLA reads this weight directly
+L3-E-b4da4d17ae,L3,Preshuffled GEMM reads activation scale column-major,derived,aiter.py diff,reads the activation scale column-major
+L3-E-19b6ff62f2,L3,unquantized KV caches must ignore non-neutral K/V scale tensors,derived,PR body,AITER treats them as descales and corrupts attention output
+L3-E-438434b5b5,L3,per-token heads are contiguous and row stride fits int,derived,diff,t.stride(1) == t.shape[2]
+L3-E-80447d2765,L3,"FlashInfer non-causal DSpark uses valid active length, not padded width",derived,diff,metadata.flashinfer_decode_topk_lens = topk_lens
+L3-E-9612f77077,L3,workspace views must be reacquired after growth,derived,PR body,reacquires simultaneous views from the current workspace when used
+L3-E-ff6b5808c4,L3,current_platform.fp8_dtype does not change after import,derived,PR body,cannot change after import
+L3-E-32636580a6,L3,causal multi-token decode row extents express intra-block causality,derived,diff,Row t attends the prefix plus block tokens 0..t
+L3-E-50d812b66a,L3,eight-token staging starts only at >=64 tokens,tested_only,PR body,forced eight-token tiles regress 2–16-token kernels
+L3-E-1dc2d854c1,L3,DeepSeek-V4.1 SWA window is 128 tokens,derived,PR body,"last window [H-128, H)"
+L3-E-71fc70d3ae,L3,DSv4 sparse indexer cache is block-flat on C4A,derived,diff,V4.0 C4A is block-flat (NORMAL)
+L3-E-38537331d3,L3,end_ptr alignment does not enable vectorized stores,derived,PR body,each program stores one scalar
+L3-E-a7fda4c88b,L3,SM90 converts scale to BF16 and SM100 converts it to E8M0,derived,PR body,"SM90 converts the scale to BF16, while SM100 converts it to E8M0"
+L3-E-1596fa5f88,L3,index source runs before consumers each decode step,derived,PR body,the source clears its own entry when it runs
+L3-E-e34685dfc0,L3,adaptive verification may make CPU and device request boundaries differ,derived,PR body,CPU request boundaries can differ from final device boundaries
+L3-E-a369a7becc,L3,TRTLLM NoPE sparse kernel requires at least one valid KV-cache entry,derived,diff,TRTLLM's NoPE sparse kernel requires at least one valid KV-cache entry
+L3-E-066ee91197,L3,softcap=50 overflows old helper above scores around 4400,derived,PR body,a pre-softcap score above 4400 overflows
+L3-E-ca831d1c55,L3,RoPE lanes are adjacent pairs in trailing rope dimensions,derived,diff,fused inverse RoPE pairs adjacent lanes
+L3-E-1c0eee919d,L3,AITER fp4 BMM only supports power-of-two K,derived,PR body,"only supports power-of-two K, and returns wrong values"
+L3-E-88aa0d287d,L3,ragged FlashInfer MLA decode cannot return LSE for DCP,derived,diff,FlashInferMLA ragged decode cannot return LSE
+L3-E-f9dce295c9,L3,FP8 wo_a path already rotates while quantizing,derived,PR body,inverse_rope_group_quant rotates while it quantizes
+L3-E-c843f0cab7,L3,default FlashInfer 0.6.18.post1 lacks native GLM53_NOPE support,derived,PR body,does not provide native GLM53_NOPE support
+L3-E-26879f3260,L3,static AITER quant preserves scale output,derived,diff,Static quant preserves it; keep this graph output
+L3-E-1904ed9402,L3,RDNA branch measured only on gfx1100/gfx1201 bf16 TP1,tested_only,PR body,"measured on bf16, TP=1 and gfx1100/gfx1201 only"
+L3-E-b715699df4,L3,AITER build must include strided KV-cache fix,derived,PR body,Requires a build containing the strided KV-cache fix
+L3-E-b5ea0c7107,L3,sum of query tokens is bounded by max_num_batched_tokens,derived,PR body,sum of query tokens equals max_num_batched_tokens
+L3-E-e26547adfb,L3,"backend supports_block_size may be exact-size, not multiples",derived,PR body,a multiple of a supported size is not a safe assumption
+L3-E-e9f167129c,L3,Gluon decode faults after per-layer cache exceeds 2 GiB,tested_only,PR body,Above the bound the kernel faults at every KV length tried
+L3-E-26f49e336a,L3,host sequence-length upper bounds include cached prefixes,derived,PR body,This includes cached prefixes
+L3-E-721d0e5c11,L3,gfx950 has MX matrix cores; gfx942 remains bf16 path,derived,PR body,bf16 path remains only for archs without MX matrix cores (gfx942)
+L3-E-04730e8270,L3,Captured graph stores one full verify of context rows per request,derived,speculator.py diff,one full verify per request
+L3-E-04730e8270,L3,PAD_SLOT_ID rows write no K/V during capture/replay,derived,PR body,PAD_SLOT_ID so they write no K/V
+L3-E-5ff3bbfb08,L3,RopeQuant output group stride must equal sum_q,derived,PR body,launcher requires the output's group stride to equal sum_q
+L3-E-609731e8f5,L3,fused path is CUDA-only,derived,PR body,can_fuse_query_quant returns False off CUDA
+L3-E-29468dde8b,L3,FlashMLA FP8/NVFP4 needs native TMA alignment,derived,PR body,require independent native TMA alignment
+L3-E-2edbb32e58,L3,DeepSeek-V3.2 default index_kpool is 1,derived,PR body,defaulting to 1 for DeepSeek-V3.2
+L3-E-c88f4824ff,L3,device query_start_loc is authoritative for graph replay token boundaries,derived,test_indexer_deepseek_v4_slot_mapping.py,Graph replay follows device boundaries even when CPU lengths are stale.
+L3-E-a4eb3f25d6,L3,TRTLLM-GEN varlen decode is usable only for adaptive verification without DCP,derived,flashinfer.py,and decode_kernel == FlashInferDecodeKernel.TRTLLM_GEN and not use_dcp
+L3-E-a4eb3f25d6,L3,batches with a prefill must not replay varlen decode graphs,derived,model_runner.py,Varlen decode graphs replay decodes only
+L3-E-a9eafde59c,L3,fused path requires SM100/SM103 and at most 8 local heads per group,derived,PR #58634 body,takes the fused path on SM100/SM103 when each group has at most 8 local heads
+L3-E-a9eafde59c,L3,extra padded MXFP8 scale rows are zeroed,tested_only,test_fused_inv_rope_fp8_quant.py,padded scale rows must be zero
+L3-E-c8d7a7dd13,L3,FlashInfer SM90 schedule exposes expected plan-info layout,derived,flashinfer_mla_sparse_sm90.py,assert len(plan_info) == _PLAN_INFO_LEN
+L3-E-c8d7a7dd13,L3,plan slack absorbs contexts that grow by a few tokens per step,derived,PR #58684 body,Contexts grow by a few tokens per step and the slack absorbs that
+L3-E-0376f81530,L3,"without speculative token accounting, seq_lens_cpu_upper_bound is exact",derived,flashinfer.py,"No speculative token accounting, so the upper bound is exact."
+L3-E-94d1462924,L3,pointer metadata must be rebuilt only outside CUDA graph capture,derived,dspark_mla.py,assert not torch.cuda.is_current_stream_capturing()
+L3-E-94d1462924,L3,captured graphs keep reading live pointers after in-place pointer array update,derived,PR #58814 body,"The pointer array is updated in place, so captured graphs keep reading live pointers."
+L3-E-25624f65cf,L3,CPRR route requires DCP interleave size 1 and gfx950,derived,rocm_aiter_mla.py,"Requires DCP with interleave size 1, speculative decoding, and gfx950"
+L3-E-25624f65cf,L3,"CPRR kernels exist only for native gathered head counts 16,32,64,128",derived,rocm_aiter_mla.py,"_NATIVE_CPRR_HEADS: Final = (16, 32, 64, 128)"
+L3-E-25624f65cf,L3,qlen == 2 must fall back to segmented route,tested_only,test_rocm_aiter_mla_dcp_cprr.py,Qlen 2 is below CPRR's floor and must use segmented verification.
+L3-E-75fad5bbef,L3,skipping -1 sentinel indices is semantically equivalent to masking them out,derived,PR #58058 body,skipping an index and masking it out give the same attention result
+L3-E-75fad5bbef,L3,consumers do not check sign before indexing the KV pool,derived,rocm_aiter_mla_sparse.py,consumers index the KV pool without checking the sign

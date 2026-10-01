@@ -1,0 +1,255 @@
+{
+ "lineage": "L1",
+ "census": {
+  "linked_failures": 168,
+  "with_introducing_change": 134,
+  "reverts": 32,
+  "relands": 13,
+  "notes": "Census is the union of L1 failure-links fix_event_id rows and L1 lineage-edges to_events where edge_type is repairs/reverts/relands: 77 failure-links rows plus 146 special edges yield 168 unique linked repair/revert/reland/failure events. The 134 introducing-change count includes failure-links rows with introducing_event_id plus special-edge to_events with an explicit from_event_id. Revert/reland counts are unique linked events whose event_type is revert/reland; special edges contain 33 reverts and 19 relands."
+ },
+ "histories": [
+  {
+   "history_id": "F-L1-01",
+   "title": "W4AFP8 MoE TMA descriptor synchronization",
+   "failed_what": "The Hopper CUTLASS-derived W4A8/W4AFP8 MoE grouped GEMM port from PR #7772 copied TMA descriptors into shared storage without the descriptor commit/wait sequence later required by upstream CUTLASS/TensorRT-LLM.",
+   "move_ids": [],
+   "artifact_ids": [
+    "L1.cutlass.w4a8"
+   ],
+   "mechanism": "A rare synchronization/order bug let the W4AFP8 MoE kernel use unstable TMA descriptors. Larger multi-expert shapes could produce wrong results, and DeepSeek-R1 W4AFP8 tensor-parallel serving showed inconsistent outputs for the same seed and prompt.",
+   "invalidation_scope": "implementation",
+   "durable_encoding": [
+    "no durable encoding found"
+   ],
+   "durable_encoding_evidence": "The repair diff only adds cute::tma_desc_commit_group() and cute::tma_desc_wait_group() in sm90_mma_array_tma_gmma_rs_warpspecialized_mixed_input_.hpp; PR #9392 changed one source file and did not add a test, guard, comment, documented requirement, or abstraction.",
+   "repeat_assumption": "none found (searched: L1 lineage-events and move registry after PR #9392 for W4A8/W4AFP8 TMA descriptor-copy synchronization failures; no later L1 repair/revert repeats the missing commit/wait assumption).",
+   "move_returned": "The W4AFP8 grouped GEMM path was fixed forward by adding the upstream CUTLASS/TensorRT-LLM descriptor commit/wait sequence; the event later has outcome merged_modified_later and survives_at_cutoff=no, but the synchronization lesson returned in the repaired implementation rather than as a separate successor move.",
+   "timeline": [
+    {
+     "date": "2025-07-04",
+     "repo": "sgl-project/sglang",
+     "pr": 7772,
+     "sha": "da3890e82a97e9b1f970133c0fef6341a8bbf791",
+     "event_id": "L1-E-da3890e82a",
+     "role": "introduce"
+    },
+    {
+     "date": "2025-08-20",
+     "repo": "sgl-project/sglang",
+     "pr": 9392,
+     "sha": "de4990a5b2d1db1ba6a13c222538e00443d58abd",
+     "event_id": "L1-E-de4990a5b2",
+     "role": "failure_report"
+    },
+    {
+     "date": "2025-08-21",
+     "repo": "sgl-project/sglang",
+     "pr": 9392,
+     "sha": "de4990a5b2d1db1ba6a13c222538e00443d58abd",
+     "event_id": "L1-E-de4990a5b2",
+     "role": "repair"
+    }
+   ],
+   "narrative": "PR #7772 ported a Hopper W4A8 MoE grouped GEMM with tests over small multi-expert shapes. PR #9392 reported that the existing multi-expert test could rarely fail, especially at batch_size=512 and num_experts=256, and that DeepSeek-R1 W4AFP8 TP could be nondeterministic. The repair says the issue was introduced in #7772 and adapts an upstream CUTLASS/TensorRT-LLM fix. The actual diff is a four-line synchronization repair: commit and wait for TMA descriptors before copying them into shared tensormap storage. The optimization idea was not rejected; one implementation's synchronization protocol was incomplete.",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/7772",
+    "https://github.com/sgl-project/sglang/pull/9392",
+    "https://github.com/sgl-project/sglang/commit/da3890e82a97e9b1f970133c0fef6341a8bbf791",
+    "https://github.com/sgl-project/sglang/commit/de4990a5b2d1db1ba6a13c222538e00443d58abd",
+    "experiments/deep-study/kernel-failures-report.md#W4AFP8-MoE-TMA-descriptor-synchronization"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "deep_study_record"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L1-02",
+   "title": "TRTLLM FP4 MoE renormalization for Qwen/DeepSeek NVFP4",
+   "failed_what": "The FlashInfer/TRTLLM FP4 MoE runner integration for Blackwell NVFP4 models enabled Qwen-series routing and then patched router-logit dtype handling, but the combined renormalization/dtype behavior still broke Qwen3 NVFP4 accuracy.",
+   "move_ids": [],
+   "artifact_ids": [
+    "L1.runner.flashinfer_trtllm",
+    "L1.triton.fused_moe"
+   ],
+   "mechanism": "The FP4 MoE adapter treated DeepSeek and Qwen NVFP4 routing/renormalization needs as equivalent. PR #13761 introduced DeepSeek breakage; PR #14135 fixed that by casting router logits to float32, but moved the bug to Qwen3 NVFP4 until #14350 corrected the conditional renorm path.",
+   "invalidation_scope": "partial_domain",
+   "durable_encoding": [
+    "guard"
+   ],
+   "durable_encoding_evidence": "The PR #14350 diff changes fused_moe_triton/layer.py so router_logits is cast to float32 only inside the RoutingMethodType.RENORMALIZE branch, preserving Qwen/DeepSeek-specific renorm behavior; no new test file is added in the repair.",
+   "repeat_assumption": "none found (searched: L1 failure-links and lineage-events after PR #14350 for TRTLLM FP4 MoE renormalization/Qwen NVFP4 regressions; no later linked L1 repair repeats this specific Qwen-vs-DeepSeek renorm assumption).",
+   "move_returned": "The FlashInfer/TRTLLM FP4 MoE path returned as an enabled Qwen-series backend after PR #14350; the repair removed an accidental server-args disable and corrected the conditional renorm handling instead of reverting the backend.",
+   "timeline": [
+    {
+     "date": "2025-11-26",
+     "repo": "sgl-project/sglang",
+     "pr": 13761,
+     "sha": "91e8dc371a8b631475cb620aae35d5628ed27155",
+     "event_id": "L1-E-91e8dc371a",
+     "role": "introduce"
+    },
+    {
+     "date": "2025-11-29",
+     "repo": "sgl-project/sglang",
+     "pr": 14135,
+     "sha": "3339c8107292346b173bede6989bae060534cf11",
+     "event_id": "L1-E-3339c81072",
+     "role": "repair"
+    },
+    {
+     "date": "2025-12-03",
+     "repo": "sgl-project/sglang",
+     "pr": 14350,
+     "sha": "922756aaa1c2f03589ca1cf5380c0e8abcd670d1",
+     "event_id": "L1-E-922756aaa1",
+     "role": "failure_report"
+    },
+    {
+     "date": "2025-12-04",
+     "repo": "sgl-project/sglang",
+     "pr": 14350,
+     "sha": "922756aaa1c2f03589ca1cf5380c0e8abcd670d1",
+     "event_id": "L1-E-922756aaa1",
+     "role": "repair"
+    }
+   ],
+   "narrative": "PR #13761 enabled NVFP4 MoE for Qwen-series Blackwell models and added a Qwen3 FP4 nightly test. PR #14135 fixed an illegal-memory DeepSeek failure by casting router logits to float32. PR #14350 then states that #13761 introduced a DeepSeek bug and #14135 fixed it while introducing a Qwen3 bug. The final repair keeps the backend enabled but narrows the dtype/renorm handling: router logits are cast inside the renormalization branch, and the Qwen3 TRTLLM-MHA disable is removed. This invalidated a domain-specific adapter assumption, not FP4 MoE itself.",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/13761",
+    "https://github.com/sgl-project/sglang/pull/14135",
+    "https://github.com/sgl-project/sglang/pull/14350",
+    "https://github.com/sgl-project/sglang/commit/922756aaa1c2f03589ca1cf5380c0e8abcd670d1"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "test",
+    "deep_study_record"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L1-03",
+   "title": "AITER/DeepEP fused shared-expert scaling",
+   "failed_what": "The AMD AITER plus DeepEP fused shared-expert remap path from PR #28450 appended shared experts as top-k slots but reused the default 1/routed_scaling_factor compensation when the AITER path had already folded routing scale into top-k weights.",
+   "move_ids": [
+    "M-L1-routing-scale-fusion"
+   ],
+   "artifact_ids": [
+    "L1.routing.topk_py"
+   ],
+   "mechanism": "The always-on shared expert was weighted by 1/routed_scaling_factor on an AITER path that skips the later post-MoE multiply. With rsf=2.5, the shared expert contributed about 0.4x, causing long-form generation collapse while short GSM8K smoke tests remained insensitive.",
+   "invalidation_scope": "partial_domain",
+   "durable_encoding": [
+    "test",
+    "comment",
+    "guard"
+   ],
+   "durable_encoding_evidence": "PR #28237 adds test/registered/unit/layers/moe/test_fused_shared_expert_scaling.py with three contract tests, adds comments explaining AITER vs post-MoE scaling, and guards _remap_topk_for_deepep with if _use_aiter: shared weight = 1.0 else 1/rsf.",
+   "repeat_assumption": "none found (searched: L1 events after #28237 for shared-expert 1/routed_scaling_factor reuse; later #39126 adds/updates shared-expert fusion gate tests, but no linked failure repeats this exact AITER shared-weight assumption).",
+   "move_returned": "The shared-expert fusion and routed-scaling fusion move stayed active but with a domain split: AITER/HIP uses unit shared weight, while the post-MoE-scaled path keeps inverse-rsf compensation.",
+   "timeline": [
+    {
+     "date": "2026-06-25",
+     "repo": "sgl-project/sglang",
+     "pr": 28450,
+     "sha": "de2d01c8da49a522194f6acb8b839f9b452593cb",
+     "event_id": "L1-E-de2d01c8da",
+     "role": "introduce"
+    },
+    {
+     "date": "2026-06-25",
+     "repo": "sgl-project/sglang",
+     "pr": 28237,
+     "sha": "3d3a7ec0315924804ccb278901d6f13fdd9b0943",
+     "event_id": "L1-E-3d3a7ec031",
+     "role": "repair"
+    }
+   ],
+   "narrative": "PR #28450 fused shared-expert append and DeepEP remap for the AMD AITER path. PR #28237 explains that the default DeepEP path multiplies the whole MoE output by routed_scaling_factor, so a shared weight of 1/rsf nets to 1.0, but AITER folds rsf into top-k and skips the post-MoE multiply. The fused shared expert was therefore underweighted, causing long-form reasoning to loop to the token cap and dropping MLPerf exact_match from roughly 80.5 to 62.5. The repair adds a path guard plus unit tests that encode the contract.",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/28450",
+    "https://github.com/sgl-project/sglang/pull/28237",
+    "https://github.com/sgl-project/sglang/commit/de2d01c8da49a522194f6acb8b839f9b452593cb",
+    "https://github.com/sgl-project/sglang/commit/3d3a7ec0315924804ccb278901d6f13fdd9b0943"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "test",
+    "benchmark",
+    "deep_study_record"
+   ],
+   "confidence": "high"
+  },
+  {
+   "history_id": "F-L1-04",
+   "title": "JIT activation reland after zero-token PCG failure",
+   "failed_what": "The JIT activation optimization in PR #21766 routed MoE activation call sites to a new vectorized/PDL JIT activation kernel, but it missed a num_tokens == 0 case that broke CI/piecewise CUDA graph paths and forced a revert.",
+   "move_ids": [],
+   "artifact_ids": [
+    "L1.triton.fused_moe",
+    "L1.runner.triton",
+    "L1.runner.deep_gemm",
+    "L1.runner.openai_triton_kernels",
+    "L1.runner.marlin",
+    "L1.cutlass.adapters"
+   ],
+   "mechanism": "The JIT activation path launched as if every activation call had at least one token. A CI failure led to reverting #21766; the reland adds an early return for num_tokens == 0 before dimension checks and kernel launch.",
+   "invalidation_scope": "adapter",
+   "durable_encoding": [
+    "guard",
+    "test"
+   ],
+   "durable_encoding_evidence": "PR #22094's activation.cuh adds if (num_tokens == 0) return; before launching the activation kernel, and the reland includes python/sglang/jit_kernel/tests/test_activation.py covering activation correctness and out-param behavior.",
+   "repeat_assumption": "none found (searched: L1 reverts/relands after #22094 and JIT activation records for another num_token==0 activation failure; no later linked L1 failure repeats this zero-token assumption).",
+   "move_returned": "Yes. PR #22078 reverted PR #21766, and PR #22094 explicitly relanded JIT activation with the zero-token guard and tests; the move returned as the same vectorized/PDL JIT activation integration.",
+   "timeline": [
+    {
+     "date": "2026-04-03",
+     "repo": "sgl-project/sglang",
+     "pr": 21766,
+     "sha": "44e5d357037cdd45ec86078ab9b7775936081d53",
+     "event_id": "L1-E-44e5d35703",
+     "role": "introduce"
+    },
+    {
+     "date": "2026-04-03",
+     "repo": "sgl-project/sglang",
+     "pr": 22078,
+     "sha": "ac1e437f6a6348e08fa48583eee008204305b9bf",
+     "event_id": "L1-E-ac1e437f6a",
+     "role": "revert"
+    },
+    {
+     "date": "2026-04-24",
+     "repo": "sgl-project/sglang",
+     "pr": 22094,
+     "sha": "82254bd9c5bba9cba42f5469e49cbe438adb5aa0",
+     "event_id": "L1-E-82254bd9c5",
+     "role": "reland"
+    }
+   ],
+   "narrative": "PR #21766 added a JIT activation kernel and wired MoE runner activation call sites to it, claiming PDL/vectorization speedups on H200/B200. PR #22078 reverted it the same day, linking a CI failure. The reland PR #22094 states the missing fix: num_token = 0. Its C++ wrapper computes num_tokens and returns immediately when it is zero, avoiding an empty-grid launch/path error before shape-dependent checks. It also restores the activation tests. The optimization survived, but only after the adapter encoded the empty-token case.",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/21766",
+    "https://github.com/sgl-project/sglang/pull/22078",
+    "https://github.com/sgl-project/sglang/pull/22094",
+    "https://github.com/sgl-project/sglang/commit/44e5d357037cdd45ec86078ab9b7775936081d53",
+    "https://github.com/sgl-project/sglang/commit/ac1e437f6a6348e08fa48583eee008204305b9bf",
+    "https://github.com/sgl-project/sglang/commit/82254bd9c5bba9cba42f5469e49cbe438adb5aa0"
+   ],
+   "evidence_types": [
+    "pr_body",
+    "diff",
+    "test",
+    "revert_record",
+    "deep_study_record"
+   ],
+   "confidence": "high"
+  }
+ ]
+}

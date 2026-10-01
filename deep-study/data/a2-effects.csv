@@ -1,0 +1,19 @@
+repo,effect,estimate,ci95_low,ci95_high,n_performance,n_non_performance,bootstrap_reps,stratum
+vllm,km_median_days_to_merge_diff,63.6419,41.3178,105.3185,3214,22307,1000,all
+vllm,km_median_days_to_merge_ratio,3.9346,2.7748,5.9052,3214,22307,1000,all
+vllm,cif_merged_30d_diff,-0.0845,-0.1038,-0.0662,3214,22307,1000,all
+vllm,cif_merged_7d_diff,-0.1307,-0.1458,-0.1133,3214,22307,1000,all
+vllm,rmst_90d_days_diff,8.9576,7.3631,10.4951,3214,22307,1000,all
+vllm,closed_unmerged_share_diff,-0.0219,-0.0387,-0.0039,3214,22307,1000,all
+vllm,km_median_days_to_merge_diff,6.8669,2.3072,16.07,476,8157,1000,size_small (lines 0-29)
+vllm,km_median_days_to_merge_diff,-0.6222,-13.5375,20.9664,909,7503,1000,size_medium (lines 29-169)
+vllm,km_median_days_to_merge_diff,nan,13.6892,13.6892,1829,6647,1000,size_large (lines 169-1000000000000)
+sglang,km_median_days_to_merge_diff,29.6489,22.7308,39.618,3094,22892,1000,all
+sglang,km_median_days_to_merge_ratio,4.9103,3.9531,6.2689,3094,22892,1000,all
+sglang,cif_merged_30d_diff,-0.1009,-0.1203,-0.0817,3094,22892,1000,all
+sglang,cif_merged_7d_diff,-0.1689,-0.1858,-0.1512,3094,22892,1000,all
+sglang,rmst_90d_days_diff,9.7231,7.9869,11.4708,3094,22892,1000,all
+sglang,closed_unmerged_share_diff,-0.0102,-0.0276,0.006,3094,22892,1000,all
+sglang,km_median_days_to_merge_diff,5.8075,2.9373,10.012,436,8278,1000,size_small (lines 0-33)
+sglang,km_median_days_to_merge_diff,9.5113,4.0452,15.5249,969,7665,1000,size_medium (lines 33-222)
+sglang,km_median_days_to_merge_diff,59.0334,32.9211,178.4813,1689,6949,1000,size_large (lines 222-1000000000000)

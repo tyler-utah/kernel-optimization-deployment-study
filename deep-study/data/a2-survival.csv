@@ -1,0 +1,17 @@
+repo,group,horizon_days,km_merged_prob_closed_censored,cif_merged,cif_merged_ci_low,cif_merged_ci_high,cif_closed
+vllm,performance,1,0.0842,0.0796,0.0706,0.0892,0.0689
+vllm,performance,7,0.2528,0.2324,0.2168,0.2473,0.1087
+vllm,performance,30,0.4228,0.3752,0.3581,0.3929,0.1737
+vllm,performance,90,0.5009,0.4321,0.4128,0.4505,0.242
+vllm,non_performance,1,0.223,0.2083,0.2029,0.2136,0.0899
+vllm,non_performance,7,0.4004,0.3631,0.3578,0.3695,0.1381
+vllm,non_performance,30,0.5235,0.4597,0.4533,0.4665,0.1976
+vllm,non_performance,90,0.5784,0.496,0.4891,0.5031,0.2596
+sglang,performance,1,0.1229,0.1174,0.1074,0.1295,0.0611
+sglang,performance,7,0.307,0.2853,0.2696,0.3004,0.1082
+sglang,performance,30,0.4794,0.4288,0.4104,0.4471,0.1571
+sglang,performance,90,0.5734,0.4983,0.4767,0.5179,0.2288
+sglang,non_performance,1,0.3214,0.3042,0.298,0.3098,0.0854
+sglang,non_performance,7,0.4942,0.4541,0.448,0.461,0.1304
+sglang,non_performance,30,0.5911,0.5297,0.5236,0.5369,0.1749
+sglang,non_performance,90,0.633,0.5576,0.5509,0.5645,0.2394

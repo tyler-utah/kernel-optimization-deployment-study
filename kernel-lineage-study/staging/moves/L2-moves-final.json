@@ -1,0 +1,2383 @@
+{
+  "lineage": "L2",
+  "name_map": {
+    "FlashAttention-3 MLA backend selected by default on Hopper": "M-L2-fa3-hopper-mla",
+    "FlashMLA tile-scheduler metadata and graph-replayed num_splits": "M-L2-flashmla-tile-metadata",
+    "MHA-style MLA prefill without weight absorption": "M-L2-prefill-without-absorption",
+    "Paged latent MLA KV cache with fused writes and FP8 scale side buffers": "M-L2-paged-latent-kv-fused-writes",
+    "TRT-LLM Gen MLA decode via FlashInfer": "M-L2-trtllm-gen-mla-flashinfer",
+    "absorbed_latent_mqa_decode": "M-L2-absorbed-latent-mqa-decode",
+    "aiter_fp8_mla_prefill_metadata": "one_off",
+    "aiter_mla_decode_dispatch": "one_off",
+    "aiter_mla_head_padding": "one_off",
+    "aiter_wo_a_bf16_batched_gemm": "one_off",
+    "amd_add_unified_kv_attention_support_in_dpsk_v4_": "one_off",
+    "amd_deepseek_v4_clean_env_vars_28920": "one_off",
+    "amd_dsv4_feat_enable_fp8_two_pool_unified_kv_on_": "one_off",
+    "amd_dsv4_fix_nonetype_issue_when_enabling_hicach": "one_off",
+    "amd_enable_12_head_mla_aiter_fp8_gluon_decode_ba": "one_off",
+    "amd_enable_fast_triton_sparse_mla_backend": "one_off",
+    "amd_fix_deepseek_v4_mtp_accept_length_issue_2852": "one_off",
+    "amd_fix_dspark_accept_length_and_reduce_host_bub": "M-L2-flashinfer-ragged-prefill",
+    "amd_fp8_bmm_mla": "one_off",
+    "amd_fuse_compress_norm_rope_hadamard_into_single": "one_off",
+    "amd_gfx95_fill_the_chunked_prefill_compute_budge": "one_off",
+    "amd_glm5_add_opt_in_triton_fp8_sparse_mla_prefil": "one_off",
+    "amd_improve_performance_of_dsv4_in_high_concurre": "one_off",
+    "amd_optimize_kimi_k3_triton_mla_prefill_on_gfx95": "M-L2-flashinfer-ragged-prefill",
+    "amd_optimize_o_proj_gemm_and_attn_output_rope_pe": "one_off",
+    "amd_refactor_sparse_mla_decode_kernel_for_deepse": "one_off",
+    "amd_remove_bf16_to_fp32_elementwise_cast_from_co": "one_off",
+    "amd_replace_fp8_mla_with_fp8_mha_kernel_for_diff": "one_off",
+    "amd_support_gfx1250_on_rocm_10": "M-L2-flashmla-tile-metadata",
+    "amd_two_batch_overlap_streams": "one_off",
+    "ascend_fia_mla_graph_kernel": "one_off",
+    "ascend_paged_mla_kv_cache": "one_off",
+    "avoid_mxfp4_contiguous_copy": "one_off",
+    "avoid_prefix_lens_d2h_sync": "one_off",
+    "backend_mechanism_update": "one_off",
+    "backend_scoped_rocm_fused_mla_dispatch": "one_off",
+    "balanced_context_parallel_prefill_slicing": "one_off",
+    "bcg_eager_fast_indexer_split": "one_off",
+    "bmm_output_direct_projection": "one_off",
+    "build_the_unified_read_stream_directly_without_t": "M-L2-flashmla-tile-metadata",
+    "chunked_prefix_full_cuda_graph": "one_off",
+    "chunked_prefix_mha_lse_merge": "one_off",
+    "compact_unused_verify_mask": "one_off",
+    "concat_mla_absorb_q_general": "one_off",
+    "context_parallel_multibatch_token_split": "one_off",
+    "cp_decode_attention_weight_partition": "one_off",
+    "ctx_resource_workspace_leases": "one_off",
+    "cutedsl_mla_dcp_metadata": "one_off",
+    "cutlass_concat_free_q_interface": "M-L2-cutlass-concat-free-q-interface",
+    "cutlass_mla_head_count_specialization": "M-L2-cutlass-sm100-persistent-mla",
+    "cutlass_sm100_persistent_mla": "M-L2-cutlass-sm100-persistent-mla",
+    "dcp_a2a_lse_combine": "one_off",
+    "dcp_a2a_pack_lse_fusion": "M-L2-dcp-a2a-pack-lse-fusion",
+    "dcp_indices_localized_once": "one_off",
+    "dcp_partial_kv_lse_allgather": "one_off",
+    "deduplicate_replicated_dsa_state_transfer": "one_off",
+    "deepgemm_grouped_gemm_masked_fp8_bmm": "one_off",
+    "default_flashmla_sparse_prefill": "one_off",
+    "default_fused_mhc_post_pre_sm120": "one_off",
+    "defer_cp_kv_gather_after_rope": "one_off",
+    "delete_cutlass_mla_non_marlin_gptq_awq_aot_kerne": "M-L2-cutlass-sm100-persistent-mla",
+    "dense_block_table_for_unified_mla": "one_off",
+    "dense_mha_short_context_fallback_gfx950": "one_off",
+    "dest_contiguous_dcp_mla_pack": "one_off",
+    "device_side_cumsum_zero_prefix": "one_off",
+    "dflash_host_sync_elimination": "one_off",
+    "draft_decode_steps_minus_one": "one_off",
+    "dsa_cache_layer_split_cp": "one_off",
+    "dsa_kpool_metadata_fusion": "one_off",
+    "dspark_confidence_scheduled_verify": "one_off",
+    "dsv41_flashmla_sched_meta": "M-L2-flashmla-tile-metadata",
+    "dsv41_kv_layout_quantized_pages": "one_off",
+    "dsv4_device_side_spec_seqlens": "one_off",
+    "dsv4_kv_compression_v2": "one_off",
+    "dsv4_mtp_graph_sparse_triton_decode": "one_off",
+    "dsv4_pad_mla_decode_q_heads_to_64_not_full_n_hea": "one_off",
+    "dsv4_rocm_fused_compress_sparse_decode": "one_off",
+    "dsv4_sparse_mla_backend": "one_off",
+    "dsv4_two_batch_overlap_prefill": "one_off",
+    "dynamic_split_kv_decode": "M-L2-split-kv-lse-dynamic-decode",
+    "extend_shape_flashinfer_autotune": "one_off",
+    "fa3_fa4_sync_free_spec_metadata": "one_off",
+    "fa3_hopper_mla": "M-L2-fa3-hopper-mla",
+    "fa3_hopper_mla_default": "M-L2-fa3-hopper-mla",
+    "fa4_blackwell_mla_prefill": "M-L2-fa3-hopper-mla",
+    "fa4_qv_head_padding": "one_off",
+    "fast_mla_decode_plan": "M-L2-flashinfer-plan-run-graph",
+    "feature_unified_memory_support_decode_context_pa": "M-L2-flashmla-tile-metadata",
+    "fixed_width_draft_extend_metadata": "one_off",
+    "flashinfer_cutedsl_mla_backend": "one_off",
+    "flashinfer_mla_backend": "M-L2-flashinfer-plan-run-graph",
+    "flashinfer_mla_page_indices": "M-L2-paged-latent-kv-fused-writes",
+    "flashinfer_plan_run": "M-L2-flashinfer-plan-run-graph",
+    "flashinfer_plan_run_graph": "M-L2-flashinfer-plan-run-graph",
+    "flashinfer_plan_run_graph_fast_plan": "M-L2-flashinfer-plan-run-graph",
+    "flashinfer_ragged_prefill": "M-L2-flashinfer-ragged-prefill",
+    "flashmla_fp8_kv_cache": "one_off",
+    "flashmla_tile_metadata": "M-L2-flashmla-tile-metadata",
+    "flat_row_attention_rope_hip": "one_off",
+    "fold_sq_verify_decode_selection": "one_off",
+    "fp4_e2m1_mla_kv_cache": "one_off",
+    "fp8_absorbed_bmm_batch_major": "M-L2-absorbed-latent-mqa-decode",
+    "fp8_kvcache_dequant_flashmla_prefill": "one_off",
+    "fp8_or_quantized_mla_path": "one_off",
+    "full_prefill_cuda_graph_fixed_slots": "one_off",
+    "fused_a_gemm_q_b_proj_dispatch": "one_off",
+    "fused_absorb_q_concat_kernel": "M-L2-fused-absorb-q-concat",
+    "fused_dsa_replay_metadata_generation": "one_off",
+    "fused_fp8_kv_q_prepare": "M-L2-paged-latent-kv-fused-writes",
+    "fused_fp8_query_rope_quantize": "one_off",
+    "fused_k_nope_k_pe_concat": "one_off",
+    "fused_kv_pack_fp8_quantize": "M-L2-paged-latent-kv-fused-writes",
+    "fused_mla_k_concat_kernel": "M-L2-fused-mla-k-concat",
+    "fused_nsa_metadata_copy": "one_off",
+    "fused_qk_norm_rope_verify": "one_off",
+    "generic_fast_verify_plan_kwargs": "M-L2-flashinfer-plan-run-graph",
+    "gfx950_compact_sparse_decode_split_reduce": "one_off",
+    "gfx950_sparse_mla_splitk_geometry": "one_off",
+    "graph_safe_sparse_mla_workspaces": "one_off",
+    "grouped_draft_decode_shared_kv_read": "one_off",
+    "grouped_head_shared_kv_verify": "M-L2-grouped-head-shared-kv-verify",
+    "hca_stream_kv_splits_by_compress_ratio": "one_off",
+    "head_shape_specialization": "M-L2-paged-latent-kv-fused-writes",
+    "hicache_add_mla_host_dedup_primitives": "one_off",
+    "hip_radix_breakable_cuda_graph_metadata": "one_off",
+    "hisparse_dram_kv_transfer_kind": "one_off",
+    "hisparse_slot_translation_fused_kv_writer": "one_off",
+    "initialize_request_scoped_c128_state": "one_off",
+    "integrate_flash_mla_sparse_fwd_25418": "M-L2-flashmla-tile-metadata",
+    "jit_concat_mla_repackaging": "one_off",
+    "jit_fused_qkv_a_gemm": "one_off",
+    "kernel_glm_5_3_flash_related_kernels_ported_from": "one_off",
+    "kimi_tc_piecewise_prefill_graph_default": "one_off",
+    "kv_page_owner_striping_with_scratch_allgather": "one_off",
+    "lean_persistent_cta_decode": "one_off",
+    "merged_prefix_extend_mha_prefill": "one_off",
+    "mla_gather_128bit_block_quota": "one_off",
+    "mla_verify_splitkv_head_block_reuse": "one_off",
+    "mooncake_mla_rank0_load_broadcast": "one_off",
+    "mtp_decode_nsa_impl_dispatch": "one_off",
+    "no_allocate_prefetch_concat_mla_k": "one_off",
+    "non_power_two_head_padding": "one_off",
+    "nonpaged_c4_indexer_gather": "M-L2-nonpaged-c4-indexer-gather",
+    "npu_add_ascend_npu_support_for_deepseek_v4_25144": "one_off",
+    "npu_add_sparsity_driven_kv_offload_for_deepseek_": "one_off",
+    "npu_bugfix_fix_npu_mla_hicache_backup_accessing_": "one_off",
+    "npu_fia_nz_kv_cache_layout": "one_off",
+    "npu_glm5_2_fp8_memory_opt": "one_off",
+    "npu_hicache_optimize_hicache_l2_io_with_memfabri": "one_off",
+    "npu_k3_kv_nz_preprocess": "one_off",
+    "npu_mla_process_absorb_prepare_fusion": "one_off",
+    "npu_mla_prolog_fusion": "one_off",
+    "npu_support_glm5_2_and_fp8_dsa_indexer_kvcache_f": "one_off",
+    "nsa_mtp_metadata_precompute": "one_off",
+    "page_major_dense_mla_views": "one_off",
+    "page_major_kv_envelope": "one_off",
+    "page_unified_mla_loadback": "one_off",
+    "paged_fp8_kv_gather_requant": "one_off",
+    "paged_latent_kv_cache": "M-L2-paged-latent-kv-fused-writes",
+    "paged_latent_kv_fused_writes": "M-L2-paged-latent-kv-fused-writes",
+    "paged_latent_mla_kv_fp8_separate_write": "M-L2-paged-latent-kv-fused-writes",
+    "paged_topk_for_mtp_draft_extend": "one_off",
+    "pd_hisparse_add_deepseek_v4_support_for_hisparse": "one_off",
+    "perf_parallelize_create_flashmla_kv_indices_over": "one_off",
+    "perf_unified_memory_close_the_dcp_decode_gap_on_": "one_off",
+    "piecewise_cuda_graph_mla_dispatch": "one_off",
+    "post_capture_kv_vmm_sizing": "one_off",
+    "pp_cuda_comm_overlap": "one_off",
+    "precompute_seq_lens_k_for_graph_replay": "one_off",
+    "precomputed_attention_metadata": "M-L2-flashmla-tile-metadata",
+    "prefill_qkv_fp8_quantize_hook": "one_off",
+    "prefill_without_absorption": "M-L2-prefill-without-absorption",
+    "producer_consumer_fp8_kv_pipeline": "one_off",
+    "q8kv8_native_fp8_sparse_prefill": "one_off",
+    "q8kv8_qprep_wgmma_fusion": "one_off",
+    "q8kv8_sparse_mla_prefill": "one_off",
+    "q8kv8_sparse_prefill_integration": "one_off",
+    "ragged_topk_index_transform_fused": "one_off",
+    "remove_forward_absorb_extra_copy": "one_off",
+    "reserved_slot_skip_mla_writes": "M-L2-paged-latent-kv-fused-writes",
+    "reuse_fp8_scale_buffer": "one_off",
+    "reuse_partial_lse_output": "one_off",
+    "rocm_absorb_q_rope_kvwrite_fusion": "one_off",
+    "rocm_dsv4_remove_the_redundant_fp8_scale_transpo": "one_off",
+    "rocm_fp8_wo_a_absorb_gemm": "one_off",
+    "rocm_fused_rope_decode": "M-L2-rocm-fused-rope-decode",
+    "rocm_router_splitk_gemv_gate": "one_off",
+    "rocm_sorted_topk_epilogue": "one_off",
+    "rocm_take_the_fused_dsa_metadata_kernels_and_dro": "one_off",
+    "rocm_v41_fp4_indexer_and_kv_layout": "one_off",
+    "separate_q_nope_q_rope_interface": "M-L2-separate-q-nope-q-rope-interface",
+    "seq_len_cpu_prefill_sync_avoidance": "one_off",
+    "sgl_kernel_flashmla_wrapper": "M-L2-flashmla-tile-metadata",
+    "shared_warp_vectorized_copy_alignment": "one_off",
+    "skip_draft_common_template": "one_off",
+    "skip_ragged_prefill_lse_no_prefix": "M-L2-skip-ragged-prefill-lse-no-prefix",
+    "skip_redundant_q_cat_copy": "one_off",
+    "skip_softmax_attention": "one_off",
+    "sm120_direct_swa_kv_pages": "one_off",
+    "sm120_native_query_head_width": "one_off",
+    "sm120_page_split_flashinfer_decode": "one_off",
+    "sm120_triton_flashmla_fallback": "one_off",
+    "sparse_index_reuse_or_transform": "one_off",
+    "sparse_mla_adapter_dispatch": "one_off",
+    "sparse_topk_valid_length_skip": "one_off",
+    "split_kv_decode": "M-L2-split-kv-lse-dynamic-decode",
+    "static_width_dsa_draft_extend_metadata": "one_off",
+    "stride_aware_kv_a_layernorm": "one_off",
+    "support_nope_layers_in_the_tokenspeed_mla_fp8_pr": "one_off",
+    "swa_ring_reprefill_tail": "M-L2-swa-ring-reprefill-tail",
+    "target_only_verify_tree_mask_scratch": "one_off",
+    "tma_bulk_store_set_mla_kv_buffer": "M-L2-paged-latent-kv-fused-writes",
+    "tma_staged_hicache_transfer": "one_off",
+    "tokenspeed_mla_blackwell_backend": "one_off",
+    "topk_v2_tie_overflow_padding": "one_off",
+    "touched_page_split_mask": "one_off",
+    "triton_mla_fp8_split_kv_decode": "M-L2-paged-latent-kv-fused-writes",
+    "trtllm_fp8_prefill_qkv": "one_off",
+    "trtllm_gen_mla_flashinfer_decode": "M-L2-trtllm-gen-mla-flashinfer",
+    "trtllm_nsa_sparse_fp8_mla": "one_off",
+    "trtllm_ragged_prefill": "M-L2-flashinfer-ragged-prefill",
+    "umbp_rank_replicated_key_dedup": "one_off",
+    "unified_cuda_graph_metadata": "M-L2-flashinfer-plan-run-graph",
+    "unified_kv_compressed_hicache_views": "one_off",
+    "unified_memory_hicache_index_translation": "one_off",
+    "vendored_fa4_cute_backend": "one_off",
+    "verify_lse_indptr_launch_elision": "one_off",
+    "zero_copy_bpreshuffle_fp8_scale": "one_off"
+  },
+  "moves": [
+    {
+      "move_id": "M-L2-absorbed-latent-mqa-decode",
+      "name": "MLA decode by absorbing K/V projection weights into latent-cache attention",
+      "category": "algebraic_rewrite",
+      "description": "Decode projects q_nope with w_kc, attends over the kv_lora_rank+RoPE latent cache as a single-KV-head MQA problem, then de-absorbs the value result with w_vc. This avoids materializing per-head K/V and lets generic MQA/GQA decode kernels run over compressed latent states.",
+      "problem_solved": "Per-head K/V expansion and cache bandwidth in MLA decode.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "e1eae1fd15ed",
+        "pr": 905,
+        "date": "2024-08-05",
+        "artifact_id": "L2.optimization.weight_absorption",
+        "evidence": "self.w_kc = w_kc; self.w_vc = w_vc"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "f414352ae678",
+          "pr": 1261,
+          "date": "2024-08-30",
+          "artifact_id": "L2.optimization.weight_absorption",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "self_attn.w_vc = w_vc.transpose(1, 2).contiguous()"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "L2.model.deepseek_v2_mla",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "unclear",
+          "evidence": "num_kv_heads=1; v_head_dim=self.kv_lora_rank"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "vllm.model_executor.models.longcat_flash",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "self_attn.w_kc = w_kc.transpose(1, 2).contiguous()"
+        }
+      ],
+      "semantic_preconditions": [
+        "Model exposes MLA dimensions kv_lora_rank and qk_rope_head_dim.",
+        "Weight absorption is used for decode/extend paths, not all prefill cases."
+      ],
+      "hardware_preconditions": [
+        "CUDA/HIP device capable of batched GEMM and selected attention backend."
+      ],
+      "framework_preconditions": [
+        "RadixAttention receives num_kv_heads=1 and v_head_dim=kv_lora_rank for latent-cache decode."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Compressed latent cache is shaped as one KV head of kv_lora_rank+RoPE dimensions.",
+          "status": "derived",
+          "source": "e1eae1fd15ed:deepseek_v2.py",
+          "excerpt": "num_kv_heads=1, v_head_dim=self.kv_lora_rank",
+          "kind": "semantic",
+          "spec_checked": ""
+        },
+        {
+          "assumption": "Offline transposition preserves the absorbed-value GEMM semantics.",
+          "status": "derived",
+          "source": "f414352ae678:deepseek_v2.py",
+          "excerpt": "self_attn.w_vc = w_vc.transpose(1, 2).contiguous()",
+          "kind": "semantic",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "PR #1261 transposes absorbed weights offline; no numeric result in checked diff.",
+      "correctness_evidence": "Registry lists test/srt/test_mla.py and test/registered/mla/test_mla.py.",
+      "known_failures": [],
+      "current_status": "live_textual_refactored",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/models/deepseek_v2.py",
+          "python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mla.py"
+        ],
+        "regex": "w_kc|w_vc|num_kv_heads=1",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.2.9 30a9b2ef203329110477dd10cf3ff45df0c2e8f4",
+          "present:sglang v0.2.13 5bd953749b520070a5b72b5b99b9a92853698685"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/905",
+        "https://github.com/sgl-project/sglang/pull/1261"
+      ],
+      "later_uses": [
+        "L2-E-e1eae1fd15",
+        "L2-E-f414352ae6",
+        "L2-E-92bce3d7bb"
+      ],
+      "known_failure_refs": [
+        "L2-E-54772f784a"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body",
+        "upstream_source"
+      ],
+      "biography": {
+        "first_appearance": "SGLang PR #905 / e1eae1fd15ed (2024-08-05) in deepseek_v2.py; pickaxe first hit is e1eae1fd15 for w_kc/w_vc.",
+        "problem": "Avoids per-head K/V expansion and cache bandwidth in MLA decode by treating latent cache as one KV head and absorbing/de-absorbing projection weights.",
+        "preconditions": "MLA exposes kv_lora_rank and qk_rope_head_dim; latent cache is stored as kv_lora_rank+RoPE; RadixAttention/attention backend accepts num_kv_heads=1 and v_head_dim=kv_lora_rank.",
+        "survival": "conceptual + textual evidence: original file moved/refactored, but cutoff git grep finds w_kc/w_vc in forward_mla.py; v0.2.9 absent and v0.2.13 present.",
+        "recurrence": "Modified by #1261 offline transposition and later FP8 paths; vLLM cutoff DeepSeek/LongCat MLA backends keep latent_cache split by kv_lora_rank/qk_rope_head_dim and absorbed-style backend interfaces.",
+        "failures": "FP8 repair #1285 followed the absorbed-weight path; no revert of the core algebraic move found.",
+        "acknowledgement": "no acknowledgement found in checked SGLang/vLLM PR text for vLLM reappearance; SGLang PR #905 only says \"MLA implementation.\"",
+        "event_ids": [
+          "L2-E-e1eae1fd15",
+          "L2-E-f414352ae6",
+          "L2-E-92bce3d7bb"
+        ],
+        "evidence_urls": [
+          "https://github.com/sgl-project/sglang/pull/905",
+          "https://github.com/sgl-project/sglang/pull/1261"
+        ],
+        "confidence": "high"
+      }
+    },
+    {
+      "move_id": "M-L2-prefill-without-absorption",
+      "name": "MHA-style MLA prefill without weight absorption",
+      "category": "algebraic_rewrite",
+      "description": "Long prefill/extend without cached prefix uses the normal kv_b_proj path, materializing k_nope and v before attention. Decode and prefix-bearing extend remain on the absorbed path, separating throughput-prefill from memory-bound decode.",
+      "problem_solved": "Absorbed MLA was not optimal or convenient for full prefill where dense MHA-style computation is available.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "ec52464ddeab",
+        "pr": 2349,
+        "date": "2024-12-05",
+        "artifact_id": "L2.optimization.weight_absorption",
+        "evidence": "Use normal computation for prefill and use weight absorption for extend/decode"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "L2.optimization.weight_absorption",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "unclear",
+          "evidence": "forward_normal and forward_absorb remain split"
+        }
+      ],
+      "semantic_preconditions": [
+        "forward_batch.forward_mode.is_extend() and extend_prefix_lens.sum()==0 selects normal computation in the introducing diff."
+      ],
+      "hardware_preconditions": [
+        "Backend supports materialized per-head K/V prefill."
+      ],
+      "framework_preconditions": [
+        "ForwardBatch exposes forward_mode and extend_prefix_lens."
+      ],
+      "assumptions": [
+        {
+          "assumption": "No-prefix extend is treated as prefill for this branch.",
+          "status": "derived",
+          "source": "ec52464ddeab:deepseek_v2.py",
+          "excerpt": "forward_batch.forward_mode.is_extend() and forward_batch.extend_prefix_lens.sum() == 0",
+          "kind": "semantic",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "None found beyond mechanism-bearing PR/diff.",
+      "correctness_evidence": "Covered by MLA tests in registry; no specific assertion found.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/models/deepseek_v2.py",
+          "python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mla.py"
+        ],
+        "regex": "forward_normal|forward_absorb|is_extend\\(\\)",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.0 f8b0326934bacb7a7d4eba68fb6eddebaa6ff751",
+          "present:sglang v0.4.1 efc52f85e2d5c9b31545d4092f2b361b6ff04d67"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/2349"
+      ],
+      "later_uses": [
+        "L2-E-ec52464dde",
+        "L2-E-f235498eca"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-split-kv-lse-dynamic-decode",
+      "name": "Split-KV flash-decoding with LSE merge and dynamic per-batch split counts",
+      "category": "split_reduction",
+      "description": "The Triton decode kernel splits a sequence's KV range across CTAs, stores per-split partial values and log-sum-exp, then a second stage merges them with online-softmax correction. Later dynamic-workload changes load num_kv_splits per batch and launch to max_kv_splits so short and long requests can share a batch more efficiently.",
+      "problem_solved": "Long-context decode underutilization and load imbalance across heterogeneous batch sequence lengths.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "df191254abc0",
+        "pr": 1138,
+        "date": "2024-08-19",
+        "artifact_id": "L2.kernel.triton_decode_lightllm",
+        "evidence": "_fwd_grouped_kernel_stage1; _fwd_grouped_kernel_stage2"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "c0e9a36c5f5e",
+          "pr": 4553,
+          "date": "2025-03-18",
+          "artifact_id": "L2.kernel.triton_decode_lightllm",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "kv_splits = tl.load(num_kv_splits + cur_batch)"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "vllm.v1.attention.backends.mla",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "FLASHINFER_MLA_LSE_WORKSPACE_BUFFER_SIZE"
+        }
+      ],
+      "semantic_preconditions": [
+        "KV indices/indptr define each request's cached token span.",
+        "Merge stage receives per-split LSE values."
+      ],
+      "hardware_preconditions": [
+        "Triton target supports the selected BLOCK_N/BLOCK_H launch geometry."
+      ],
+      "framework_preconditions": [
+        "max_kv_splits workspace is allocated and num_kv_splits is valid per batch item."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Splits cover the sequence by ceil-dividing each request length and skipping empty splits.",
+          "status": "derived",
+          "source": "c0e9a36c5f5e:decode_attention.py",
+          "excerpt": "kv_len_per_split = tl.cdiv(tl.cdiv(cur_batch_seq_len, kv_splits), MIN_BLOCK_KV)",
+          "kind": "semantic",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "#4553 is a dynamic-workload optimization; no numeric result in checked diff.",
+      "correctness_evidence": "#2479 later fixed a correctness issue for the Triton decoding kernel.",
+      "known_failures": [
+        {
+          "ref": "#2479",
+          "what": "Fix correctness issue for triton decoding kernel",
+          "scope": "implementation"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/layers/attention/triton_ops/decode_attention.py",
+          "python/sglang/kernels/ops/attention/decode_attention.py"
+        ],
+        "regex": "max_kv_splits|Att_Lse",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.3 e0b9a423c8413c486f8e6a2c168cd3e6e7a74589",
+          "present:sglang v0.4.5 57f99608f4fdea03e0450f51a6fcabe726409f25"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/1138",
+        "https://github.com/sgl-project/sglang/pull/4553"
+      ],
+      "later_uses": [
+        "L2-E-df191254ab",
+        "L2-E-7dc66fcb40",
+        "L2-E-c0e9a36c5f",
+        "L2-E-26ba3458d3"
+      ],
+      "known_failure_refs": [
+        "L2-E-2479",
+        "kernel-correctness-cases:sglang:2305242f51"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body",
+        "test",
+        "upstream_source"
+      ],
+      "biography": {
+        "first_appearance": "SGLang PR #1138 / df191254abc0 (2024-08-19); pickaxe first hit for Att_Lse/_fwd_grouped_kernel_stage1 is df191254ab.",
+        "problem": "Improves long-context decode occupancy and heterogeneous-batch balance by splitting KV work and merging partial values with LSE/online-softmax correction.",
+        "preconditions": "Each request has valid KV span metadata; partial outputs and LSE are allocated for max_kv_splits; merge stage sees the same split count used by stage 1.",
+        "survival": "textual: cutoff git grep finds max_kv_splits and Att_Lse in python/sglang/kernels/ops/attention/decode_attention.py; v0.3.0 and v0.4.5 release checks are present.",
+        "recurrence": "#4553 makes splits dynamic per batch and separates attn_lse; vLLM cutoff MLA FlashInfer path carries explicit LSE workspace constants for MLA backends.",
+        "failures": "Catalog/failure evidence records #2479 as a Triton decoding correctness repair; split count/LSE workspace remains live after the repair.",
+        "acknowledgement": "SGLang #1138 acknowledges upstream inspiration: \"Inspired by https://github.com/InternLM/lmdeploy/pull/1649.\" No vLLM acknowledgement found in checked PR text.",
+        "event_ids": [
+          "L2-E-df191254ab",
+          "L2-E-c0e9a36c5f"
+        ],
+        "evidence_urls": [
+          "https://github.com/sgl-project/sglang/pull/1138",
+          "https://github.com/sgl-project/sglang/pull/4553"
+        ],
+        "confidence": "high"
+      }
+    },
+    {
+      "move_id": "M-L2-flashinfer-plan-run-graph",
+      "name": "FlashInfer MLA plan/run split with CUDA-graph-safe fast planning",
+      "category": "dispatch_plan",
+      "description": "SGLang wraps FlashInfer BatchMLAPagedAttentionWrapper with explicit plan calls before run, keeping workspace and plan buffers across layers/batches. The fast plan path passes CPU indptrs and pinned workspace to FlashInfer's cached module during graph replay to avoid stream synchronization.",
+      "problem_solved": "Repeated host planning overhead and CUDA graph replay blocking for FlashInfer MLA decode.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "70f894b810c0",
+        "pr": 3550,
+        "date": "2025-02-14",
+        "artifact_id": "L2.backend.flashinfer_general_mla",
+        "evidence": "BatchMLAPagedAttentionWrapper(self.workspace_buffer, backend=\"fa2\")"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "fc91d08a8f0",
+          "pr": 4012,
+          "date": "2025-03-05",
+          "artifact_id": "L2.runner.cuda_graph_mla",
+          "relation": "repaired",
+          "acknowledges_prior": "no",
+          "evidence": "A faster version of BatchMLAPagedAttentionWrapper::plan"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "f2c47886fdba",
+          "pr": 33451,
+          "date": "2026-02-12",
+          "artifact_id": "vllm.flashinfer_mla_sparse",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "Wraps FlashInfer's BatchMLAPagedAttentionWrapper"
+        }
+      ],
+      "semantic_preconditions": [
+        "Batch metadata is known before run.",
+        "KV page tables and q/kv indptrs match FlashInfer MLA API."
+      ],
+      "hardware_preconditions": [
+        "FlashInfer supports the selected backend and GPU architecture."
+      ],
+      "framework_preconditions": [
+        "CUDA graph replay reuses preallocated qo_indptr/kv_indptr/kv_lens buffers."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Fast plan avoids synchronization during graph replay by using CPU indptrs.",
+          "status": "derived",
+          "source": "fc91d08a8f0:flashinfer_mla_backend.py",
+          "excerpt": "for skipping the stream synchronization in original plan function during cuda graph replaying",
+          "kind": "framework",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "confirmed-reverts.csv row 26 says #3987 fast decode plan regressed other cases; #4012 revised it.",
+      "correctness_evidence": "test/registered/attention/unittests/mla/test_flashinfer.py in registry.",
+      "known_failures": [
+        {
+          "ref": "confirmed-reverts.csv:26/#4008",
+          "what": "fast decode plan reverted for performance regression",
+          "scope": "implementation"
+        },
+        {
+          "ref": "kernel-correctness-cases.csv/#21987",
+          "what": "CUDA graph replay issues for FlashInfer MLA",
+          "scope": "adapter"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/layers/attention/flashinfer_mla_backend.py"
+        ],
+        "regex": "fast_mla_decode_plan|BatchMLAPagedAttentionWrapper",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.3 e0b9a423c8413c486f8e6a2c168cd3e6e7a74589",
+          "present:sglang v0.4.4 6aaeb84872f096df1b4ed78cbe6ba5ef8435f5ed"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/3550",
+        "https://github.com/sgl-project/sglang/pull/4012",
+        "https://github.com/sgl-project/sglang/pull/4008"
+      ],
+      "later_uses": [
+        "L2-E-70f894b810",
+        "L2-E-b110084654",
+        "L2-E-fa56106731",
+        "L2-E-9e1014cf99",
+        "L2-E-fc91d08a8f",
+        "L2-E-a2cb5913a0",
+        "L2-E-ff8ed7a302",
+        "L2-E-4f883636a2",
+        "L2-E-20621aa14b",
+        "L2-E-c0b790cf7f"
+      ],
+      "known_failure_refs": [
+        "confirmed-reverts:sglang:9e1014cf9941",
+        "kernel-correctness-cases:sglang:cd75d54fc5"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "deep_study_record",
+        "diff",
+        "pr_body",
+        "revert_record",
+        "test",
+        "upstream_source"
+      ],
+      "biography": {
+        "first_appearance": "SGLang PR #3550 / 70f894b810c0 (2025-02-14) wraps FlashInfer BatchMLAPagedAttentionWrapper; pickaxe first hit is #3550.",
+        "problem": "Separates FlashInfer MLA planning from run and later removes CUDA-graph replay synchronization from repeated plan metadata handling.",
+        "preconditions": "FlashInfer MLA wrapper installed; page/indptr metadata match its API; graph replay reuses preallocated buffers and host-derivable indptr/length data.",
+        "survival": "textual: cutoff git grep finds BatchMLAPagedAttentionWrapper and fast_mla_decode_plan in flashinfer_mla_backend.py; v0.4.4 release check present.",
+        "recurrence": "#3987 introduced fast plan, #4008 reverted it for regressions, #4012 revised it; #4f883636 later feeds host-derived indptr/lengths. vLLM PR #33451 integrates FlashInfer sparse MLA backend.",
+        "failures": "#4008 explicitly reverts #3987 \"because it introduces regression for other cases\"; CUDA-graph metadata failures are recorded in L2 failure links.",
+        "acknowledgement": "SGLang #3550 acknowledges FlashInfer release v0.2.1 and asks downstream users to cite the PR; vLLM #33451 cites FlashInfer PR #2138, not SGLang.",
+        "event_ids": [
+          "L2-E-70f894b810",
+          "L2-E-fa56106731",
+          "L2-E-9e1014cf99",
+          "L2-E-fc91d08a8f",
+          "L2-E-4f883636a2"
+        ],
+        "evidence_urls": [
+          "https://github.com/sgl-project/sglang/pull/3550",
+          "https://github.com/sgl-project/sglang/pull/4008",
+          "https://github.com/sgl-project/sglang/pull/4012",
+          "https://github.com/vllm-project/vllm/pull/33451"
+        ],
+        "confidence": "high"
+      }
+    },
+    {
+      "move_id": "M-L2-flashinfer-ragged-prefill",
+      "name": "FlashInfer ragged MLA prefill for no-prefix extends",
+      "category": "dispatch_plan",
+      "description": "The FlashInfer MLA backend chooses BatchPrefillWithRaggedKVCacheWrapper when ragged prefill is enabled and extend has no cached prefix; otherwise it plans the paged MLA wrapper. This separates contiguous prefill work from paged prefix-cache work.",
+      "problem_solved": "Paged prefill overhead when there is no prefix cache to reuse.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "90a4b7d98a5c",
+        "pr": 3967,
+        "date": "2025-02-28",
+        "artifact_id": "L2.backend.flashinfer_mla",
+        "evidence": "use_ragged = not flashinfer_mla_disable_ragged and extend_no_prefix"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "36acd2ff16d9",
+          "pr": 10180,
+          "date": "2025-09-12",
+          "artifact_id": "L2.backend.trtllm_mla",
+          "relation": "repaired",
+          "acknowledges_prior": "unclear",
+          "evidence": "Fix chunked prefix cache for nvfp4"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "vllm.flashinfer_mla",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "public trtllm_batch_decode_with_kv_cache_mla entry point builds a fresh plan"
+        }
+      ],
+      "semantic_preconditions": [
+        "extend_no_prefix is true for ragged path.",
+        "Prefix lengths are available for qo_indptr computation."
+      ],
+      "hardware_preconditions": [
+        "FlashInfer ragged prefill wrapper is installed and supports dtype/head dimensions."
+      ],
+      "framework_preconditions": [
+        "flashinfer_mla_disable_ragged flag controls dispatch."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Ragged prefill is selected only when every extend has no prefix.",
+          "status": "derived",
+          "source": "90a4b7d98a5c:flashinfer_mla_backend.py",
+          "excerpt": "extend_no_prefix = not any(forward_batch.extend_prefix_lens_cpu)",
+          "kind": "framework",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "None found in checked diff.",
+      "correctness_evidence": "FlashInfer MLA unit tests in registry; chunked-prefix repair #10180.",
+      "known_failures": [
+        {
+          "ref": "#10180",
+          "what": "Fix chunked prefix cache for nvfp4",
+          "scope": "partial_domain"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/layers/attention/flashinfer_mla_backend.py"
+        ],
+        "regex": "BatchPrefillWithRaggedKVCacheWrapper|use_ragged",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.3 e0b9a423c8413c486f8e6a2c168cd3e6e7a74589",
+          "present:sglang v0.4.4 6aaeb84872f096df1b4ed78cbe6ba5ef8435f5ed"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/3967",
+        "https://github.com/sgl-project/sglang/pull/10180"
+      ],
+      "later_uses": [
+        "L2-E-90a4b7d98a",
+        "L2-E-bebd0576e5",
+        "L2-E-3c2724c48d",
+        "L2-E-21289cfd50"
+      ],
+      "known_failure_refs": [
+        "confirmed-reverts:sglang:a6f892e5d08f",
+        "L2-E-36acd2ff16"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "deep_study_record",
+        "diff",
+        "pr_body",
+        "test",
+        "upstream_source"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-flashmla-tile-metadata",
+      "name": "FlashMLA tile-scheduler metadata and graph-replayed num_splits",
+      "category": "persistent_scheduling",
+      "description": "FlashMLA decode precomputes tile_scheduler_metadata and num_splits with get_mla_metadata, then passes both to flash_mla_with_kvcache. CUDA graph support copies recomputed metadata into fixed graph buffers before replay.",
+      "problem_solved": "Persistent/tile-scheduled decode needs scheduler metadata while CUDA graphs need stable buffer addresses.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "a53fe428f9f5",
+        "pr": 4472,
+        "date": "2025-03-16",
+        "artifact_id": "L2.backend.flashmla",
+        "evidence": "mla_metadata, mla_splits = get_mla_metadata"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "b6944f97a616",
+          "pr": 4514,
+          "date": "2025-03-19",
+          "artifact_id": "L2.runner.cuda_graph_mla",
+          "relation": "repaired",
+          "acknowledges_prior": "no",
+          "evidence": "self.cuda_graph_mla_metadata.copy_(mla_metadata)"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "2e94b9cfbb41",
+          "pr": 13867,
+          "date": "2025-02-27",
+          "artifact_id": "vllm.flashmla",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "scheduler_metadata, _ = get_mla_metadata"
+        }
+      ],
+      "semantic_preconditions": [
+        "Sequence lengths are known for metadata construction.",
+        "num_splits matches tile_scheduler_metadata."
+      ],
+      "hardware_preconditions": [
+        "FlashMLA-supported NVIDIA architectures (initially Hopper-family)."
+      ],
+      "framework_preconditions": [
+        "FlashMLA page_size is 64 in SGLang integration."
+      ],
+      "assumptions": [
+        {
+          "assumption": "FlashMLA only supports page_size 64 in this backend.",
+          "status": "derived",
+          "source": "a53fe428f9f5:flashmla_backend.py",
+          "excerpt": "FlashMLA only supports pagesize=64",
+          "kind": "framework",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "None found in checked diff.",
+      "correctness_evidence": "test/srt/test_flashmla.py and registered FlashMLA tests in registry.",
+      "known_failures": [
+        {
+          "ref": "kernel-correctness-cases.csv/#4691",
+          "what": "fix FlashMLA cudagraph config",
+          "scope": "adapter"
+        },
+        {
+          "ref": "confirmed-reverts.csv:34/#4470",
+          "what": "FlashMLA submodule reverted for missing submodule setup",
+          "scope": "adapter"
+        },
+        {
+          "ref": "confirmed-reverts.csv:157/#16678",
+          "what": "FP8 sparse_mla optimization caused zero GSM8K accuracy",
+          "scope": "implementation"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/layers/attention/flashmla_backend.py"
+        ],
+        "regex": "get_mla_metadata|num_splits|tile_scheduler_metadata",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.4 6aaeb84872f096df1b4ed78cbe6ba5ef8435f5ed",
+          "present:sglang v0.4.5 57f99608f4fdea03e0450f51a6fcabe726409f25"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/4472",
+        "https://github.com/sgl-project/sglang/pull/4514",
+        "https://github.com/vllm-project/vllm/pull/13867"
+      ],
+      "later_uses": [
+        "L2-E-a53fe428f9",
+        "L2-E-b6944f97a6",
+        "L2-E-2e4babdb0a",
+        "L2-E-23afdfd1c2",
+        "L2-E-80a6b32703",
+        "L2-E-6af34b95b6",
+        "L2-E-b66f8e0b96",
+        "L2-E-93173b27e8",
+        "L2-E-9910ef8167",
+        "L2-E-3865efc9f7",
+        "L2-E-d9848b9ecd",
+        "L2-E-a11dba1a01",
+        "L2-E-91f691c490"
+      ],
+      "known_failure_refs": [
+        "kernel-correctness-cases:sglang:4691",
+        "confirmed-reverts:sglang:16678",
+        "confirmed-reverts:sglang:4470"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "deep_study_record",
+        "diff",
+        "pr_body",
+        "test",
+        "upstream_source"
+      ],
+      "biography": {
+        "first_appearance": "SGLang PR #4472 / a53fe428f9f5 (2025-03-16); pickaxe first hit for get_mla_metadata/flash_mla_with_kvcache is a53fe428f9.",
+        "problem": "Supplies FlashMLA decode with tile_scheduler_metadata/num_splits and later makes those metadata buffers safe for CUDA graph replay.",
+        "preconditions": "Sequence lengths are known before decode; FlashMLA page_size is 64 in SGLang integration; CUDA graph mode copies recomputed metadata into fixed graph buffers.",
+        "survival": "textual: cutoff git grep finds get_mla_metadata, num_splits, and tile_scheduler metadata in flashmla_backend.py; v0.4.5 release check present.",
+        "recurrence": "#4514 adds CUDA graph support and copies metadata; vLLM PR #13867 adds flashmla.py with scheduler_metadata and cutoff vLLM keeps cg_buf_tile_scheduler_metadata/cg_buf_num_splits.",
+        "failures": "SGLang records FlashMLA submodule/build reverts and FP8 sparse_mla zero-accuracy rollback; #4514 reports GSM8K 0.980 and MMLU 0.878 after graph support.",
+        "acknowledgement": "SGLang #4472 says it directly integrates FlashMLA; no acknowledgement of SGLang found in checked vLLM #13867 PR text.",
+        "event_ids": [
+          "L2-E-a53fe428f9",
+          "L2-E-b6944f97a6",
+          "L2-E-2966367a31"
+        ],
+        "evidence_urls": [
+          "https://github.com/sgl-project/sglang/pull/4472",
+          "https://github.com/sgl-project/sglang/pull/4514",
+          "https://github.com/vllm-project/vllm/pull/13867"
+        ],
+        "confidence": "high"
+      }
+    },
+    {
+      "move_id": "M-L2-paged-latent-kv-fused-writes",
+      "name": "Paged latent MLA KV cache with fused writes and FP8 scale side buffers",
+      "category": "layout_transformation",
+      "description": "MLATokenToKVPool stores one buffer per layer with kv_lora_rank latent values followed by RoPE dimensions; writers use set_mla_kv_buffer kernels to place no-PE and RoPE parts in one paged layout. Later FP8 paths add quantized write kernels and scale buffers.",
+      "problem_solved": "MLA needs compact cache storage and fast per-token writes without expanding K/V heads.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "e1eae1fd15ed",
+        "pr": 905,
+        "date": "2024-08-05",
+        "artifact_id": "L2.pool.mla_token_kv",
+        "evidence": "torch.empty((size + 1, 1, kv_lora_rank + qk_rope_head_dim))"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "dca9ba63215d",
+          "pr": 25311,
+          "date": "2026-05-14",
+          "artifact_id": "L2.kernel.set_mla_kv_buffer",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "can_use_set_mla_kv_buffer; jit_set_mla_kv_buffer"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "ee93795476a4",
+          "pr": 25333,
+          "date": "2026-05-15",
+          "artifact_id": "L2.kernel.mla_kv_pack_quantize_fp8",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "fused cat+FP8-quantize for MLA chunked-prefill K/V"
+        }
+      ],
+      "semantic_preconditions": [
+        "Cache tensor's last dimension is kv_lora_rank + qk_rope_head_dim.",
+        "Write locations are page-aligned or resolved for paged layouts."
+      ],
+      "hardware_preconditions": [
+        "Triton/CUDA path available for fused writes; FP8 dtype support for quantized cache."
+      ],
+      "framework_preconditions": [
+        "FlashMLA uses page_size 64; other MLA pools typically page_size 1 unless backend overrides."
+      ],
+      "assumptions": [
+        {
+          "assumption": "MLA has a single kv_buffer, so transfer metadata is one buffer per layer.",
+          "status": "derived",
+          "source": "89e1316e:memory_pool.py:4478",
+          "excerpt": "MLA has only one kv_buffer",
+          "kind": "semantic",
+          "spec_checked": ""
+        },
+        {
+          "assumption": "HND paged layouts require (size+page_size) divisible by page_size.",
+          "status": "derived",
+          "source": "89e1316e:memory_pool.py:2043",
+          "excerpt": "assert total_slots % self.page_size == 0",
+          "kind": "framework",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "#25333 fuses cat+FP8 quantize; no numeric result in checked evidence.",
+      "correctness_evidence": "test/registered/jit/test_set_mla_kv_buffer.py and test_mla_kv_pack_quantize_fp8.py in registry.",
+      "known_failures": [
+        {
+          "ref": "confirmed-reverts.csv:82/#9581",
+          "what": "page-size greater than 1 for FlashInfer MLA reverted",
+          "scope": "adapter"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/mem_cache/memory_pool.py",
+          "python/sglang/kernels/ops/kvcache/mla_buffer.py"
+        ],
+        "regex": "class MLATokenToKVPool|set_mla_kv_buffer",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.2.9 30a9b2ef203329110477dd10cf3ff45df0c2e8f4",
+          "present:sglang v0.2.13 5bd953749b520070a5b72b5b99b9a92853698685"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/905",
+        "https://github.com/sgl-project/sglang/pull/25311",
+        "https://github.com/sgl-project/sglang/pull/25333"
+      ],
+      "later_uses": [
+        "L2-E-e1eae1fd15",
+        "L2-E-799c4bb502",
+        "L2-E-e30c273bc9",
+        "L2-E-3cc3d9b950",
+        "L2-E-4793ec7d1a",
+        "L2-E-76196b3cbf",
+        "L2-E-c8ede0e93c",
+        "L2-E-9d878c1f3e",
+        "L2-E-7431db7392",
+        "L2-E-dd49127fe6",
+        "L2-E-19cb918653",
+        "L2-E-3fe8bc987e",
+        "L2-E-dca9ba6321",
+        "L2-E-ee93795476",
+        "L2-E-fb207b72b0",
+        "L2-E-04c1036bb3",
+        "L2-E-5a132c061b"
+      ],
+      "known_failure_refs": [
+        "confirmed-reverts:sglang:ebd9dbe71ba4",
+        "kernel-correctness-cases:sglang:6be65ae462"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "deep_study_record",
+        "diff",
+        "pr_body",
+        "test"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-fa3-hopper-mla",
+      "name": "FlashAttention-3 MLA backend selected by default on Hopper",
+      "category": "specialization",
+      "description": "The FA3 backend maps absorbed MLA decode to flash_attn_with_kvcache over q_rope and the RoPE cache, and SGLang selects fa3 by default on Hopper/CUDA>=12.3 unless incompatible features intervene. This is an architecture-specialized backend choice rather than a new model equation.",
+      "problem_solved": "Hopper MLA decode/prefill performance using FA3 kernels instead of the generic Triton fallback.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "20c90be23de7",
+        "pr": 4831,
+        "date": "2025-03-28",
+        "artifact_id": "L2.backend.fa3_fa4_mla",
+        "evidence": "self.use_mla = model_config.attention_arch == AttentionArch.MLA"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "57de7c6b5fb3",
+          "pr": 5210,
+          "date": "2025-04-12",
+          "artifact_id": "L2.dispatch.server_args_defaults",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "server_args.attention_backend = \"fa3\""
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "bec0a4ede621",
+          "pr": 48269,
+          "date": "2026-07-11",
+          "artifact_id": "vllm.flash_attn_mla_sparse",
+          "relation": "repaired",
+          "acknowledges_prior": "unclear",
+          "evidence": "broke FLASH_ATTN_MLA_SPARSE"
+        }
+      ],
+      "semantic_preconditions": [
+        "Attention architecture is MLA and MLA is not disabled.",
+        "Speculative path and FP8 dtype restrictions do not force fallback."
+      ],
+      "hardware_preconditions": [
+        "Hopper SM90 and CUDA >= 12.3 for SGLang default selection."
+      ],
+      "framework_preconditions": [
+        "flash_attn_interface.flash_attn_with_kvcache is installed."
+      ],
+      "assumptions": [
+        {
+          "assumption": "FA3 default is limited to Hopper CUDA 12.3 path in the introducing default-selection change.",
+          "status": "derived",
+          "source": "57de7c6b5fb3:model_runner.py",
+          "excerpt": "if is_hopper_with_cuda_12_3(): ... attention_backend = \"fa3\"",
+          "kind": "hardware",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Default switch PR #5210 implies preferred performance; no numeric result in checked diff.",
+      "correctness_evidence": "python/sglang/test/attention/test_flashattn_mla_backend.py in registry.",
+      "known_failures": [
+        {
+          "ref": "confirmed-reverts.csv:487/vLLM #48269",
+          "what": "FA3 dependency update broke FLASH_ATTN_MLA_SPARSE",
+          "scope": "adapter"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/model_executor/model_runner.py",
+          "python/sglang/srt/layers/attention/flashattention_backend.py"
+        ],
+        "regex": "is_hopper_with_cuda_12_3|attention_backend = \"fa3\"",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.5 57f99608f4fdea03e0450f51a6fcabe726409f25",
+          "present:sglang v0.4.6 84022c0e563c9b519fa16bf0eb7f9d750a728531"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/4831",
+        "https://github.com/sgl-project/sglang/pull/5210"
+      ],
+      "later_uses": [
+        "L2-E-20c90be23d",
+        "L2-E-57de7c6b5f",
+        "L2-E-a2f7218a2e",
+        "L2-E-d3222bcc3a"
+      ],
+      "known_failure_refs": [
+        "kernel-correctness-cases:sglang:b8b6008f47",
+        "confirmed-reverts:vllm:48269"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body",
+        "test",
+        "upstream_source"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-rocm-fused-rope-decode",
+      "name": "ROCm fused MLA decode with RoPE preprocessing",
+      "category": "fusion",
+      "description": "The ROCm Triton kernel fuses rotary application for q_pe/k_pe with grouped MLA decode stage 1, including optional output of rotated k_pe tokens. This removes separate RoPE preprocessing around decode on AMD paths.",
+      "problem_solved": "Extra RoPE launches and memory traffic before MLA decode on ROCm.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "6ce9dbe82882",
+        "pr": 3237,
+        "date": "2025-02-24",
+        "artifact_id": "L2.kernel.rocm_mla_decode_rope",
+        "evidence": "def _fwd_grouped_kernel_stage1_rope"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "L2.kernel.rocm_mla_decode_rope",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "unclear",
+          "evidence": "decode_attention_fwd_grouped_rope remains live"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "c68eb98b69f4863d94318fbe9dedf654be0c5945",
+          "pr": null,
+          "date": "2026-09-28",
+          "artifact_id": "vllm.rocm_aiter_mla",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "Persist for get_mla_metadata_v1 (decode build)"
+        }
+      ],
+      "semantic_preconditions": [
+        "RoPE dimensions are the suffix after kv_lora_rank.",
+        "Last-token k_pe handling is valid for decode."
+      ],
+      "hardware_preconditions": [
+        "ROCm/gfx942 or gfx950 Triton target."
+      ],
+      "framework_preconditions": [
+        "Caller supplies cos_sin_cache, positions, rotary_dim and use_rope flag."
+      ],
+      "assumptions": [
+        {
+          "assumption": "RoPE fusion requires output k_pe tokens when enabled.",
+          "status": "derived",
+          "source": "6ce9dbe82882:rocm_mla_decode_rope.py",
+          "excerpt": "We must output the k_pe tokens with rope applied if rope fusion enabled.",
+          "kind": "hardware",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "None found in checked diff.",
+      "correctness_evidence": "test/srt/test_triton_attention_rocm_mla.py in registry.",
+      "known_failures": [
+        {
+          "ref": "kernel-correctness-cases.csv/#27188",
+          "what": "Fix TP2 DeepSeek-R1 nhead=64 MLA on AMD",
+          "scope": "partial_domain"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/layers/attention/triton_ops/rocm_mla_decode_rope.py",
+          "python/sglang/kernels/ops/attention/rocm_mla_decode_rope.py"
+        ],
+        "regex": "decode_attention_fwd_grouped_rope|_fwd_grouped_kernel_stage1_rope",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.3 e0b9a423c8413c486f8e6a2c168cd3e6e7a74589",
+          "present:sglang v0.4.4 6aaeb84872f096df1b4ed78cbe6ba5ef8435f5ed"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/3237"
+      ],
+      "later_uses": [
+        "L2-E-6ce9dbe828",
+        "L2-E-b9cf1563de"
+      ],
+      "known_failure_refs": [
+        "kernel-correctness-cases:sglang:cfb7fb4fad"
+      ],
+      "evidence_types": [
+        "deep_study_record",
+        "diff",
+        "pr_body",
+        "test",
+        "upstream_source"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-cutlass-sm100-persistent-mla",
+      "name": "CUTLASS SM100 MLA kernel with persistent tile scheduler",
+      "category": "persistent_scheduling",
+      "description": "The Blackwell CUTLASS kernel instantiates Sm100FmhaMlaKernelTmaWarpspecialized with Sm100MlaPersistentTileScheduler and TMA/warp-specialized templates, computes split-KV/workspace sizing, and exposes cutlass_mla_decode. It was later deleted rather than kept as a textual successor.",
+      "problem_solved": "SM100-specific MLA decode performance via CUTLASS persistent scheduling.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "f65b8d5c896c",
+        "pr": 5142,
+        "date": "2025-04-11",
+        "artifact_id": "L2.kernel.cutlass_mla",
+        "evidence": "Sm100MlaPersistentTileScheduler"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "84810da4ae42",
+          "pr": 5390,
+          "date": "2025-04-27",
+          "artifact_id": "L2.backend.cutlass_mla",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "class CutlassMLABackend(FlashInferMLAAttnBackend)"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "c0b790cf7fe6",
+          "pr": 32114,
+          "date": "2026-09-10",
+          "artifact_id": "L2.kernel.cutlass_mla",
+          "relation": "removed",
+          "acknowledges_prior": "no",
+          "evidence": "deleted file mode 100644 cutlass_mla_backend.py"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "41aa5784287f",
+          "pr": 17625,
+          "date": "2025-06-03",
+          "artifact_id": "vllm.cutlass_mla",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "Add Cutlass MLA backend"
+        }
+      ],
+      "semantic_preconditions": [
+        "MLA query/cache tensors match CUTLASS SM100 MLA expected shapes.",
+        "Workspace size is computed for max_seq_len, batches and SM count."
+      ],
+      "hardware_preconditions": [
+        "Blackwell SM100; CUTLASS 3.9 family templates."
+      ],
+      "framework_preconditions": [
+        "sgl-kernel extension exports cutlass_mla_decode and workspace-size function."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Persistent scheduler is selected by template option.",
+          "status": "derived",
+          "source": "f65b8d5c896c:cutlass_mla_kernel.cu",
+          "excerpt": "conditional_t<PersistenceOption::value, Sm100MlaPersistentTileScheduler",
+          "kind": "framework",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "No numeric result in checked diff; kernel is explicitly Blackwell-specialized.",
+      "correctness_evidence": "sgl-kernel/tests/test_cutlass_mla.py and registered test_cutlass_mla.py in registry.",
+      "known_failures": [
+        {
+          "ref": "kernel-correctness-cases.csv/#6998",
+          "what": "Fix cutlass MLA gets almost zero accuracy",
+          "scope": "implementation"
+        },
+        {
+          "ref": "confirmed-reverts.csv:415/vLLM #30653",
+          "what": "CUTLASS MLA lacked FP8 support in CI path",
+          "scope": "partial_domain"
+        }
+      ],
+      "current_status": "removed_textually_in_sglang_concept_reappears_in_vllm",
+      "signature": {
+        "pathspec": [
+          "sgl-kernel/csrc/attention/cutlass_mla_kernel.cu",
+          "python/sglang/kernels/aot/csrc/attention/cutlass_mla_kernel.cu"
+        ],
+        "regex": "Sm100MlaPersistentTileScheduler|cutlass_mla_decode",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.5 57f99608f4fdea03e0450f51a6fcabe726409f25",
+          "present:sglang v0.4.6 84022c0e563c9b519fa16bf0eb7f9d750a728531",
+          "absent-after-removal:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/5142",
+        "https://github.com/sgl-project/sglang/pull/5390",
+        "https://github.com/sgl-project/sglang/pull/32114",
+        "https://github.com/vllm-project/vllm/pull/17625"
+      ],
+      "later_uses": [
+        "L2-E-f65b8d5c89",
+        "L2-E-0ab3f437ab",
+        "L2-E-18efb5e8e0",
+        "L2-E-c0b790cf7f"
+      ],
+      "known_failure_refs": [
+        "kernel-correctness-cases:sglang:e58423b2b9",
+        "kernel-correctness-cases:sglang:812e82f35e",
+        "confirmed-reverts:vllm:30653"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "issue",
+        "pr_body",
+        "test",
+        "upstream_source"
+      ],
+      "biography": {
+        "first_appearance": "SGLang PR #5142 / f65b8d5c896c (2025-04-11) adds Blackwell CUTLASS MLA kernel; pickaxe first hit is f65b8d5c89.",
+        "problem": "Provides SM100/Blackwell-specific MLA decode using CUTLASS TMA warp-specialized persistent tile scheduling and split-KV workspace sizing.",
+        "preconditions": "Blackwell SM100/CUTLASS 3.9 family templates; tensors match SM100 MLA expected shapes; extension exports cutlass_mla_decode and workspace-size functions.",
+        "survival": "lost + evidence: v0.4.6 release check finds cutlass_mla_kernel.cu, but cutoff git grep finds no Sm100MlaPersistentTileScheduler/cutlass_mla_decode in SGLang after #32114 deletion.",
+        "recurrence": "SGLang #5390 adds backend wrapper; vLLM PR #17625 independently adds CUTLASS_MLA backend with ~17% throughput claim; SGLang #32114 removes cutlass_mla and leaves FlashInferMLABackend fallback.",
+        "failures": "SGLang failure links include CUTLASS MLA CUDA-graph near-zero accuracy and build failures; vLLM later records CUTLASS MLA partial-domain failures such as FP8 support in CI.",
+        "acknowledgement": "SGLang #5142 thanks upstream kernel/test code; vLLM #17625 does not acknowledge SGLang in checked PR text. #32114 explains removal: \"SM10.0-only... no CI coverage.\"",
+        "event_ids": [
+          "L2-E-f65b8d5c89",
+          "L2-E-84810da4ae",
+          "L2-E-c0b790cf7f"
+        ],
+        "evidence_urls": [
+          "https://github.com/sgl-project/sglang/pull/5142",
+          "https://github.com/sgl-project/sglang/pull/5390",
+          "https://github.com/sgl-project/sglang/pull/32114",
+          "https://github.com/vllm-project/vllm/pull/17625"
+        ],
+        "confidence": "high"
+      }
+    },
+    {
+      "move_id": "M-L2-trtllm-gen-mla-flashinfer",
+      "name": "TRT-LLM Gen MLA decode via FlashInfer",
+      "category": "specialization",
+      "description": "The backend subclasses FlashInfer MLA, constructs padded block tables satisfying FlashInfer/TRT-LLM block constraints, then calls flashinfer.decode.trtllm_batch_decode_with_kv_cache_mla for decode. It became the Blackwell/explicit replacement direction after CUTLASS MLA removal.",
+      "problem_solved": "Low-latency specialized MLA decode on NVIDIA backends without maintaining an in-tree CUTLASS kernel.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "4b04998d3854",
+        "pr": 8632,
+        "date": "2025-07-31",
+        "artifact_id": "L2.backend.trtllm_mla",
+        "evidence": "Support attention backend for TRTLLM MLA kernels from flashinfer."
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "f508cd3cb78a",
+          "pr": 8638,
+          "date": "2025-08-11",
+          "artifact_id": "L2.backend.trtllm_mla",
+          "relation": "same_artifact_modified",
+          "acknowledges_prior": "no",
+          "evidence": "TRTLLM-MLA FP8 path"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "c0b790cf7fe6",
+          "pr": 32114,
+          "date": "2026-09-10",
+          "artifact_id": "L2.backend.cutlass_mla",
+          "relation": "replaced",
+          "acknowledges_prior": "unclear",
+          "evidence": "cutlass_mla backend deleted; trtllm_mla remains registered"
+        },
+        {
+          "repo": "vllm-project/vllm",
+          "sha": "dcb28a332bfb",
+          "pr": 21078,
+          "date": "2025-09-10",
+          "artifact_id": "vllm.flashinfer_mla",
+          "relation": "reimplemented",
+          "acknowledges_prior": "unclear",
+          "evidence": "Flashinfer MLA (trtllm-gen) decode kernel integration"
+        }
+      ],
+      "semantic_preconditions": [
+        "Head counts and qk_rope_head_dim are supported by FlashInfer TRT-LLM MLA.",
+        "Block table padding satisfies block_num % (128 / page_size) == 0."
+      ],
+      "hardware_preconditions": [
+        "NVIDIA GPU supported by FlashInfer's TRT-LLM Gen MLA kernels."
+      ],
+      "framework_preconditions": [
+        "FlashInfer is installed; SGLang attention_backend is trtllm_mla or model override selects it."
+      ],
+      "assumptions": [
+        {
+          "assumption": "TRT-LLM block-table divisibility is required by FlashInfer shape checks.",
+          "status": "derived",
+          "source": "4b04998d3854:trtllm_mla_backend.py",
+          "excerpt": "block_num % (128 / block_size) == 0",
+          "kind": "framework",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "No numeric result in checked diff.",
+      "correctness_evidence": "python/sglang/test/attention/test_trtllm_mla_backend.py in registry.",
+      "known_failures": [
+        {
+          "ref": "#9675",
+          "what": "Fix TRTLLM MLA CUDA KV blocks causing accuracy drop",
+          "scope": "implementation"
+        },
+        {
+          "ref": "confirmed-reverts.csv:424/vLLM #32484",
+          "what": "FlashInfer prefill backend had correctness issues",
+          "scope": "adapter"
+        }
+      ],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/layers/attention/trtllm_mla_backend.py"
+        ],
+        "regex": "trtllm_batch_decode_with_kv_cache_mla|TRTLLMMLABackend",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.4.3 e0b9a423c8413c486f8e6a2c168cd3e6e7a74589",
+          "present:sglang v0.5.17 29481685462732237d80d86076d6563e1f658102"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/pull/8632",
+        "https://github.com/sgl-project/sglang/pull/8638",
+        "https://github.com/vllm-project/vllm/pull/21078"
+      ],
+      "later_uses": [
+        "L2-E-4b04998d38",
+        "L2-E-f508cd3cb7",
+        "L2-E-d9a20fd28a",
+        "L2-E-0c29c8fece"
+      ],
+      "known_failure_refs": [
+        "kernel-correctness-cases:sglang:70c0c1f926",
+        "kernel-correctness-cases:sglang:5595f6e988",
+        "confirmed-reverts:vllm:32484"
+      ],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body",
+        "upstream_source"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-fused-absorb-q-concat",
+      "name": "Fused q_nope/q_rope absorb-query concat kernel",
+      "category": "fusion",
+      "description": "A CUDA/JIT helper concatenates q_nope and q_rope for absorbed MLA without a separate torch.cat allocation, then is reused by TRTLLM_MLA and target/MTP extend paths.",
+      "problem_solved": "Remove q concatenation allocation/launch overhead in absorbed MLA paths.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "3b25dc127ae7df0680cfe0fd7800ba5aa280c64c",
+        "pr": 10473,
+        "date": "2025-09-15",
+        "artifact_id": "L2.kernel.concat_mla",
+        "evidence": "17.5% e2e speedup for short seq len"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "3b25dc127ae7df0680cfe0fd7800ba5aa280c64c",
+          "pr": 10473,
+          "date": "2025-09-15",
+          "artifact_id": "L2.kernel.concat_mla",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "17.5% e2e speedup for short seq len"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "311de47bb7a8baf646f58a472ea1b6712bd51ff6",
+          "pr": 10474,
+          "date": "2025-09-16",
+          "artifact_id": "L2.backend.trtllm_mla;L2.kernel.concat_mla",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "see https://github.com/sgl-project/sglang/pull/10473 for info"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "063c3791fe2ecf8c175677d79dc19db38d4d07dc",
+          "pr": 10777,
+          "date": "2025-09-22",
+          "artifact_id": "L2.backend.trtllm_mla;L2.kernel.concat_mla",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "Fix trtllm_mla slow concat kernel in MTP"
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "sgl-kernel/csrc/elementwise/concat_mla.cu",
+          "sgl-kernel/python/sgl_kernel/elementwise.py",
+          "python/sglang/srt/layers/attention/trtllm_mla_backend.py"
+        ],
+        "regex": "concat_mla_absorb_q|concat_mla_absorb_q_general",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang 3b25dc127a^",
+          "present:sglang 3b25dc127a",
+          "present:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/063c3791fe2ecf8c175677d79dc19db38d4d07dc",
+        "https://github.com/sgl-project/sglang/commit/311de47bb7a8baf646f58a472ea1b6712bd51ff6",
+        "https://github.com/sgl-project/sglang/commit/3b25dc127ae7df0680cfe0fd7800ba5aa280c64c",
+        "https://github.com/sgl-project/sglang/pull/10473",
+        "https://github.com/sgl-project/sglang/pull/10474",
+        "https://github.com/sgl-project/sglang/pull/10777"
+      ],
+      "later_uses": [
+        "L2-E-3b25dc127a",
+        "L2-E-311de47bb7",
+        "L2-E-063c3791fe"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-cutlass-concat-free-q-interface",
+      "name": "CUTLASS MLA concat-free Q interface",
+      "category": "fusion",
+      "description": "CUTLASS MLA API accepts q_nope/q_pe separately and SRT passes split Q/K tensors, avoiding a concatenated Q representation at the backend boundary.",
+      "problem_solved": "Avoid materializing concatenated query tensors before CUTLASS MLA decode.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "aa46ed34d25730d532fe15068c02ddbe7c83f730",
+        "pr": 7145,
+        "date": "2025-06-13",
+        "artifact_id": "L2.kernel.cutlass_mla",
+        "evidence": "Remove 200us slow concat kernel"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "aa46ed34d25730d532fe15068c02ddbe7c83f730",
+          "pr": 7145,
+          "date": "2025-06-13",
+          "artifact_id": "L2.kernel.cutlass_mla",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "Remove 200us slow concat kernel"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "c49c1d9226ad0a380aa854f60ea7daf5db191477",
+          "pr": 7020,
+          "date": "2025-06-13",
+          "artifact_id": "L2.backend.cutlass_mla;L2.kernel.cutlass_mla;L2.model.deepseek_v2_mla",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "gsm8k and mmlu ok after integrating this pr"
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "removed",
+      "signature": {
+        "pathspec": [
+          "sgl-kernel/csrc/attention/cutlass_mla_kernel.cu",
+          "sgl-kernel/python/sgl_kernel/attention.py",
+          "python/sglang/srt/layers/attention/cutlass_mla_backend.py",
+          "python/sglang/kernels/aot/csrc/attention/cutlass_mla_kernel.cu"
+        ],
+        "regex": "q_nope, q_pe|q_nope\\.dtype == q_pe\\.dtype|q_nope\\s*,\\s*q_pe",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang aa46ed34d2^",
+          "present:sglang aa46ed34d2",
+          "present:sglang v0.4.8",
+          "absent:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/aa46ed34d25730d532fe15068c02ddbe7c83f730",
+        "https://github.com/sgl-project/sglang/commit/c49c1d9226ad0a380aa854f60ea7daf5db191477",
+        "https://github.com/sgl-project/sglang/pull/7020",
+        "https://github.com/sgl-project/sglang/pull/7145"
+      ],
+      "later_uses": [
+        "L2-E-aa46ed34d2",
+        "L2-E-c49c1d9226"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "diff",
+        "pr_body"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-dcp-a2a-pack-lse-fusion",
+      "name": "DCP A2A attention-output/LSE pack fusion",
+      "category": "fusion",
+      "description": "A Triton pack kernel writes partial attention payload and LSE into all-to-all send buffers with independent strides, fusing communication packing for distributed context parallel MLA.",
+      "problem_solved": "Reduce DCP communication packing launches and preserve LSE needed for later merge.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "6c6294b7be23f751683f63b2c52775ec950b9a30",
+        "pr": 34614,
+        "date": "2026-08-12",
+        "artifact_id": "L2.kernel.dcp_lse_merge",
+        "evidence": "def dcp_pack_a2a_send("
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "6c6294b7be23f751683f63b2c52775ec950b9a30",
+          "pr": 34614,
+          "date": "2026-08-12",
+          "artifact_id": "L2.kernel.dcp_lse_merge",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "def dcp_pack_a2a_send("
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "81fe452810d9256b5d307cad3a3e261c70170591",
+          "pr": 34651,
+          "date": "2026-08-13",
+          "artifact_id": "L2.kernel.dcp_lse_merge",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "dcp_pack_a2a_send now takes independently strided payload and LSE destinations"
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/kernels/ops/attention/dcp_kernels.py",
+          "python/sglang/srt/layers/dcp/comm.py"
+        ],
+        "regex": "def dcp_pack_a2a_send|dcp_pack_a2a_send\\(",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang 6c6294b7be^",
+          "present:sglang 6c6294b7be",
+          "present:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/6c6294b7be23f751683f63b2c52775ec950b9a30",
+        "https://github.com/sgl-project/sglang/commit/81fe452810d9256b5d307cad3a3e261c70170591",
+        "https://github.com/sgl-project/sglang/pull/34614",
+        "https://github.com/sgl-project/sglang/pull/34651"
+      ],
+      "later_uses": [
+        "L2-E-6c6294b7be",
+        "L2-E-81fe452810"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "diff",
+        "pr_body",
+        "test"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-fused-mla-k-concat",
+      "name": "Fused MLA K noPE/RoPE concat kernel",
+      "category": "fusion",
+      "description": "A CUDA helper fuses k_nope and k_rope writes into contiguous MLA K tensors and is reused by DeepSeek prefill instead of slice assignment.",
+      "problem_solved": "Avoid separate K concatenation/slice writes before MLA prefill.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "0096798ed60b9eadce468c2d206cd2982e97b978",
+        "pr": 10156,
+        "date": "2025-09-08",
+        "artifact_id": "L2.kernel.concat_mla",
+        "evidence": "cuda"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "0096798ed60b9eadce468c2d206cd2982e97b978",
+          "pr": 10156,
+          "date": "2025-09-08",
+          "artifact_id": "L2.kernel.concat_mla",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "cuda"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "b047b553c26ebc83b8b749a605ef1c44f5bb4416",
+          "pr": 10157,
+          "date": "2025-09-14",
+          "artifact_id": "L2.kernel.concat_mla;L2.model.deepseek_v2_mla",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "depend on https://github.com/sgl-project/sglang/pull/10156"
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "sgl-kernel/csrc/elementwise/concat_mla.cu",
+          "sgl-kernel/python/sgl_kernel/elementwise.py",
+          "python/sglang/kernels/aot/csrc/elementwise/concat_mla.cu",
+          "python/sglang/kernels/aot/python/sgl_kernel/elementwise.py",
+          "python/sglang/kernels/ops/attention/concat_mla.py"
+        ],
+        "regex": "concat_mla_k_kernel|def concat_mla_k|torch\\.ops\\.sgl_kernel\\.concat_mla_k",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang 0096798ed6^",
+          "present:sglang 0096798ed6",
+          "present:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/0096798ed60b9eadce468c2d206cd2982e97b978",
+        "https://github.com/sgl-project/sglang/commit/b047b553c26ebc83b8b749a605ef1c44f5bb4416",
+        "https://github.com/sgl-project/sglang/pull/10156",
+        "https://github.com/sgl-project/sglang/pull/10157"
+      ],
+      "later_uses": [
+        "L2-E-0096798ed6",
+        "L2-E-b047b553c2"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-grouped-head-shared-kv-verify",
+      "name": "Grouped-head verify with shared KV tile reuse",
+      "category": "work_partitioning",
+      "description": "Verify kernels group query heads so one program loads a shared KV tile and reuses it across heads, later extending the pattern to non-causal draft attention.",
+      "problem_solved": "Reduce duplicate KV reads in verify/draft attention.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "6cbfa791d699c889d28f1bf5a65b08331b601388",
+        "pr": 34517,
+        "date": "2026-08-15",
+        "artifact_id": "L2.kernel.verify_mla",
+        "evidence": "each program loads a KV tile once and reuses it across a block of query heads"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "6cbfa791d699c889d28f1bf5a65b08331b601388",
+          "pr": 34517,
+          "date": "2026-08-15",
+          "artifact_id": "L2.kernel.verify_mla",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "each program loads a KV tile once and reuses it across a block of query heads"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "34180a0d3544f988810812b366a5a4859987b57c",
+          "pr": 35499,
+          "date": "2026-08-20",
+          "artifact_id": "L2.kernel.verify_mla",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "Route DSpark draft attn to `verify_shared_kv`"
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/kernels/ops/attention/verify_mla.py",
+          "python/sglang/srt/layers/attention/triton_backend.py"
+        ],
+        "regex": "verify_shared_kv|shared.*KV|GROUP_SIZE",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.5.17",
+          "present:sglang v0.5.18",
+          "present:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/34180a0d3544f988810812b366a5a4859987b57c",
+        "https://github.com/sgl-project/sglang/commit/6cbfa791d699c889d28f1bf5a65b08331b601388",
+        "https://github.com/sgl-project/sglang/pull/34517",
+        "https://github.com/sgl-project/sglang/pull/35499"
+      ],
+      "later_uses": [
+        "L2-E-6cbfa791d6",
+        "L2-E-34180a0d35"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body",
+        "test"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-nonpaged-c4-indexer-gather",
+      "name": "Non-paged C4 indexer gather for DeepGEMM",
+      "category": "layout_transformation",
+      "description": "C4 index keys/scales are gathered into contiguous non-paged storage to use a faster DeepGEMM fp8_mqa_logits path, then defaulted above a local-query threshold.",
+      "problem_solved": "Use non-paged dense access for C4 indexer hot paths.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "a6ee64d237a2c19d067ed9998245c83b44de6290",
+        "pr": 29619,
+        "date": "2026-07-02",
+        "artifact_id": "L2.adapter.dsv4_nonpaged_indexer;L2.backend.sparse_mla_adapters",
+        "evidence": "gathering the C4 index keys and scales into contiguous storage"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "a6ee64d237a2c19d067ed9998245c83b44de6290",
+          "pr": 29619,
+          "date": "2026-07-02",
+          "artifact_id": "L2.adapter.dsv4_nonpaged_indexer;L2.backend.sparse_mla_adapters",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "gathering the C4 index keys and scales into contiguous storage"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "48ad6a83cfb9de6eec1179ab4f5b017365d63174",
+          "pr": 30140,
+          "date": "2026-07-07",
+          "artifact_id": "L2.adapter.dsv4_nonpaged_indexer;L2.backend.sparse_mla_adapters",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "SGLANG_OPT_DSV4_NONPAGED_INDEXER = EnvBool(True)"
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/environ.py",
+          "python/sglang/srt/layers/attention/dsv4/indexer.py",
+          "python/sglang/srt/layers/attention/deepseek_v4_backend.py"
+        ],
+        "regex": "SGLANG_OPT_DSV4_NONPAGED_INDEXER|nonpaged_indexer",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang v0.5.14",
+          "present:sglang v0.5.15",
+          "present:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/48ad6a83cfb9de6eec1179ab4f5b017365d63174",
+        "https://github.com/sgl-project/sglang/commit/a6ee64d237a2c19d067ed9998245c83b44de6290",
+        "https://github.com/sgl-project/sglang/pull/29619",
+        "https://github.com/sgl-project/sglang/pull/30140"
+      ],
+      "later_uses": [
+        "L2-E-a6ee64d237",
+        "L2-E-48ad6a83cf"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body",
+        "test"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-separate-q-nope-q-rope-interface",
+      "name": "Separate q_nope/q_rope backend interface",
+      "category": "fusion",
+      "description": "FA3/RadixAttention and FlashInfer MLA accept q_nope/q_rope separately, avoiding DeepSeek query concatenation except paths that still require ragged inputs.",
+      "problem_solved": "Remove framework-level concatenation before MLA backends.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "6b6e7487750b048061e839109d193103accbbf23",
+        "pr": 5638,
+        "date": "2025-04-22",
+        "artifact_id": "L2.backend.fa3_fa4_mla;L2.model.deepseek_v2_mla",
+        "evidence": "concat for q in FA3 backend can be removed"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "6b6e7487750b048061e839109d193103accbbf23",
+          "pr": 5638,
+          "date": "2025-04-22",
+          "artifact_id": "L2.backend.fa3_fa4_mla;L2.model.deepseek_v2_mla",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "concat for q in FA3 backend can be removed"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "e30c273bc9bbb2ea31268b22b67ba8221e058e2c",
+          "pr": 5822,
+          "date": "2025-05-08",
+          "artifact_id": "L2.backend.flashinfer_mla;L2.model.deepseek_v2_mla",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "Base on  #5748 and #5638 , for flashinfer mla, remove q and k cat."
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/layers/attention/flashattention_backend.py",
+          "python/sglang/srt/layers/attention/flashinfer_mla_backend.py",
+          "python/sglang/srt/layers/radix_attention.py",
+          "python/sglang/srt/models/deepseek_v2.py",
+          "python/sglang/srt/models/deepseek_common/attention_forward_methods/forward_mla.py"
+        ],
+        "regex": "q_nope.*q_rope|q_rope.*q_nope",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang 6b6e748775^",
+          "present:sglang 6b6e748775",
+          "present:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/6b6e7487750b048061e839109d193103accbbf23",
+        "https://github.com/sgl-project/sglang/commit/e30c273bc9bbb2ea31268b22b67ba8221e058e2c",
+        "https://github.com/sgl-project/sglang/pull/5638",
+        "https://github.com/sgl-project/sglang/pull/5822"
+      ],
+      "later_uses": [
+        "L2-E-6b6e748775",
+        "L2-E-e30c273bc9"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "benchmark",
+        "diff",
+        "pr_body"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-skip-ragged-prefill-lse-no-prefix",
+      "name": "Skip unused LSE in no-prefix ragged prefill",
+      "category": "fusion",
+      "description": "No-prefix ragged prefill calls forward() rather than forward_return_lse() when LSE is unused; the mechanism was reverted and later relanded.",
+      "problem_solved": "Avoid computing/storing LSE for ragged prefill cases that do not consume it.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "bfa392245159147a2b7dbd67178c825e5035c329",
+        "pr": 5476,
+        "date": "2025-04-18",
+        "artifact_id": "L2.backend.flashinfer_mla",
+        "evidence": "Small tweak to save a bit of compute."
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "bfa392245159147a2b7dbd67178c825e5035c329",
+          "pr": 5476,
+          "date": "2025-04-18",
+          "artifact_id": "L2.backend.flashinfer_mla",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "Small tweak to save a bit of compute."
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "22da3d978f8a79e606a19a30ab5b462411106b04",
+          "pr": 5555,
+          "date": "2025-05-05",
+          "artifact_id": "L2.backend.flashinfer_mla",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "Reopens #5476 as per #5544"
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/layers/attention/flashinfer_mla_backend.py"
+        ],
+        "regex": "prefill_wrapper_ragged\\.forward\\(",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang bfa3922451^",
+          "present:sglang bfa3922451",
+          "present:sglang 22da3d978f",
+          "present:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/22da3d978f8a79e606a19a30ab5b462411106b04",
+        "https://github.com/sgl-project/sglang/commit/bfa392245159147a2b7dbd67178c825e5035c329",
+        "https://github.com/sgl-project/sglang/pull/5476",
+        "https://github.com/sgl-project/sglang/pull/5555"
+      ],
+      "later_uses": [
+        "L2-E-bfa3922451",
+        "L2-E-22da3d978f"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "diff",
+        "pr_body",
+        "test"
+      ],
+      "biography": null
+    },
+    {
+      "move_id": "M-L2-swa-ring-reprefill-tail",
+      "name": "SWA ring tail re-prefill for unified KV",
+      "category": "layout_transformation",
+      "description": "Trailing sliding-window tokens are held back from prefix reuse or recomputed because the SWA ring is not represented in persistent host/HiCache state.",
+      "problem_solved": "Preserve correctness for unified-KV SWA ring layout across prefix reuse/loadback.",
+      "first_observed": {
+        "repo": "sgl-project/sglang",
+        "sha": "462b6171bd80902f68a0056c41bf95e0cec91400",
+        "pr": 30339,
+        "date": "2026-07-09",
+        "artifact_id": "L2.kernel.dsv4_unified_kv_triton",
+        "evidence": "SWA ring slots covering the reused-prefix region still hold whatever"
+      },
+      "occurrences": [
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "462b6171bd80902f68a0056c41bf95e0cec91400",
+          "pr": 30339,
+          "date": "2026-07-09",
+          "artifact_id": "L2.kernel.dsv4_unified_kv_triton",
+          "relation": "first_observed",
+          "acknowledges_prior": "unclear",
+          "evidence": "SWA ring slots covering the reused-prefix region still hold whatever"
+        },
+        {
+          "repo": "sgl-project/sglang",
+          "sha": "8d0fd341507710d628bf3e05d88ae87253970b78",
+          "pr": 29417,
+          "date": "2026-07-09",
+          "artifact_id": "L2.kernel.dsv4_unified_kv_triton;L2.dispatch.server_args_defaults",
+          "relation": "same_mechanism",
+          "acknowledges_prior": "unclear",
+          "evidence": "pull it out and convert it into the format HiCache expects"
+        }
+      ],
+      "semantic_preconditions": [
+        "The caller uses the MLA/DSA tensor shapes named in the event evidence."
+      ],
+      "hardware_preconditions": [
+        "The selected CUDA/HIP/NPU backend supports the event-specific kernel."
+      ],
+      "framework_preconditions": [
+        "Backend dispatch reaches the event-specific path and supplies matching metadata/workspace."
+      ],
+      "assumptions": [
+        {
+          "assumption": "Mechanism identity is derived from repeated move-mention evidence, not a checked public specification.",
+          "kind": "semantic",
+          "status": "derived",
+          "source": "staging/move-mentions.csv",
+          "excerpt": "same raw mechanism appears in multiple L2 events",
+          "spec_checked": ""
+        }
+      ],
+      "performance_evidence": "Move retained because it recurs in multiple L2 events; numeric evidence not independently audited in WP-E.",
+      "correctness_evidence": "No dedicated correctness evidence audited for this added recurring move.",
+      "known_failures": [],
+      "current_status": "live_textual",
+      "signature": {
+        "pathspec": [
+          "python/sglang/srt/mem_cache/swa_radix_cache.py",
+          "python/sglang/srt/managers/schedule_batch.py"
+        ],
+        "regex": "swa_reprefill_tail_tokens|reprefill_tail",
+        "min_files": 1,
+        "validated_at": [
+          "absent:sglang 462b6171bd^",
+          "present:sglang 462b6171bd",
+          "present:sglang 8d0fd34150",
+          "present:sglang cutoff 89e1316eae9aae634c174c040415289fe4484aee"
+        ]
+      },
+      "confidence": "high",
+      "evidence_urls": [
+        "https://github.com/sgl-project/sglang/commit/462b6171bd80902f68a0056c41bf95e0cec91400",
+        "https://github.com/sgl-project/sglang/commit/8d0fd341507710d628bf3e05d88ae87253970b78",
+        "https://github.com/sgl-project/sglang/pull/29417",
+        "https://github.com/sgl-project/sglang/pull/30339"
+      ],
+      "later_uses": [
+        "L2-E-462b6171bd",
+        "L2-E-8d0fd34150"
+      ],
+      "known_failure_refs": [],
+      "evidence_types": [
+        "benchmark",
+        "pr_body"
+      ],
+      "biography": null
+    }
+  ],
+  "rejected_candidates": [
+    {
+      "name": "Sparse DSA/NSA indexer and top-k routing",
+      "why": "Registry and task scope exclude sparse indexer/top-k; MLA backend adapters only are in scope."
+    },
+    {
+      "name": "FlashMLA/CUTLASS speedup claims without code mechanism",
+      "why": "Rejected when only title/claim was visible; retained moves require code symbols or diffs."
+    },
+    {
+      "name": "Generic non-MLA FlashInfer attention",
+      "why": "Generic MHA backend use is not an MLA lineage move unless the MLA wrapper/kernel mechanism is present."
+    }
+  ],
+  "notes": "History bounded by SGLang cutoff 89e1316e and vLLM cutoff c68eb98b. Upstream FlashInfer/FlashMLA SHAs were not locally available, so upstream recurrences are recorded through SGLang/vLLM wrapper code and PR evidence. move-release-presence.csv was absent; survival checked with git grep/show against SGLang/vLLM cutoff and release tags for biography moves."
+}

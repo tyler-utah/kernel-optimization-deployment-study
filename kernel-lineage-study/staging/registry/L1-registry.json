@@ -1,0 +1,5475 @@
+{
+ "lineage": "L1",
+ "identity_notes": [
+  "Pure moves keep identity; AOT-to-kernels/aot is same artifact.",
+  "JIT copies are separate when they create distinct runtime compilation/dispatch path.",
+  "Upstream kernels are separate from SGLang adapters.",
+  "Attention/indexer top-k, sampling top-k and request routers are excluded name collisions.",
+  "CPU/NPU/MUSA variants are registered with hardware scope."
+ ],
+ "artifacts": [
+  {
+   "artifact_id": "L1.upstream.vllm.align_sum",
+   "name": "vLLM align/sum ancestry",
+   "kind": "upstream_kernel",
+   "role": "Upstream align and moe_sum custom ops",
+   "language": "CUDA C++",
+   "origin": "upstream_other",
+   "upstream": "vllm-project/vllm",
+   "path_history": [
+    {
+     "path": "csrc/moe_align_block_size_kernels.cu",
+     "from": "2024-01-29",
+     "from_sha": "5d60def02cb5",
+     "from_pr": 2453,
+     "to": "2024-10-24",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:csrc/moe/moe_align_sum_kernels.cu"
+    },
+    {
+     "path": "csrc/moe/moe_align_sum_kernels.cu",
+     "from": "2024-10-24",
+     "from_sha": "59449095ab53",
+     "from_pr": 9384,
+     "to": "2026-06-10",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:csrc/libtorch_stable/moe/moe_align_sum_kernels.cu"
+    },
+    {
+     "path": "csrc/libtorch_stable/moe/moe_align_sum_kernels.cu",
+     "from": "2026-06-10",
+     "from_sha": "6e64c1bab187",
+     "from_pr": 44565,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_align_block_size_kernel",
+    "moe_sum"
+   ],
+   "introduced": {
+    "sha": "5d60def02cb5a43fa5864fcb123909b101df9ec5",
+    "pr": 2453,
+    "date": "2024-01-29",
+    "evidence": "vLLM add commit"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "vllm_ops.moe_align_block_size/moe_sum",
+   "dispatch_status_history": [
+    {
+     "date": "2024-01-29",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "5d60def02cb5a43fa5864fcb123909b101df9ec5"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "csrc/.*moe_align_sum_kernels\\.cu"
+   ],
+   "notes": "vLLM #9384 says replace torch.sum with customized moe_sum."
+  },
+  {
+   "artifact_id": "L1.upstream.vllm.fused_topk",
+   "name": "vLLM fused_moe/topk ancestry",
+   "kind": "upstream_kernel",
+   "role": "Upstream fused_moe and topk_softmax copied/ported",
+   "language": "Triton|CUDA C++",
+   "origin": "upstream_other",
+   "upstream": "vllm-project/vllm",
+   "path_history": [
+    {
+     "path": "vllm/model_executor/layers/fused_moe/fused_moe.py",
+     "from": "2024-02-26",
+     "from_sha": "c7f2cf2b7f67",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "csrc/moe/topk_softmax_kernels.cu",
+     "from": "2024-02-05",
+     "from_sha": "f0d4e145575b",
+     "from_pr": 2769,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "fused_moe_kernel",
+    "topk_softmax_kernel"
+   ],
+   "introduced": {
+    "sha": "c7f2cf2b7f67",
+    "pr": null,
+    "date": "2024-05-27",
+    "evidence": "SGLang header cites this vLLM blob"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "source-copy/header and CUDA port anchor",
+   "dispatch_status_history": [
+    {
+     "date": "2024-05-27",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "c7f2cf2b7f67"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    ".*fused_moe.*",
+    ".*topk_softmax_kernels\\.cu"
+   ],
+   "notes": "SGLang #4302: Cherry picked current vllm MoE topk softmax kernel template."
+  },
+  {
+   "artifact_id": "L1.triton.fused_moe",
+   "name": "SGLang Triton fused MoE core",
+   "kind": "kernel",
+   "role": "Two-GEMM routed expert Triton pipeline",
+   "language": "Triton",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/fused_moe.py",
+     "from": "2024-05-27",
+     "from_sha": "09de730dee31",
+     "from_pr": 484,
+     "to": "2024-08-14",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:layers/fused_moe/fused_moe.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/fused_moe/fused_moe.py",
+     "from": "2024-08-14",
+     "from_sha": "a59636bb5e68",
+     "from_pr": 1095,
+     "to": "2024-11-24",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:layers/fused_moe_triton/fused_moe.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/fused_moe_triton/fused_moe.py",
+     "from": "2024-11-24",
+     "from_sha": "be0124bda09d",
+     "from_pr": 2163,
+     "to": "2024-12-24",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:layers/moe/fused_moe_triton/fused_moe.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_triton/fused_moe.py",
+     "from": "2024-12-24",
+     "from_sha": "e835a50021e0",
+     "from_pr": 2563,
+     "to": "2026-04-17",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:moe_runner/triton_utils/fused_moe.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/triton_utils/fused_moe.py",
+     "from": "2026-04-17",
+     "from_sha": "5f7aee726a10",
+     "from_pr": 23019,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "fused_moe_kernel",
+    "invoke_fused_moe_kernel",
+    "fused_experts_impl"
+   ],
+   "introduced": {
+    "sha": "09de730dee31d13451fc8967b7ca31967b1a2420",
+    "pr": 484,
+    "date": "2024-05-27",
+    "evidence": "header: Adapted from vLLM fused_moe.py"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [
+    {
+     "artifact_id": "L1.upstream.vllm.fused_topk",
+     "relation": "ported_from",
+     "evidence": "Header: Adapted from vLLM fused_moe.py",
+     "evidence_ref": "09de730d"
+    }
+   ],
+   "hardware": [
+    "all_cuda",
+    "amd_mi300",
+    "musa",
+    "xpu"
+   ],
+   "framework_interface": "fused_moe/fused_experts called by MoE layers",
+   "dispatch_status_history": [
+    {
+     "date": "2024-05-27",
+     "status": "default",
+     "scope": "see role/interface",
+     "ref": "09de730dee31d13451fc8967b7ca31967b1a2420"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/.*fused_moe.*\\.py"
+   ],
+   "notes": "#23019 says TritonRunnerCore.run and fused_experts_impl had ~95% identical logic."
+  },
+  {
+   "artifact_id": "L1.triton.helper_kernels",
+   "name": "Triton helper kernels",
+   "kind": "kernel",
+   "role": "Split Triton invoke/align/sum_reduce helpers",
+   "language": "Triton",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_triton/fused_moe_triton_kernels.py",
+     "from": "2025-09-02",
+     "from_sha": "b5245064f66e",
+     "from_pr": 9878,
+     "to": "2026-04-17",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:moe_runner/triton_utils/fused_moe_triton_kernels.py"
+    },
+    {
+     "path": "python/sglang/kernels/ops/moe/fused_moe_triton_kernels.py",
+     "from": "2026-07-14",
+     "from_sha": "ee464fedc63e",
+     "from_pr": 30786,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "invoke_fused_moe_kernel",
+    "moe_sum_reduce_triton"
+   ],
+   "introduced": {
+    "sha": "b5245064f66e99686bf060f0ea51f81f39c0c1db",
+    "pr": 9878,
+    "date": "2025-09-02",
+    "evidence": "split from long fused_moe file"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-09-02",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "b5245064f66e99686bf060f0ea51f81f39c0c1db"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/fused_moe_triton/fused_moe_triton_kernels\\.py",
+    "python/sglang/srt/layers/moe/moe_runner/triton_utils/fused_moe_triton_kernels\\.py",
+    "python/sglang/kernels/ops/moe/fused_moe_triton_kernels\\.py"
+   ],
+   "notes": "#30786 says byte-identical move to kernels.ops.moe."
+  },
+  {
+   "artifact_id": "L1.triton.moe_align",
+   "name": "Triton moe_align_block_size",
+   "kind": "kernel",
+   "role": "Triton alignment/padding metadata",
+   "language": "Triton",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_triton/fused_moe.py",
+     "from": "2025-01-02",
+     "from_sha": "ba5112ff691d",
+     "from_pr": 2712,
+     "to": "2025-09-02",
+     "to_sha": "b5245064f66e",
+     "to_pr": 9878,
+     "transition": "created",
+     "end": "split_to:python/sglang/srt/layers/moe/fused_moe_triton/moe_align_block_size.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_triton/moe_align_block_size.py",
+     "from": "2025-09-02",
+     "from_sha": "b5245064f66e",
+     "from_pr": 9878,
+     "to": "2026-04-17",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:moe_runner/triton_utils/moe_align_block_size.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/triton_utils/moe_align_block_size.py",
+     "from": "2026-04-17",
+     "from_sha": "5f7aee726a10",
+     "from_pr": 23019,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_align_block_size"
+   ],
+   "introduced": {
+    "sha": "ba5112ff691d791a9e38c6c71f59324a5fcb49d0",
+    "pr": 2712,
+    "date": "2025-01-02",
+    "evidence": "feat: support moe_align_block_size_triton (#2712)"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-01-??",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "ba5112ff691d791a9e38c6c71f59324a5fcb49d0"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/fused_moe_triton/fused_moe\\.py",
+    "python/sglang/srt/layers/moe/(fused_moe_triton|moe_runner/triton_utils)/moe_align_block_size\\.py"
+   ],
+   "notes": "vLLM back-reference anchor."
+  },
+  {
+   "artifact_id": "L1.align.cuda_aot",
+   "name": "AOT CUDA moe_align",
+   "kind": "kernel",
+   "role": "CUDA token/expert alignment incl optimized variants",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/src/sgl-kernel/csrc/moe_align_kernel.cu",
+     "from": "2024-12-26",
+     "from_sha": "31548116a8dc",
+     "from_pr": 2579,
+     "to": "2025-03-03",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:sgl-kernel/src/sgl-kernel/csrc/moe/moe_align_kernel.cu"
+    },
+    {
+     "path": "sgl-kernel/src/sgl-kernel/csrc/moe/moe_align_kernel.cu",
+     "from": "2025-03-03",
+     "from_sha": "6b45a21d16a3",
+     "from_pr": 4025,
+     "to": "2025-03-08",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:sgl-kernel/csrc/moe/moe_align_kernel.cu"
+    },
+    {
+     "path": "sgl-kernel/csrc/moe/moe_align_kernel.cu",
+     "from": "2025-03-08",
+     "from_sha": "8abf74e3c935",
+     "from_pr": 4213,
+     "to": "2026-07-29",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:python/sglang/kernels/aot/csrc/moe/moe_align_kernel.cu"
+    },
+    {
+     "path": "python/sglang/kernels/aot/csrc/moe/moe_align_kernel.cu",
+     "from": "2026-07-29",
+     "from_sha": "c32c4ef79cf5",
+     "from_pr": 32648,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_align_block_size",
+    "sgl_moe_align_block_size"
+   ],
+   "introduced": {
+    "sha": "31548116a8dc8c6df7e146e0587335a59fc5b9d7",
+    "pr": 2579,
+    "date": "2024-12-26",
+    "evidence": "#2579 fixes moe_align_block_size_kernel"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2024-12-26",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "31548116a8dc8c6df7e146e0587335a59fc5b9d7"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/src/sgl-kernel/csrc/moe_align_kernel\\.cu",
+    "sgl-kernel/src/sgl-kernel/csrc/moe/moe_align_kernel\\.cu",
+    "sgl-kernel/csrc/moe/moe_align_kernel\\.cu",
+    "python/sglang/kernels/aot/csrc/moe/moe_align_kernel\\.cu"
+   ],
+   "notes": "vLLM later ports SGLang align in #12574/#12850/#19572."
+  },
+  {
+   "artifact_id": "L1.routing.topk_py",
+   "name": "Python top-k routing layer",
+   "kind": "adapter",
+   "role": "select_experts, grouped/biased top-k, scaling, EPLB masks",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/topk.py",
+     "from": "2024-12-24",
+     "from_sha": "e835a50021e0",
+     "from_pr": 2563,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "TopK",
+    "TopKConfig",
+    "select_experts",
+    "fused_topk",
+    "grouped_topk_gpu",
+    "biased_grouped_topk_gpu"
+   ],
+   "introduced": {
+    "sha": "e835a50021e03bf7c14b8af68b210189bb6e768b",
+    "pr": 2563,
+    "date": "2024-12-24",
+    "evidence": "reorg adds topk.py"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2024-12-24",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "e835a50021e03bf7c14b8af68b210189bb6e768b"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/topk\\.py"
+   ],
+   "notes": "Dispatches to FlashInfer, aiter, sgl_kernel, JIT/Triton, CPU/NPU/MUSA."
+  },
+  {
+   "artifact_id": "L1.routing.topk_softmax",
+   "name": "top-k softmax CUDA/JIT",
+   "kind": "kernel",
+   "role": "Fused softmax+top-k routing",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/moe_topk_softmax_kernels.cu",
+     "from": "2025-03-14",
+     "from_sha": "61e4433cafd6",
+     "from_pr": 4302,
+     "to": "2026-07-29",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:kernels/aot/csrc/moe/moe_topk_softmax_kernels.cu"
+    },
+    {
+     "path": "python/sglang/kernels/jit/csrc/moe/moe_topk_softmax.cuh",
+     "from": "2026-08-16",
+     "from_sha": "56a759cffc2e",
+     "from_pr": 34509,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "topk_softmax"
+   ],
+   "introduced": {
+    "sha": "61e4433cafd6115a22cf2143f7f38b157ab39b53",
+    "pr": 4302,
+    "date": "2025-03-14",
+    "evidence": "#4302 cherry picked vLLM template"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-03-14",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "61e4433cafd6115a22cf2143f7f38b157ab39b53"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/csrc/moe/moe_topk_softmax_kernels\\.cu",
+    "python/sglang/kernels/aot/csrc/moe/moe_topk_softmax_kernels\\.cu",
+    "python/sglang/kernels/jit/csrc/moe/moe_topk_softmax\\.cuh",
+    "python/sglang/kernels/ops/moe/moe_topk_softmax\\.py"
+   ],
+   "notes": "Ported from vLLM topk_softmax."
+  },
+  {
+   "artifact_id": "L1.routing.topk_sigmoid",
+   "name": "top-k sigmoid CUDA/JIT",
+   "kind": "kernel",
+   "role": "Fused sigmoid+top-k routing",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/moe_topk_sigmoid_kernels.cu",
+     "from": "2025-11-20",
+     "from_sha": "e72cf136932a",
+     "from_pr": 13049,
+     "to": "2026-07-29",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:kernels/aot/csrc/moe/moe_topk_sigmoid_kernels.cu"
+    },
+    {
+     "path": "python/sglang/kernels/jit/csrc/moe/moe_topk_sigmoid.cuh",
+     "from": "2026-07-23",
+     "from_sha": "99f636a86fb8",
+     "from_pr": 32072,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "topk_sigmoid"
+   ],
+   "introduced": {
+    "sha": "e72cf136932a7d8790ef4feeaa606932b6d62c5c",
+    "pr": 13049,
+    "date": "2025-11-20",
+    "evidence": "support moe topk sigmoid kernel"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-11-20",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "e72cf136932a7d8790ef4feeaa606932b6d62c5c"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/csrc/moe/moe_topk_sigmoid_kernels\\.cu",
+    "python/sglang/kernels/aot/csrc/moe/moe_topk_sigmoid_kernels\\.cu",
+    "python/sglang/kernels/jit/csrc/moe/moe_topk_sigmoid\\.cuh",
+    "python/sglang/kernels/ops/moe/moe_topk_sigmoid\\.py"
+   ],
+   "notes": "Sigmoid router path."
+  },
+  {
+   "artifact_id": "L1.routing.fused_gate",
+   "name": "fused gate / grouped top-k",
+   "kind": "kernel",
+   "role": "DeepSeek-style grouped/biased top-k and fused gate kernels",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/moe_fused_gate.cu",
+     "from": "2025-03-29",
+     "from_sha": "45dcfc2e762d",
+     "from_pr": 4530,
+     "to": "2026-07-07",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "removed/replaced_by:JIT"
+    },
+    {
+     "path": "python/sglang/jit_kernel/csrc/moe/grouped_topk.cuh",
+     "from": "2026-04-24",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2026-07-03",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    },
+    {
+     "path": "python/sglang/kernels/jit/csrc/moe/moe_fused_gate.cuh",
+     "from": "2026-07-23",
+     "from_sha": "99f636a86fb8",
+     "from_pr": 32072,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/kernels/ops/moe/moe_fused_gate.py",
+     "from": "2026-07-22",
+     "from_sha": "74338e94f10e",
+     "from_pr": 32045,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_fused_gate",
+    "biased_grouped_topk"
+   ],
+   "introduced": {
+    "sha": "45dcfc2e762d3ff197de9e84945298a6eeb134a3",
+    "pr": 4530,
+    "date": "2025-03-29",
+    "evidence": "#4530 adapted/improved grouped gate kernel"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-03-29",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "45dcfc2e762d3ff197de9e84945298a6eeb134a3"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/csrc/moe/(kimi_k2_)?moe_fused_gate(_musa)?\\.cu",
+    "python/sglang/jit_kernel/csrc/moe/(grouped_topk|moe_fused_gate)\\.cuh",
+    "python/sglang/jit_kernel/(grouped_topk|moe_fused_gate)\\.py",
+    "python/sglang/kernels/jit/csrc/moe/moe_fused_gate\\.cuh",
+    "python/sglang/kernels/ops/moe/moe_fused_gate\\.py"
+   ],
+   "notes": "AOT retired; JIT/ops path live."
+  },
+  {
+   "artifact_id": "L1.routing.hash_topk",
+   "name": "HashTopK routing and kernels",
+   "kind": "kernel",
+   "role": "DeepSeek-V4 hash/vocab top-k routing plus JIT/Triton kernels",
+   "language": "CUDA C++|Triton|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/hash_topk.py",
+     "from": "2026-05-07",
+     "from_sha": "35870d55aca7",
+     "from_pr": 23882,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/kernels/jit/csrc/deepseek_v4/hash_topk.cuh",
+     "from": "2026-07-23",
+     "from_sha": "99f636a86fb8",
+     "from_pr": 32072,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/kernels/ops/moe/dsv4.py",
+     "from": "2026-07-14",
+     "from_sha": "ee464fedc63e",
+     "from_pr": 30786,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/kernels/ops/moe/triton_hash_topk.py",
+     "from": "2026-07-22",
+     "from_sha": "74338e94f10e",
+     "from_pr": 32045,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "HashTopK",
+    "MoEHashTopKParams",
+    "hash_topk_triton"
+   ],
+   "introduced": {
+    "sha": "35870d55aca7c6912aa4c785f583da4acac04938",
+    "pr": 23882,
+    "date": "2026-05-07",
+    "evidence": "Deepseek V4 adds hash_topk"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2026-05-07",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "35870d55aca7c6912aa4c785f583da4acac04938"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/hash_topk\\.py",
+    "python/sglang/jit_kernel/csrc/deepseek_v4/hash_topk\\.cuh",
+    "python/sglang/kernels/jit/csrc/deepseek_v4/hash_topk\\.cuh",
+    "python/sglang/kernels/ops/moe/(dsv4|triton_hash_topk)\\.py"
+   ],
+   "notes": "MoE HashTopK, not attention dsv4 topk_v2."
+  },
+  {
+   "artifact_id": "L1.runner.framework",
+   "name": "MoeRunner framework",
+   "kind": "dispatcher",
+   "role": "Unified backend registry and runner abstraction",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/base.py",
+     "from": "2025-08-14",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/runner.py",
+     "from": "2025-09-05",
+     "from_sha": "3fa62da78c12",
+     "from_pr": 9269,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "MoeRunner",
+    "MoeRunnerConfig",
+    "register_moe_runner_core"
+   ],
+   "introduced": {
+    "sha": "3fa62da78c120be7103bfcb6fd1405d3630d6c98",
+    "pr": 9269,
+    "date": "2025-09-05",
+    "evidence": "#9269 decouples dispatch/pre/core/post/combine"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-09-05",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "3fa62da78c120be7103bfcb6fd1405d3630d6c98"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/moe_runner/(base|runner|__init__)\\.py"
+   ],
+   "notes": "Default MoE backend framework."
+  },
+  {
+   "artifact_id": "L1.hardware.cpu_npu_musa",
+   "name": "CPU/NPU/MUSA variants",
+   "kind": "backend",
+   "role": "Hardware-scoped topk/routing/MoE variants",
+   "language": "C++ CPU|Python|other",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/cpu/topk.cpp",
+     "from": "2025-04-08",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/hardware_backend/npu/moe/topk.py",
+     "from": "2025-12-04",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/hardware_backend/musa/kernels/topk.py",
+     "from": "2026-04-30",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/ascend.py",
+     "from": "2026-07-15",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "topk_softmax_cpu",
+    "fused_topk_npu",
+    "AscendRunnerCore"
+   ],
+   "introduced": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2025-04-08",
+    "evidence": "path census first touch CPU topk"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-04-08",
+     "status": "optional",
+     "scope": "see role/interface",
+     "ref": "unknown"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/csrc/cpu/topk\\.cpp",
+    "python/sglang/kernels/aot/csrc/cpu/topk\\.cpp",
+    "python/sglang/srt/hardware_backend/npu/moe/.*\\.py",
+    "python/sglang/srt/hardware_backend/musa/kernels/topk\\.py",
+    "python/sglang/srt/layers/moe/moe_runner/ascend\\.py"
+   ],
+   "notes": "Registered as hardware scope, not CUDA successor."
+  },
+  {
+   "artifact_id": "L1.cutlass.fp8_blockwise",
+   "name": "CUTLASS FP8 blockwise adapter",
+   "kind": "kernel",
+   "role": "FP8 blockscale CUTLASS MoE kernel and Python wrapper",
+   "language": "CUTLASS C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/fp8_blockwise_moe_kernel.cu",
+     "from": "2025-04-22",
+     "from_sha": "e62c49557dfc",
+     "from_pr": 5281,
+     "to": "2026-07-29",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:kernels/aot"
+    },
+    {
+     "path": "python/sglang/kernels/aot/csrc/moe/fp8_blockwise_moe_kernel.cu",
+     "from": "2026-07-29",
+     "from_sha": "c32c4ef79cf5",
+     "from_pr": 32648,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "moved_from:sgl-kernel/csrc/moe/fp8_blockwise_moe_kernel.cu",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "fp8_blockwise_moe",
+    "cutlass_moe"
+   ],
+   "introduced": {
+    "sha": "e62c49557dfc5731a46e1565c9cb85bd4d0c568a",
+    "pr": 5281,
+    "date": "2025-04-22",
+    "evidence": "#5281 adds FP8 Blockscale CUTLASS MoE"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-04-22",
+     "status": "optional",
+     "scope": "see role",
+     "ref": "e62c49557dfc5731a46e1565c9cb85bd4d0c568a"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "(sgl-kernel|python/sglang/kernels/aot)/csrc/moe/fp8_blockwise_moe_kernel\\.cu",
+    "(sgl-kernel|python/sglang/kernels/aot)/csrc/moe/(cutlass_moe_helper|prepare_moe_input)\\.cu"
+   ],
+   "notes": "#5694 reports 30-40% speedup over Triton for small batches. Python wrappers moved to L1.cutlass.adapters."
+  },
+  {
+   "artifact_id": "L1.cutlass.nvfp4",
+   "name": "CUTLASS NVFP4/FP4 adapter",
+   "kind": "kernel",
+   "role": "CUTLASS fused FP4/NVFP4 MoE implementation and JIT migration copy",
+   "language": "CUTLASS C++|CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/nvfp4_blockwise_moe.cu",
+     "from": "2025-06-02",
+     "from_sha": "eb38c7d1cae1",
+     "from_pr": 6093,
+     "to": "2026-03-07",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved/copied_to:JIT"
+    },
+    {
+     "path": "python/sglang/jit_kernel/csrc/moe/nvfp4_blockwise_moe.cuh",
+     "from": "2026-03-05",
+     "from_sha": "2bdd89a6cd6e",
+     "from_pr": 19437,
+     "to": "2026-07-14",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    }
+   ],
+   "key_symbols": [
+    "nvfp4_blockwise_moe"
+   ],
+   "introduced": {
+    "sha": "eb38c7d1cae1c616de3c1c0ce40353c720f7e3c7",
+    "pr": 6093,
+    "date": "2025-06-02",
+    "evidence": "#6093 adds support for NVFP4 MoE kernels"
+   },
+   "ended": {
+    "sha": "ee464fedc63e9cd3e8b5a56c6bbbe4272cd00580",
+    "pr": 30786,
+    "date": "2026-07-14",
+    "how": "removed/replaced_by:L1.runner.flashinfer_cutedsl"
+   },
+   "live_at_cutoff": false,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-06-02",
+     "status": "optional",
+     "scope": "see role",
+     "ref": "eb38c7d1cae1c616de3c1c0ce40353c720f7e3c7"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/csrc/moe/nvfp4_blockwise_moe\\.cu",
+    "python/sglang/jit_kernel/csrc/moe/nvfp4_blockwise_moe\\.cuh"
+   ],
+   "notes": "Separate quantized FP4 implementation distinct from FP8 and W4A8."
+  },
+  {
+   "artifact_id": "L1.cutlass.w4a8",
+   "name": "CUTLASS W4A8 adapter",
+   "kind": "kernel",
+   "role": "W4A8 grouped GEMM MoE kernels and Python adapter",
+   "language": "CUTLASS C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/cutlass_moe/w4a8/w4a8_grouped_mm_c3x.cu",
+     "from": "2025-07-04",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2026-07-29",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:kernels/aot"
+    },
+    {
+     "path": "python/sglang/kernels/aot/csrc/moe/cutlass_moe/w4a8/w4a8_grouped_mm_c3x.cu",
+     "from": "2026-07-29",
+     "from_sha": "c32c4ef79cf5",
+     "from_pr": 32648,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "moved_from:sgl-kernel/csrc/moe/cutlass_moe/w4a8/w4a8_grouped_mm_c3x.cu",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "w4a8_grouped_mm_c3x",
+    "cutlass_w4a8_moe"
+   ],
+   "introduced": {
+    "sha": "cb9d91ea8a710f45a587ef062aa3007dedd6c1cd",
+    "pr": 7762,
+    "date": "2025-07-07",
+    "evidence": "#7762 supports DeepSeek-R1-W4AFP8"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "see role",
+   "dispatch_status_history": [
+    {
+     "date": "2025-07-07",
+     "status": "optional",
+     "scope": "see role",
+     "ref": "cb9d91ea8a710f45a587ef062aa3007dedd6c1cd"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "(sgl-kernel|python/sglang/kernels/aot)/csrc/moe/cutlass_moe/w4a8/.*"
+   ],
+   "notes": "Distinct W4A8 quantized implementation. Python wrapper moved to L1.cutlass.adapters."
+  },
+  {
+   "artifact_id": "L1.align.cuda_jit",
+   "name": "JIT CUDA moe_align",
+   "kind": "kernel",
+   "role": "JIT-packaged moe_align implementation",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/jit_kernel/csrc/moe/moe_align_kernel.cu",
+     "from": "2026-04-08",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2026-07-23",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:python/sglang/kernels/jit/csrc/moe/moe_align_kernel.cu"
+    },
+    {
+     "path": "python/sglang/kernels/jit/csrc/moe/moe_align_kernel.cu",
+     "from": "2026-07-23",
+     "from_sha": "99f636a86fb8",
+     "from_pr": 32072,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_align_block_size"
+   ],
+   "introduced": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2026-04-08",
+    "evidence": "path census first touch"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "sglang.kernels.jit runtime compiled align op",
+   "dispatch_status_history": [
+    {
+     "date": "2026-04-08",
+     "status": "optional",
+     "scope": "sglang.kernels.jit runtime compiled align op",
+     "ref": "unknown"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/(jit_kernel|kernels/jit)/csrc/moe/moe_align_kernel\\.cu"
+   ],
+   "notes": "Split from old lump L1.align.cuda_jit_ops."
+  },
+  {
+   "artifact_id": "L1.align.single_token",
+   "name": "moe_align_single_token",
+   "kind": "kernel",
+   "role": "Specialized single-token align implementation",
+   "language": "Python/JIT",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/moe/moe_align_single_token.py",
+     "from": "2026-08-04",
+     "from_sha": "abddb1c7e9d6",
+     "from_pr": 32541,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_align_single_token"
+   ],
+   "introduced": {
+    "sha": "abddb1c7e9d61ddddeaf016d885c2f20aab426e8",
+    "pr": 32541,
+    "date": "2026-08-04",
+    "evidence": "[Kimi] Support kimi-k3"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "sglang.kernels.ops.moe single-token align fast path",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-04",
+     "status": "optional",
+     "scope": "sglang.kernels.ops.moe single-token align fast path",
+     "ref": "abddb1c7e9d61ddddeaf016d885c2f20aab426e8"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/moe/moe_align_single_token\\.py"
+   ],
+   "notes": "New specialized implementation/wrapper split from old lump L1.align.cuda_jit_ops."
+  },
+  {
+   "artifact_id": "L1.align.small_numel",
+   "name": "moe_align_small_numel",
+   "kind": "kernel",
+   "role": "Single-launch align for tiny batches with many experts",
+   "language": "Python/JIT",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/moe/moe_align_small_numel.py",
+     "from": "2026-08-08",
+     "from_sha": "5fdf6cd18f97",
+     "from_pr": 32395,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_align_small_numel"
+   ],
+   "introduced": {
+    "sha": "5fdf6cd18f978b84fb02b7ac82c740a4d2d7d5e3",
+    "pr": 32395,
+    "date": "2026-08-08",
+    "evidence": "PR title: Single-launch moe_align for tiny batches with many experts"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "sglang.kernels.ops.moe tiny-batch align fast path",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-08",
+     "status": "optional",
+     "scope": "sglang.kernels.ops.moe tiny-batch align fast path",
+     "ref": "5fdf6cd18f978b84fb02b7ac82c740a4d2d7d5e3"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/moe/moe_align_small_numel\\.py"
+   ],
+   "notes": "New implementation, not just wrapper; split from old lump L1.align.cuda_jit_ops."
+  },
+  {
+   "artifact_id": "L1.align.hip_variant",
+   "name": "ROCm HIP align variant",
+   "kind": "kernel",
+   "role": "Short-lived HIP align variant for ROCm enablement",
+   "language": "HIP",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/src/sgl-kernel/csrc/moe/moe_align_kernel.hip",
+     "from": "2025-03-07",
+     "from_sha": "0beea4503f4f",
+     "from_pr": 4178,
+     "to": "2025-03-07",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    }
+   ],
+   "key_symbols": [
+    "moe_align_kernel.hip"
+   ],
+   "introduced": {
+    "sha": "0beea4503f4f23f6f4348748c610af4c4233d2fc",
+    "pr": 4178,
+    "date": "2025-03-07",
+    "evidence": "ROCm Flex Attention enablement added .hip variant"
+   },
+   "ended": {
+    "sha": "eb61f5c9af73931b548da5bcafed7ce61e081b42",
+    "pr": 4186,
+    "date": "2025-03-07",
+    "how": "removed"
+   },
+   "live_at_cutoff": false,
+   "predecessors": [],
+   "hardware": [
+    "amd_mi300"
+   ],
+   "framework_interface": "ROCm HIP variant, reverted same day",
+   "dispatch_status_history": [
+    {
+     "date": "2025-03-07",
+     "status": "optional",
+     "scope": "ROCm HIP variant, reverted same day",
+     "ref": "0beea4503f4f23f6f4348748c610af4c4233d2fc"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/src/sgl-kernel/csrc/moe/moe_align_kernel\\.hip"
+   ],
+   "notes": ""
+  },
+  {
+   "artifact_id": "L1.reduce.moe_sum_reduce",
+   "name": "CUDA moe_sum_reduce",
+   "kind": "kernel",
+   "role": "Fused expert-output reduction with routed_scaling_factor",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/moe_sum_reduce.cu",
+     "from": "2025-09-19",
+     "from_sha": "616a3e20df5f",
+     "from_pr": 10321,
+     "to": "2026-07-29",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:python/sglang/kernels/aot/csrc/moe/moe_sum_reduce.cu"
+    },
+    {
+     "path": "python/sglang/kernels/aot/csrc/moe/moe_sum_reduce.cu",
+     "from": "2026-07-29",
+     "from_sha": "c32c4ef79cf5",
+     "from_pr": 32648,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_sum_reduce"
+   ],
+   "introduced": {
+    "sha": "616a3e20df5faf73a7d1581c7016413f64d583e4",
+    "pr": 10321,
+    "date": "2025-09-19",
+    "evidence": "#10321 rewrites Triton moe_sum_reduce in CUDA"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "sgl_kernel.moe_sum_reduce(input, output, routed_scaling_factor)",
+   "dispatch_status_history": [
+    {
+     "date": "2025-09-19",
+     "status": "optional",
+     "scope": "sgl_kernel.moe_sum_reduce(input, output, routed_scaling_factor)",
+     "ref": "616a3e20df5faf73a7d1581c7016413f64d583e4"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "(sgl-kernel|python/sglang/kernels/aot)/.*moe_sum_reduce\\.cu"
+   ],
+   "notes": "Implements routed_scaling_factor fusion in combine; split from L1.reduce.sum_fusion."
+  },
+  {
+   "artifact_id": "L1.reduce.moe_sum",
+   "name": "CUDA moe_sum",
+   "kind": "kernel",
+   "role": "MoE combine sum helper",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/moe_sum.cu",
+     "from": "2025-10-11",
+     "from_sha": "8fdcd98efefc",
+     "from_pr": 11019,
+     "to": "2026-07-29",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:python/sglang/kernels/aot/csrc/moe/moe_sum.cu"
+    },
+    {
+     "path": "python/sglang/kernels/aot/csrc/moe/moe_sum.cu",
+     "from": "2026-07-29",
+     "from_sha": "c32c4ef79cf5",
+     "from_pr": 32648,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "moe_sum"
+   ],
+   "introduced": {
+    "sha": "8fdcd98efefcd98a804c412d16a95e6f59f17f54",
+    "pr": 11019,
+    "date": "2025-10-11",
+    "evidence": "#11019 kernel list includes moe_sum"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "sgl_kernel.moe_sum combine",
+   "dispatch_status_history": [
+    {
+     "date": "2025-10-11",
+     "status": "optional",
+     "scope": "sgl_kernel.moe_sum combine",
+     "ref": "8fdcd98efefcd98a804c412d16a95e6f59f17f54"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "(sgl-kernel|python/sglang/kernels/aot)/.*moe_sum\\.cu"
+   ],
+   "notes": "Split from L1.reduce.sum_fusion."
+  },
+  {
+   "artifact_id": "L1.reduce.topk_sum_jit",
+   "name": "JIT topk_sum reduction",
+   "kind": "kernel",
+   "role": "Decode topk_reduce/topk_sum reduction fusion for routed outputs",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/jit/csrc/moe/topk_sum.cuh",
+     "from": "2026-08-01",
+     "from_sha": "fb207b72b02a",
+     "from_pr": 32890,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/kernels/ops/moe/moe_topk_sum.py",
+     "from": "2026-08-01",
+     "from_sha": "fb207b72b02a",
+     "from_pr": 32890,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "topk_sum_kernel",
+    "moe_topk_sum"
+   ],
+   "introduced": {
+    "sha": "fb207b72b02a2adfab3a4a18f5e3b5fa57bb1049",
+    "pr": 32890,
+    "date": "2026-08-01",
+    "evidence": "feat(kernels): port standalone Kimi K3 kernels"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "fused_marlin_moe small/decode top-k reduction",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-01",
+     "status": "optional",
+     "scope": "fused_marlin_moe small/decode top-k reduction",
+     "ref": "fb207b72b02a2adfab3a4a18f5e3b5fa57bb1049"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/(jit/csrc/moe/topk_sum\\.cuh|ops/moe/moe_topk_sum\\.py)"
+   ],
+   "notes": "Own artifact for topk_reduce/topk_sum; split from L1.reduce.sum_fusion."
+  },
+  {
+   "artifact_id": "L1.runner.triton",
+   "name": "Triton MoeRunner adapter",
+   "kind": "runner",
+   "role": "MoeRunner adapter for SGLang Triton fused MoE core",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/triton.py",
+     "from": "2025-09-05",
+     "from_sha": "3fa62da78c12",
+     "from_pr": 9269,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "TritonRunnerCore"
+   ],
+   "introduced": {
+    "sha": "3fa62da78c120be7103bfcb6fd1405d3630d6c98",
+    "pr": 9269,
+    "date": "2025-09-05",
+    "evidence": "#9269 MoE runner framework"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda",
+    "amd_mi300"
+   ],
+   "framework_interface": "--moe-runner-backend triton",
+   "dispatch_status_history": [
+    {
+     "date": "2025-09-05",
+     "status": "optional",
+     "scope": "--moe-runner-backend triton",
+     "ref": "3fa62da78c120be7103bfcb6fd1405d3630d6c98"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/moe_runner/triton\\.py"
+   ],
+   "notes": "Split from old L1.runner.triton_deepgemm."
+  },
+  {
+   "artifact_id": "L1.runner.deep_gemm",
+   "name": "DeepGEMM MoeRunner",
+   "kind": "runner",
+   "role": "MoeRunner backend for DeepGEMM grouped GEMM",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "deepseek-ai/DeepGEMM",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/deep_gemm.py",
+     "from": "2025-10-07",
+     "from_sha": "3c06b673aff9",
+     "from_pr": 11211,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/deep_gemm_sm120.py",
+     "from": "2026-09-02",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "DeepGemmRunnerCore"
+   ],
+   "introduced": {
+    "sha": "3c06b673aff98b2e3f3ae311f39f76445ff24e5f",
+    "pr": 11211,
+    "date": "2025-10-07",
+    "evidence": "#11211 implements deep_gemm MoE runner"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100",
+    "sm120"
+   ],
+   "framework_interface": "--moe-runner-backend deep_gemm; deepep_v2 requires deep_gemm",
+   "dispatch_status_history": [
+    {
+     "date": "2025-10-07",
+     "status": "optional",
+     "scope": "--moe-runner-backend deep_gemm; deepep_v2 requires deep_gemm",
+     "ref": "3c06b673aff98b2e3f3ae311f39f76445ff24e5f"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/moe_runner/deep_gemm.*\\.py"
+   ],
+   "notes": "Split from old L1.runner.triton_deepgemm."
+  },
+  {
+   "artifact_id": "L1.runner.openai_triton_kernels",
+   "name": "OpenAI triton_kernels runner",
+   "kind": "runner",
+   "role": "Adapter for external OpenAI triton_kernels MoE path",
+   "language": "Python",
+   "origin": "upstream_pip",
+   "upstream": "openai/triton-kernels",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_triton/triton_kernels_moe.py",
+     "from": "2025-07-06",
+     "from_sha": "253454de9b53",
+     "from_pr": 7689,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/triton_kernels.py",
+     "from": "2025-10-23",
+     "from_sha": "62eff37ba19a",
+     "from_pr": 11795,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "triton_kernels_moe",
+    "TritonKernelsRunnerCore"
+   ],
+   "introduced": {
+    "sha": "253454de9b53c8797076f0ad9e9118c0c9186a56",
+    "pr": 7689,
+    "date": "2025-07-06",
+    "evidence": "Integrate triton moe kernel"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "--moe-runner-backend triton_kernels",
+   "dispatch_status_history": [
+    {
+     "date": "2025-07-06",
+     "status": "optional",
+     "scope": "--moe-runner-backend triton_kernels",
+     "ref": "253454de9b53c8797076f0ad9e9118c0c9186a56"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/(fused_moe_triton/triton_kernels_moe|moe_runner/triton_kernels)\\.py"
+   ],
+   "notes": "OpenAI triton_kernels runner; split from old L1.runner.triton_deepgemm."
+  },
+  {
+   "artifact_id": "L1.runner.flashinfer_trtllm",
+   "name": "FlashInfer TRT-LLM runner",
+   "kind": "runner",
+   "role": "FlashInfer TRT-LLM routed MoE runner and layer adapter",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "flashinfer-ai/flashinfer",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/flashinfer_trtllm.py",
+     "from": "2026-01-07",
+     "from_sha": "24b30f7757f8",
+     "from_pr": 15151,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/flashinfer_trtllm_moe.py",
+     "from": "2026-03-14",
+     "from_sha": "574dbe23b25b",
+     "from_pr": 18184,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "FlashInferTrtllmRunner",
+    "flashinfer_trtllm_moe"
+   ],
+   "introduced": {
+    "sha": "24b30f7757f8dc650c8e562eef104d8eae7628e6",
+    "pr": 15151,
+    "date": "2026-01-07",
+    "evidence": "#15151 refactors fp8.py to flashinfer_trtllm"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100"
+   ],
+   "framework_interface": "--moe-runner-backend flashinfer_trtllm / routed",
+   "dispatch_status_history": [
+    {
+     "date": "2026-01-07",
+     "status": "optional",
+     "scope": "--moe-runner-backend flashinfer_trtllm / routed",
+     "ref": "24b30f7757f8dc650c8e562eef104d8eae7628e6"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/(moe_runner/flashinfer_trtllm|flashinfer_trtllm_moe)\\.py"
+   ],
+   "notes": "Split from old L1.runner.flashinfer."
+  },
+  {
+   "artifact_id": "L1.runner.flashinfer_cutedsl",
+   "name": "FlashInfer CuteDSL runner",
+   "kind": "runner",
+   "role": "FlashInfer CuteDSL FP4 MoE adapter; layer and runner are same adapter lineage",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "flashinfer-ai/flashinfer",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/flashinfer_cutedsl_moe.py",
+     "from": "2025-09-11",
+     "from_sha": "3df05f4d6ab8",
+     "from_pr": 9199,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/flashinfer_cutedsl.py",
+     "from": "2026-04-10",
+     "from_sha": "c554dc5c64b6",
+     "from_pr": 21339,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "FlashInferCuteDslMoe",
+    "CuteDslFp4MoeQuantInfo"
+   ],
+   "introduced": {
+    "sha": "3df05f4d6ab80fb78918168b71c82282a041529d",
+    "pr": 9199,
+    "date": "2025-09-11",
+    "evidence": "#9199 adds flashinfer grouped_gemm_nt_masked"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm100",
+    "sm120"
+   ],
+   "framework_interface": "--moe-runner-backend flashinfer_cutedsl",
+   "dispatch_status_history": [
+    {
+     "date": "2025-09-11",
+     "status": "optional",
+     "scope": "--moe-runner-backend flashinfer_cutedsl",
+     "ref": "3df05f4d6ab80fb78918168b71c82282a041529d"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/(flashinfer_cutedsl_moe|moe_runner/flashinfer_cutedsl)\\.py"
+   ],
+   "notes": "Same adapter lineage: 2025 layer integration then 2026 MoeRunner wrapper. Split from old L1.runner.flashinfer."
+  },
+  {
+   "artifact_id": "L1.runner.flashinfer_mxfp4",
+   "name": "FlashInfer MXFP4 runner",
+   "kind": "runner",
+   "role": "Short-lived SM90 CUTLASS W4A16/MXFP4 FlashInfer runner",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "flashinfer-ai/flashinfer",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/flashinfer_mxfp4.py",
+     "from": "2026-05-30",
+     "from_sha": "0d9a2a9de378",
+     "from_pr": 26489,
+     "to": "2026-06-25",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "merged_into:flashinfer_cutlass.py"
+    }
+   ],
+   "key_symbols": [
+    "FlashInferMxfp4Runner"
+   ],
+   "introduced": {
+    "sha": "0d9a2a9de378e0d9ed7d968cd49100d4ea0cb637",
+    "pr": 26489,
+    "date": "2026-05-30",
+    "evidence": "#26489 migrates SM90 Cutlass W4A16 to MoeRunner"
+   },
+   "ended": {
+    "sha": "212c30d00899bf3f32c5de37ffa924318a67af25",
+    "pr": 28211,
+    "date": "2026-06-25",
+    "how": "merged_into:L1.runner.flashinfer_cutlass"
+   },
+   "live_at_cutoff": false,
+   "predecessors": [],
+   "hardware": [
+    "sm90"
+   ],
+   "framework_interface": "--moe-runner-backend flashinfer_mxfp4 alias preserved through cutlass registration",
+   "dispatch_status_history": [
+    {
+     "date": "2026-05-30",
+     "status": "optional",
+     "scope": "--moe-runner-backend flashinfer_mxfp4 alias preserved through cutlass registration",
+     "ref": "0d9a2a9de378e0d9ed7d968cd49100d4ea0cb637"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/moe_runner/flashinfer_mxfp4\\.py"
+   ],
+   "notes": "Deleted/merged by #28211; split from old L1.runner.flashinfer."
+  },
+  {
+   "artifact_id": "L1.runner.flashinfer_cutlass",
+   "name": "FlashInfer CUTLASS runner",
+   "kind": "runner",
+   "role": "Centralized FlashInfer CUTLASS/MXFP4 MoE runner",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "flashinfer-ai/flashinfer",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/flashinfer_cutlass.py",
+     "from": "2026-06-25",
+     "from_sha": "212c30d00899",
+     "from_pr": 28211,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "FlashInferCutlassRunner"
+   ],
+   "introduced": {
+    "sha": "212c30d00899bf3f32c5de37ffa924318a67af25",
+    "pr": 28211,
+    "date": "2026-06-25",
+    "evidence": "#28211 centralizes FlashInfer CUTLASS MoE runner"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100",
+    "sm120"
+   ],
+   "framework_interface": "--moe-runner-backend flashinfer_cutlass / flashinfer_mxfp4 registration",
+   "dispatch_status_history": [
+    {
+     "date": "2026-06-25",
+     "status": "optional",
+     "scope": "--moe-runner-backend flashinfer_cutlass / flashinfer_mxfp4 registration",
+     "ref": "212c30d00899bf3f32c5de37ffa924318a67af25"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/moe_runner/flashinfer_cutlass\\.py"
+   ],
+   "notes": "Successor of L1.runner.flashinfer_mxfp4; split from old L1.runner.flashinfer."
+  },
+  {
+   "artifact_id": "L1.runner.flashinfer_megamoe",
+   "name": "FlashInfer MegaMOE runner",
+   "kind": "runner",
+   "role": "FlashInfer MegaMOE adapter",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "flashinfer-ai/flashinfer",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/flashinfer_megamoe.py",
+     "from": "2026-09-10",
+     "from_sha": "1b77f498a0f7",
+     "from_pr": 31470,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "flashinfer_megamoe"
+   ],
+   "introduced": {
+    "sha": "1b77f498a0f7c422782eaccd018fdd850b421cfd",
+    "pr": 31470,
+    "date": "2026-09-10",
+    "evidence": "Support flashinfer Mega Moe"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100"
+   ],
+   "framework_interface": "--moe-runner-backend flashinfer_megamoe",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-10",
+     "status": "optional",
+     "scope": "--moe-runner-backend flashinfer_megamoe",
+     "ref": "1b77f498a0f7c422782eaccd018fdd850b421cfd"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/flashinfer_megamoe\\.py"
+   ],
+   "notes": "Split from old L1.runner.flashinfer."
+  },
+  {
+   "artifact_id": "L1.runner.marlin",
+   "name": "Marlin MoE runner",
+   "kind": "runner",
+   "role": "Marlin WNA16 kernels and Python runner successor",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/marlin_moe_wna16/ops.cu",
+     "from": "2025-07-01",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2026-02-27",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_triton/fused_marlin_moe.py",
+     "from": "2025-11-21",
+     "from_sha": "fb04d4342877",
+     "from_pr": 13596,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/marlin.py",
+     "from": "2025-12-10",
+     "from_sha": "8642dbe41601",
+     "from_pr": 14554,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/kernels/ops/moe/moe_wna16_marlin.py",
+     "from": "2026-07-22",
+     "from_sha": "74338e94f10e",
+     "from_pr": 32045,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "MarlinRunnerCore",
+    "fused_marlin_moe",
+    "moe_wna16_marlin"
+   ],
+   "introduced": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2025-07-01",
+    "evidence": "path census first touch marlin_moe_wna16"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm80",
+    "sm90"
+   ],
+   "framework_interface": "--moe-runner-backend marlin",
+   "dispatch_status_history": [
+    {
+     "date": "2025-07-01",
+     "status": "optional",
+     "scope": "--moe-runner-backend marlin",
+     "ref": "unknown"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "(sgl-kernel/csrc/moe/marlin_moe_wna16/.*|python/sglang/.*/(fused_marlin_moe|marlin|moe_wna16_marlin).*\\.py)"
+   ],
+   "notes": "Split from old L1.runner.marlin_aiter_megamoe; sgl-kernel source removed #19379, Python/JIT path survives."
+  },
+  {
+   "artifact_id": "L1.runner.aiter",
+   "name": "AITER MoE runner",
+   "kind": "runner",
+   "role": "AMD AITER fused MoE runner",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "ROCm/aiter",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/aiter.py",
+     "from": "2026-04-30",
+     "from_sha": "108bfd8b6a0d",
+     "from_pr": 23597,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_triton/aiter_mxfp4_w4a8_moe.py",
+     "from": "2026-08-31",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "AiterRunnerCore",
+    "AiterMoeQuantInfo"
+   ],
+   "introduced": {
+    "sha": "108bfd8b6a0dcee9d3771581f47d5fb0fbdf474c",
+    "pr": 23597,
+    "date": "2026-04-30",
+    "evidence": "#23597 adds AITER runner"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "amd_mi300",
+    "amd_rdna"
+   ],
+   "framework_interface": "--moe-runner-backend aiter",
+   "dispatch_status_history": [
+    {
+     "date": "2026-04-30",
+     "status": "optional",
+     "scope": "--moe-runner-backend aiter",
+     "ref": "108bfd8b6a0dcee9d3771581f47d5fb0fbdf474c"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/(moe_runner/aiter|fused_moe_triton/aiter_.*moe)\\.py"
+   ],
+   "notes": "Split from old L1.runner.marlin_aiter_megamoe."
+  },
+  {
+   "artifact_id": "L1.runner.deepgemm_megamoe",
+   "name": "DeepGEMM MegaMoE adapter",
+   "kind": "runner",
+   "role": "MegaMOE/DeepSeek-V4 adapter family separate from FlashInfer MegaMOE",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/mega_moe.py",
+     "from": "2026-05-07",
+     "from_sha": "35870d55aca7",
+     "from_pr": 23882,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/mega_moe_sm90.py",
+     "from": "2026-07-30",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/mega_moe_flydsl.py",
+     "from": "2026-09-25",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "MegaMoE"
+   ],
+   "introduced": {
+    "sha": "35870d55aca7c6912aa4c785f583da4acac04938",
+    "pr": 23882,
+    "date": "2026-05-07",
+    "evidence": "Deepseek V4 adds mega_moe.py"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100"
+   ],
+   "framework_interface": "MegaMOE model/backend adapter",
+   "dispatch_status_history": [
+    {
+     "date": "2026-05-07",
+     "status": "optional",
+     "scope": "MegaMOE model/backend adapter",
+     "ref": "35870d55aca7c6912aa4c785f583da4acac04938"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/mega_moe.*\\.py"
+   ],
+   "notes": "Split from old L1.runner.marlin_aiter_megamoe."
+  },
+  {
+   "artifact_id": "L1.ep.layer",
+   "name": "EP MoE layer and Triton kernels",
+   "kind": "dispatcher",
+   "role": "EPMoE/DeepEPMoE layer and ep_moe Triton helper kernels",
+   "language": "Python|Triton",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/ep_moe/layer.py",
+     "from": "2024-12-06",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2024-12-24",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:layers/moe/ep_moe/layer.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/ep_moe/layer.py",
+     "from": "2024-12-24",
+     "from_sha": "e835a50021e0",
+     "from_pr": 2563,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/ep_moe/kernels.py",
+     "from": "2024-12-24",
+     "from_sha": "e835a50021e0",
+     "from_pr": 2563,
+     "to": "2026-07-14",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:kernels/ops/moe/ep_moe_kernels.py"
+    },
+    {
+     "path": "python/sglang/kernels/ops/moe/ep_moe_kernels.py",
+     "from": "2026-07-14",
+     "from_sha": "ee464fedc63e",
+     "from_pr": 30786,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "EPMoE",
+    "DeepEPMoE",
+    "ep_moe_kernels"
+   ],
+   "introduced": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2024-12-06",
+    "evidence": "path census first touch ep_moe layer"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda",
+    "amd_mi300"
+   ],
+   "framework_interface": "EP MoE layer; helper kernels moved to kernels.ops.moe",
+   "dispatch_status_history": [
+    {
+     "date": "2024-12-06",
+     "status": "optional",
+     "scope": "EP MoE layer; helper kernels moved to kernels.ops.moe",
+     "ref": "unknown"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/(ep_moe|moe/ep_moe)/(layer|kernels)\\.py",
+    "python/sglang/kernels/ops/moe/ep_moe_kernels\\.py"
+   ],
+   "notes": "Split from old L1.ep.dispatch."
+  },
+  {
+   "artifact_id": "L1.ep.deepep_dispatcher",
+   "name": "DeepEP token dispatcher adapter",
+   "kind": "dispatcher",
+   "role": "DeepEP token dispatcher adapter",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "deepseek-ai/DeepEP",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/ep_moe/token_dispatcher.py",
+     "from": "2025-03-19",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2025-08-01",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "split_to:token_dispatcher/deepep.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/token_dispatcher/deepep.py",
+     "from": "2025-08-01",
+     "from_sha": "6c88f6c8d908",
+     "from_pr": 8658,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/token_dispatcher/deepep_v2.py",
+     "from": "2026-08-19",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "DeepEPDispatcher"
+   ],
+   "introduced": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2025-03-19",
+    "evidence": "path census first touch ep_moe/token_dispatcher.py"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "--moe-a2a-backend deepep/deepep_v2",
+   "dispatch_status_history": [
+    {
+     "date": "2025-03-19",
+     "status": "optional",
+     "scope": "--moe-a2a-backend deepep/deepep_v2",
+     "ref": "unknown"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/(ep_moe/token_dispatcher|token_dispatcher/deepep.*)\\.py"
+   ],
+   "notes": "Split from old L1.ep.dispatch."
+  },
+  {
+   "artifact_id": "L1.ep.other_dispatchers",
+   "name": "Other a2a token dispatchers",
+   "kind": "dispatcher",
+   "role": "Mooncake, FlashInfer, MorIEP, NIXL, FuseEP, PPLX token dispatcher adapters",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/token_dispatcher/mooncake.py",
+     "from": "2025-10-14",
+     "from_sha": "a40229f6f828",
+     "from_pr": 10423,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/token_dispatcher/fuseep.py",
+     "from": "2025-11-25",
+     "from_sha": "432ecf841e26",
+     "from_pr": 12078,
+     "to": "2026-05-21",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/token_dispatcher/flashinfer.py",
+     "from": "2026-01-24",
+     "from_sha": "2c2c4e446b99",
+     "from_pr": 14668,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/token_dispatcher/moriep.py",
+     "from": "2026-01-28",
+     "from_sha": "f1384f5293ce",
+     "from_pr": 17012,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/token_dispatcher/nixl.py",
+     "from": "2026-03-11",
+     "from_sha": "9991debde37b",
+     "from_pr": 19248,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "MooncakeDispatcher",
+    "FlashInferDispatcher",
+    "MorIEP",
+    "NIXL",
+    "FuseEP"
+   ],
+   "introduced": {
+    "sha": "a40229f6f8285e814d9ba8f3469eb99968c85b2e",
+    "pr": 10423,
+    "date": "2025-10-14",
+    "evidence": "Introduce Mooncake Backend and Mooncake EP"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda",
+    "npu"
+   ],
+   "framework_interface": "--moe-a2a-backend mooncake/flashinfer/moriep/nixl/fuseep/pplx",
+   "dispatch_status_history": [
+    {
+     "date": "2025-10-14",
+     "status": "optional",
+     "scope": "--moe-a2a-backend mooncake/flashinfer/moriep/nixl/fuseep/pplx",
+     "ref": "a40229f6f8285e814d9ba8f3469eb99968c85b2e"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/token_dispatcher/(mooncake|flashinfer|moriep|nixl|fuseep|pplx)\\.py"
+   ],
+   "notes": "Split from old L1.ep.dispatch."
+  },
+  {
+   "artifact_id": "L1.ep.reorder_aot",
+   "name": "AOT EP reorder/SwiGLU kernels",
+   "kind": "kernel",
+   "role": "Short-lived sgl-kernel EP pre/post reorder and silu/mul kernels",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/moe/ep_moe_reorder_kernel.cu",
+     "from": "2025-06-01",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2025-09-06",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    },
+    {
+     "path": "sgl-kernel/csrc/moe/ep_moe_silu_and_mul_kernel.cu",
+     "from": "2025-06-11",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2025-09-06",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    }
+   ],
+   "key_symbols": [
+    "ep_moe_reorder_kernel",
+    "ep_moe_silu_and_mul_kernel"
+   ],
+   "introduced": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2025-06-01",
+    "evidence": "path census first touch ep_moe_reorder_kernel.cu"
+   },
+   "ended": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2025-09-06",
+    "how": "removed/replaced_by:L1.ep.layer"
+   },
+   "live_at_cutoff": false,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "AOT helper kernels later superseded by EP/Triton helpers",
+   "dispatch_status_history": [
+    {
+     "date": "2025-06-01",
+     "status": "optional",
+     "scope": "AOT helper kernels later superseded by EP/Triton helpers",
+     "ref": "unknown"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/csrc/moe/ep_moe_(reorder|silu_and_mul)_kernel\\.cu"
+   ],
+   "notes": "Split from old L1.ep.dispatch; deleted 2025-09-06 with no live AOT successor."
+  },
+  {
+   "artifact_id": "L1.upstream.deepep",
+   "name": "DeepEP upstream package",
+   "kind": "upstream_kernel",
+   "role": "External DeepEP communication kernels/library",
+   "language": "other",
+   "origin": "upstream_pip",
+   "upstream": "deepseek-ai/DeepEP",
+   "path_history": [
+    {
+     "path": "python/pyproject.toml",
+     "from": "2026-08-07",
+     "from_sha": "eb3cc879e0cd",
+     "from_pr": 33932,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "sgl-deep-ep"
+   ],
+   "introduced": {
+    "sha": "eb3cc879e0cd417212e55680979d25c0ca44da36",
+    "pr": 33932,
+    "date": "2026-08-07",
+    "evidence": "Install DeepEP from release wheels"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "pin: python/pyproject.toml sgl-deep-ep==0.1.2",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-07",
+     "status": "optional",
+     "scope": "pin: python/pyproject.toml sgl-deep-ep==0.1.2",
+     "ref": "eb3cc879e0cd417212e55680979d25c0ca44da36"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/pyproject\\.toml"
+   ],
+   "notes": "Replaces old L1.upstream.external_libs."
+  },
+  {
+   "artifact_id": "L1.upstream.deepgemm",
+   "name": "DeepGEMM upstream package",
+   "kind": "upstream_kernel",
+   "role": "External DeepGEMM kernels/library",
+   "language": "other",
+   "origin": "upstream_pip",
+   "upstream": "deepseek-ai/DeepGEMM",
+   "path_history": [
+    {
+     "path": "python/pyproject.toml",
+     "from": "2026-05-06",
+     "from_sha": "ecb786c8d719",
+     "from_pr": 24268,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "sgl-deep-gemm"
+   ],
+   "introduced": {
+    "sha": "ecb786c8d719a7a7fd981369b0d89453e75999bb",
+    "pr": 24268,
+    "date": "2026-05-06",
+    "evidence": "Deprecate DeepGemm in sgl kernel and apply custom wheel sgl-deep-gemm"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100"
+   ],
+   "framework_interface": "pin: python/pyproject.toml sgl-deep-gemm==0.2.0",
+   "dispatch_status_history": [
+    {
+     "date": "2026-05-06",
+     "status": "optional",
+     "scope": "pin: python/pyproject.toml sgl-deep-gemm==0.2.0",
+     "ref": "ecb786c8d719a7a7fd981369b0d89453e75999bb"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/pyproject\\.toml"
+   ],
+   "notes": "Replaces old L1.upstream.external_libs."
+  },
+  {
+   "artifact_id": "L1.upstream.flashinfer_moe",
+   "name": "FlashInfer MoE upstream package",
+   "kind": "upstream_kernel",
+   "role": "External FlashInfer MoE/TRTLLM/CUTLASS/CuteDSL kernels",
+   "language": "CUDA C++|CuTe DSL",
+   "origin": "upstream_pip",
+   "upstream": "flashinfer-ai/flashinfer",
+   "path_history": [
+    {
+     "path": "python/pyproject.toml",
+     "from": "2025-02-04",
+     "from_sha": "d39899e85c5c",
+     "from_pr": 3288,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "flashinfer_python"
+   ],
+   "introduced": {
+    "sha": "d39899e85c5c29b3aeb2ea36d19f59214de60336",
+    "pr": 3288,
+    "date": "2025-02-04",
+    "evidence": "upgrade flashinfer v0.2.0.post2"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100",
+    "sm120"
+   ],
+   "framework_interface": "pin: python/pyproject.toml flashinfer_python[cu13]==0.6.18 at cutoff",
+   "dispatch_status_history": [
+    {
+     "date": "2025-02-04",
+     "status": "optional",
+     "scope": "pin: python/pyproject.toml flashinfer_python[cu13]==0.6.18 at cutoff",
+     "ref": "d39899e85c5c29b3aeb2ea36d19f59214de60336"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/pyproject\\.toml"
+   ],
+   "notes": "Replaces old L1.upstream.external_libs; current pin touched by #10465."
+  },
+  {
+   "artifact_id": "L1.upstream.openai_triton_kernels",
+   "name": "OpenAI triton_kernels upstream",
+   "kind": "upstream_kernel",
+   "role": "External OpenAI triton_kernels MoE package",
+   "language": "Triton",
+   "origin": "upstream_pip",
+   "upstream": "openai/triton-kernels",
+   "path_history": [],
+   "key_symbols": [
+    "triton_kernels"
+   ],
+   "introduced": {
+    "sha": "253454de9b53c8797076f0ad9e9118c0c9186a56",
+    "pr": 7689,
+    "date": "2025-07-06",
+    "evidence": "Integrate triton moe kernel"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "No pinned dependency file found in python/pyproject at cutoff; imported by triton_kernels_moe.py",
+   "dispatch_status_history": [
+    {
+     "date": "2025-07-06",
+     "status": "optional",
+     "scope": "No pinned dependency file found in python/pyproject at cutoff; imported by triton_kernels_moe.py",
+     "ref": "253454de9b53c8797076f0ad9e9118c0c9186a56"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/fused_moe_triton/triton_kernels_moe\\.py"
+   ],
+   "notes": "Replaces old L1.upstream.external_libs; pin evidence unresolved."
+  },
+  {
+   "artifact_id": "L1.upstream.aiter_moe",
+   "name": "AITER upstream MoE",
+   "kind": "upstream_kernel",
+   "role": "External ROCm AITER fused MoE kernels",
+   "language": "HIP/CUDA",
+   "origin": "upstream_pip",
+   "upstream": "ROCm/aiter",
+   "path_history": [],
+   "key_symbols": [
+    "aiter.fused_moe"
+   ],
+   "introduced": {
+    "sha": "108bfd8b6a0dcee9d3771581f47d5fb0fbdf474c",
+    "pr": 23597,
+    "date": "2026-04-30",
+    "evidence": "#23597 adds AITER runner backend"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "amd_mi300",
+    "amd_rdna"
+   ],
+   "framework_interface": "No pinned dependency file found; optional import from aiter/aiter.fused_moe",
+   "dispatch_status_history": [
+    {
+     "date": "2026-04-30",
+     "status": "optional",
+     "scope": "No pinned dependency file found; optional import from aiter/aiter.fused_moe",
+     "ref": "108bfd8b6a0dcee9d3771581f47d5fb0fbdf474c"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/moe_runner/aiter\\.py"
+   ],
+   "notes": "Replaces old L1.upstream.external_libs; pin evidence unresolved."
+  },
+  {
+   "artifact_id": "L1.triton.fused_moe_patch",
+   "name": "fused_moe_patch adapter",
+   "kind": "adapter",
+   "role": "Patch helper around fused_moe during pre-moe reorg layout",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/fused_moe/patch.py",
+     "from": "2024-09-24",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": "2024-11-24",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:python/sglang/srt/layers/fused_moe_patch.py"
+    },
+    {
+     "path": "python/sglang/srt/layers/fused_moe_patch.py",
+     "from": "2024-11-24",
+     "from_sha": "5652c565352c",
+     "from_pr": 2159,
+     "to": "2024-12-24",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    }
+   ],
+   "key_symbols": [
+    "fused_moe_patch"
+   ],
+   "introduced": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2024-09-24",
+    "evidence": "path census first touch fused_moe/patch.py"
+   },
+   "ended": {
+    "sha": "e835a50021e03bf7c14b8af68b210189bb6e768b",
+    "pr": 2563,
+    "date": "2024-12-24",
+    "how": "removed"
+   },
+   "live_at_cutoff": false,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "patch/helper module for fused_moe package",
+   "dispatch_status_history": [
+    {
+     "date": "2024-09-24",
+     "status": "optional",
+     "scope": "patch/helper module for fused_moe package",
+     "ref": "unknown"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/(fused_moe/patch|fused_moe_patch)\\.py"
+   ],
+   "notes": "Added per request; ended in #2563 reorg."
+  },
+  {
+   "artifact_id": "L1.triton.grok_variant",
+   "name": "Grok fused MoE variant",
+   "kind": "kernel",
+   "role": "Short-lived Grok-specific fused MoE Triton variant",
+   "language": "Triton",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/fused_moe_grok/fused_moe.py",
+     "from": "2024-11-24",
+     "from_sha": "be0124bda09d",
+     "from_pr": 2163,
+     "to": "2024-11-27",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    },
+    {
+     "path": "python/sglang/srt/layers/fused_moe_grok/layer.py",
+     "from": "2024-11-24",
+     "from_sha": "be0124bda09d",
+     "from_pr": 2163,
+     "to": "2024-11-27",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "deleted"
+    }
+   ],
+   "key_symbols": [
+    "fused_moe_grok"
+   ],
+   "introduced": {
+    "sha": "be0124bda09dc10267f6cbbcb097bf14dd4fd8b6",
+    "pr": 2163,
+    "date": "2024-11-24",
+    "evidence": "path census first touch Grok branch"
+   },
+   "ended": {
+    "sha": "unknown",
+    "pr": null,
+    "date": "2024-11-27",
+    "how": "removed"
+   },
+   "live_at_cutoff": false,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda",
+    "amd_mi300"
+   ],
+   "framework_interface": "Grok layer variant",
+   "dispatch_status_history": [
+    {
+     "date": "2024-11-24",
+     "status": "optional",
+     "scope": "Grok layer variant",
+     "ref": "be0124bda09dc10267f6cbbcb097bf14dd4fd8b6"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/fused_moe_grok/.*\\.py"
+   ],
+   "notes": "Previously lumped in L1.ref.native_grok; successor unclear."
+  },
+  {
+   "artifact_id": "L1.routing.router_py",
+   "name": "MoE router.py Triton kernels",
+   "kind": "kernel",
+   "role": "MoE router helper kernels moved to kernels.ops.moe/router.py",
+   "language": "Triton|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/router.py",
+     "from": "2025-03-13",
+     "from_sha": "c6d7f8d37080",
+     "from_pr": 4398,
+     "to": "2026-07-14",
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "moved_to:python/sglang/kernels/ops/moe/router.py"
+    },
+    {
+     "path": "python/sglang/kernels/ops/moe/router.py",
+     "from": "2026-07-14",
+     "from_sha": "ee464fedc63e",
+     "from_pr": 30786,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "router"
+   ],
+   "introduced": {
+    "sha": "c6d7f8d37080967ca7b61c2b8e3723130873c7cb",
+    "pr": 4398,
+    "date": "2025-03-13",
+    "evidence": "Add fused elementwise kernels for grok-1"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda",
+    "amd_mi300"
+   ],
+   "framework_interface": "MoE router helper under kernels.ops.moe, not request router",
+   "dispatch_status_history": [
+    {
+     "date": "2025-03-13",
+     "status": "optional",
+     "scope": "MoE router helper under kernels.ops.moe, not request router",
+     "ref": "c6d7f8d37080967ca7b61c2b8e3723130873c7cb"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/(srt/layers/moe|kernels/ops/moe)/router\\.py"
+   ],
+   "notes": "Kept as MoE routing artifact; distinct from request router excluded entry."
+  },
+  {
+   "artifact_id": "L1.cutlass.adapters",
+   "name": "CUTLASS MoE Python adapters",
+   "kind": "adapter",
+   "role": "Python adapters and params for CUTLASS FP8/W4A8 MoE families",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "cutlass",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/cutlass_moe.py",
+     "from": "2025-05-16",
+     "from_sha": "6fc935750336",
+     "from_pr": 5694,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/cutlass_moe_params.py",
+     "from": "2025-06-05",
+     "from_sha": "unknown",
+     "from_pr": null,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    },
+    {
+     "path": "python/sglang/srt/layers/moe/cutlass_w4a8_moe.py",
+     "from": "2025-07-07",
+     "from_sha": "cb9d91ea8a71",
+     "from_pr": 7762,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live"
+    }
+   ],
+   "key_symbols": [
+    "CutlassMoE",
+    "cutlass_w4a8_moe",
+    "CutlassMoEParams"
+   ],
+   "introduced": {
+    "sha": "6fc93575033676ab754ce579065ae642bf1f98a8",
+    "pr": 5694,
+    "date": "2025-05-16",
+    "evidence": "#5694 adds Python wrapper for CUTLASS FP8 Blockscale MoE"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [
+    {
+     "artifact_id": "L1.cutlass.fp8_blockwise",
+     "relation": "wraps",
+     "evidence": "cutlass_moe.py wraps FP8 blockwise CUTLASS kernel",
+     "evidence_ref": "PR 5694"
+    },
+    {
+     "artifact_id": "L1.cutlass.w4a8",
+     "relation": "wraps",
+     "evidence": "cutlass_w4a8_moe.py wraps W4A8 CUTLASS kernels",
+     "evidence_ref": "PR 7762"
+    }
+   ],
+   "hardware": [
+    "sm90",
+    "sm100"
+   ],
+   "framework_interface": "cutlass_moe.py/cutlass_w4a8_moe.py adapters used by quant methods and MoeRunner paths",
+   "dispatch_status_history": [
+    {
+     "date": "2025-05-16",
+     "status": "optional",
+     "scope": "CUTLASS MoE quantized backends",
+     "ref": "6fc93575"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/cutlass(_w4a8)?_moe\\.py",
+    "python/sglang/srt/layers/moe/cutlass_moe_params\\.py"
+   ],
+   "notes": "Separate adapter artifact per user request; avoids duplicating kernel-family artifacts."
+  },
+  {
+   "artifact_id": "L1.output.moe_reduction",
+   "name": "Shared MoE output reduction protocol",
+   "kind": "adapter",
+   "role": "Deferred/completed MoE FFN output all-reduce/reduce-scatter protocol",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/utils.py",
+     "from_sha": "1e8699fda39f",
+     "from_pr": 32963,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-09-18"
+    }
+   ],
+   "key_symbols": [
+    "UnreducedOutput",
+    "maybe_reduce_output"
+   ],
+   "introduced": {
+    "sha": "1e8699fda39f",
+    "pr": 32963,
+    "date": "2026-09-18",
+    "evidence": "PR #32963: Merge EP+MoE-TP post-experts all-reduces; later shared/refined by #41097/#41195/#41196/#41200."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Deferred/completed MoE FFN output all-reduce/reduce-scatter protocol",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-18",
+     "status": "optional",
+     "scope": "Deferred/completed MoE FFN output all-reduce/reduce-scatter protocol",
+     "ref": "1e8699fda39f"
+    }
+   ],
+   "tests": [
+    "test/registered/unit/layers/moe/test_moe_output_reduction.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/(utils|__init__)\\.py"
+   ],
+   "notes": "Merge EP+MoE-TP post-experts all-reduces; later shared/refined by #41097/#41195/#41196/#41200.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.fusion.cutedsl_ar",
+   "name": "CuTe DSL all-reduce/MoE finalize fusion",
+   "kind": "adapter",
+   "role": "CuTe DSL fused prepare/finalize/all-reduce hooks for MoE layer boundaries",
+   "language": "Python|CuTe DSL",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/cutedsl_ar_fusion.py",
+     "from_sha": "3177d10ca6f7",
+     "from_pr": 39816,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-09-24"
+    }
+   ],
+   "key_symbols": [
+    "CuTeDSLARFusion",
+    "prepare_mlp"
+   ],
+   "introduced": {
+    "sha": "3177d10ca6f7",
+    "pr": 39816,
+    "date": "2026-09-24",
+    "evidence": "PR #39816: Refactor Cute-DSL AR fusion to support DeepseekV2 archs; follow-up contract refactors #41252/#41418/#41431/#41442."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100"
+   ],
+   "framework_interface": "CuTe DSL fused prepare/finalize/all-reduce hooks for MoE layer boundaries",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-24",
+     "status": "optional",
+     "scope": "CuTe DSL fused prepare/finalize/all-reduce hooks for MoE layer boundaries",
+     "ref": "3177d10ca6f7"
+    }
+   ],
+   "tests": [
+    "test/registered/unit/layers/moe/test_cutedsl_ar_fusion.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/cutedsl_ar_fusion\\.py"
+   ],
+   "notes": "Refactor Cute-DSL AR fusion to support DeepseekV2 archs; follow-up contract refactors #41252/#41418/#41431/#41442.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.lora.moe_align_jit",
+   "name": "MoE LoRA JIT alignment kernel",
+   "kind": "kernel",
+   "role": "JIT alignment kernel/wrapper for per-expert MoE LoRA tokens",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/jit_kernel/csrc/lora/moe_lora_align_kernel.cu",
+     "from_sha": "af2807e14616",
+     "from_pr": 19710,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-03-12"
+    }
+   ],
+   "key_symbols": [
+    "moe_lora_align_kernel",
+    "moe_lora_align"
+   ],
+   "introduced": {
+    "sha": "af2807e14616",
+    "pr": 19710,
+    "date": "2026-03-12",
+    "evidence": "PR #19710: Added MOE LoRA JIT alignment kernel; #36379 moved/built it under kernels/jit for ROCm."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda",
+    "amd_mi300"
+   ],
+   "framework_interface": "JIT alignment kernel/wrapper for per-expert MoE LoRA tokens",
+   "dispatch_status_history": [
+    {
+     "date": "2026-03-12",
+     "status": "optional",
+     "scope": "JIT alignment kernel/wrapper for per-expert MoE LoRA tokens",
+     "ref": "af2807e14616"
+    }
+   ],
+   "tests": [
+    "python/sglang/jit_kernel/tests/test_moe_lora_align_block_size.py",
+    "test/registered/kernels/ops/moe/test_moe_lora_align_block_size.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/(jit_kernel|kernels/jit)/csrc/lora/moe_lora_align_kernel\\.cu",
+    "python/sglang/jit_kernel/moe_lora_align\\.py"
+   ],
+   "notes": "Added MOE LoRA JIT alignment kernel; #36379 moved/built it under kernels/jit for ROCm.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.state.routed_experts_capturer",
+   "name": "Routed-experts DP state capturer",
+   "kind": "adapter",
+   "role": "Captures routed-experts DP slicing state without implicit CUDA sync",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/state_capturer/routed_experts.py",
+     "from_sha": "4a279d9c362",
+     "from_pr": 24550,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-05-06"
+    }
+   ],
+   "key_symbols": [
+    "RoutedExpertsCapturer"
+   ],
+   "introduced": {
+    "sha": "4a279d9c362",
+    "pr": 24550,
+    "date": "2026-05-06",
+    "evidence": "PR #24550: Avoid implicit CUDA sync in routed experts DP slicing; #26123 fixes buffer overflow."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Captures routed-experts DP slicing state without implicit CUDA sync",
+   "dispatch_status_history": [
+    {
+     "date": "2026-05-06",
+     "status": "optional",
+     "scope": "Captures routed-experts DP slicing state without implicit CUDA sync",
+     "ref": "4a279d9c362"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/state_capturer/routed_experts\\.py"
+   ],
+   "notes": "Avoid implicit CUDA sync in routed experts DP slicing; #26123 fixes buffer overflow.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.finalize.moe_finalize_fuse_shared",
+   "name": "JIT MoE finalize fused with shared add",
+   "kind": "kernel",
+   "role": "JIT kernel fusing deferred MoE finalize with shared/main-stream add",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/jit_kernel/csrc/moe/moe_finalize_fuse_shared.cu",
+     "from_sha": "d1a39b0c74ed",
+     "from_pr": 27720,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-06-12"
+    }
+   ],
+   "key_symbols": [
+    "moe_finalize_fuse_shared"
+   ],
+   "introduced": {
+    "sha": "d1a39b0c74ed",
+    "pr": 27720,
+    "date": "2026-06-12",
+    "evidence": "PR #27720: Defer moe finalize and fuse it with main stream add; #38612 accepts fp32 routing weights."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "JIT kernel fusing deferred MoE finalize with shared/main-stream add",
+   "dispatch_status_history": [
+    {
+     "date": "2026-06-12",
+     "status": "optional",
+     "scope": "JIT kernel fusing deferred MoE finalize with shared/main-stream add",
+     "ref": "d1a39b0c74ed"
+    }
+   ],
+   "tests": [
+    "test/registered/kernels/ops/kimi_k3/test_ar_fusion.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/(jit_kernel|kernels/jit)/csrc/moe/moe_finalize_fuse_shared\\.cu",
+    "python/sglang/jit_kernel/moe_finalize_fuse_shared\\.py"
+   ],
+   "notes": "Defer moe finalize and fuse it with main stream add; #38612 accepts fp32 routing weights.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.runner.humming",
+   "name": "Humming MoE runner and permute/prepare kernels",
+   "kind": "runner",
+   "role": "Humming quantized MoE runner with permute prepare and FP8 DeepEP dispatch hooks",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/humming.py",
+     "from_sha": "423b8485fbf4",
+     "from_pr": 23754,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-07-14"
+    }
+   ],
+   "key_symbols": [
+    "HummingRunner",
+    "moe_permute_prepare"
+   ],
+   "introduced": {
+    "sha": "423b8485fbf4",
+    "pr": 23754,
+    "date": "2026-07-14",
+    "evidence": "PR #23754: Added humming quantization kernel; #31429 adds FP8 DeepEP dispatch."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Humming quantized MoE runner with permute prepare and FP8 DeepEP dispatch hooks",
+   "dispatch_status_history": [
+    {
+     "date": "2026-07-14",
+     "status": "optional",
+     "scope": "Humming quantized MoE runner with permute prepare and FP8 DeepEP dispatch hooks",
+     "ref": "423b8485fbf4"
+    }
+   ],
+   "tests": [
+    "test/registered/kernels/ops/moe/test_humming_fp8_dispatch.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/moe_runner/humming\\.py",
+    "python/sglang/(jit_kernel|kernels/jit)/csrc/moe/moe_permute_prepare\\.cu"
+   ],
+   "notes": "Added humming quantization kernel; #31429 adds FP8 DeepEP dispatch.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.model.inkling_moe",
+   "name": "Inkling MoE activation kernels",
+   "kind": "kernel",
+   "role": "Inkling-specific MoE activation/silu-and-mul path",
+   "language": "Triton|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/moe/inkling_moe.py",
+     "from_sha": "02cd44c59a69",
+     "from_pr": 33108,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-08-05"
+    }
+   ],
+   "key_symbols": [
+    "inkling_silu_and_mul"
+   ],
+   "introduced": {
+    "sha": "02cd44c59a69",
+    "pr": 33108,
+    "date": "2026-08-05",
+    "evidence": "PR #33108: Add inkling-small MoE support for sm_121; #33903 replaces Helion with Triton."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100",
+    "sm120"
+   ],
+   "framework_interface": "Inkling-specific MoE activation/silu-and-mul path",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-05",
+     "status": "optional",
+     "scope": "Inkling-specific MoE activation/silu-and-mul path",
+     "ref": "02cd44c59a69"
+    }
+   ],
+   "tests": [
+    "test/registered/kernels/ops/moe/test_inkling_silu_and_mul.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/moe/inkling_moe\\.py"
+   ],
+   "notes": "Add inkling-small MoE support for sm_121; #33903 replaces Helion with Triton.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.expert_pack_mxfp4",
+   "name": "Expert-pack MXFP4 JIT kernels",
+   "kind": "kernel",
+   "role": "MXFP4 expert-pack kernels and Python op for DSV4/Kimi-K3",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/jit/csrc/moe/expert_pack_mxfp4.cu",
+     "from_sha": "2d8484740d5e",
+     "from_pr": 35314,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-08-26"
+    }
+   ],
+   "key_symbols": [
+    "expert_pack_mxfp4"
+   ],
+   "introduced": {
+    "sha": "2d8484740d5e",
+    "pr": 35314,
+    "date": "2026-08-26",
+    "evidence": "PR #35314: Support deepseek v4 and kimi k3 on ssd; #38830 ports to load_jit."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm100",
+    "sm120"
+   ],
+   "framework_interface": "MXFP4 expert-pack kernels and Python op for DSV4/Kimi-K3",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-26",
+     "status": "optional",
+     "scope": "MXFP4 expert-pack kernels and Python op for DSV4/Kimi-K3",
+     "ref": "2d8484740d5e"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/jit/csrc/moe/expert_pack_mxfp4\\.(cu|cuh)",
+    "python/sglang/kernels/ops/moe/expert_pack_mxfp4\\.py",
+    "python/sglang/srt/layers/moe/expert_pack\\.py"
+   ],
+   "notes": "Support deepseek v4 and kimi k3 on ssd; #38830 ports to load_jit.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.router.dsv3_gemm_aot",
+   "name": "DSV3 AOT router GEMM kernels",
+   "kind": "kernel",
+   "role": "AOT CUDA router GEMM/fused-A GEMM for DeepSeek V3 routing",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/gemm/dsv3_router_gemm.cu",
+     "from_sha": "7248272ccc21",
+     "from_pr": 7627,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2025-06-29"
+    }
+   ],
+   "key_symbols": [
+    "dsv3_router_gemm"
+   ],
+   "introduced": {
+    "sha": "7248272ccc21",
+    "pr": 7627,
+    "date": "2025-06-29",
+    "evidence": "PR #7627: Added dsv3 router gemm; #30280 deletes sgl-kernel AOT router GEMM and leaves JIT path."
+   },
+   "ended": {
+    "sha": "03342e77325c",
+    "pr": 30280,
+    "date": "2026-07-22",
+    "how": "replaced_by:JIT wrapper"
+   },
+   "live_at_cutoff": false,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "AOT CUDA router GEMM/fused-A GEMM for DeepSeek V3 routing",
+   "dispatch_status_history": [
+    {
+     "date": "2025-06-29",
+     "status": "removed",
+     "scope": "AOT CUDA router GEMM/fused-A GEMM for DeepSeek V3 routing",
+     "ref": "7248272ccc21"
+    }
+   ],
+   "tests": [
+    "sgl-kernel/tests/test_dsv3_router_gemm.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/csrc/gemm/dsv3_.*router_gemm.*\\.cu",
+    "python/sglang/jit_kernel/dsv3_router_gemm\\.py"
+   ],
+   "notes": "Added dsv3 router gemm; #30280 deletes sgl-kernel AOT router GEMM and leaves JIT path.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.modelopt_fp4_moe",
+   "name": "ModelOpt FP4 MoE quantization adapter",
+   "kind": "adapter",
+   "role": "ModelOpt FP4 MoE quantization and routed_scaling_factor handling",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/modelopt_quant.py",
+     "from_sha": "58c468f4045e",
+     "from_pr": 8333,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2025-07-25"
+    }
+   ],
+   "key_symbols": [
+    "routed_scaling_factor"
+   ],
+   "introduced": {
+    "sha": "58c468f4045e",
+    "pr": 8333,
+    "date": "2025-07-25",
+    "evidence": "PR #8333: Fix FP4 MoE accuracy from missing routed_scaling_factor."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "ModelOpt FP4 MoE quantization and routed_scaling_factor handling",
+   "dispatch_status_history": [
+    {
+     "date": "2025-07-25",
+     "status": "optional",
+     "scope": "ModelOpt FP4 MoE quantization and routed_scaling_factor handling",
+     "ref": "58c468f4045e"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/modelopt_quant\\.py"
+   ],
+   "notes": "Fix FP4 MoE accuracy from missing routed_scaling_factor.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.nvfp4_expert_quant",
+   "name": "NVFP4 expert quantization kernel",
+   "kind": "kernel",
+   "role": "AOT FP4/NVFP4 expert quantization kernel for MoE",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "sgl-kernel/csrc/gemm/nvfp4_expert_quant.cu",
+     "from_sha": "4fc09e0df0f0",
+     "from_pr": 8777,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2025-08-15"
+    }
+   ],
+   "key_symbols": [
+    "nvfp4_expert_quant"
+   ],
+   "introduced": {
+    "sha": "4fc09e0df0f0",
+    "pr": 8777,
+    "date": "2025-08-15",
+    "evidence": "PR #8777: Fp4 MOE quant kernel optimization."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "AOT FP4/NVFP4 expert quantization kernel for MoE",
+   "dispatch_status_history": [
+    {
+     "date": "2025-08-15",
+     "status": "optional",
+     "scope": "AOT FP4/NVFP4 expert quantization kernel for MoE",
+     "ref": "4fc09e0df0f0"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "sgl-kernel/csrc/gemm/nvfp4_expert_quant\\.cu"
+   ],
+   "notes": "Fp4 MOE quant kernel optimization.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.w8a8_fp8_moe",
+   "name": "W8A8 FP8 MoE quantization adapter",
+   "kind": "adapter",
+   "role": "W8A8 FP8 quantization method behavior for fused MoE",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/w8a8_fp8.py",
+     "from_sha": "2f8ba6fe82be",
+     "from_pr": 10429,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2025-09-14"
+    }
+   ],
+   "key_symbols": [
+    "W8A8Fp8Config"
+   ],
+   "introduced": {
+    "sha": "2f8ba6fe82be",
+    "pr": 10429,
+    "date": "2025-09-14",
+    "evidence": "PR #10429: Fix w8a8_fp8 MoE and add tests."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "W8A8 FP8 quantization method behavior for fused MoE",
+   "dispatch_status_history": [
+    {
+     "date": "2025-09-14",
+     "status": "optional",
+     "scope": "W8A8 FP8 quantization method behavior for fused MoE",
+     "ref": "2f8ba6fe82be"
+    }
+   ],
+   "tests": [
+    "test/srt/quant/test_w8a8_quantization.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/w8a8_fp8\\.py"
+   ],
+   "notes": "Fix w8a8_fp8 MoE and add tests.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.ep.ktransformers_wrapper",
+   "name": "KTransformers EP wrapper",
+   "kind": "adapter",
+   "role": "KTransformers heterogeneous EP wrapper around fused MoE/GPU quantization backend",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/kt_ep_wrapper.py",
+     "from_sha": "ddd1440d0f02",
+     "from_pr": 12834,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2025-11-09"
+    }
+   ],
+   "key_symbols": [
+    "KTransformersEPWrapper"
+   ],
+   "introduced": {
+    "sha": "ddd1440d0f02",
+    "pr": 12834,
+    "date": "2025-11-09",
+    "evidence": "PR #12834: Refactor KTransformers heterogeneous compute with unified GPU-quantization backend."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "KTransformers heterogeneous EP wrapper around fused MoE/GPU quantization backend",
+   "dispatch_status_history": [
+    {
+     "date": "2025-11-09",
+     "status": "optional",
+     "scope": "KTransformers heterogeneous EP wrapper around fused MoE/GPU quantization backend",
+     "ref": "ddd1440d0f02"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/kt_ep_wrapper\\.py"
+   ],
+   "notes": "Refactor KTransformers heterogeneous compute with unified GPU-quantization backend.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.rocm_int4fp8_moe",
+   "name": "ROCm int4-fp8 MoE online quantization method",
+   "kind": "adapter",
+   "role": "ROCm int4/fp8 online quantization method for MoE layers",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/quark_int4fp8_moe.py",
+     "from_sha": "5af84c8af554",
+     "from_pr": 7392,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-01-14"
+    }
+   ],
+   "key_symbols": [
+    "int4fp8_moe"
+   ],
+   "introduced": {
+    "sha": "5af84c8af554",
+    "pr": 7392,
+    "date": "2026-01-14",
+    "evidence": "PR #7392: Add int4fp8_moe online quantization on ROCm."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "amd_mi300"
+   ],
+   "framework_interface": "ROCm int4/fp8 online quantization method for MoE layers",
+   "dispatch_status_history": [
+    {
+     "date": "2026-01-14",
+     "status": "optional",
+     "scope": "ROCm int4/fp8 online quantization method for MoE layers",
+     "ref": "5af84c8af554"
+    }
+   ],
+   "tests": [
+    "test/srt/test_int4fp8_moe.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/quark_int4fp8_moe\\.py"
+   ],
+   "notes": "Add int4fp8_moe online quantization on ROCm.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.compressed_tensors_moe",
+   "name": "Compressed-tensors MoE quantization scheme",
+   "kind": "adapter",
+   "role": "Compressed-tensors MoE scheme and ignored-layer handling",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/compressed_tensors/compressed_tensors_moe.py",
+     "from_sha": "107958a48946",
+     "from_pr": 17828,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-02-09"
+    }
+   ],
+   "key_symbols": [
+    "CompressedTensorsMoEMethod"
+   ],
+   "introduced": {
+    "sha": "107958a48946",
+    "pr": 17828,
+    "date": "2026-02-09",
+    "evidence": "PR #17828: Make compressed-tensors MoEs support ignored layers."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Compressed-tensors MoE scheme and ignored-layer handling",
+   "dispatch_status_history": [
+    {
+     "date": "2026-02-09",
+     "status": "optional",
+     "scope": "Compressed-tensors MoE scheme and ignored-layer handling",
+     "ref": "107958a48946"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/compressed_tensors/compressed_tensors_moe\\.py"
+   ],
+   "notes": "Make compressed-tensors MoEs support ignored layers.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.wna16_moe",
+   "name": "WNA16 MoE quantization method",
+   "kind": "adapter",
+   "role": "WNA16 quantization method dispatch for fused MoE",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/moe_wna16.py",
+     "from_sha": "7a607c49009d",
+     "from_pr": 18459,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-02-16"
+    }
+   ],
+   "key_symbols": [
+    "MoeWNA16Config"
+   ],
+   "introduced": {
+    "sha": "7a607c49009d",
+    "pr": 18459,
+    "date": "2026-02-16",
+    "evidence": "PR #18459: fix_get_quant_method_in_fused_moe_condition."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "WNA16 quantization method dispatch for fused MoE",
+   "dispatch_status_history": [
+    {
+     "date": "2026-02-16",
+     "status": "optional",
+     "scope": "WNA16 quantization method dispatch for fused MoE",
+     "ref": "7a607c49009d"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/moe_wna16\\.py"
+   ],
+   "notes": "fix_get_quant_method_in_fused_moe_condition.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.unquant_moe",
+   "name": "Unquantized fused-MoE method wrapper",
+   "kind": "adapter",
+   "role": "Unquantized method wrapper carrying FusedMoE top_k/backend selection",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/unquant.py",
+     "from_sha": "cdc411160b08",
+     "from_pr": 19287,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-02-25"
+    }
+   ],
+   "key_symbols": [
+    "UnquantizedMoEMethod",
+    "FusedMoE"
+   ],
+   "introduced": {
+    "sha": "cdc411160b08",
+    "pr": 19287,
+    "date": "2026-02-25",
+    "evidence": "PR #19287: Fix NPU corner case where FusedMoE.top_k is not explicitly declared."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda",
+    "npu",
+    "xpu"
+   ],
+   "framework_interface": "Unquantized method wrapper carrying FusedMoE top_k/backend selection",
+   "dispatch_status_history": [
+    {
+     "date": "2026-02-25",
+     "status": "optional",
+     "scope": "Unquantized method wrapper carrying FusedMoE top_k/backend selection",
+     "ref": "cdc411160b08"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/unquant\\.py"
+   ],
+   "notes": "Fix NPU corner case where FusedMoE.top_k is not explicitly declared.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.hardware.xpu_fused_experts",
+   "name": "XPU fused_experts MoE path",
+   "kind": "adapter",
+   "role": "Intel XPU sgl-kernel-xpu fused_experts path for GPT-OSS BF16 models",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/unquant.py",
+     "from_sha": "1e9eecfa36ce",
+     "from_pr": 22417,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-04-13"
+    }
+   ],
+   "key_symbols": [
+    "fused_experts"
+   ],
+   "introduced": {
+    "sha": "1e9eecfa36ce",
+    "pr": 22417,
+    "date": "2026-04-13",
+    "evidence": "PR #22417: Enable sgl-kernel-xpu fused_experts MoE kernel path for GPT-OSS bf16."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "xpu"
+   ],
+   "framework_interface": "Intel XPU sgl-kernel-xpu fused_experts path for GPT-OSS BF16 models",
+   "dispatch_status_history": [
+    {
+     "date": "2026-04-13",
+     "status": "optional",
+     "scope": "Intel XPU sgl-kernel-xpu fused_experts path for GPT-OSS BF16 models",
+     "ref": "1e9eecfa36ce"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/unquant\\.py"
+   ],
+   "notes": "Enable sgl-kernel-xpu fused_experts MoE kernel path for GPT-OSS bf16.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.native.torch_moe",
+   "name": "Torch-native fused MoE path",
+   "kind": "adapter",
+   "role": "Native PyTorch fused-MoE backend/dispatch path",
+   "language": "PyTorch|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_native.py",
+     "from_sha": "0ac23cffacc",
+     "from_pr": 12771,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-04-29"
+    }
+   ],
+   "key_symbols": [
+    "FusedMoENative",
+    "native_moe"
+   ],
+   "introduced": {
+    "sha": "0ac23cffacc",
+    "pr": 12771,
+    "date": "2026-04-29",
+    "evidence": "PR #12771: Add intel_xpu backend with torch native backend; #36407 fixes noncontiguous top-k IDs."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "xpu",
+    "cpu"
+   ],
+   "framework_interface": "Native PyTorch fused-MoE backend/dispatch path",
+   "dispatch_status_history": [
+    {
+     "date": "2026-04-29",
+     "status": "optional",
+     "scope": "Native PyTorch fused-MoE backend/dispatch path",
+     "ref": "0ac23cffacc"
+    }
+   ],
+   "tests": [
+    "test/registered/unit/layers/moe/test_fused_moe_native.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/fused_moe_native\\.py"
+   ],
+   "notes": "Add intel_xpu backend with torch native backend; #36407 fixes noncontiguous top-k IDs.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.mxfp8_jit_moe",
+   "name": "MXFP8 JIT MoE group GEMM and quant kernels",
+   "kind": "kernel",
+   "role": "JIT expert-specialized MXFP8 block-scaled group GEMM and quant kernels",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/jit_kernel/csrc/moe/expert_specialization/es_sm100_mxfp8_blockscaled_moe_group_gemm.cuh",
+     "from_sha": "3f7c95d6cccb",
+     "from_pr": 23833,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-04-29"
+    }
+   ],
+   "key_symbols": [
+    "mxfp8_blockscaled_moe_group_gemm"
+   ],
+   "introduced": {
+    "sha": "3f7c95d6cccb",
+    "pr": 23833,
+    "date": "2026-04-29",
+    "evidence": "PR #23833: Migrate MXFP8 Group GEMM and Quant into JIT."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm100"
+   ],
+   "framework_interface": "JIT expert-specialized MXFP8 block-scaled group GEMM and quant kernels",
+   "dispatch_status_history": [
+    {
+     "date": "2026-04-29",
+     "status": "optional",
+     "scope": "JIT expert-specialized MXFP8 block-scaled group GEMM and quant kernels",
+     "ref": "3f7c95d6cccb"
+    }
+   ],
+   "tests": [
+    "python/sglang/jit_kernel/tests/test_mxfp8_moe.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/jit_kernel/csrc/moe/expert_specialization/es_sm100_mxfp8_blockscaled_.*\\.cuh",
+    "python/sglang/jit_kernel/mxfp8\\.py"
+   ],
+   "notes": "Migrate MXFP8 Group GEMM and Quant into JIT.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.triton.mxfp4_sm120",
+   "name": "SM120 MXFP4 Triton MoE path",
+   "kind": "kernel",
+   "role": "Blackwell Desktop SM120 Triton MXFP4 MoE implementation",
+   "language": "Triton|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/fused_moe_triton/mxfp4_moe_sm120_triton.py",
+     "from_sha": "524ba10eda1b",
+     "from_pr": 24692,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-06-01"
+    }
+   ],
+   "key_symbols": [
+    "mxfp4_moe_sm120_triton"
+   ],
+   "introduced": {
+    "sha": "524ba10eda1b",
+    "pr": 24692,
+    "date": "2026-06-01",
+    "evidence": "PR #24692: SM120 support for DeepSeek-V4 inference."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm120"
+   ],
+   "framework_interface": "Blackwell Desktop SM120 Triton MXFP4 MoE implementation",
+   "dispatch_status_history": [
+    {
+     "date": "2026-06-01",
+     "status": "optional",
+     "scope": "Blackwell Desktop SM120 Triton MXFP4 MoE implementation",
+     "ref": "524ba10eda1b"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/fused_moe_triton/mxfp4_moe_sm120_triton\\.py",
+    "python/sglang/srt/layers/quantization/mxfp4_marlin_moe\\.py"
+   ],
+   "notes": "SM120 support for DeepSeek-V4 inference.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.routing.gemma4_fused_router",
+   "name": "Gemma4 fused router",
+   "kind": "kernel",
+   "role": "Single-launch Gemma4 router fusing top-k, softmax and scale",
+   "language": "Python|Triton",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/gemma4_fused_ops.py",
+     "from_sha": "5ae8d286d2b8",
+     "from_pr": 26502,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-06-02"
+    }
+   ],
+   "key_symbols": [
+    "gemma4_fused_routing"
+   ],
+   "introduced": {
+    "sha": "5ae8d286d2b8",
+    "pr": 26502,
+    "date": "2026-06-02",
+    "evidence": "PR #26502: single-launch fused router (topk + softmax + scale)."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Single-launch Gemma4 router fusing top-k, softmax and scale",
+   "dispatch_status_history": [
+    {
+     "date": "2026-06-02",
+     "status": "optional",
+     "scope": "Single-launch Gemma4 router fusing top-k, softmax and scale",
+     "ref": "5ae8d286d2b8"
+    }
+   ],
+   "tests": [
+    "test/registered/kernels/test_gemma4_fused_routing.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/gemma4_fused_ops\\.py"
+   ],
+   "notes": "single-launch fused router (topk + softmax + scale).",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.quark_mxfp4_moe",
+   "name": "Quark MXFP4 MoE quantization scheme",
+   "kind": "adapter",
+   "role": "AMD Quark W4A4/MXFP4 MoE quantization scheme",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4_moe.py",
+     "from_sha": "293816ab14af",
+     "from_pr": 18005,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-06-03"
+    }
+   ],
+   "key_symbols": [
+    "QuarkW4A4MXFP4MoEScheme"
+   ],
+   "introduced": {
+    "sha": "293816ab14af",
+    "pr": 18005,
+    "date": "2026-06-03",
+    "evidence": "PR #18005: Online MXFP4 quantization for dense and MOE models."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "amd_mi300"
+   ],
+   "framework_interface": "AMD Quark W4A4/MXFP4 MoE quantization scheme",
+   "dispatch_status_history": [
+    {
+     "date": "2026-06-03",
+     "status": "optional",
+     "scope": "AMD Quark W4A4/MXFP4 MoE quantization scheme",
+     "ref": "293816ab14af"
+    }
+   ],
+   "tests": [
+    "test/registered/quant/test_quark_mxfp4.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/quark/schemes/quark_w4a4_mxfp4_moe\\.py"
+   ],
+   "notes": "Online MXFP4 quantization for dense and MOE models.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.lora.experimental_trtllm_moe",
+   "name": "Experimental TRT-LLM LoRA MoE backend",
+   "kind": "kernel",
+   "role": "Experimental LoRA TRT-LLM/FlashInfer MoE backend for FP8/NVFP4",
+   "language": "CUDA C++|Python",
+   "origin": "vendored",
+   "upstream": "NVIDIA/TensorRT-LLM|flashinfer-ai/flashinfer",
+   "path_history": [
+    {
+     "path": "python/sglang/jit_kernel/trtllm_lora_temp/data/csrc/fused_moe/trtllm_backend/trtllm_fused_moe_dev_kernel.cu",
+     "from_sha": "c9f582a272dc",
+     "from_pr": 27329,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-06-05"
+    }
+   ],
+   "key_symbols": [
+    "moe_lora_merged_align",
+    "topk_softmax_pack",
+    "trtllm_fused_moe_dev_kernel"
+   ],
+   "introduced": {
+    "sha": "c9f582a272dc",
+    "pr": 27329,
+    "date": "2026-06-05",
+    "evidence": "PR #27329: Experimental fast LoRA path with experimental_sgl_trtllm MoE backend."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Experimental LoRA TRT-LLM/FlashInfer MoE backend for FP8/NVFP4",
+   "dispatch_status_history": [
+    {
+     "date": "2026-06-05",
+     "status": "experimental",
+     "scope": "Experimental LoRA TRT-LLM/FlashInfer MoE backend for FP8/NVFP4",
+     "ref": "c9f582a272dc"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/jit_kernel/csrc/trtllm_lora_temp/.*",
+    "python/sglang/jit_kernel/trtllm_lora_temp/.*"
+   ],
+   "notes": "Experimental fast LoRA path with experimental_sgl_trtllm MoE backend.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.ep.lplb_dispatch",
+   "name": "LPLB expert-location dispatch kernels",
+   "kind": "dispatcher",
+   "role": "Linear-programming load balancer solver/dispatch kernels for expert parallelism",
+   "language": "CUDA C++|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/jit_kernel/csrc/lplb/dispatch_probability.cuh",
+     "from_sha": "92b42c8d8ade",
+     "from_pr": 24515,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-06-16"
+    }
+   ],
+   "key_symbols": [
+    "LPLBSolver",
+    "dispatch_probability"
+   ],
+   "introduced": {
+    "sha": "92b42c8d8ade",
+    "pr": 24515,
+    "date": "2026-06-16",
+    "evidence": "PR #24515: Linear-programming load balancer for MoE expert parallelism."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Linear-programming load balancer solver/dispatch kernels for expert parallelism",
+   "dispatch_status_history": [
+    {
+     "date": "2026-06-16",
+     "status": "optional",
+     "scope": "Linear-programming load balancer solver/dispatch kernels for expert parallelism",
+     "ref": "92b42c8d8ade"
+    }
+   ],
+   "tests": [
+    "test/registered/eplb/test_lplb_distributed.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/jit_kernel/csrc/lplb/.*\\.cuh",
+    "python/sglang/jit_kernel/lplb/.*\\.py",
+    "python/sglang/srt/eplb/(expert_location_dispatch|lplb_solver)\\.py"
+   ],
+   "notes": "Linear-programming load balancer for MoE expert parallelism.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.routing.inkling_gate_topk",
+   "name": "Inkling gate top-k renormalization kernel",
+   "kind": "kernel",
+   "role": "Inkling MoE gate top-k renormalization kernel",
+   "language": "CUDA C++",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/jit_kernel/csrc/moe/inkling_gate_topk_renorm.cuh",
+     "from_sha": "02236fa38cb0",
+     "from_pr": 31681,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-07-19"
+    }
+   ],
+   "key_symbols": [
+    "inkling_gate_topk_renorm"
+   ],
+   "introduced": {
+    "sha": "02236fa38cb0",
+    "pr": 31681,
+    "date": "2026-07-19",
+    "evidence": "PR #31681: Add Inkling model support including gate/topk kernel."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Inkling MoE gate top-k renormalization kernel",
+   "dispatch_status_history": [
+    {
+     "date": "2026-07-19",
+     "status": "optional",
+     "scope": "Inkling MoE gate top-k renormalization kernel",
+     "ref": "02236fa38cb0"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/jit_kernel/csrc/moe/inkling_gate_topk_renorm\\.cuh"
+   ],
+   "notes": "Add Inkling model support including gate/topk kernel.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.ep.dwdp_prefill",
+   "name": "DWDP MoE prefill manager",
+   "kind": "adapter",
+   "role": "Distributed Weight Data Parallelism manager/transport/weight-buffer integration for MoE prefill",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/dwdp/dwdp_manager.py",
+     "from_sha": "37a830b66709",
+     "from_pr": 29778,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-07-20"
+    }
+   ],
+   "key_symbols": [
+    "DWDPManager",
+    "WeightBuffer"
+   ],
+   "introduced": {
+    "sha": "37a830b66709",
+    "pr": 29778,
+    "date": "2026-07-20",
+    "evidence": "PR #29778: Add DWDP for MoE prefill."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Distributed Weight Data Parallelism manager/transport/weight-buffer integration for MoE prefill",
+   "dispatch_status_history": [
+    {
+     "date": "2026-07-20",
+     "status": "optional",
+     "scope": "Distributed Weight Data Parallelism manager/transport/weight-buffer integration for MoE prefill",
+     "ref": "37a830b66709"
+    }
+   ],
+   "tests": [
+    "test/registered/disaggregation/test_disaggregation_dwdp_gpt_oss.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/dwdp/.*\\.py"
+   ],
+   "notes": "Add DWDP for MoE prefill.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.routing.longcat_hpc_gemm",
+   "name": "LongCat router GEMM HPC-Ops adapter",
+   "kind": "adapter",
+   "role": "LongCat router GEMM integration around upstream HPC-Ops bf16xfp32 kernel",
+   "language": "Python",
+   "origin": "upstream_other",
+   "upstream": "HPC-Ops",
+   "path_history": [
+    {
+     "path": "python/sglang/jit_kernel/dsv4/gemm.py",
+     "from_sha": "e4eea7ce2ffa",
+     "from_pr": 30247,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-07-21"
+    }
+   ],
+   "key_symbols": [
+    "linear_bf16_fp32_hpc",
+    "router_gemm"
+   ],
+   "introduced": {
+    "sha": "e4eea7ce2ffa",
+    "pr": 30247,
+    "date": "2026-07-21",
+    "evidence": "PR #30247: Optimize LongCat-Flash router GEMM with HPC-Ops bf16xfp32 kernel."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "LongCat router GEMM integration around upstream HPC-Ops bf16xfp32 kernel",
+   "dispatch_status_history": [
+    {
+     "date": "2026-07-21",
+     "status": "optional",
+     "scope": "LongCat router GEMM integration around upstream HPC-Ops bf16xfp32 kernel",
+     "ref": "e4eea7ce2ffa"
+    }
+   ],
+   "tests": [
+    "test/registered/unit/models/test_longcat_flash_router_hpc_gemm.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/jit_kernel/dsv4/gemm\\.py",
+    "python/sglang/srt/models/longcat_flash\\.py"
+   ],
+   "notes": "Optimize LongCat-Flash router GEMM with HPC-Ops bf16xfp32 kernel.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.runner.hpc_ops",
+   "name": "HPC-Ops FP8 MoE runner",
+   "kind": "runner",
+   "role": "Optional MoE runner backend using upstream HPC-Ops FP8 kernels",
+   "language": "Python",
+   "origin": "upstream_other",
+   "upstream": "HPC-Ops",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/moe/moe_runner/hpc_ops.py",
+     "from_sha": "3d91a569ce48",
+     "from_pr": 30541,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-07-24"
+    }
+   ],
+   "key_symbols": [
+    "HpcOpsRunner"
+   ],
+   "introduced": {
+    "sha": "3d91a569ce48",
+    "pr": 30541,
+    "date": "2026-07-24",
+    "evidence": "PR #30541: Add HPC-Ops FP8 MoE runner backend."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Optional MoE runner backend using upstream HPC-Ops FP8 kernels",
+   "dispatch_status_history": [
+    {
+     "date": "2026-07-24",
+     "status": "optional",
+     "scope": "Optional MoE runner backend using upstream HPC-Ops FP8 kernels",
+     "ref": "3d91a569ce48"
+    }
+   ],
+   "tests": [
+    "test/registered/moe/test_hpc_ops_moe.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/moe/moe_runner/hpc_ops\\.py"
+   ],
+   "notes": "Add HPC-Ops FP8 MoE runner backend.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.routing.kimi_k3_radix4_topk",
+   "name": "Kimi-K3 radix-4 MoE top-k router",
+   "kind": "kernel",
+   "role": "ROCm radix-4 MoE top-k router kernel for Kimi-K3",
+   "language": "HIP|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/jit/csrc/moe/route_radix4_hip.cuh",
+     "from_sha": "edd675cecfb2",
+     "from_pr": 34490,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-08-22"
+    }
+   ],
+   "key_symbols": [
+    "moe_route_radix4"
+   ],
+   "introduced": {
+    "sha": "edd675cecfb2",
+    "pr": 34490,
+    "date": "2026-08-22",
+    "evidence": "PR #34490: Add Radix-4 MoE top-k router kernel for Kimi-K3."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "amd_mi300",
+    "mi350"
+   ],
+   "framework_interface": "ROCm radix-4 MoE top-k router kernel for Kimi-K3",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-22",
+     "status": "optional",
+     "scope": "ROCm radix-4 MoE top-k router kernel for Kimi-K3",
+     "ref": "edd675cecfb2"
+    }
+   ],
+   "tests": [
+    "test/registered/kernels/ops/moe/test_moe_route_radix4.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/jit/csrc/moe/route_radix4_hip\\.cuh",
+    "python/sglang/kernels/ops/moe/moe_route_radix4\\.py"
+   ],
+   "notes": "Add Radix-4 MoE top-k router kernel for Kimi-K3.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.cutlass.shuffle_rows_with_scales",
+   "name": "CUTLASS shuffle rows with scales helper",
+   "kind": "kernel",
+   "role": "Gathers CUTLASS MoE activations and scales in one launch",
+   "language": "Python|Triton",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/moe/shuffle_rows_with_scales.py",
+     "from_sha": "77940dec80c9",
+     "from_pr": 34915,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-08-24"
+    }
+   ],
+   "key_symbols": [
+    "shuffle_rows_with_scales"
+   ],
+   "introduced": {
+    "sha": "77940dec80c9",
+    "pr": 34915,
+    "date": "2026-08-24",
+    "evidence": "PR #34915: Gather the cutlass MoE activation and its scales in one launch."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Gathers CUTLASS MoE activations and scales in one launch",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-24",
+     "status": "optional",
+     "scope": "Gathers CUTLASS MoE activations and scales in one launch",
+     "ref": "77940dec80c9"
+    }
+   ],
+   "tests": [
+    "test/registered/kernels/ops/moe/test_shuffle_rows_with_scales.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/moe/shuffle_rows_with_scales\\.py"
+   ],
+   "notes": "Gather the cutlass MoE activation and its scales in one launch.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.mxfp4_moe",
+   "name": "MXFP4 MoE quantization adapter",
+   "kind": "adapter",
+   "role": "MXFP4 MoE quantization scale handling",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/mxfp4.py",
+     "from_sha": "2935bb8e79e6",
+     "from_pr": 36456,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-08-26"
+    }
+   ],
+   "key_symbols": [
+    "MXFP4Config"
+   ],
+   "introduced": {
+    "sha": "2935bb8e79e6",
+    "pr": 36456,
+    "date": "2026-08-26",
+    "evidence": "PR #36456: Fix OOB read in mxfp4 MoE weight scales on Hopper."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm90",
+    "sm100",
+    "sm120"
+   ],
+   "framework_interface": "MXFP4 MoE quantization scale handling",
+   "dispatch_status_history": [
+    {
+     "date": "2026-08-26",
+     "status": "optional",
+     "scope": "MXFP4 MoE quantization scale handling",
+     "ref": "2935bb8e79e6"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/mxfp4\\.py"
+   ],
+   "notes": "Fix OOB read in mxfp4 MoE weight scales on Hopper.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.routing.pack_topk_ids",
+   "name": "FlashInfer routed MoE pack_topk_ids helper",
+   "kind": "kernel",
+   "role": "Packs top-k ids for FlashInfer routed MoE",
+   "language": "Python|Triton",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/moe/pack_topk_ids.py",
+     "from_sha": "e57e934bcc5c",
+     "from_pr": 32882,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-09-01"
+    }
+   ],
+   "key_symbols": [
+    "pack_topk_ids"
+   ],
+   "introduced": {
+    "sha": "e57e934bcc5c",
+    "pr": 32882,
+    "date": "2026-09-01",
+    "evidence": "PR #32882: Accept int64 top-k IDs in FlashInfer routed MoE packer."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Packs top-k ids for FlashInfer routed MoE",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-01",
+     "status": "optional",
+     "scope": "Packs top-k ids for FlashInfer routed MoE",
+     "ref": "e57e934bcc5c"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/moe/pack_topk_ids\\.py"
+   ],
+   "notes": "Accept int64 top-k IDs in FlashInfer routed MoE packer.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.routing.router_gemv",
+   "name": "MiniMax-M3 router GEMV",
+   "kind": "kernel",
+   "role": "Triton split-K router GEMV with in-kernel fixup",
+   "language": "Triton|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/gemm/router_gemv.py",
+     "from_sha": "5177a3ec0854",
+     "from_pr": 36557,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-09-08"
+    }
+   ],
+   "key_symbols": [
+    "router_gemv"
+   ],
+   "introduced": {
+    "sha": "5177a3ec0854",
+    "pr": 36557,
+    "date": "2026-09-08",
+    "evidence": "PR #36557: MiniMax-M3 Triton split-K router GEMV with in-kernel fixup."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "all_cuda"
+   ],
+   "framework_interface": "Triton split-K router GEMV with in-kernel fixup",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-08",
+     "status": "optional",
+     "scope": "Triton split-K router GEMV with in-kernel fixup",
+     "ref": "5177a3ec0854"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/gemm/router_gemv\\.py"
+   ],
+   "notes": "MiniMax-M3 Triton split-K router GEMV with in-kernel fixup.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.quant.glm_nextn_fp8_moe",
+   "name": "GLM NextN per-channel FP8 MoE quantization policy",
+   "kind": "adapter",
+   "role": "GLM NextN draft fused MoE per-channel FP8 casting policy",
+   "language": "Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/srt/layers/quantization/quark/schemes/quark_w8a8_fp8_moe.py",
+     "from_sha": "f920be4b0973",
+     "from_pr": 39155,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-09-15"
+    }
+   ],
+   "key_symbols": [
+    "quark_w8a8_fp8_moe"
+   ],
+   "introduced": {
+    "sha": "f920be4b0973",
+    "pr": 39155,
+    "date": "2026-09-15",
+    "evidence": "PR #39155: GLM-5.2 NextN casts draft fused MoE to per-channel FP8."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "amd_mi300"
+   ],
+   "framework_interface": "GLM NextN draft fused MoE per-channel FP8 casting policy",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-15",
+     "status": "optional",
+     "scope": "GLM NextN draft fused MoE per-channel FP8 casting policy",
+     "ref": "f920be4b0973"
+    }
+   ],
+   "tests": [
+    "test/registered/unit/models/test_glm_nextn_moe_ptpc.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/srt/layers/quantization/quark/schemes/quark_w8a8_fp8_moe\\.py"
+   ],
+   "notes": "GLM-5.2 NextN casts draft fused MoE to per-channel FP8.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.aiter.smallm_moe_gfx950",
+   "name": "Small-M MXFP4 fused MoE gfx950 HIP kernel",
+   "kind": "kernel",
+   "role": "gfx950 Small-M MXFP4 fused-MoE HIP kernel package",
+   "language": "HIP|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/moe/smallm_moe_gfx950/smallm_moe.hip",
+     "from_sha": "32290dda2cea",
+     "from_pr": 40204,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-09-23"
+    }
+   ],
+   "key_symbols": [
+    "smallm_moe_gfx950"
+   ],
+   "introduced": {
+    "sha": "32290dda2cea",
+    "pr": 40204,
+    "date": "2026-09-23",
+    "evidence": "PR #40204: Small-M MXFP4 fused-MoE kernel for gfx950."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "mi350"
+   ],
+   "framework_interface": "gfx950 Small-M MXFP4 fused-MoE HIP kernel package",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-23",
+     "status": "optional",
+     "scope": "gfx950 Small-M MXFP4 fused-MoE HIP kernel package",
+     "ref": "32290dda2cea"
+    }
+   ],
+   "tests": [
+    "test/registered/amd/test_smallm_moe_gfx950.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/moe/smallm_moe_gfx950/.*"
+   ],
+   "notes": "Small-M MXFP4 fused-MoE kernel for gfx950.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.aiter.moe_sorting_small",
+   "name": "Small-batch MoE sorting path",
+   "kind": "kernel",
+   "role": "Small-batch sorting path with fused MXFP8 quantization",
+   "language": "Python|Triton|HIP",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/moe/moe_sorting_small.py",
+     "from_sha": "36f59982faaa",
+     "from_pr": 36559,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-09-24"
+    }
+   ],
+   "key_symbols": [
+    "moe_sorting_small",
+    "mxfp8_moe_amd_gfx95"
+   ],
+   "introduced": {
+    "sha": "36f59982faaa",
+    "pr": 36559,
+    "date": "2026-09-24",
+    "evidence": "PR #36559: Small-batch sorting path with fused mxfp8 quantisation."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "mi350"
+   ],
+   "framework_interface": "Small-batch sorting path with fused MXFP8 quantization",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-24",
+     "status": "optional",
+     "scope": "Small-batch sorting path with fused MXFP8 quantization",
+     "ref": "36f59982faaa"
+    }
+   ],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/moe/moe_sorting_small\\.py",
+    "python/sglang/kernels/ops/moe/mxfp8_moe_amd_gfx95\\.py"
+   ],
+   "notes": "Small-batch sorting path with fused mxfp8 quantisation.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.routing.rocm_router_gate",
+   "name": "ROCm router gate operation",
+   "kind": "kernel",
+   "role": "ROCm Triton router gate operation for DSV4.1 AMD routing",
+   "language": "Triton|Python",
+   "origin": "in_tree",
+   "upstream": "",
+   "path_history": [
+    {
+     "path": "python/sglang/kernels/ops/moe/rocm_router_gate.py",
+     "from_sha": "effb75218808",
+     "from_pr": 41019,
+     "to": null,
+     "to_sha": null,
+     "to_pr": null,
+     "transition": "created",
+     "end": "live",
+     "from": "2026-09-26"
+    }
+   ],
+   "key_symbols": [
+    "rocm_router_gate"
+   ],
+   "introduced": {
+    "sha": "effb75218808",
+    "pr": 41019,
+    "date": "2026-09-26",
+    "evidence": "PR #41019: dsv4.1-amd router kernels."
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "amd_mi300",
+    "mi350"
+   ],
+   "framework_interface": "ROCm Triton router gate operation for DSV4.1 AMD routing",
+   "dispatch_status_history": [
+    {
+     "date": "2026-09-26",
+     "status": "optional",
+     "scope": "ROCm Triton router gate operation for DSV4.1 AMD routing",
+     "ref": "effb75218808"
+    }
+   ],
+   "tests": [
+    "test/registered/kernels/ops/moe/test_rocm_router_gate.py"
+   ],
+   "benchmarks": [],
+   "path_regexes": [
+    "python/sglang/kernels/ops/moe/rocm_router_gate\\.py"
+   ],
+   "notes": "dsv4.1-amd router kernels.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.upstream.vllm.nvfp4_moe_kernels",
+   "name": "vLLM NVFP4 MoE quant/expert kernels",
+   "kind": "upstream_kernel",
+   "role": "upstream NVFP4 MoE quantization kernels that SGLang later ported",
+   "language": "CUDA C++/Triton",
+   "origin": "upstream_other",
+   "upstream": "vllm-project/vllm:csrc/quantization/fp4",
+   "path_history": [],
+   "key_symbols": [],
+   "introduced": {
+    "sha": "294fc1e2c9",
+    "pr": 19500,
+    "date": "2025-06-?",
+    "evidence": "cross_reference supplementary adjudication"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm100"
+   ],
+   "framework_interface": "vLLM-internal (upstream of SGLang ports)",
+   "dispatch_status_history": [],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [],
+   "notes": "Added for cross_reference events #19500/#31832 (vLLM) cited by L1 ported_from relations.",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.upstream.vllm.flashinfer_moe_adapter",
+   "name": "vLLM FlashInfer TRT-LLM FP4 MoE adapter",
+   "kind": "upstream_kernel",
+   "role": "upstream vLLM adapter around FlashInfer trtllm FP4 MoE",
+   "language": "CUDA C++/Triton",
+   "origin": "upstream_other",
+   "upstream": "vllm-project/vllm:vllm/model_executor/layers/fused_moe",
+   "path_history": [],
+   "key_symbols": [],
+   "introduced": {
+    "sha": "a0c7081695",
+    "pr": 35088,
+    "date": "",
+    "evidence": "cross_reference supplementary adjudication"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm100"
+   ],
+   "framework_interface": "vLLM-internal (upstream of SGLang ports)",
+   "dispatch_status_history": [],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [],
+   "notes": "Added for cross_reference event #35088 (vLLM).",
+   "added_in": "reconciliation"
+  },
+  {
+   "artifact_id": "L1.upstream.vllm.routing_kernels",
+   "name": "vLLM fused routing kernels",
+   "kind": "upstream_kernel",
+   "role": "upstream vLLM routing kernels (e.g. fused Gemma4 router in Triton)",
+   "language": "CUDA C++/Triton",
+   "origin": "upstream_other",
+   "upstream": "vllm-project/vllm:vllm/model_executor/layers/fused_moe",
+   "path_history": [],
+   "key_symbols": [],
+   "introduced": {
+    "sha": "45232a454e",
+    "pr": 39083,
+    "date": "",
+    "evidence": "cross_reference supplementary adjudication"
+   },
+   "ended": null,
+   "live_at_cutoff": true,
+   "predecessors": [],
+   "hardware": [
+    "sm100"
+   ],
+   "framework_interface": "vLLM-internal (upstream of SGLang ports)",
+   "dispatch_status_history": [],
+   "tests": [],
+   "benchmarks": [],
+   "path_regexes": [],
+   "notes": "Added for cross_reference event #39083 (vLLM).",
+   "added_in": "reconciliation"
+  }
+ ],
+ "excluded_artifacts": [
+  {
+   "name": "DSA/DeepSeek-V4 attention/indexer top-k",
+   "paths": [
+    "python/sglang/kernels/ops/attention/dsv4/topk.py",
+    "python/sglang/srt/layers/attention/dsa/dsa_topk_backend.py",
+    "python/sglang/srt/state_capturer/indexer_topk.py"
+   ],
+   "reason": "name_collision",
+   "evidence": "attention/dsv4 topk used by dsa_backend/indexer, not layers/moe routing"
+  },
+  {
+   "name": "sampling top-k/top-p",
+   "paths": [
+    "sgl-kernel/csrc/musa/top_k_top_p_sampling.mu"
+   ],
+   "reason": "name_collision",
+   "evidence": "sampling kernel, not select_experts"
+  },
+  {
+   "name": "request router/gateway",
+   "paths": [
+    "python/sglang/srt/managers/router/*"
+   ],
+   "reason": "name_collision",
+   "evidence": "server request router, not MoE expert router"
+  },
+  {
+   "name": "LoRA-only fused MoE kernels",
+   "paths": [
+    "python/sglang/srt/lora/triton_ops/fused_moe_lora_kernel.py"
+   ],
+   "reason": "out_of_scope",
+   "evidence": "LoRA-only; shared align tests only"
+  },
+  {
+   "name": "MiniMax/DSA attention top-k",
+   "paths": [
+    "python/sglang/kernels/ops/attention/minimax_sparse/*topk*.py"
+   ],
+   "reason": "name_collision",
+   "evidence": "attention sparse indexer paths"
+  },
+  {
+   "name": "DeepSelect topk_select vendor",
+   "paths": [
+    "python/sglang/kernels/jit/csrc/deep_select/vendor/cuda_kernels/*/topk_select.cuh"
+   ],
+   "reason": "other_lineage:Lx",
+   "evidence": "not called by MoE topk.py/hash_topk.py at cutoff"
+  }
+ ],
+ "unresolved": [
+  {
+   "question": "Some census-only wrappers/hardware variants lack fetched PR bodies",
+   "missing_evidence": "Dates/paths verified; detailed intent thin"
+  },
+  {
+   "question": "Not every migration individually diffed with -M",
+   "missing_evidence": "Used PR 30786/32072/32648 broad rename claims plus census"
+  },
+  {
+   "question": "Grok variant successor unclear",
+   "missing_evidence": "No explicit replacement found"
+  },
+  {
+   "question": "Upstream FlashInfer/DeepEP/AITER histories not exhaustively mined",
+   "missing_evidence": "Only SGLang integration points recorded"
+  },
+  {
+   "question": "OpenAI triton_kernels and AITER pin files not found",
+   "missing_evidence": "No python/pyproject.toml or requirements pin located by cutoff grep; adapters use optional imports."
+  }
+ ],
+ "searches_run": [
+  "read task-registry, agent-brief, CODEBOOK",
+  "paths.py sglang/vllm regex census",
+  "rg/view census files",
+  "git log diff-filter A/D for key paths bounded by cutoffs",
+  "git show initial fused_moe header and current dispatch files",
+  "git grep hash_topk/topk_sum/topk_reduce at cutoff",
+  "gh pr view selected SGLang and vLLM PRs",
+  "Read task-newart/brief/registry/codebook and L1 inputs",
+  "Summarized existing artifact IDs/path_regexes from L1-registry.json",
+  "git show --no-patch/--name-only for L1 NEW commits in sglang.git through cutoff 89e1316eae9aae634c174c040415289fe4484aee",
+  "registry_check.py L1"
+ ]
+}

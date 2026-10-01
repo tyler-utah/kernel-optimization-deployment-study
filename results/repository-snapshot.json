@@ -1,0 +1,28 @@
+{
+  "study_cutoff_date": "2026-09-28",
+  "captured_at_utc": "2026-09-29T05:50:00Z",
+  "repositories": [
+    {
+      "repo": "vllm-project/vllm",
+      "url": "https://github.com/vllm-project/vllm.git",
+      "local_path": "experiments/data/repos/vllm",
+      "head_sha": "7230dfea501b232ce92d057f1c5ee9cb009c4cb4",
+      "first_first_parent_commit_date": "2023-02-09",
+      "last_first_parent_commit_date": "2026-09-29",
+      "first_parent_commit_count": 22106,
+      "log_file": "experiments/data/vllm-log.txt",
+      "cutoff_note": "The frozen HEAD includes UTC-dated commits on 2026-09-29; analyses exclude records after the 2026-09-28 cutoff."
+    },
+    {
+      "repo": "sgl-project/sglang",
+      "url": "https://github.com/sgl-project/sglang.git",
+      "local_path": "experiments/data/repos/sglang",
+      "head_sha": "79cafec013d0a01c782d7a4bc902ef32a8941ba8",
+      "first_first_parent_commit_date": "2023-10-09",
+      "last_first_parent_commit_date": "2026-09-28",
+      "first_parent_commit_count": 19040,
+      "log_file": "experiments/data/sglang-log.txt",
+      "cutoff_note": "All frozen first-parent commits are on or before the cutoff."
+    }
+  ]
+}

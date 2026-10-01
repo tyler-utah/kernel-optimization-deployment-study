@@ -1,0 +1,3 @@
+field,n,percent_agreement,cohen_kappa,comparison
+provenance_class,204,0.7647,0.6853,first pass vs independent second pass (model-model; not human IRR)
+academic_paper_vs_other,204,0.8824,0.7052,binary collapse

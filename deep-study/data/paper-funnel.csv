@@ -1,0 +1,37 @@
+venue,stage,n,denominator,share,wilson95_low,wilson95_high
+MLSys 2025,all_papers,61,61,1.0,0.9408,1.0
+MLSys 2025,kernel_style,18,61,0.2951,0.1955,0.4189
+MLSys 2025,reached_L1,11,18,0.6111,0.3862,0.797
+MLSys 2025,reached_L2,6,18,0.3333,0.1628,0.5625
+MLSys 2025,reached_L3,5,18,0.2778,0.125,0.5087
+MLSys 2025,reached_L4,4,18,0.2222,0.09,0.4522
+MLSys 2025,reached_L5,4,18,0.2222,0.09,0.4522
+MLSys 2025,self_reported_production_S,2,18,0.1111,0.031,0.328
+MLSys 2025,L4plus_framework_code_before_publication,2,18,0.1111,0.031,0.328
+MLSys 2025,L4plus_adopted_after_publication,2,18,0.1111,0.031,0.328
+MLSys 2025,negatives_with_L3plus_evidence,3,20,0.15,0.0524,0.3604
+MLSys 2025,negatives_missed_kernel_style_with_L3plus,0,20,0.0,0.0,0.1611
+ASPLOS 2025,all_papers,160,160,1.0,0.9766,1.0
+ASPLOS 2025,kernel_style,21,160,0.1313,0.0875,0.1923
+ASPLOS 2025,reached_L1,10,21,0.4762,0.2834,0.6763
+ASPLOS 2025,reached_L2,5,21,0.2381,0.1063,0.4509
+ASPLOS 2025,reached_L3,1,21,0.0476,0.0085,0.2267
+ASPLOS 2025,reached_L4,0,21,0.0,0.0,0.1546
+ASPLOS 2025,reached_L5,0,21,0.0,0.0,0.1546
+ASPLOS 2025,self_reported_production_S,1,21,0.0476,0.0085,0.2267
+ASPLOS 2025,L4plus_framework_code_before_publication,0,21,0.0,0.0,0.1546
+ASPLOS 2025,L4plus_adopted_after_publication,0,21,0.0,0.0,0.1546
+ASPLOS 2025,negatives_with_L3plus_evidence,0,20,0.0,0.0,0.1611
+ASPLOS 2025,negatives_missed_kernel_style_with_L3plus,0,20,0.0,0.0,0.1611
+both,all_papers,221,221,1.0,0.9829,1.0
+both,kernel_style,39,221,0.1765,0.1319,0.2321
+both,reached_L1,21,39,0.5385,0.3857,0.6843
+both,reached_L2,11,39,0.2821,0.1654,0.4378
+both,reached_L3,6,39,0.1538,0.0725,0.2973
+both,reached_L4,4,39,0.1026,0.0406,0.2358
+both,reached_L5,4,39,0.1026,0.0406,0.2358
+both,self_reported_production_S,3,39,0.0769,0.0265,0.2032
+both,L4plus_framework_code_before_publication,2,39,0.0513,0.0142,0.1689
+both,L4plus_adopted_after_publication,2,39,0.0513,0.0142,0.1689
+both,negatives_with_L3plus_evidence,3,40,0.075,0.0258,0.1986
+both,negatives_missed_kernel_style_with_L3plus,0,40,0.0,0.0,0.0876

@@ -1,0 +1,5 @@
+repo,group,merged_prs,reverted,revert_rate,wilson95_low,wilson95_high,note
+vllm,performance,1277,23,0.018,0.012,0.0269,merged PRs created 2025-09-29..2026-09-28 that appear as a reverted target in the 24-month confirmed revert census
+vllm,non_performance,10699,94,0.0088,0.0072,0.0107,merged PRs created 2025-09-29..2026-09-28 that appear as a reverted target in the 24-month confirmed revert census
+sglang,performance,1423,34,0.0239,0.0171,0.0332,merged PRs created 2025-09-29..2026-09-28 that appear as a reverted target in the 24-month confirmed revert census
+sglang,non_performance,12437,140,0.0113,0.0095,0.0133,merged PRs created 2025-09-29..2026-09-28 that appear as a reverted target in the 24-month confirmed revert census

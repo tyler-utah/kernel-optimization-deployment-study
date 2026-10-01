@@ -1,0 +1,91 @@
+{
+  "report": "experiments/system-evolution-report.md",
+  "claims_checked": 12,
+  "all_exact": true,
+  "claims": [
+    {
+      "claim_id": "vllm-kernel_performance_share",
+      "source_file": "experiments/results/headline-numbers.csv",
+      "expected_text": "6.6%",
+      "report_line": "1. **Kernel-performance work is a minority of merged work:** **6.6%** of recent vLLM commits and **5.2%** of recent SGLang commits were classified kernel-performance. <!-- claim:headline:vllm-kernel_performance_share:pct1 --> <!-- claim:headline:sglang-kernel_performance_share:pct1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "sglang-kernel_performance_share",
+      "source_file": "experiments/results/headline-numbers.csv",
+      "expected_text": "5.2%",
+      "report_line": "1. **Kernel-performance work is a minority of merged work:** **6.6%** of recent vLLM commits and **5.2%** of recent SGLang commits were classified kernel-performance. <!-- claim:headline:vllm-kernel_performance_share:pct1 --> <!-- claim:headline:sglang-kernel_performance_share:pct1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "vllm-kernel_performance-median_hours_to_merge",
+      "source_file": "experiments/results/pr-evidence-summary.csv",
+      "expected_text": "3.0 days",
+      "report_line": "2. **Performance PRs merged more slowly:** the post-stratified median was **3.0 days** versus **1.8 days** for other vLLM PRs, and **3.0 days** versus **0.7 days** in SGLang. <!-- claim:pr:vllm:kernel_performance:median_hours_to_merge:days1 --> <!-- claim:pr:vllm:other:median_hours_to_merge:days1 --> <!-- claim:pr:sglang:kernel_performance:median_hours_to_merge:days1 --> <!-- claim:pr:sglang:other:median_hours_to_merge:days1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "vllm-other-median_hours_to_merge",
+      "source_file": "experiments/results/pr-evidence-summary.csv",
+      "expected_text": "1.8 days",
+      "report_line": "2. **Performance PRs merged more slowly:** the post-stratified median was **3.0 days** versus **1.8 days** for other vLLM PRs, and **3.0 days** versus **0.7 days** in SGLang. <!-- claim:pr:vllm:kernel_performance:median_hours_to_merge:days1 --> <!-- claim:pr:vllm:other:median_hours_to_merge:days1 --> <!-- claim:pr:sglang:kernel_performance:median_hours_to_merge:days1 --> <!-- claim:pr:sglang:other:median_hours_to_merge:days1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "sglang-kernel_performance-median_hours_to_merge",
+      "source_file": "experiments/results/pr-evidence-summary.csv",
+      "expected_text": "3.0 days",
+      "report_line": "2. **Performance PRs merged more slowly:** the post-stratified median was **3.0 days** versus **1.8 days** for other vLLM PRs, and **3.0 days** versus **0.7 days** in SGLang. <!-- claim:pr:vllm:kernel_performance:median_hours_to_merge:days1 --> <!-- claim:pr:vllm:other:median_hours_to_merge:days1 --> <!-- claim:pr:sglang:kernel_performance:median_hours_to_merge:days1 --> <!-- claim:pr:sglang:other:median_hours_to_merge:days1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "sglang-other-median_hours_to_merge",
+      "source_file": "experiments/results/pr-evidence-summary.csv",
+      "expected_text": "0.7 days",
+      "report_line": "2. **Performance PRs merged more slowly:** the post-stratified median was **3.0 days** versus **1.8 days** for other vLLM PRs, and **3.0 days** versus **0.7 days** in SGLang. <!-- claim:pr:vllm:kernel_performance:median_hours_to_merge:days1 --> <!-- claim:pr:vllm:other:median_hours_to_merge:days1 --> <!-- claim:pr:sglang:kernel_performance:median_hours_to_merge:days1 --> <!-- claim:pr:sglang:other:median_hours_to_merge:days1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "vllm-open_queue_kernel_performance-open_queue_performance_count",
+      "source_file": "experiments/results/pr-evidence-summary.csv",
+      "expected_text": "589",
+      "report_line": "3. **Discovered work is visibly queued:** title classification found **589** performance PRs among vLLM's open queue and **345** among SGLang's. <!-- claim:pr:vllm:open_queue_kernel_performance:open_queue_performance_count:int --> <!-- claim:pr:sglang:open_queue_kernel_performance:open_queue_performance_count:int -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "sglang-open_queue_kernel_performance-open_queue_performance_count",
+      "source_file": "experiments/results/pr-evidence-summary.csv",
+      "expected_text": "345",
+      "report_line": "3. **Discovered work is visibly queued:** title classification found **589** performance PRs among vLLM's open queue and **345** among SGLang's. <!-- claim:pr:vllm:open_queue_kernel_performance:open_queue_performance_count:int --> <!-- claim:pr:sglang:open_queue_kernel_performance:open_queue_performance_count:int -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "vllm-contributor-top5_share",
+      "source_file": "experiments/results/headline-numbers.csv",
+      "expected_text": "13.6%",
+      "report_line": "4. **Contribution is concentrated without being attributable to one person:** the five largest repository-scoped contributor identities account for **13.6%** of recent vLLM commits and **22.2%** of SGLang commits. <!-- claim:headline:vllm-contributor-top5_share:pct1 --> <!-- claim:headline:sglang-contributor-top5_share:pct1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "sglang-contributor-top5_share",
+      "source_file": "experiments/results/headline-numbers.csv",
+      "expected_text": "22.2%",
+      "report_line": "4. **Contribution is concentrated without being attributable to one person:** the five largest repository-scoped contributor identities account for **13.6%** of recent vLLM commits and **22.2%** of SGLang commits. <!-- claim:headline:vllm-contributor-top5_share:pct1 --> <!-- claim:headline:sglang-contributor-top5_share:pct1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "vllm-dco_signed_off_by-compliance_rate",
+      "source_file": "experiments/results/rule-compliance-observed.csv",
+      "expected_text": "97.0%",
+      "report_line": "5. **Codified checks are followed unevenly:** **97.0%** of matched vLLM squash commits contained a DCO trailer, while only **14.9%** of sampled vLLM PR bodies with checklists completed every item. <!-- claim:rule:vllm:dco_signed_off_by:compliance_rate:pct1 --> <!-- claim:rule:vllm:checklist_completion:compliance_rate:pct1 -->",
+      "exact_match": true
+    },
+    {
+      "claim_id": "vllm-checklist_completion-compliance_rate",
+      "source_file": "experiments/results/rule-compliance-observed.csv",
+      "expected_text": "14.9%",
+      "report_line": "5. **Codified checks are followed unevenly:** **97.0%** of matched vLLM squash commits contained a DCO trailer, while only **14.9%** of sampled vLLM PR bodies with checklists completed every item. <!-- claim:rule:vllm:dco_signed_off_by:compliance_rate:pct1 --> <!-- claim:rule:vllm:checklist_completion:compliance_rate:pct1 -->",
+      "exact_match": true
+    }
+  ]
+}

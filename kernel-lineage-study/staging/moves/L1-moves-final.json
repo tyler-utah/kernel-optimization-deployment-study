@@ -1,0 +1,1683 @@
+{
+ "lineage": "L1",
+ "name_map": {
+  "EP/DeepEP token permutation and post-reorder fused accumulation": "M-L1-ep-deepep-reorder-layout",
+  "Fuse routed_scaling_factor into gate output or MoE combine reduction": "M-L1-routing-scale-fusion",
+  "Fused routing score, bias/group selection and top-k gate kernels": "M-L1-routing-fused-gate-topk",
+  "Fused top-k expert-output reduction": "M-L1-reduce-topk-sum-fusion",
+  "Pad per-expert token runs to BLOCK_M for routed GEMM tiles": "M-L1-align-block-padding",
+  "Shared-memory cumsum plus separate multi-block token sort": "M-L1-align-two-phase-shared-cumsum",
+  "Single-token and tiny-numel one-launch align fast paths": "M-L1-align-decode-fastpaths",
+  "Triton fused_moe tiled expert GEMM pipeline with activation fusion": "M-L1-fused-moe-triton-tiled-pipeline",
+  "a2a_breakable_cuda_graph_enablement": "one_off",
+  "activation_fusion_masked_experts": "M-L1-fused-moe-triton-tiled-pipeline",
+  "adaptive_quant_launch_occupancy": "one_off",
+  "aiter_fp4_intermediate_pad_skip": "one_off",
+  "aiter_fused_deepep_permutation": "M-L1-ep-deepep-reorder-layout",
+  "align_block_padding": "M-L1-align-block-padding",
+  "amd_dsv4_aiter_topk_dispatch": "one_off",
+  "amd_fp8_even_k_padding": "one_off",
+  "amd_moe_weight_padding": "one_off",
+  "amd_moe_weight_scale_padding": "one_off",
+  "amd_piecewise_cuda_graph_routing_guards": "one_off",
+  "append_remap_padded_fill_fusion": "one_off",
+  "arm_cpu_w8a8_moe_int8": "one_off",
+  "ascend_fuseep_decode_fused_dispatch_gmm_combine": "one_off",
+  "avoid_zero_fill_align_buffers": "M-L1-align-two-phase-shared-cumsum",
+  "avoid_zero_fill_intermediate": "one_off",
+  "awq_gptq_packed_moe_kernel": "one_off",
+  "batch_mmap_views_before_h2d": "one_off",
+  "block_warp_scan_align": "M-L1-align-two-phase-shared-cumsum",
+  "cache_aiter_expert_mask": "one_off",
+  "cache_flashinfer_weight_processing": "one_off",
+  "cached_deepgemm_bf16_fp32_dispatch": "one_off",
+  "compiled_biased_grouped_topk_postprocess": "one_off",
+  "cooperative_schedule_for_fp8_blockwise": "one_off",
+  "cpu_amx_fused_moe_with_align_offsets": "one_off",
+  "cpu_bf16_mxfp4_moe_bias_swiglu": "one_off",
+  "cpu_fp8_fused_experts": "one_off",
+  "cpu_fused_topk_softmax_sigmoid": "one_off",
+  "cpu_int4_w4a8_packed_moe": "one_off",
+  "cpu_moe_l2_weight_cache_blocks": "one_off",
+  "cpu_moe_thread_blocking_2d": "one_off",
+  "cpu_partial_sort_topk": "one_off",
+  "cpu_qwen35_tp_padding": "one_off",
+  "cpu_qwen3_next_topk_specialization": "one_off",
+  "cpu_silu_rcp14": "one_off",
+  "cpu_topk_sigmoid_softmax_fusion": "M-L1-routing-fused-gate-topk",
+  "cuda_int4_memory_access": "one_off",
+  "cuda_moe_sum_reduce": "M-L1-reduce-topk-sum-fusion",
+  "cuda_sum_reduce_scale_fusion": "M-L1-routing-scale-fusion",
+  "cute_dsl_nvfp4_quantize": "one_off",
+  "cutedsl_fp4_weight_scale_preprocess": "one_off",
+  "cutedsl_moe_finalize_allreduce_rmsnorm": "one_off",
+  "cutlass_apply_shuffle_mul_sum_fusion": "M-L1-reduce-topk-sum-fusion",
+  "cutlass_fp4_grouped_moe": "one_off",
+  "cutlass_fp4_no_combine_output": "one_off",
+  "cutlass_fp8_blockwise_grouped_moe": "one_off",
+  "cutlass_fp8_blockwise_schedule_refine": "one_off",
+  "cutlass_fp8_pingpong_hopper": "one_off",
+  "cutlass_k_major_scale_factors": "one_off",
+  "cutlass_shuffle_mul_sum_fusion": "M-L1-reduce-topk-sum-fusion",
+  "cutlass_small_k_cooperative_schedule": "one_off",
+  "cutlass_small_k_identity_epilogue": "one_off",
+  "cutlass_w4a8_grouped_gemm": "one_off",
+  "cutlass_w4a8_tp_tile_configs": "one_off",
+  "deepep_breakable_cuda_graph_prefill": "one_off",
+  "deepep_cuda_graph_mode_capture": "one_off",
+  "deepep_deferred_route_weighting_layout": "M-L1-ep-deepep-reorder-layout",
+  "deepep_reorder_layout": "M-L1-ep-deepep-reorder-layout",
+  "deepep_shared_expert_waterfill": "one_off",
+  "deepep_w4a8_low_latency_reorder": "M-L1-ep-deepep-reorder-layout",
+  "deepep_w4a8_normal_reorder": "M-L1-ep-deepep-reorder-layout",
+  "deepep_waterfill_topk_expansion": "M-L1-ep-deepep-reorder-layout",
+  "deepgemm_bf16_grouped_ep_moe": "one_off",
+  "deepgemm_compile_mode_skip_launch": "one_off",
+  "deepgemm_ep_reorder_metadata": "M-L1-ep-deepep-reorder-layout",
+  "deepgemm_megamoe_qwen_nvfp4_dispatch": "one_off",
+  "deepgemm_memory_budget_layout_selection": "one_off",
+  "deepgemm_mn_major_scale_alignment": "one_off",
+  "deepgemm_standard_dispatch_permute": "one_off",
+  "defer_idempotent_pad_zeroing": "one_off",
+  "deferred_finalize_shared_add_fusion": "one_off",
+  "dgx_spark_moe_stage_retune": "one_off",
+  "direct_output_buffer_moe": "one_off",
+  "direct_register_symmetric_memory_buffers": "one_off",
+  "dispose_ep_intermediate_tensors": "one_off",
+  "down_projection_tma_tuned_moe": "one_off",
+  "draft_moe_per_channel_fp8_loadtime_cast": "one_off",
+  "drop_redundant_routing_bias_cast": "one_off",
+  "dual_stream_routed_main_order": "one_off",
+  "dwdp_double_buffered_weight_prefetch": "one_off",
+  "dwdp_vmm_weight_prefetch": "one_off",
+  "dynamic_small_batch_padding": "M-L1-align-block-padding",
+  "elastic_ep_active_rank_routing": "M-L1-ep-deepep-reorder-layout",
+  "elide_grouped_topk_bias_roundtrip_cast": "one_off",
+  "elide_padded_hidden_slice": "one_off",
+  "ep_deepep_reorder_layout": "M-L1-ep-deepep-reorder-layout",
+  "ep_fused_moe_piecewise_cuda_graph": "one_off",
+  "ep_moe_silu_mul_cuda_vectorized": "one_off",
+  "ep_post_reorder_fp32_accumulate_expert0": "M-L1-ep-deepep-reorder-layout",
+  "ep_token_dispatch_layout": "M-L1-ep-deepep-reorder-layout",
+  "ep_token_permutation": "M-L1-ep-deepep-reorder-layout",
+  "even_k_unmasked_loads": "one_off",
+  "expert_offset_quant_packing": "one_off",
+  "expert_offset_register_smem_lookup": "one_off",
+  "expert_pack_mxfp4_cached_matvec": "one_off",
+  "expert_specialization_grouped_gemm": "one_off",
+  "flashinfer_a2a_fused_dispatch_layout": "M-L1-ep-deepep-reorder-layout",
+  "flashinfer_autotune_default": "one_off",
+  "flashinfer_megamoe_internal_ep_compute": "one_off",
+  "flashinfer_per_token_nvfp4_activation_quant": "one_off",
+  "flashinfer_skip_unselected_experts": "one_off",
+  "flashinfer_sm90_cutlass_mxfp4_mixed_input": "one_off",
+  "flashinfer_sm90_mxfp4_w4a8_humming_scales": "one_off",
+  "flashinfer_trtllm_nongated_alignment": "one_off",
+  "flydsl_megamoe_dispatch_combine": "one_off",
+  "fp4_fused_moe_piecewise_cuda_graph": "one_off",
+  "fp4_indexer_eight_row_scale_reduction": "one_off",
+  "fp4_mfma_decode_path": "one_off",
+  "fp4_quantize_before_allgather": "one_off",
+  "fp8_deepep_dispatch_quantization": "one_off",
+  "fuse routed_scaling_factor into gate output or MoE combine reduction": "M-L1-routing-scale-fusion",
+  "fuse_routed_scaling_factor": "M-L1-routing-scale-fusion",
+  "fused routing score, bias/group selection and top-k gate kernels": "M-L1-routing-fused-gate-topk",
+  "fused top-k expert-output reduction": "M-L1-reduce-topk-sum-fusion",
+  "fused_align_buffer_initialization": "M-L1-align-block-padding",
+  "fused_gate_multiconfig_and_microopts": "M-L1-routing-fused-gate-topk",
+  "fused_gate_topk": "M-L1-routing-fused-gate-topk",
+  "fused_lplb_prep_post_probability": "one_off",
+  "fused_moe_sum_all_reduce_atomic": "M-L1-reduce-topk-sum-fusion",
+  "fused_padded_row_masking": "one_off",
+  "fused_router_logits_topk": "M-L1-routing-fused-gate-topk",
+  "fused_routing_score_bias_group_topk": "M-L1-routing-fused-gate-topk",
+  "fused_routing_score_topk": "M-L1-routing-fused-gate-topk",
+  "fused_routing_topk_softmax": "M-L1-routing-fused-gate-topk",
+  "fused_shared_append_deepep_remap": "one_off",
+  "fused_silu_mul_fp8_quant": "one_off",
+  "fused_silu_mul_quant_deepgemm": "one_off",
+  "fused_silu_mul_quant_fp8": "one_off",
+  "fused_simulated_expert_routing": "one_off",
+  "fused_sorted_ids_padding": "M-L1-align-block-padding",
+  "fused_topk_expert_output_reduction": "M-L1-reduce-topk-sum-fusion",
+  "fused_topk_sum_reduce_vector_tile": "M-L1-reduce-topk-sum-fusion",
+  "gelu_activation_fusion": "one_off",
+  "gemma4_single_launch_router": "M-L1-routing-fused-gate-topk",
+  "grid_stride_fp4_expert_quant": "one_off",
+  "h200_glm52_cutlass_w4a8_config_table": "one_off",
+  "h20_specialized_cutlass_groupgemm": "one_off",
+  "hash_topk_tid2eid_routing": "M-L1-routing-fused-gate-topk",
+  "hpc_bf16xfp32_weight_split": "one_off",
+  "hpc_ops_fp8_moe_runner": "one_off",
+  "humming_fused_mul_sum": "one_off",
+  "inplace_topk_value_masking": "M-L1-routing-fused-gate-topk",
+  "jit_activation_vectorized_pdl": "one_off",
+  "jit_filtered_activation_fusion": "one_off",
+  "jit_per_tensor_fp8_quant": "one_off",
+  "local_top2_per_iteration": "M-L1-routing-fused-gate-topk",
+  "lora_merged_virtual_expert_align": "M-L1-align-block-padding",
+  "lora_topk_flashinfer_routed_pack": "M-L1-routing-fused-gate-topk",
+  "lp_expert_replica_dispatch": "one_off",
+  "marlin_block_size_call_retune": "one_off",
+  "marlin_custom_op_capture": "one_off",
+  "marlin_inflight_fp4_dequant": "one_off",
+  "marlin_mxfp4_w4a16_grouped_moe": "one_off",
+  "marlin_occupancy_launch_specialization": "one_off",
+  "marlin_wna16_generated_gemm": "one_off",
+  "masked_expert_activation_skip": "M-L1-fused-moe-triton-tiled-pipeline",
+  "masked_routed_scaling_low_latency": "M-L1-routing-scale-fusion",
+  "megamoe_dispatch_buffer_dtype_match": "one_off",
+  "moe_custom_op_decorator": "one_off",
+  "moe_deferred_finalize_fuse_shared_default": "one_off",
+  "moe_quant_once_prequant_reuse": "one_off",
+  "moe_sum_combine": "M-L1-reduce-topk-sum-fusion",
+  "mori_decode_receive_bound": "one_off",
+  "mori_inter_kernel_threshold_switch": "one_off",
+  "mori_send_side_mxfp8_quant": "one_off",
+  "mori_two_batch_overlap_dual_stream": "one_off",
+  "moriep_dispatch_truncation_for_kernel_choice": "one_off",
+  "moriep_fp8_blockwise_combine": "one_off",
+  "moriep_sdma_split_send_recv": "one_off",
+  "moriep_weight_dtype_dispatch_plan": "one_off",
+  "musa_fused_moe_gemv_swiglu": "one_off",
+  "negative_sentinel_zero_expert_mask": "M-L1-ep-deepep-reorder-layout",
+  "npu_custom_swiglu_quant": "one_off",
+  "npu_deepep_gemm_swiglu_fusion": "one_off",
+  "npu_dispatch_ffn_combine": "one_off",
+  "npu_fused_gating_topk_softmax": "M-L1-routing-fused-gate-topk",
+  "npu_fused_gmm1_swiglu_requant": "one_off",
+  "npu_gguf_predequant_grouped_matmul": "one_off",
+  "npu_grouped_matmul_moe_path": "one_off",
+  "npu_moe_init_routing_v2_fusion": "one_off",
+  "npu_moe_multistream_decode": "one_off",
+  "npu_mxfp4_moe_dynamic_activation_quant": "one_off",
+  "npu_mxfp8_routing_quant_fusion": "one_off",
+  "npu_topk_renorm_optimization": "M-L1-routing-fused-gate-topk",
+  "npu_w4a4_mxfp4_groupedmatmul": "one_off",
+  "npu_zbal_memfabric_dispatch": "one_off",
+  "online_mxfp4_weight_loader_quant": "one_off",
+  "online_nvfp4_per_token_scale_forwarding": "one_off",
+  "padding_inside_quantization": "one_off",
+  "parallel_sorted_token_fill": "M-L1-align-two-phase-shared-cumsum",
+  "plain_triton_silu_and_mul": "one_off",
+  "post_moe_reduce_scatterv": "one_off",
+  "quantize_before_shuffle_scale_transpose": "one_off",
+  "radix4_wave64_topk_select": "one_off",
+  "release_npu_fuseep_weight_cache": "one_off",
+  "remove_cast_contiguous_pack_overhead": "one_off",
+  "requant_group_tile_live_row_grid": "one_off",
+  "reuse_intermediate_cache_storage": "one_off",
+  "reuse_prev_layer_moe_output_buffer": "one_off",
+  "rocm_ck_fused_two_gemm_activation": "one_off",
+  "rocm_moe_dual_stream_overlap": "one_off",
+  "rocm_triton_softmax_topk_default": "M-L1-routing-fused-gate-topk",
+  "routed_scaling_factor_fusion": "M-L1-routing-scale-fusion",
+  "routed_scaling_factor_gate_fusion": "M-L1-routing-scale-fusion",
+  "routed_scaling_factor_in_sum_reduce": "M-L1-routing-scale-fusion",
+  "router_logit_upcast_elision": "M-L1-routing-fused-gate-topk",
+  "router_topk2_bias": "M-L1-routing-fused-gate-topk",
+  "routing_fused_gate_topk": "M-L1-routing-fused-gate-topk",
+  "row_packed_router_launch": "one_off",
+  "sanitize_nonfinite_quant_input": "one_off",
+  "sgl_per_token_group_quant_fp8_dispatch": "one_off",
+  "sgl_scaled_fp8_quant_dispatch": "one_off",
+  "shared-memory cumsum plus separate multi-block token sort": "M-L1-align-two-phase-shared-cumsum",
+  "shared_aligned_warp_vector_copy": "one_off",
+  "shared_blelloch_prefix_scan": "M-L1-align-two-phase-shared-cumsum",
+  "shared_count_atomic_align": "M-L1-align-two-phase-shared-cumsum",
+  "shared_gate_gemv_append_fusion": "one_off",
+  "shared_memory_cumsum_multiblock_token_sort": "M-L1-align-two-phase-shared-cumsum",
+  "shuffle_rows_with_scales_one_launch": "one_off",
+  "silu_mul_fp4_quant_fusion": "one_off",
+  "single_batch_overlap_moe_decode": "one_off",
+  "single_launch_small_moe_sort": "one_off",
+  "single_sm_lplb_ipm_solver": "one_off",
+  "skip_cumsum_buffer_zero_init": "M-L1-align-two-phase-shared-cumsum",
+  "skip_inactive_eplb_bookkeeping": "one_off",
+  "sm100_cutedsl_mxfp8_quantize": "one_off",
+  "sm100_mxfp8_moe_group_gemm_2sm": "one_off",
+  "sm120_fused_mxfp4_dequant_gemv": "one_off",
+  "sm120_mxfp4_cutlass_layout_prepare": "one_off",
+  "sm120_static_routing_cuda_graph": "one_off",
+  "sm90_fp8_megamoe_pre_dispatch": "one_off",
+  "small_batch_expert_align_fastpath": "M-L1-align-decode-fastpaths",
+  "small_batch_router_pdl_overhead_reduction": "M-L1-routing-fused-gate-topk",
+  "smallm_two_phase_fp4_moe": "one_off",
+  "softmax_no_bias_compile_time_path": "one_off",
+  "sort_fused_mxfp8_activation_quant": "one_off",
+  "split_k_router_gemv_last_cta_fixup": "one_off",
+  "swap_ab_for_small_m_fp8_grouped_gemm": "one_off",
+  "swap_ab_triton_fp8_dot": "M-L1-fused-moe-triton-tiled-pipeline",
+  "swap_ab_wgmma_operand_transpose": "one_off",
+  "symmetric_output_allreduce_fastpath": "one_off",
+  "tma_b_descriptor_lru_cache": "one_off",
+  "topk_1_2_combine_fastpath": "M-L1-reduce-topk-sum-fusion",
+  "topk_correction_bias_dtype_cache": "one_off",
+  "topk_softmax_bias_softcap": "M-L1-routing-fused-gate-topk",
+  "topk_softmax_renormalize_fusion": "M-L1-routing-fused-gate-topk",
+  "torch_compile_grouped_topk": "one_off",
+  "torch_compile_moe_monkey_patch": "one_off",
+  "trait_driven_per_token_group_quant": "one_off",
+  "triton_act_and_mul_filter_expert": "one_off",
+  "triton_fused_moe_pipeline": "M-L1-fused-moe-triton-tiled-pipeline",
+  "triton_fused_moe_tuned_xpu_tile_configs": "M-L1-fused-moe-triton-tiled-pipeline",
+  "triton_kernels_preallocated_moe_buffers": "one_off",
+  "triton_pack_topk_ids": "one_off",
+  "triton_three_stage_align": "one_off",
+  "triton_tiled_expert_gemm": "M-L1-fused-moe-triton-tiled-pipeline",
+  "trtllm_lora_two_stream_overlap": "one_off",
+  "two_phase_shared_cumsum_sort": "M-L1-align-two-phase-shared-cumsum",
+  "up_projection_tma_descriptor": "one_off",
+  "w4afp8_fine_grained_tiling": "one_off",
+  "xpu_expert_weight_row_stride_padding": "one_off",
+  "xpu_sgl_kernel_fused_experts_dispatch": "one_off"
+ },
+ "moves": [
+  {
+   "move_id": "M-L1-align-block-padding",
+   "name": "Pad per-expert token runs to BLOCK_M for routed GEMM tiles",
+   "category": "tiling_blocking",
+   "description": "moe_align_block_size groups flattened (token, top-k slot) pairs by expert, pads each expert run to a BLOCK_M multiple, and emits sorted_token_ids/expert_ids/num_tokens_post_pad for the Triton fused_moe kernel.",
+   "problem_solved": "Avoids mixed-expert tiles and enables contiguous per-expert GEMM blocks.",
+   "first_observed": {
+    "repo": "vllm-project/vllm",
+    "sha": "5d60def02cb5a43fa5864fcb123909b101df9ec5",
+    "pr": 2453,
+    "date": "2024-01-29",
+    "artifact_id": "L1.upstream.vllm.fused_moe",
+    "evidence": "cumsum[i] = cumsum[i-1] + CEILDIV(..., block_size) * block_size"
+   },
+   "occurrences": [
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "09de730dee31d13451fc8967b7ca31967b1a2420",
+     "pr": 484,
+     "date": "2024-05-27",
+     "artifact_id": "L1.triton.fused_moe",
+     "relation": "ported/reimplemented",
+     "acknowledges_prior": "yes: SGLang header cites vLLM fused_moe.py",
+     "evidence": "moe_align_block_size emits sorted_token_ids/expert_ids/num_tokens_post_pad"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "31548116a8dc8c6df7e146e0587335a59fc5b9d7",
+     "pr": 2579,
+     "date": "2024-12-26",
+     "artifact_id": "L1.align.cuda_aot",
+     "relation": "reimplemented",
+     "acknowledges_prior": "unclear",
+     "evidence": "CEILDIV(..., block_size) * block_size"
+    },
+    {
+     "repo": "vllm-project/vllm",
+     "sha": "95460fc51318702a33226b87152afe810187e01e",
+     "pr": 12574,
+     "date": "2025-02-03",
+     "artifact_id": "L1.upstream.vllm.align_sum",
+     "relation": "ported",
+     "acknowledges_prior": "yes: sgl_moe_align_block_size is based on",
+     "evidence": "taken from ... sgl-project/sglang/commit/ded9fcd"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "5fdf6cd18f978b84fb02b7ac82c740a4d2d7d5e3",
+     "pr": 32395,
+     "date": "2026-08-08",
+     "artifact_id": "L1.align.small_numel",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "yes: Buffer contract matches",
+     "evidence": "every bucket is padded to a block_size multiple"
+    }
+   ],
+   "semantic_preconditions": [
+    "topk_ids are flattened token-slot expert ids",
+    "pad slots use numel and are masked by fused_moe",
+    "expert_ids index one expert per BLOCK_M tile"
+   ],
+   "hardware_preconditions": [
+    "CUDA/HIP capable GPU for kernel paths"
+   ],
+   "framework_preconditions": [
+    "consumer reads only [0, num_tokens_post_pad)",
+    "topk_ids and output buffers are contiguous"
+   ],
+   "assumptions": [
+    {
+     "assumption": "Each padded tile belongs to one expert.",
+     "status": "derived",
+     "source": "09de730d:python/sglang/srt/layers/fused_moe.py",
+     "excerpt": "sorted_token_ids by expert index and padding ensures divisibility",
+     "kind": "semantic",
+     "spec_checked": ""
+    },
+    {
+     "assumption": "Pad slots are masked before loading token data.",
+     "status": "derived",
+     "source": "89e1316e:python/sglang/kernels/ops/moe/fused_moe_triton_kernels.py",
+     "excerpt": "token_mask = offs_token < num_valid_tokens",
+     "kind": "semantic",
+     "spec_checked": ""
+    }
+   ],
+   "performance_evidence": "None isolated at first import; #32395 explains launch-bound costs.",
+   "correctness_evidence": "#32395 tests exact num_tokens_post_pad/expert_ids/sorted_token_ids and consumer invariants.",
+   "known_failures": [],
+   "current_status": "live_textual",
+   "signature": {
+    "pathspec": [
+     "python/sglang/srt/layers/*fused_moe*.py",
+     "python/sglang/srt/layers/moe/**/*.py",
+     "python/sglang/kernels/**/*.py",
+     "sgl-kernel/**/*.cu"
+    ],
+    "regex": "padding ensures divisibility by BLOCK_SIZE_M|CEILDIV\\(.*block_size\\).*block_size|padded_cnt = \\(",
+    "min_files": 1,
+    "validated_at": [
+     "sglang v0.4.4: match sgl-kernel/csrc/moe/moe_align_kernel.cu",
+     "sglang v0.4.0: no match"
+    ]
+   },
+   "confidence": "high",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/484",
+    "https://github.com/sgl-project/sglang/pull/32395",
+    "https://github.com/vllm-project/vllm/pull/12574"
+   ],
+   "later_uses": [
+    "L1-E-09de730dee",
+    "L1-E-31548116a8",
+    "L1-E-ba5112ff69",
+    "L1-E-0beea4503f",
+    "L1-E-eb61f5c9af",
+    "L1-E-b93ef5e56d",
+    "L1-E-817d43705c",
+    "L1-E-8b5f83ed3b",
+    "L1-E-57ab776910",
+    "L1-E-c9e8613c97",
+    "L1-E-bfcf15a129",
+    "L1-E-c5947ecd85",
+    "L1-E-af2807e146",
+    "L1-E-917d2aa1dc",
+    "L1-E-c9f582a272",
+    "vllm#12574",
+    "vllm#2453",
+    "vllm#19572"
+   ],
+   "known_failure_refs": [],
+   "evidence_types": [
+    "diff",
+    "pr_body",
+    "test",
+    "upstream_source"
+   ],
+   "biography": {
+    "first_appearance": "vLLM #2453, commit 5d60def02c (2024-01-29), added csrc/moe_align_block_size_kernels.cu for DeepSeekMoE; SGLang #484 (09de730dee, 2024-05-27) brought the same padded per-expert sorted-token contract into its Triton fused_moe path.",
+    "problem": "Converts flattened token/top-k expert ids into contiguous expert runs padded to BLOCK_M, so routed GEMM tiles never mix experts and can read expert_ids/num_tokens_post_pad cheaply.",
+    "preconditions": "topk_ids are valid flattened expert ids; padding sentinel rows are masked by consumers; each BLOCK_M tile is assigned one expert; output buffers are contiguous and sized for post-pad count.",
+    "survival": "textual + evidence: git grep at 89e1316e finds moe_align_block_size, CEILDIV(...block_size), padded_count/sorted ids; release samples show presence from v0.1.17/v0.4.x through v0.5.20.",
+    "recurrence": "SGLang reimplemented/optimized it in sgl-kernel (#2579/#3347); vLLM #12574 explicitly ported SGLang ded9fcd/ba5112ff back, and vLLM #19572 later optimized the CUDA kernel with padded_num_experts/experts_per_warp.",
+    "failures": "No direct failure in failure-links; related align optimizations were reverted under the two-phase/multi-block move, not the padding contract itself.",
+    "acknowledgement": "vLLM #12574 commit body says \"sgl_moe_align_block_size is based on\" SGLang ded9fcd and \"moe_align_block_size is based on\" SGLang ba5112ff.",
+    "event_ids": [
+     "L1-E-09de730dee",
+     "L1-E-31548116a8",
+     "L1-E-ba5112ff69",
+     "L1-E-0beea4503f",
+     "L1-E-eb61f5c9af",
+     "L1-E-b93ef5e56d",
+     "L1-E-817d43705c",
+     "L1-E-8b5f83ed3b",
+     "L1-E-57ab776910",
+     "L1-E-c9e8613c97",
+     "L1-E-bfcf15a129",
+     "L1-E-c5947ecd85",
+     "L1-E-af2807e146",
+     "L1-E-917d2aa1dc",
+     "L1-E-c9f582a272",
+     "L1-E-95460fc513",
+     "L1-E-5d60def02c",
+     "L1-E-ffb2cd6b54"
+    ],
+    "evidence_urls": [
+     "https://github.com/vllm-project/vllm/pull/2453",
+     "https://github.com/sgl-project/sglang/pull/484",
+     "https://github.com/vllm-project/vllm/pull/12574",
+     "https://github.com/vllm-project/vllm/pull/19572"
+    ],
+    "confidence": "high"
+   }
+  },
+  {
+   "move_id": "M-L1-align-two-phase-shared-cumsum",
+   "name": "Shared-memory cumsum plus separate multi-block token sort",
+   "category": "multi_block",
+   "description": "The align kernel computes per-expert counts and padded cumulative offsets in shared memory, then a separate sort/count kernel scatters tokens with atomics into those ranges. Later code adds warp-level shared-memory scans.",
+   "problem_solved": "Lets many CTAs sort tokens while preserving padded expert ranges.",
+   "first_observed": {
+    "repo": "sgl-project/sglang",
+    "sha": "cdae77b03dfc6fec3863630550b45bbfc789f957",
+    "pr": 3347,
+    "date": "2025-02-07",
+    "artifact_id": "L1.align.cuda_aot",
+    "evidence": "moe_token_sort_kernel ... atomicAdd(&cumsum_buffer[expert_id], 1)"
+   },
+   "occurrences": [
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "1c96fa86cfa2c8770c9705ba65b65670e8637767",
+     "pr": 3613,
+     "date": "2025-02-28",
+     "artifact_id": "L1.align.cuda_aot",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "yes: follow up of moe-align-with-multiple-blocks-execution",
+     "evidence": "efficient excution in multi-blocks"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "18bb216c28e6d92c95f700b6aa71dd67cab3335a",
+     "pr": 3982,
+     "date": "2025-03-01",
+     "artifact_id": "L1.align.cuda_aot",
+     "relation": "removed",
+     "acknowledges_prior": "yes: Reverts sgl-project/sglang#3613",
+     "evidence": "Will merge it after further modification"
+    },
+    {
+     "repo": "vllm-project/vllm",
+     "sha": "ffb2cd6b5441af28da22694a19838a19507a15e1",
+     "pr": 19572,
+     "date": "2025-06-17",
+     "artifact_id": "L1.upstream.vllm.align_sum",
+     "relation": "ported",
+     "acknowledges_prior": "yes: taken from sgl-project/sglang/commit/cdae77",
+     "evidence": "padded_num_experts, experts_per_warp, block_size"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+     "pr": null,
+     "date": "2026-09-28",
+     "artifact_id": "L1.align.cuda_aot",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "unclear",
+     "evidence": "Perform 2 level exclusive-prefix-sum to scan_buf"
+    }
+   ],
+   "semantic_preconditions": [
+    "cumsum_buffer is initialized from padded offsets before scatter",
+    "atomicAdd order within an expert is not semantically observed"
+   ],
+   "hardware_preconditions": [
+    "shared memory holds counts, prefixes, scan buffer and warp sums",
+    "warp size 32 in CUDA path"
+   ],
+   "framework_preconditions": [
+    "generic path launches align before count_and_sort on the same stream"
+   ],
+   "assumptions": [
+    {
+     "assumption": "Intra-expert scatter order is irrelevant to consumers.",
+     "status": "derived",
+     "source": "#32395 PR body",
+     "excerpt": "Every pair writes its own output row",
+     "kind": "framework",
+     "spec_checked": ""
+    },
+    {
+     "assumption": "Warp scan path assumes WARP_SIZE lanes.",
+     "status": "derived",
+     "source": "89e1316e:moe_align_kernel.cu",
+     "excerpt": "tid & (WARP_SIZE - 1)",
+     "kind": "hardware",
+     "spec_checked": ""
+    }
+   ],
+   "performance_evidence": "#3613 reports 3x-6x speedup but was reverted; #19572 optimizes the vLLM port.",
+   "correctness_evidence": "SGLang test_moe_align.py touched by #3613/#3982; #32395 later cross-checks CUDA path.",
+   "known_failures": [
+    {
+     "ref": "confirmed-reverts.csv sglang:18bb216c",
+     "what": "#3613 multi-block optimization reverted until further modification",
+     "scope": "implementation"
+    }
+   ],
+   "current_status": "live_textual",
+   "signature": {
+    "pathspec": [
+     "python/sglang/kernels/aot/csrc/moe/moe_align_kernel.cu",
+     "sgl-kernel/**/moe_align_kernel.cu"
+    ],
+    "regex": "count_and_sort_expert_tokens_kernel|moe_token_sort_kernel|warp_exclusive_scan\\(padded_count\\)",
+    "min_files": 1,
+    "validated_at": [
+     "sglang v0.5.20: match python/sglang/kernels/aot/csrc/moe/moe_align_kernel.cu",
+     "sglang v0.4.5: no scan_buf/warp_exclusive_scan match"
+    ]
+   },
+   "confidence": "high",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/3347",
+    "https://github.com/sgl-project/sglang/pull/3613",
+    "https://github.com/sgl-project/sglang/pull/3982",
+    "https://github.com/vllm-project/vllm/pull/19572"
+   ],
+   "later_uses": [
+    "L1-E-ded9fcd09a",
+    "L1-E-cdae77b03d",
+    "L1-E-1c96fa86cf",
+    "L1-E-18bb216c28",
+    "L1-E-0beea4503f",
+    "L1-E-eb61f5c9af",
+    "L1-E-f730362ee2",
+    "L1-E-60bcbf2a35",
+    "L1-E-7151194bb2",
+    "L1-E-a3398d8478",
+    "L1-E-af1cc8fe2d",
+    "L1-E-2262369905",
+    "L1-E-3bdcdd134b",
+    "L1-E-c5947ecd85",
+    "L1-E-4b351f6b95",
+    "L1-E-db30a63a13",
+    "L1-E-e9dea79755",
+    "vllm#19572"
+   ],
+   "known_failure_refs": [
+    "confirmed-reverts.csv sglang:18bb216c"
+   ],
+   "evidence_types": [
+    "diff",
+    "pr_body",
+    "revert_record",
+    "test",
+    "upstream_source"
+   ],
+   "biography": {
+    "first_appearance": "SGLang #3347, commit cdae77b03d (2025-02-07), added sgl-kernel moe_align_kernel.cu with moe_token_sort_kernel, cumsum_buffer, and atomicAdd scatter.",
+    "problem": "Lets alignment scale beyond a single serial expert-count pass by separating padded cumsum construction from token sorting/scatter while preserving expert-padded ranges.",
+    "preconditions": "cumsum_buffer must be initialized to padded offsets before scatter; atomicAdd order within an expert must be semantically unobserved; kernels run on one stream; warp/block scan code assumes CUDA-style WARP_SIZE.",
+    "survival": "textual + evidence: cutoff 89e1316e contains count_and_sort_expert_tokens_kernel and warp_exclusive_scan(padded_count); release samples find it in v0.4.4/v0.4.5 and v0.5.2-v0.5.20.",
+    "recurrence": "#3613 tried a multi-block follow-up; #3982 reverted it pending modification; later #19572 in vLLM ported the SGLang cdae77 lineage and rewrote around padded_num_experts/experts_per_warp.",
+    "failures": "confirmed-reverts.csv sglang:18bb216c records the #3613 multi-block optimization revert; later SGLang events remove/reintroduce block/warp scan variants.",
+    "acknowledgement": "vLLM #19572 subject names optimizing moe_align_block_size; #12574 already acknowledged SGLang sources. SGLang #3613 PR text called it a follow-up of moe-align-with-multiple-blocks-execution.",
+    "event_ids": [
+     "L1-E-ded9fcd09a",
+     "L1-E-cdae77b03d",
+     "L1-E-1c96fa86cf",
+     "L1-E-18bb216c28",
+     "L1-E-0beea4503f",
+     "L1-E-eb61f5c9af",
+     "L1-E-f730362ee2",
+     "L1-E-60bcbf2a35",
+     "L1-E-7151194bb2",
+     "L1-E-a3398d8478",
+     "L1-E-af1cc8fe2d",
+     "L1-E-2262369905",
+     "L1-E-3bdcdd134b",
+     "L1-E-c5947ecd85",
+     "L1-E-4b351f6b95",
+     "L1-E-db30a63a13",
+     "L1-E-e9dea79755",
+     "L1-E-ffb2cd6b54"
+    ],
+    "evidence_urls": [
+     "https://github.com/sgl-project/sglang/pull/3347",
+     "https://github.com/sgl-project/sglang/pull/3613",
+     "https://github.com/sgl-project/sglang/pull/3982",
+     "https://github.com/vllm-project/vllm/pull/19572"
+    ],
+    "confidence": "high"
+   }
+  },
+  {
+   "move_id": "M-L1-align-decode-fastpaths",
+   "name": "Single-token and tiny-numel one-launch align fast paths",
+   "category": "specialization",
+   "description": "Decode-shape align bypasses the generic two-kernel path: M==1 uses a single warp, and tiny numel uses one Triton CTA with pair-axis comparisons. Both produce the same block-padded buffers without an external cumsum buffer.",
+   "problem_solved": "Removes one launch per MoE layer for launch-bound bs=1/tiny decode.",
+   "first_observed": {
+    "repo": "sgl-project/sglang",
+    "sha": "abddb1c7e9d61ddddeaf016d885c2f20aab426e8",
+    "pr": 32541,
+    "date": "2026-08-04",
+    "artifact_id": "L1.align.single_token",
+    "evidence": "one warp replaces the moe_align_block_size + count_and_sort_expert_tokens"
+   },
+   "occurrences": [
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "5fdf6cd18f978b84fb02b7ac82c740a4d2d7d5e3",
+     "pr": 32395,
+     "date": "2026-08-08",
+     "artifact_id": "L1.align.small_numel",
+     "relation": "reimplemented",
+     "acknowledges_prior": "yes: Reference semantics reproduced",
+     "evidence": "single-CTA moe_align for tiny batches with MANY experts"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+     "pr": null,
+     "date": "2026-09-28",
+     "artifact_id": "L1.align.small_numel",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "unclear",
+     "evidence": "Consumer side of the router top-k"
+    }
+   ],
+   "semantic_preconditions": [
+    "single-token path requires M == 1 and topk <= 32",
+    "tiny-numel path requires topk_ids.numel() <= 64",
+    "ignore_invalid_expert=False for small_numel"
+   ],
+   "hardware_preconditions": [
+    "CUDA JIT path for single-token",
+    "Triton CUDA backend for small-numel",
+    "PDL optional on supported architectures"
+   ],
+   "framework_preconditions": [
+    "Kernel selection is explicit in moe_align_block_size.py",
+    "PDL waits when chained after router top-k"
+   ],
+   "assumptions": [
+    {
+     "assumption": "Single-token top-k expert ids are distinct.",
+     "status": "derived",
+     "source": "abddb1c7:align_single_token.cuh",
+     "excerpt": "top-k expert ids are distinct",
+     "kind": "semantic",
+     "spec_checked": ""
+    },
+    {
+     "assumption": "Small-numel pair tensors remain register-resident at NP=64.",
+     "status": "tested_only",
+     "source": "5fdf6cd:moe_align_small_numel.py",
+     "excerpt": "fit in registers at NP=64 (~4 us)",
+     "kind": "hardware",
+     "spec_checked": ""
+    }
+   ],
+   "performance_evidence": "Single-token comments: ~4.4us pair replaced by ~1.5us; #32395: launches per layer 2 to 1.",
+   "correctness_evidence": "#32395 adds exact torch-oracle tests and dispatch-boundary tests for numel 63/64/65.",
+   "known_failures": [],
+   "current_status": "live_textual",
+   "signature": {
+    "pathspec": [
+     "python/sglang/kernels/jit/csrc/moe/align_single_token.cuh",
+     "python/sglang/kernels/ops/moe/moe_align_single_token.py",
+     "python/sglang/kernels/ops/moe/moe_align_small_numel.py"
+    ],
+    "regex": "align_single_token_kernel|SMALL_NUMEL_LIMIT|moe_align_small_numel",
+    "min_files": 1,
+    "validated_at": [
+     "sglang v0.5.18: match moe_align_small_numel files",
+     "sglang v0.5.17: no moe_align_small_numel match"
+    ]
+   },
+   "confidence": "high",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/32541",
+    "https://github.com/sgl-project/sglang/pull/32395"
+   ],
+   "later_uses": [
+    "L1-E-f730362ee2",
+    "L1-E-abddb1c7e9",
+    "L1-E-5fdf6cd18f"
+   ],
+   "known_failure_refs": [],
+   "evidence_types": [
+    "diff",
+    "pr_body",
+    "test"
+   ],
+   "biography": null
+  },
+  {
+   "move_id": "M-L1-routing-fused-gate-topk",
+   "name": "Fused routing score, bias/group selection and top-k gate kernels",
+   "category": "fusion",
+   "description": "Routing kernels fuse score computation, optional expert bias/grouped ranking, top-k selection, renormalization and output/index writes. Shared experts are represented as extra top-k slots via num_fused_shared_experts in the fused JIT path.",
+   "problem_solved": "Replaces Python/Torch routing pipelines and intermediate tensors with one routing kernel.",
+   "first_observed": {
+    "repo": "vllm-project/vllm",
+    "sha": "f0d4e145575b",
+    "pr": 2769,
+    "date": "2024-02-05",
+    "artifact_id": "L1.upstream.vllm.fused_topk",
+    "evidence": "Adapted from ... TensorRT-LLM ... moe_kernels.cu"
+   },
+   "occurrences": [
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "61e4433cafd6115a22cf2143f7f38b157ab39b53",
+     "pr": 4302,
+     "date": "2025-03-14",
+     "artifact_id": "L1.routing.topk_softmax",
+     "relation": "ported",
+     "acknowledges_prior": "yes: Cherry picked current vllm",
+     "evidence": "originally adapted from ... TensorRT-LLM"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "45dcfc2e762d3ff197de9e84945298a6eeb134a3",
+     "pr": 4530,
+     "date": "2025-03-29",
+     "artifact_id": "L1.routing.fused_gate",
+     "relation": "reimplemented",
+     "acknowledges_prior": "yes: PR adapted and improved from #3191",
+     "evidence": "support all power of 2 # expert & # expert group"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "99f636a86fb80d5e399eda93902e772fba1957b9",
+     "pr": 32072,
+     "date": "2026-07-23",
+     "artifact_id": "L1.routing.fused_gate",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "unclear",
+     "evidence": "moe_fused_gate.cuh JIT path live"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "74338e94f10ec1f2cc9f3f1b5060612082f45c3d",
+     "pr": 32045,
+     "date": "2026-07-22",
+     "artifact_id": "L1.routing.fused_gate",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "unclear",
+     "evidence": "Kimi K2 MoE fused gate"
+    }
+   ],
+   "semantic_preconditions": [
+    "topk > num_fused_shared_experts",
+    "scoring_func in sigmoid/sqrtsoftplus/softmax",
+    "grouped path assumes supported expert-group shape"
+   ],
+   "hardware_preconditions": [
+    "CUDA warp reductions and shared memory",
+    "Kimi K2 variant supports NUM_EXPERTS in {256,384}"
+   ],
+   "framework_preconditions": [
+    "input and bias are 2D/1D fp32 for generic JIT wrapper",
+    "shared experts use appended expert ids >= num_experts"
+   ],
+   "assumptions": [
+    {
+     "assumption": "Shared-expert fusion is routing only when appended as top-k slots.",
+     "status": "derived",
+     "source": "89e1316e:moe_fused_gate.cuh",
+     "excerpt": "topk_routed = topk - num_fused_shared_experts",
+     "kind": "semantic",
+     "spec_checked": ""
+    },
+    {
+     "assumption": "Biased ranking uses bias for selection but original score for weights.",
+     "status": "derived",
+     "source": "89e1316e:moe_fused_gate.cuh",
+     "excerpt": "shared_scores[e] = biased_val",
+     "kind": "semantic",
+     "spec_checked": ""
+    }
+   ],
+   "performance_evidence": "#4530: DeepSeek V3 grouped top-k 5k tokens 251.12 eager vs 26.40 SGL Kernel.",
+   "correctness_evidence": "#4530 adds test_moe_fused_gate.py; correctness cases include shared-expert/top-k fixes.",
+   "known_failures": [
+    {
+     "ref": "sglang PR 4505",
+     "what": "grouped_topk softmax/sigmoid option reverted as unnecessary",
+     "scope": "partial_domain"
+    },
+    {
+     "ref": "kernel-correctness-cases.csv sglang:a9dd3ec3e9",
+     "what": "shared expert replacement needed sorted top-k by score",
+     "scope": "implementation"
+    },
+    {
+     "ref": "confirmed-reverts.csv sglang:dd949ace",
+     "what": "fused-gate routed scaling optimization reverted",
+     "scope": "implementation"
+    }
+   ],
+   "current_status": "live_textual",
+   "signature": {
+    "pathspec": [
+     "python/sglang/kernels/jit/csrc/moe/moe_fused_gate.cuh",
+     "python/sglang/kernels/ops/moe/moe_fused_gate.py",
+     "python/sglang/kernels/jit/csrc/trtllm_lora_temp/kimi_k2_moe_fused_gate.cuh",
+     "sgl-kernel/csrc/moe/moe_topk_softmax_kernels.cu"
+    ],
+    "regex": "moe_fused_gate|num_fused_shared_experts|topk_softmax_kernel|Kimi K2 MoE fused gate",
+    "min_files": 1,
+    "validated_at": [
+     "sglang v0.5.20: match moe_fused_gate and Kimi K2 files",
+     "sglang v0.4.4: no moe_fused_gate/topk_softmax match"
+    ]
+   },
+   "confidence": "high",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/4302",
+    "https://github.com/sgl-project/sglang/pull/4530",
+    "https://github.com/sgl-project/sglang/pull/32072",
+    "https://github.com/sgl-project/sglang/pull/32045"
+   ],
+   "later_uses": [
+    "L1-E-c6d7f8d370",
+    "L1-E-61e4433caf",
+    "L1-E-45dcfc2e76",
+    "L1-E-924ca7c92c",
+    "L1-E-38076dea84",
+    "L1-E-8e09b37077",
+    "L1-E-d58e354472",
+    "L1-E-d9dd529854",
+    "L1-E-ff00895c46",
+    "L1-E-81964328b7",
+    "L1-E-22352d47a9",
+    "L1-E-2998c4bdf4",
+    "L1-E-cafebef154",
+    "L1-E-c0652d907b",
+    "L1-E-a1cb717d0b",
+    "L1-E-1d3d42bda0",
+    "L1-E-820e13c9c1",
+    "L1-E-e72cf13693",
+    "L1-E-eff7df6d0a",
+    "L1-E-3dabd609fb",
+    "L1-E-c05d3afb5d",
+    "L1-E-a9ce1623cd",
+    "L1-E-fd535942ac",
+    "L1-E-490fa9fa44",
+    "L1-E-57ffc55fb6",
+    "L1-E-b2af34be54",
+    "L1-E-74c2e5bacd",
+    "L1-E-6d03861476",
+    "L1-E-fb272d27db",
+    "L1-E-ddcacaf1bd",
+    "L1-E-71e89e9003",
+    "L1-E-35870d55ac",
+    "L1-E-2df9e8b4b3",
+    "L1-E-e27d4fb70f",
+    "L1-E-ff642ed936",
+    "L1-E-5ae8d286d2",
+    "L1-E-c9f582a272",
+    "L1-E-7c23d2255a",
+    "L1-E-cf36dca6d4",
+    "L1-E-d364cd8ead",
+    "L1-E-a2d7eb303e",
+    "L1-E-96368a5f77",
+    "L1-E-0663ebc783",
+    "L1-E-241937af87",
+    "L1-E-02236fa38c",
+    "L1-E-bab1dd0d12",
+    "L1-E-5558dbad00",
+    "L1-E-fb207b72b0",
+    "L1-E-8e0499bd50",
+    "L1-E-0099107e8b",
+    "L1-E-50dae2d99d",
+    "L1-E-6657f7d844",
+    "L1-E-7fac84b639",
+    "L1-E-90b3f8544c",
+    "L1-E-effb752188",
+    "L1-E-fa443412c5"
+   ],
+   "known_failure_refs": [
+    "sglang PR 4505",
+    "kernel-correctness-cases.csv sglang:a9dd3ec3e9",
+    "confirmed-reverts.csv sglang:dd949ace"
+   ],
+   "evidence_types": [
+    "diff",
+    "pr_body",
+    "revert_record",
+    "test",
+    "upstream_source"
+   ],
+   "biography": {
+    "first_appearance": "vLLM #2769, commit f0d4e14557 (2024-02-05), added a fused top-k softmax MoE kernel adapted from TensorRT-LLM; SGLang #4302 cherry-picked the vLLM template.",
+    "problem": "Eliminates Python/Torch routing pipelines and intermediate score/top-k tensors by fusing score normalization, optional bias/group choice, top-k selection, renormalization, and index/weight writes.",
+    "preconditions": "scoring function and grouped shapes must be supported; topk must exceed fused shared-expert slots; bias is for ranking while original scores feed weights; appended shared-expert ids must be interpreted by downstream MoE.",
+    "survival": "textual + evidence: cutoff grep finds moe_fused_gate, num_fused_shared_experts, and topk_softmax_kernel references; release samples show topk_softmax in v0.4.5 and fused JIT/AOT paths through v0.5.20.",
+    "recurrence": "SGLang #4302 ports vLLM/TRT-LLM topk_softmax; #4530 reimplements grouped DeepSeek-style fused gate; later SGLang variants add shared expert slots, Kimi K2, and model-specific routing.",
+    "failures": "Known partial failures include SGLang PR 4505 reverting grouped_topk softmax/sigmoid option, kernel-correctness shared-expert sort fix a9dd3ec3e9, and scale-fusion revert dd949ace.",
+    "acknowledgement": "#4302 says \"Cherry picked current vllm MoE topk softmax kernel template\"; source header cites TensorRT-LLM. #4530 says \"PR adapted and improved from #3191\".",
+    "event_ids": [
+     "L1-E-c6d7f8d370",
+     "L1-E-61e4433caf",
+     "L1-E-45dcfc2e76",
+     "L1-E-924ca7c92c",
+     "L1-E-38076dea84",
+     "L1-E-8e09b37077",
+     "L1-E-d58e354472",
+     "L1-E-d9dd529854",
+     "L1-E-ff00895c46",
+     "L1-E-81964328b7",
+     "L1-E-22352d47a9",
+     "L1-E-2998c4bdf4",
+     "L1-E-cafebef154",
+     "L1-E-c0652d907b",
+     "L1-E-a1cb717d0b",
+     "L1-E-1d3d42bda0",
+     "L1-E-820e13c9c1",
+     "L1-E-e72cf13693",
+     "L1-E-eff7df6d0a",
+     "L1-E-3dabd609fb",
+     "L1-E-c05d3afb5d",
+     "L1-E-a9ce1623cd",
+     "L1-E-fd535942ac",
+     "L1-E-490fa9fa44",
+     "L1-E-57ffc55fb6",
+     "L1-E-b2af34be54",
+     "L1-E-74c2e5bacd",
+     "L1-E-6d03861476",
+     "L1-E-fb272d27db",
+     "L1-E-ddcacaf1bd",
+     "L1-E-71e89e9003",
+     "L1-E-35870d55ac",
+     "L1-E-2df9e8b4b3",
+     "L1-E-e27d4fb70f",
+     "L1-E-ff642ed936",
+     "L1-E-5ae8d286d2",
+     "L1-E-c9f582a272",
+     "L1-E-7c23d2255a",
+     "L1-E-cf36dca6d4",
+     "L1-E-d364cd8ead",
+     "L1-E-a2d7eb303e",
+     "L1-E-96368a5f77",
+     "L1-E-0663ebc783",
+     "L1-E-241937af87",
+     "L1-E-02236fa38c",
+     "L1-E-bab1dd0d12",
+     "L1-E-5558dbad00",
+     "L1-E-fb207b72b0",
+     "L1-E-8e0499bd50",
+     "L1-E-0099107e8b",
+     "L1-E-50dae2d99d",
+     "L1-E-6657f7d844",
+     "L1-E-7fac84b639",
+     "L1-E-90b3f8544c",
+     "L1-E-effb752188",
+     "L1-E-fa443412c5"
+    ],
+    "evidence_urls": [
+     "https://github.com/vllm-project/vllm/pull/2769",
+     "https://github.com/sgl-project/sglang/pull/4302",
+     "https://github.com/sgl-project/sglang/pull/4530"
+    ],
+    "confidence": "high"
+   }
+  },
+  {
+   "move_id": "M-L1-routing-scale-fusion",
+   "name": "Fuse routed_scaling_factor into gate output or MoE combine reduction",
+   "category": "quantization_scaling",
+   "description": "SGLang folds routed_scaling_factor into either routing gate weights or the fused top-k combine/reduce kernel instead of a separate multiply. Current code passes the factor into moe_sum_reduce and can apply it in moe_fused_gate output when requested.",
+   "problem_solved": "Eliminates standalone scale multiplies and reduces combine-path memory traffic.",
+   "first_observed": {
+    "repo": "sgl-project/sglang",
+    "sha": "515ef4facbc89cd7c093c198386a8817fce856d6",
+    "pr": 6220,
+    "date": "2025-06-07",
+    "artifact_id": "L1.triton.fused_moe",
+    "evidence": "Fuse routed scaling factor in topk_reduce kernel"
+   },
+   "occurrences": [
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "1fb76ebb93894447d1e3a0a04bca4875563b328c",
+     "pr": 6968,
+     "date": "2025-06-08",
+     "artifact_id": "L1.triton.fused_moe",
+     "relation": "removed",
+     "acknowledges_prior": "yes: This reverts commit 515ef4",
+     "evidence": "Revert \"Fuse routed scaling factor\""
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "591c232f7c9ef959c8620567789fe9d918a58bb4",
+     "pr": 8770,
+     "date": "2025-08-09",
+     "artifact_id": "L1.routing.fused_gate",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "yes: Resubmit of #8364",
+     "evidence": "Fuse routed scaling factor into moe_fused_gate"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "dd949ace23d6d112d9e3e1e2020deb3278cc8b3c",
+     "pr": 9035,
+     "date": "2025-08-11",
+     "artifact_id": "L1.routing.fused_gate",
+     "relation": "removed",
+     "acknowledges_prior": "yes: reverts commit 591c232",
+     "evidence": "Revert ... moe_fused_gate"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "616a3e20df5faf73a7d1581c7016413f64d583e4",
+     "pr": 10321,
+     "date": "2025-09-19",
+     "artifact_id": "L1.reduce.moe_sum_reduce",
+     "relation": "reimplemented",
+     "acknowledges_prior": "unclear",
+     "evidence": "acc *= scale"
+    }
+   ],
+   "semantic_preconditions": [
+    "routed_scaling_factor is scalar per MoE invocation",
+    "gate-output scaling must preserve renormalization semantics"
+   ],
+   "hardware_preconditions": [
+    "CUDA/XPU/MUSA current AOT combine",
+    "Triton/TorchCompile fallback for small tokens"
+   ],
+   "framework_preconditions": [
+    "fused_experts passes routed_scaling_factor through runner config",
+    "topk==1 and factor==1 may bypass combine"
+   ],
+   "assumptions": [
+    {
+     "assumption": "Scaling in sum_reduce is equivalent to post-sum multiply.",
+     "status": "derived",
+     "source": "616a3e20:moe_sum_reduce.cu",
+     "excerpt": "acc *= scale",
+     "kind": "semantic",
+     "spec_checked": ""
+    },
+    {
+     "assumption": "Gate-output scaling is optional and explicit.",
+     "status": "derived",
+     "source": "89e1316e:moe_fused_gate.cuh",
+     "excerpt": "apply_routed_scaling_factor_on_output ? routed_scaling_factor",
+     "kind": "semantic",
+     "spec_checked": ""
+    }
+   ],
+   "performance_evidence": "#6220 microbench: Original 9.376us vs TorchCompile 5.600us at one token; #10321 CUDA 7.488us.",
+   "correctness_evidence": "#6220 and #10321 bodies report correctness verification; current code retains fallbacks.",
+   "known_failures": [
+    {
+     "ref": "confirmed-reverts.csv sglang:1fb76ebb",
+     "what": "topk_reduce scale fusion directly reverted",
+     "scope": "implementation"
+    },
+    {
+     "ref": "confirmed-reverts.csv sglang:dd949ace",
+     "what": "moe_fused_gate scale fusion reverted",
+     "scope": "implementation"
+    }
+   ],
+   "current_status": "live_textual",
+   "signature": {
+    "pathspec": [
+     "python/sglang/srt/layers/moe/**/*.py",
+     "python/sglang/kernels/aot/csrc/moe/moe_sum_reduce.cu",
+     "python/sglang/kernels/jit/csrc/moe/moe_fused_gate.cuh",
+     "sgl-kernel/csrc/moe/moe_sum_reduce.cu"
+    ],
+    "regex": "routed_scaling_factor|apply_routed_scaling_factor_on_output|acc \\*= scale",
+    "min_files": 1,
+    "validated_at": [
+     "sglang v0.5.3: match sgl-kernel/csrc/moe/moe_sum_reduce.cu",
+     "sglang v0.5.2: no moe_sum_reduce.cu match"
+    ]
+   },
+   "confidence": "high",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/6220",
+    "https://github.com/sgl-project/sglang/pull/6968",
+    "https://github.com/sgl-project/sglang/pull/8770",
+    "https://github.com/sgl-project/sglang/pull/9035",
+    "https://github.com/sgl-project/sglang/pull/10321"
+   ],
+   "later_uses": [
+    "L1-E-924ca7c92c",
+    "L1-E-adca585bfb",
+    "L1-E-515ef4facb",
+    "L1-E-1fb76ebb93",
+    "L1-E-3712abfaf9",
+    "L1-E-f642524fd9",
+    "L1-E-f9f0138f80",
+    "L1-E-591c232f7c",
+    "L1-E-dd949ace23",
+    "L1-E-13c48dcf88",
+    "L1-E-a91e90d9a3",
+    "L1-E-616a3e20df",
+    "L1-E-4edb240112",
+    "L1-E-9535015d05",
+    "L1-E-5b5571a8da",
+    "L1-E-990c7590b8",
+    "L1-E-2ab141547d",
+    "L1-E-08d6d297e5",
+    "L1-E-359009fa00",
+    "L1-E-a2c38175a4",
+    "L1-E-169fc1e20c"
+   ],
+   "known_failure_refs": [
+    "confirmed-reverts.csv sglang:1fb76ebb",
+    "confirmed-reverts.csv sglang:dd949ace"
+   ],
+   "evidence_types": [
+    "diff",
+    "pr_body",
+    "revert_record"
+   ],
+   "biography": {
+    "first_appearance": "SGLang #6220, commit 515ef4facb (2025-06-07), fused routed_scaling_factor into topk_reduce; later SGLang #8770/#10321 moved the same idea into gate output or CUDA sum-reduce.",
+    "problem": "Avoids a separate routed_scaling_factor multiply and extra memory traffic after routing/combine by applying the scalar while weights or combined outputs are already in registers.",
+    "preconditions": "routed_scaling_factor is scalar for the MoE call; placement must preserve whether scaling applies to top-k weights or final output; bypass paths for topk==1/factor==1 must keep semantics.",
+    "survival": "textual + evidence: cutoff grep finds routed_scaling_factor, apply_routed_scaling_factor_on_output, and acc *= scale; release samples show scale-bearing code by v0.5.3 and through v0.5.20.",
+    "recurrence": "The first topk_reduce version was reverted (#6968), relanded/reworked, moved into moe_fused_gate (#8770), reverted again (#9035), and reappeared in moe_sum_reduce (#10321). Current vLLM/TRT-LLM MoE paths also carry routed_scaling_factor plumbing.",
+    "failures": "confirmed-reverts.csv sglang:1fb76ebb records direct topk_reduce scale-fusion revert; confirmed-reverts.csv sglang:dd949ace records moe_fused_gate scale-fusion revert.",
+    "acknowledgement": "Revert PRs acknowledge the exact reverted commits; no earlier TRT-LLM/vLLM acknowledgement found in SGLang #6220/#10321 PR text searched.",
+    "event_ids": [
+     "L1-E-924ca7c92c",
+     "L1-E-adca585bfb",
+     "L1-E-515ef4facb",
+     "L1-E-1fb76ebb93",
+     "L1-E-3712abfaf9",
+     "L1-E-f642524fd9",
+     "L1-E-f9f0138f80",
+     "L1-E-591c232f7c",
+     "L1-E-dd949ace23",
+     "L1-E-13c48dcf88",
+     "L1-E-a91e90d9a3",
+     "L1-E-616a3e20df",
+     "L1-E-4edb240112",
+     "L1-E-9535015d05",
+     "L1-E-5b5571a8da",
+     "L1-E-990c7590b8",
+     "L1-E-2ab141547d",
+     "L1-E-08d6d297e5",
+     "L1-E-359009fa00",
+     "L1-E-a2c38175a4",
+     "L1-E-169fc1e20c"
+    ],
+    "evidence_urls": [
+     "https://github.com/sgl-project/sglang/pull/6220",
+     "https://github.com/sgl-project/sglang/pull/6968",
+     "https://github.com/sgl-project/sglang/pull/8770",
+     "https://github.com/sgl-project/sglang/pull/9035",
+     "https://github.com/sgl-project/sglang/pull/10321"
+    ],
+    "confidence": "high"
+   }
+  },
+  {
+   "move_id": "M-L1-reduce-topk-sum-fusion",
+   "name": "Fused top-k expert-output reduction",
+   "category": "fusion",
+   "description": "MoE combine replaces torch.sum/top-k reduction with CUDA, Triton, or JIT kernels that loop over top-k expert-output rows and write the final hidden vector directly. CUDA moe_sum_reduce also fuses routed scaling; Kimi decode adds vectorized bf16 topk_sum.",
+   "problem_solved": "Avoids generic PyTorch reductions and extra intermediate writes on the MoE combine path.",
+   "first_observed": {
+    "repo": "vllm-project/vllm",
+    "sha": "59449095ab53",
+    "pr": 9384,
+    "date": "2024-10-24",
+    "artifact_id": "L1.upstream.vllm.align_sum",
+    "evidence": "replace torch.sum with customized moe_sum"
+   },
+   "occurrences": [
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "616a3e20df5faf73a7d1581c7016413f64d583e4",
+     "pr": 10321,
+     "date": "2025-09-19",
+     "artifact_id": "L1.reduce.moe_sum_reduce",
+     "relation": "reimplemented",
+     "acknowledges_prior": "unclear",
+     "evidence": "rewrite it in CUDA for better performance"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "8fdcd98efefcd98a804c412d16a95e6f59f17f54",
+     "pr": 11019,
+     "date": "2025-10-11",
+     "artifact_id": "L1.reduce.moe_sum",
+     "relation": "ported",
+     "acknowledges_prior": "yes: Adapted from vllm",
+     "evidence": "Kernel List ... moe_sum"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "fb207b72b02a2adfab3a4a18f5e3b5fa57bb1049",
+     "pr": 32890,
+     "date": "2026-08-01",
+     "artifact_id": "L1.reduce.topk_sum_jit",
+     "relation": "reimplemented",
+     "acknowledges_prior": "unclear",
+     "evidence": "Top-k expert-output sum"
+    }
+   ],
+   "semantic_preconditions": [
+    "input is shaped [M, topk, hidden]",
+    "JIT topk_sum requires contiguous bf16 tensors",
+    "K divisible by 8 for vectorized JIT loads"
+   ],
+   "hardware_preconditions": [
+    "CUDA for AOT/JIT paths",
+    "bf16 vector path uses 128-bit loads"
+   ],
+   "framework_preconditions": [
+    "fallbacks remain for small token torch.compile/Triton",
+    "output buffer is preallocated and contiguous"
+   ],
+   "assumptions": [
+    {
+     "assumption": "Vectorized JIT topk_sum requires hidden dimension divisible by eight.",
+     "status": "derived",
+     "source": "fb207b72:topk_sum.cuh",
+     "excerpt": "K must be divisible by 8",
+     "kind": "semantic",
+     "spec_checked": ""
+    },
+    {
+     "assumption": "bf16 specialized path is selected only for aligned bf16.",
+     "status": "derived",
+     "source": "616a3e20:moe_sum_reduce.cu",
+     "excerpt": "input.scalar_type() == at::kBFloat16",
+     "kind": "hardware",
+     "spec_checked": ""
+    }
+   ],
+   "performance_evidence": "#10321: CUDAKernel 7.488us at 1 token vs Original 14.368us; topk_sum.cuh comment: ~5.7us to ~1.5us.",
+   "correctness_evidence": "#10321 reports all implementations match; #32890 retained H100 tests passed.",
+   "known_failures": [
+    {
+     "ref": "confirmed-reverts.csv sglang:2a96e302",
+     "what": "moe_sum_reduce rolled back for Marlin MoE launch crashes",
+     "scope": "partial_domain"
+    }
+   ],
+   "current_status": "live_textual",
+   "signature": {
+    "pathspec": [
+     "python/sglang/kernels/aot/csrc/moe/moe_sum_reduce.cu",
+     "python/sglang/kernels/aot/csrc/moe/moe_sum.cu",
+     "python/sglang/kernels/jit/csrc/moe/topk_sum.cuh",
+     "python/sglang/kernels/ops/moe/moe_topk_sum.py",
+     "sgl-kernel/csrc/moe/moe_sum*.cu"
+    ],
+    "regex": "moe_sum_reduce_kernel|moe_sum\\(|topk_sum_kernel|moe_topk_sum",
+    "min_files": 1,
+    "validated_at": [
+     "sglang v0.5.20: match topk_sum.cuh and moe_topk_sum.py",
+     "sglang v0.5.16: no topk_sum match"
+    ]
+   },
+   "confidence": "high",
+   "evidence_urls": [
+    "https://github.com/vllm-project/vllm/pull/9384",
+    "https://github.com/sgl-project/sglang/pull/10321",
+    "https://github.com/sgl-project/sglang/pull/11019",
+    "https://github.com/sgl-project/sglang/pull/32890"
+   ],
+   "later_uses": [
+    "L1-E-148254d4db",
+    "L1-E-bdc1acf6cd",
+    "L1-E-3e56f557fd",
+    "L1-E-c797322280",
+    "L1-E-cb3918a091",
+    "L1-E-616a3e20df",
+    "L1-E-8fdcd98efe",
+    "L1-E-813bd6f85c",
+    "L1-E-44f594d832",
+    "L1-E-2a96e302cb",
+    "L1-E-5b5571a8da",
+    "L1-E-ee5ccde0ad",
+    "L1-E-137168539a",
+    "L1-E-4b5c612257",
+    "L1-E-fb207b72b0"
+   ],
+   "known_failure_refs": [
+    "confirmed-reverts.csv sglang:2a96e302"
+   ],
+   "evidence_types": [
+    "diff",
+    "pr_body",
+    "revert_record",
+    "test",
+    "upstream_source"
+   ],
+   "biography": {
+    "first_appearance": "vLLM #9384, commit 59449095ab (2024-10-24), added moe_align_sum_kernels.cu and replaced torch.sum with customized moe_sum; SGLang later added CUDA/JIT equivalents.",
+    "problem": "Combines top-k expert outputs directly into the final hidden vector, avoiding generic torch.sum, extra reshapes, and intermediate writes; SGLang CUDA path can also fold routed scaling.",
+    "preconditions": "input is [M, topk, hidden]; output is contiguous; vectorized paths require bf16/aligned hidden sizes; fallbacks cover unsupported small-token or dtype cases.",
+    "survival": "textual + evidence: cutoff grep finds moe_sum_reduce_kernel, topk_sum_kernel, and moe_topk_sum; release samples show moe_sum_reduce in v0.5.3 and topk_sum/JIT paths by v0.5.18-v0.5.20.",
+    "recurrence": "SGLang #10321 rewrote top-k sum in CUDA; #11019 ported vLLM moe_sum; #32890 added a decode-oriented JIT topk_sum path.",
+    "failures": "confirmed-reverts.csv sglang:2a96e302 records a moe_sum_reduce rollback for Marlin MoE launch crashes, scoped to that domain.",
+    "acknowledgement": "SGLang #11019 says \"Adapted from vllm\"; no acknowledgement found in #10321/#32890 PR text searched for the CUDA/JIT rewrites.",
+    "event_ids": [
+     "L1-E-148254d4db",
+     "L1-E-bdc1acf6cd",
+     "L1-E-3e56f557fd",
+     "L1-E-c797322280",
+     "L1-E-cb3918a091",
+     "L1-E-616a3e20df",
+     "L1-E-8fdcd98efe",
+     "L1-E-813bd6f85c",
+     "L1-E-44f594d832",
+     "L1-E-2a96e302cb",
+     "L1-E-5b5571a8da",
+     "L1-E-ee5ccde0ad",
+     "L1-E-137168539a",
+     "L1-E-4b5c612257",
+     "L1-E-fb207b72b0"
+    ],
+    "evidence_urls": [
+     "https://github.com/vllm-project/vllm/pull/9384",
+     "https://github.com/sgl-project/sglang/pull/10321",
+     "https://github.com/sgl-project/sglang/pull/11019",
+     "https://github.com/sgl-project/sglang/pull/32890"
+    ],
+    "confidence": "high"
+   }
+  },
+  {
+   "move_id": "M-L1-fused-moe-triton-tiled-pipeline",
+   "name": "Triton fused_moe tiled expert GEMM pipeline with activation fusion",
+   "category": "tiling_blocking",
+   "description": "The Triton fused_moe core uses sorted_token_ids/expert_ids to tile routed tokens by expert, grouped program ordering for L2 reuse, config-selected BLOCK_M/N/K shapes, and a fused activation path between gate/up and down projections.",
+   "problem_solved": "Avoids per-token expert dispatch and separate activation kernels while choosing tile shapes by weight/dtype/top-k configuration.",
+   "first_observed": {
+    "repo": "sgl-project/sglang",
+    "sha": "09de730dee31d13451fc8967b7ca31967b1a2420",
+    "pr": 484,
+    "date": "2024-05-27",
+    "artifact_id": "L1.triton.fused_moe",
+    "evidence": "Map program ids `pid` to the block of C"
+   },
+   "occurrences": [
+    {
+     "repo": "vllm-project/vllm",
+     "sha": "c7f2cf2b7f67",
+     "pr": null,
+     "date": "2024-02-26",
+     "artifact_id": "L1.upstream.vllm.fused_topk",
+     "relation": "first",
+     "acknowledges_prior": "unclear",
+     "evidence": "SGLang header cites vLLM fused_moe.py"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "b5245064f66e99686bf060f0ea51f81f39c0c1db",
+     "pr": 9878,
+     "date": "2025-09-02",
+     "artifact_id": "L1.triton.helper_kernels",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "unclear",
+     "evidence": "invoke_fused_moe_kernel split to helper kernels"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "89e1316eae9aae634c174c040415289fe4484aee",
+     "pr": null,
+     "date": "2026-09-28",
+     "artifact_id": "L1.triton.fused_moe",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "unclear",
+     "evidence": "silu(gate) * up was already applied"
+    }
+   ],
+   "semantic_preconditions": [
+    "tokens have been sorted and padded by expert",
+    "activation fusion requires silu/gated/no bias/hooks/quant and bf16",
+    "filter_expert skips -1 expert tiles"
+   ],
+   "hardware_preconditions": [
+    "Triton GPU backend",
+    "SM90 swap_ab optimization only when supported"
+   ],
+   "framework_preconditions": [
+    "try_get_optimal_moe_config returns BLOCK_SIZE_M/N/K",
+    "MoeRunnerConfig carries routed scaling and gate_up_interleaved flags"
+   ],
+   "assumptions": [
+    {
+     "assumption": "Grouped pid ordering improves L2 reuse.",
+     "status": "derived",
+     "source": "89e1316e:fused_moe_triton_kernels.py",
+     "excerpt": "grouped ordering to promote L2 data reuse",
+     "kind": "semantic",
+     "spec_checked": ""
+    },
+    {
+     "assumption": "SwiGLU epilogue fusion is valid only under checked constraints.",
+     "status": "derived",
+     "source": "89e1316e:fused_moe.py",
+     "excerpt": "fuse_swiglu_interleaved set on an incompatible",
+     "kind": "semantic",
+     "spec_checked": ""
+    }
+   ],
+   "performance_evidence": "General speedup not isolated; comments say swap_ab benefits SM90 GPUs for certain block shapes.",
+   "correctness_evidence": "Runtime validation rejects incompatible fuse_swiglu_interleaved calls.",
+   "known_failures": [],
+   "current_status": "live_textual",
+   "signature": {
+    "pathspec": [
+     "python/sglang/srt/layers/moe/moe_runner/triton_utils/fused_moe.py",
+     "python/sglang/kernels/ops/moe/fused_moe_triton_kernels.py",
+     "python/sglang/srt/layers/fused_moe.py"
+    ],
+    "regex": "GROUP_SIZE_M|try_get_optimal_moe_config|fuse_swiglu_interleaved|sorted_token_ids_ptr.*expert_ids_ptr",
+    "min_files": 1,
+    "validated_at": [
+     "sglang v0.1.17: match python/sglang/srt/layers/fused_moe.py",
+     "sglang v0.5.15: no fuse_swiglu_interleaved match"
+    ]
+   },
+   "confidence": "high",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/484",
+    "https://github.com/sgl-project/sglang/pull/9878",
+    "https://github.com/sgl-project/sglang/pull/23019"
+   ],
+   "later_uses": [
+    "L1-E-09de730dee",
+    "L1-E-be0124bda0",
+    "L1-E-1a6e97577a",
+    "L1-E-c7f254468f",
+    "L1-E-061f41affc",
+    "L1-E-3e73e12458",
+    "L1-E-5f7aee726a",
+    "L1-E-b35213be11",
+    "L1-E-b95a746948",
+    "L1-E-d4ad368ed9"
+   ],
+   "known_failure_refs": [],
+   "evidence_types": [
+    "diff",
+    "pr_body",
+    "upstream_source"
+   ],
+   "biography": null
+  },
+  {
+   "move_id": "M-L1-ep-deepep-reorder-layout",
+   "name": "EP/DeepEP token permutation and post-reorder fused accumulation",
+   "category": "sparsity_routing",
+   "description": "Expert-parallel MoE sorts routed tokens by expert, computes src2dst/seg_indptr metadata, permutes hidden states into DeepEP/local expert layouts, then post-reorders down-projection outputs while applying top-k weights and optional scaling.",
+   "problem_solved": "Turns sparse token-to-expert routing into contiguous per-expert buffers for communication/GEMM and avoids PyTorch permute overhead.",
+   "first_observed": {
+    "repo": "sgl-project/sglang",
+    "sha": "e835a50021e03bf7c14b8af68b210189bb6e768b",
+    "pr": 2563,
+    "date": "2024-12-24",
+    "artifact_id": "L1.ep.layer",
+    "evidence": "EPMoE/DeepEPMoE layer and ep_moe kernels"
+   },
+   "occurrences": [
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "c2bd094d6eb621a51a19d6595ddb3ddcc9030970",
+     "pr": 4643,
+     "date": "2025-03-22",
+     "artifact_id": "L1.ep.layer",
+     "relation": "same_artifact_modified",
+     "acknowledges_prior": "unclear",
+     "evidence": "implemented high-efficiency Triton kernels"
+    },
+    {
+     "repo": "sgl-project/sglang",
+     "sha": "18f41ac427461b75ba769d8589196fe2a9a2fcb5",
+     "pr": 22316,
+     "date": "2026-04-10",
+     "artifact_id": "L1.ep.deepep_dispatcher",
+     "relation": "repaired",
+     "acknowledges_prior": "yes: Reland",
+     "evidence": "Reland DeepEP Low Latency Dispatch"
+    },
+    {
+     "repo": "vllm-project/vllm",
+     "sha": "14617c2b6c1257ac0d6c7b5e05b195ca30013827",
+     "pr": 52632,
+     "date": "2026-08-20",
+     "artifact_id": "cross-repo",
+     "relation": "repaired",
+     "acknowledges_prior": "unclear",
+     "evidence": "DeepEP-V2: expert_tokens_meta"
+    }
+   ],
+   "semantic_preconditions": [
+    "topk_ids can be flattened and sorted stably",
+    "-1/filtered ids are skipped or shifted consistently",
+    "src2dst maps routed pairs to communication/GEMM rows"
+   ],
+   "hardware_preconditions": [
+    "Triton kernels on CUDA/MUSA as enabled",
+    "DeepEP backend available for deepep dispatch"
+   ],
+   "framework_preconditions": [
+    "--moe-a2a-backend deepep/deepep_v2 selects dispatcher",
+    "low-latency/W4A8 paths require matching dtype and metadata"
+   ],
+   "assumptions": [
+    {
+     "assumption": "Stable sorted topk ids produce contiguous expert segments.",
+     "status": "derived",
+     "source": "89e1316e:ep_moe_kernels.py",
+     "excerpt": "torch.sort(topk_ids.view(-1), stable=True)",
+     "kind": "framework",
+     "spec_checked": ""
+    },
+    {
+     "assumption": "Post-reorder can accumulate weighted outputs in one pass.",
+     "status": "derived",
+     "source": "89e1316e:ep_moe_kernels.py",
+     "excerpt": "sum_vec += in_data * weigh_scale",
+     "kind": "semantic",
+     "spec_checked": ""
+    }
+   ],
+   "performance_evidence": "#4643 reports DeepEP original 873.38 tok/s vs current 1163.87 tok/s on H20 single node.",
+   "correctness_evidence": "Correctness dataset lists DeepEP BF16, local_num_experts, W4AFP8 scaling/mode dtype fixes.",
+   "known_failures": [
+    {
+     "ref": "kernel-correctness-cases.csv sglang:74e7e45710",
+     "what": "DEEPEP BF16 compatibility fix",
+     "scope": "adapter"
+    },
+    {
+     "ref": "kernel-correctness-cases.csv sglang:b01eeb80f8",
+     "what": "local_num_experts parameter passing fixed for EP",
+     "scope": "adapter"
+    },
+    {
+     "ref": "confirmed-reverts.csv sglang:505eb312",
+     "what": "DeepEP FP8 low-latency work reverted then relanded",
+     "scope": "implementation"
+    },
+    {
+     "ref": "confirmed-reverts.csv sglang:1270204d",
+     "what": "DeepEPv2 ElasticBuffer backend reverted for CI failure",
+     "scope": "adapter"
+    }
+   ],
+   "current_status": "live_textual",
+   "signature": {
+    "pathspec": [
+     "python/sglang/srt/layers/moe/ep_moe/*.py",
+     "python/sglang/kernels/ops/moe/ep_moe_kernels.py",
+     "python/sglang/srt/layers/moe/token_dispatcher/deepep*.py"
+    ],
+    "regex": "deepep_permute_triton_kernel|deepep_post_reorder_triton_kernel|deepep_compute_src2dst_triton_kernel|DeepEPDispatcher",
+    "min_files": 1,
+    "validated_at": [
+     "sglang v0.4.5: match python/sglang/srt/layers/moe/ep_moe/kernels.py",
+     "sglang v0.4.4: no EP reorder match"
+    ]
+   },
+   "confidence": "high",
+   "evidence_urls": [
+    "https://github.com/sgl-project/sglang/pull/4643",
+    "https://github.com/sgl-project/sglang/pull/22316",
+    "https://github.com/vllm-project/vllm/pull/52632"
+   ],
+   "later_uses": [
+    "L1-E-3d32e4a32c",
+    "L1-E-21463e321a",
+    "L1-E-f44db16c8e",
+    "L1-E-c2bd094d6e",
+    "L1-E-23c764b18a",
+    "L1-E-2716830802",
+    "L1-E-c087ddd686",
+    "L1-E-55444ed667",
+    "L1-E-43baba649e",
+    "L1-E-506c4928f5",
+    "L1-E-755f314785",
+    "L1-E-c5d2b01cea",
+    "L1-E-a40229f6f8",
+    "L1-E-825432fce6",
+    "L1-E-904655c5fd",
+    "L1-E-13bf565d60",
+    "L1-E-9535015d05",
+    "L1-E-2c2c4e446b",
+    "L1-E-f1384f5293",
+    "L1-E-60eeef7370",
+    "L1-E-9991debde3",
+    "L1-E-59cad671e2",
+    "L1-E-951fa05a09",
+    "L1-E-0ae27405d0",
+    "L1-E-b8c25bfaa7",
+    "L1-E-423b8485fb",
+    "L1-E-5558dbad00",
+    "L1-E-a1c30701aa",
+    "L1-E-4f8ecf6ae9",
+    "L1-E-1270204d2c",
+    "L1-E-21258b7a35",
+    "L1-E-a3ae667d67",
+    "L1-E-0e5347db82",
+    "vllm#52632"
+   ],
+   "known_failure_refs": [
+    "kernel-correctness-cases.csv sglang:74e7e45710",
+    "kernel-correctness-cases.csv sglang:b01eeb80f8",
+    "confirmed-reverts.csv sglang:505eb312",
+    "confirmed-reverts.csv sglang:1270204d"
+   ],
+   "evidence_types": [
+    "diff",
+    "pr_body",
+    "revert_record",
+    "upstream_source"
+   ],
+   "biography": null
+  }
+ ],
+ "rejected_candidates": [
+  {
+   "name": "CUDA graph safety of routing/align as standalone move",
+   "why": "No distinct kernel mechanism beyond static-shape dispatch gates, PDL waits, and adapter fixes; recorded as framework preconditions/failures instead."
+  },
+  {
+   "name": "Shared-expert fusion as standalone L1 move",
+   "why": "Accepted only inside fused gate/top-k when num_fused_shared_experts appends shared experts as routed slots; generic shared expert layers are broader model logic."
+  },
+  {
+   "name": "FlashInfer MoE backend kernels",
+   "why": "TRT-LLM ancestry verified for topk_softmax via vLLM/SGLang headers; no local FlashInfer kernel mechanism diff was verifiable in this scope."
+  },
+  {
+   "name": "Uncoded raw move mentions not mapped above",
+   "why": "Mapped to one_off in name_map unless structural identity with an L1 catalog move was visible from the event mechanism; recurring names outside the five MoE alignment/routing/reduce mechanisms were left one_off rather than inflated without full biography evidence."
+  }
+ ],
+ "notes": "Finalized for WP-E with cutoff SGLang 89e1316e and vLLM c68eb98. move-release-presence.csv was absent in data/cache, so survival was checked with git grep at cutoff and sampled release tags. Central biographies emphasize vLLM #2453 alignment origin, SGLang sgl-kernel optimizations, vLLM #12574/#19572 back-ports, and TRT-LLM/vLLM top-k routing lineage."
+}

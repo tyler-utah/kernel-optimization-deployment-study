@@ -1,0 +1,5 @@
+repo,validation_sample,n,confirmed_performance,not_performance,uncertain,share_confirmed,wilson95_low,wilson95_high
+vllm,validation_rule_excluded,200,16,178,6,0.08,0.0498,0.126
+vllm,validation_rule_confirmed,150,149,1,0,0.9933,0.9632,0.9988
+sglang,validation_rule_confirmed,150,147,3,0,0.98,0.9429,0.9932
+sglang,validation_rule_excluded,200,19,180,1,0.095,0.0617,0.1436

@@ -1,0 +1,107 @@
+graph LR
+  M_L2_absorbed_latent_mqa_decode_0["M-L2-absorbed-latent-mqa-decode<br/>sgl-project/sglang 2024-08-05<br/>first"]
+  M_L2_absorbed_latent_mqa_decode_1["M-L2-absorbed-latent-mqa-decode<br/>sgl-project/sglang 2024-08-30<br/>same_artifact_modified"]
+  M_L2_absorbed_latent_mqa_decode_0 -->|same_artifact_modified| M_L2_absorbed_latent_mqa_decode_1
+  M_L2_absorbed_latent_mqa_decode_2["M-L2-absorbed-latent-mqa-decode<br/>sgl-project/sglang 2026-09-28<br/>same_artifact_modified"]
+  M_L2_absorbed_latent_mqa_decode_1 -->|same_artifact_modified| M_L2_absorbed_latent_mqa_decode_2
+  M_L2_absorbed_latent_mqa_decode_3["M-L2-absorbed-latent-mqa-decode<br/>vllm-project/vllm 2026-09-28<br/>reimplemented"]
+  M_L2_absorbed_latent_mqa_decode_2 -->|reimplemented| M_L2_absorbed_latent_mqa_decode_3
+  M_L2_prefill_without_absorption_0["M-L2-prefill-without-absorption<br/>sgl-project/sglang 2024-12-05<br/>first"]
+  M_L2_prefill_without_absorption_1["M-L2-prefill-without-absorption<br/>sgl-project/sglang 2026-09-28<br/>same_artifact_modified"]
+  M_L2_prefill_without_absorption_0 -->|same_artifact_modified| M_L2_prefill_without_absorption_1
+  M_L2_split_kv_lse_dynamic_decode_0["M-L2-split-kv-lse-dynamic-decode<br/>sgl-project/sglang 2024-08-19<br/>first"]
+  M_L2_split_kv_lse_dynamic_decode_1["M-L2-split-kv-lse-dynamic-decode<br/>sgl-project/sglang 2025-03-18<br/>same_artifact_modified"]
+  M_L2_split_kv_lse_dynamic_decode_0 -->|same_artifact_modified| M_L2_split_kv_lse_dynamic_decode_1
+  M_L2_split_kv_lse_dynamic_decode_2["M-L2-split-kv-lse-dynamic-decode<br/>vllm-project/vllm 2026-09-28<br/>reimplemented"]
+  M_L2_split_kv_lse_dynamic_decode_1 -->|reimplemented| M_L2_split_kv_lse_dynamic_decode_2
+  M_L2_flashinfer_plan_run_graph_0["M-L2-flashinfer-plan-run-graph<br/>sgl-project/sglang 2025-02-14<br/>first"]
+  M_L2_flashinfer_plan_run_graph_1["M-L2-flashinfer-plan-run-graph<br/>sgl-project/sglang 2025-03-05<br/>repaired"]
+  M_L2_flashinfer_plan_run_graph_0 -->|repaired| M_L2_flashinfer_plan_run_graph_1
+  M_L2_flashinfer_plan_run_graph_2["M-L2-flashinfer-plan-run-graph<br/>vllm-project/vllm 2026-02-12<br/>reimplemented"]
+  M_L2_flashinfer_plan_run_graph_1 -->|reimplemented| M_L2_flashinfer_plan_run_graph_2
+  M_L2_flashinfer_ragged_prefill_0["M-L2-flashinfer-ragged-prefill<br/>sgl-project/sglang 2025-02-28<br/>first"]
+  M_L2_flashinfer_ragged_prefill_1["M-L2-flashinfer-ragged-prefill<br/>sgl-project/sglang 2025-09-12<br/>repaired"]
+  M_L2_flashinfer_ragged_prefill_0 -->|repaired| M_L2_flashinfer_ragged_prefill_1
+  M_L2_flashinfer_ragged_prefill_2["M-L2-flashinfer-ragged-prefill<br/>vllm-project/vllm 2026-09-28<br/>reimplemented"]
+  M_L2_flashinfer_ragged_prefill_1 -->|reimplemented| M_L2_flashinfer_ragged_prefill_2
+  M_L2_flashmla_tile_metadata_0["M-L2-flashmla-tile-metadata<br/>sgl-project/sglang 2025-03-16<br/>first"]
+  M_L2_flashmla_tile_metadata_1["M-L2-flashmla-tile-metadata<br/>sgl-project/sglang 2025-03-19<br/>repaired"]
+  M_L2_flashmla_tile_metadata_0 -->|repaired| M_L2_flashmla_tile_metadata_1
+  M_L2_flashmla_tile_metadata_2["M-L2-flashmla-tile-metadata<br/>vllm-project/vllm 2025-02-27<br/>reimplemented"]
+  M_L2_flashmla_tile_metadata_1 -->|reimplemented| M_L2_flashmla_tile_metadata_2
+  M_L2_paged_latent_kv_fused_writes_0["M-L2-paged-latent-kv-fused-writes<br/>sgl-project/sglang 2024-08-05<br/>first"]
+  M_L2_paged_latent_kv_fused_writes_1["M-L2-paged-latent-kv-fused-writes<br/>sgl-project/sglang 2026-05-14<br/>same_artifact_modified"]
+  M_L2_paged_latent_kv_fused_writes_0 -->|same_artifact_modified| M_L2_paged_latent_kv_fused_writes_1
+  M_L2_paged_latent_kv_fused_writes_2["M-L2-paged-latent-kv-fused-writes<br/>sgl-project/sglang 2026-05-15<br/>same_artifact_modified"]
+  M_L2_paged_latent_kv_fused_writes_1 -->|same_artifact_modified| M_L2_paged_latent_kv_fused_writes_2
+  M_L2_fa3_hopper_mla_0["M-L2-fa3-hopper-mla<br/>sgl-project/sglang 2025-03-28<br/>first"]
+  M_L2_fa3_hopper_mla_1["M-L2-fa3-hopper-mla<br/>sgl-project/sglang 2025-04-12<br/>same_artifact_modified"]
+  M_L2_fa3_hopper_mla_0 -->|same_artifact_modified| M_L2_fa3_hopper_mla_1
+  M_L2_fa3_hopper_mla_2["M-L2-fa3-hopper-mla<br/>vllm-project/vllm 2026-07-11<br/>repaired"]
+  M_L2_fa3_hopper_mla_1 -->|repaired| M_L2_fa3_hopper_mla_2
+  M_L2_rocm_fused_rope_decode_0["M-L2-rocm-fused-rope-decode<br/>sgl-project/sglang 2025-02-24<br/>first"]
+  M_L2_rocm_fused_rope_decode_1["M-L2-rocm-fused-rope-decode<br/>sgl-project/sglang 2026-09-28<br/>same_artifact_modified"]
+  M_L2_rocm_fused_rope_decode_0 -->|same_artifact_modified| M_L2_rocm_fused_rope_decode_1
+  M_L2_rocm_fused_rope_decode_2["M-L2-rocm-fused-rope-decode<br/>vllm-project/vllm 2026-09-28<br/>reimplemented"]
+  M_L2_rocm_fused_rope_decode_1 -->|reimplemented| M_L2_rocm_fused_rope_decode_2
+  M_L2_cutlass_sm100_persistent_mla_0["M-L2-cutlass-sm100-persistent-mla<br/>sgl-project/sglang 2025-04-11<br/>first"]
+  M_L2_cutlass_sm100_persistent_mla_1["M-L2-cutlass-sm100-persistent-mla<br/>sgl-project/sglang 2025-04-27<br/>same_artifact_modified"]
+  M_L2_cutlass_sm100_persistent_mla_0 -->|same_artifact_modified| M_L2_cutlass_sm100_persistent_mla_1
+  M_L2_cutlass_sm100_persistent_mla_2["M-L2-cutlass-sm100-persistent-mla<br/>sgl-project/sglang 2026-09-10<br/>removed"]
+  M_L2_cutlass_sm100_persistent_mla_1 -->|removed| M_L2_cutlass_sm100_persistent_mla_2
+  M_L2_cutlass_sm100_persistent_mla_3["M-L2-cutlass-sm100-persistent-mla<br/>vllm-project/vllm 2025-06-03<br/>reimplemented"]
+  M_L2_cutlass_sm100_persistent_mla_2 -->|reimplemented| M_L2_cutlass_sm100_persistent_mla_3
+  M_L2_trtllm_gen_mla_flashinfer_0["M-L2-trtllm-gen-mla-flashinfer<br/>sgl-project/sglang 2025-07-31<br/>first"]
+  M_L2_trtllm_gen_mla_flashinfer_1["M-L2-trtllm-gen-mla-flashinfer<br/>sgl-project/sglang 2025-08-11<br/>same_artifact_modified"]
+  M_L2_trtllm_gen_mla_flashinfer_0 -->|same_artifact_modified| M_L2_trtllm_gen_mla_flashinfer_1
+  M_L2_trtllm_gen_mla_flashinfer_2["M-L2-trtllm-gen-mla-flashinfer<br/>sgl-project/sglang 2026-09-10<br/>replaced"]
+  M_L2_trtllm_gen_mla_flashinfer_1 -->|replaced| M_L2_trtllm_gen_mla_flashinfer_2
+  M_L2_trtllm_gen_mla_flashinfer_3["M-L2-trtllm-gen-mla-flashinfer<br/>vllm-project/vllm 2025-09-10<br/>reimplemented"]
+  M_L2_trtllm_gen_mla_flashinfer_2 -->|reimplemented| M_L2_trtllm_gen_mla_flashinfer_3
+  M_L2_fused_absorb_q_concat_0["M-L2-fused-absorb-q-concat<br/>sgl-project/sglang 2025-09-15<br/>first"]
+  M_L2_fused_absorb_q_concat_1["M-L2-fused-absorb-q-concat<br/>sgl-project/sglang 2025-09-15<br/>first_observed"]
+  M_L2_fused_absorb_q_concat_0 -->|first_observed| M_L2_fused_absorb_q_concat_1
+  M_L2_fused_absorb_q_concat_2["M-L2-fused-absorb-q-concat<br/>sgl-project/sglang 2025-09-16<br/>same_mechanism"]
+  M_L2_fused_absorb_q_concat_1 -->|same_mechanism| M_L2_fused_absorb_q_concat_2
+  M_L2_fused_absorb_q_concat_3["M-L2-fused-absorb-q-concat<br/>sgl-project/sglang 2025-09-22<br/>same_mechanism"]
+  M_L2_fused_absorb_q_concat_2 -->|same_mechanism| M_L2_fused_absorb_q_concat_3
+  M_L2_cutlass_concat_free_q_interface_0["M-L2-cutlass-concat-free-q-interface<br/>sgl-project/sglang 2025-06-13<br/>first"]
+  M_L2_cutlass_concat_free_q_interface_1["M-L2-cutlass-concat-free-q-interface<br/>sgl-project/sglang 2025-06-13<br/>first_observed"]
+  M_L2_cutlass_concat_free_q_interface_0 -->|first_observed| M_L2_cutlass_concat_free_q_interface_1
+  M_L2_cutlass_concat_free_q_interface_2["M-L2-cutlass-concat-free-q-interface<br/>sgl-project/sglang 2025-06-13<br/>same_mechanism"]
+  M_L2_cutlass_concat_free_q_interface_1 -->|same_mechanism| M_L2_cutlass_concat_free_q_interface_2
+  M_L2_dcp_a2a_pack_lse_fusion_0["M-L2-dcp-a2a-pack-lse-fusion<br/>sgl-project/sglang 2026-08-12<br/>first"]
+  M_L2_dcp_a2a_pack_lse_fusion_1["M-L2-dcp-a2a-pack-lse-fusion<br/>sgl-project/sglang 2026-08-12<br/>first_observed"]
+  M_L2_dcp_a2a_pack_lse_fusion_0 -->|first_observed| M_L2_dcp_a2a_pack_lse_fusion_1
+  M_L2_dcp_a2a_pack_lse_fusion_2["M-L2-dcp-a2a-pack-lse-fusion<br/>sgl-project/sglang 2026-08-13<br/>same_mechanism"]
+  M_L2_dcp_a2a_pack_lse_fusion_1 -->|same_mechanism| M_L2_dcp_a2a_pack_lse_fusion_2
+  M_L2_fused_mla_k_concat_0["M-L2-fused-mla-k-concat<br/>sgl-project/sglang 2025-09-08<br/>first"]
+  M_L2_fused_mla_k_concat_1["M-L2-fused-mla-k-concat<br/>sgl-project/sglang 2025-09-08<br/>first_observed"]
+  M_L2_fused_mla_k_concat_0 -->|first_observed| M_L2_fused_mla_k_concat_1
+  M_L2_fused_mla_k_concat_2["M-L2-fused-mla-k-concat<br/>sgl-project/sglang 2025-09-14<br/>same_mechanism"]
+  M_L2_fused_mla_k_concat_1 -->|same_mechanism| M_L2_fused_mla_k_concat_2
+  M_L2_grouped_head_shared_kv_verify_0["M-L2-grouped-head-shared-kv-verify<br/>sgl-project/sglang 2026-08-15<br/>first"]
+  M_L2_grouped_head_shared_kv_verify_1["M-L2-grouped-head-shared-kv-verify<br/>sgl-project/sglang 2026-08-15<br/>first_observed"]
+  M_L2_grouped_head_shared_kv_verify_0 -->|first_observed| M_L2_grouped_head_shared_kv_verify_1
+  M_L2_grouped_head_shared_kv_verify_2["M-L2-grouped-head-shared-kv-verify<br/>sgl-project/sglang 2026-08-20<br/>same_mechanism"]
+  M_L2_grouped_head_shared_kv_verify_1 -->|same_mechanism| M_L2_grouped_head_shared_kv_verify_2
+  M_L2_nonpaged_c4_indexer_gather_0["M-L2-nonpaged-c4-indexer-gather<br/>sgl-project/sglang 2026-07-02<br/>first"]
+  M_L2_nonpaged_c4_indexer_gather_1["M-L2-nonpaged-c4-indexer-gather<br/>sgl-project/sglang 2026-07-02<br/>first_observed"]
+  M_L2_nonpaged_c4_indexer_gather_0 -->|first_observed| M_L2_nonpaged_c4_indexer_gather_1
+  M_L2_nonpaged_c4_indexer_gather_2["M-L2-nonpaged-c4-indexer-gather<br/>sgl-project/sglang 2026-07-07<br/>same_mechanism"]
+  M_L2_nonpaged_c4_indexer_gather_1 -->|same_mechanism| M_L2_nonpaged_c4_indexer_gather_2
+  M_L2_separate_q_nope_q_rope_interface_0["M-L2-separate-q-nope-q-rope-interface<br/>sgl-project/sglang 2025-04-22<br/>first"]
+  M_L2_separate_q_nope_q_rope_interface_1["M-L2-separate-q-nope-q-rope-interface<br/>sgl-project/sglang 2025-04-22<br/>first_observed"]
+  M_L2_separate_q_nope_q_rope_interface_0 -->|first_observed| M_L2_separate_q_nope_q_rope_interface_1
+  M_L2_separate_q_nope_q_rope_interface_2["M-L2-separate-q-nope-q-rope-interface<br/>sgl-project/sglang 2025-05-08<br/>same_mechanism"]
+  M_L2_separate_q_nope_q_rope_interface_1 -->|same_mechanism| M_L2_separate_q_nope_q_rope_interface_2
+  M_L2_skip_ragged_prefill_lse_no_prefix_0["M-L2-skip-ragged-prefill-lse-no-prefix<br/>sgl-project/sglang 2025-04-18<br/>first"]
+  M_L2_skip_ragged_prefill_lse_no_prefix_1["M-L2-skip-ragged-prefill-lse-no-prefix<br/>sgl-project/sglang 2025-04-18<br/>first_observed"]
+  M_L2_skip_ragged_prefill_lse_no_prefix_0 -->|first_observed| M_L2_skip_ragged_prefill_lse_no_prefix_1
+  M_L2_skip_ragged_prefill_lse_no_prefix_2["M-L2-skip-ragged-prefill-lse-no-prefix<br/>sgl-project/sglang 2025-05-05<br/>same_mechanism"]
+  M_L2_skip_ragged_prefill_lse_no_prefix_1 -->|same_mechanism| M_L2_skip_ragged_prefill_lse_no_prefix_2
+  M_L2_swa_ring_reprefill_tail_0["M-L2-swa-ring-reprefill-tail<br/>sgl-project/sglang 2026-07-09<br/>first"]
+  M_L2_swa_ring_reprefill_tail_1["M-L2-swa-ring-reprefill-tail<br/>sgl-project/sglang 2026-07-09<br/>first_observed"]
+  M_L2_swa_ring_reprefill_tail_0 -->|first_observed| M_L2_swa_ring_reprefill_tail_1
+  M_L2_swa_ring_reprefill_tail_2["M-L2-swa-ring-reprefill-tail<br/>sgl-project/sglang 2026-07-09<br/>same_mechanism"]
+  M_L2_swa_ring_reprefill_tail_1 -->|same_mechanism| M_L2_swa_ring_reprefill_tail_2

@@ -1,0 +1,53 @@
+{
+  "configuration": {
+    "pr_start": "2025-09-29T00:00:00Z",
+    "failure_start": "2024-09-29T00:00:00Z",
+    "cutoff": "2026-09-28T23:59:59Z",
+    "seed": 20260929,
+    "heads": {
+      "vllm": "7230dfea501b232ce92d057f1c5ee9cb009c4cb4",
+      "sglang": "79cafec013d0a01c782d7a4bc902ef32a8941ba8"
+    }
+  },
+  "repositories": {
+    "vllm": {
+      "created": 25573,
+      "merged": 11980,
+      "closed_without_merge": 7804,
+      "still_open": 5789,
+      "confirmed_performance": 3214,
+      "performance_merged_30d": 0.3752,
+      "other_merged_30d": 0.4597,
+      "performance_median_lines": 223,
+      "other_median_lines": 62,
+      "performance_revert_rate": 0.018,
+      "other_revert_rate": 0.0088,
+      "complete_open_queue": 5821,
+      "performance_open_queue": 1022
+    },
+    "sglang": {
+      "created": 26004,
+      "merged": 13871,
+      "closed_without_merge": 7696,
+      "still_open": 4437,
+      "confirmed_performance": 3094,
+      "performance_merged_30d": 0.4288,
+      "other_merged_30d": 0.5297,
+      "performance_median_lines": 274,
+      "other_median_lines": 78,
+      "performance_revert_rate": 0.0239,
+      "other_revert_rate": 0.0113,
+      "complete_open_queue": 4470,
+      "performance_open_queue": 784
+    }
+  },
+  "combined": {
+    "created": 51577,
+    "merged": 25851,
+    "closed_without_merge": 15500,
+    "still_open": 10226,
+    "confirmed_performance": 6308,
+    "complete_open_queue": 10291,
+    "performance_open_queue": 1806
+  }
+}

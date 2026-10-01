@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Local credentials and logs
+.env
+*.log
+agent-runs/
+
+# Rebuildable agent input containing upstream PR text rejected by push protection
+deep-study/coding/batches/b1_reverts/batch-004-input.jsonl
+
+# Rebuildable repository and API caches
+data/repos/
+data/github/
+deep-study/data/cache/
+deep-study/data/src/
+kernel-lineage-study/cache/
+
+# Interrupted atomic writes and local locks
+*.tmp
+*.lock
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/

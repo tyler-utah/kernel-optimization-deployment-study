@@ -1,0 +1,285 @@
+{
+  "version": "1.0",
+  "types": [
+    {
+      "name": "add_correctness_unit_test",
+      "group": "evidence",
+      "definition": "Reviewer asks the author to add or extend unit, kernel, regression, or e2e tests that check correctness/numerical equivalence of the changed path.",
+      "include": "Requests for kernel-vs-reference tests, model-path tests, regression tests, additional parameterized correctness cases, or adding a new test to cover the PR behavior.",
+      "exclude": "Requests only to run existing CI/lint, provide benchmark numbers, or report model-quality evals without adding tests.",
+      "example": "Please include unit tests. (vllm#43306)"
+    },
+    {
+      "name": "run_accuracy_eval",
+      "group": "evidence",
+      "definition": "Reviewer asks for model-quality or accuracy evaluation results to show the optimization does not degrade outputs.",
+      "include": "lm-eval, GSM8K, GPQA, MMLU, AIME, real-dataset accuracy, acceptance length when used as quality proxy, or baseline-vs-PR accuracy comparisons.",
+      "exclude": "Kernel allclose/unit tests, generic CI, or performance benchmarks with no quality metric.",
+      "example": "could you check lm_eval to be sure in correctness. (vllm#28095)"
+    },
+    {
+      "name": "provide_kernel_microbenchmark",
+      "group": "evidence",
+      "definition": "Reviewer asks for operator/kernel-level benchmark evidence rather than whole-system serving results.",
+      "include": "Kernel latency, bandwidth, TFLOPS, benchmark scripts under kernel benchmark directories, shape sweeps for an op, or before/after microbenchmark tables.",
+      "exclude": "End-to-end serving throughput/latency, model-quality evals, or profiling traces without a benchmark result.",
+      "example": "Please add a kernel micro benchmark, refer to https://github.com/sgl-project/sglang/tree/main/sgl-kernel/benchmark (sglang#13049)"
+    },
+    {
+      "name": "provide_end_to_end_benchmark",
+      "group": "evidence",
+      "definition": "Reviewer asks for whole-model or serving benchmark results demonstrating user-visible performance impact.",
+      "include": "vLLM/SGLang serving benchmarks, TTFT/TPOT/ITL/throughput, real prompt workloads, larger prompt sets, higher concurrency, or model-level before/after results.",
+      "exclude": "Isolated kernel microbenchmarks, accuracy-only evals, or reproduction commands without measured performance.",
+      "example": "@GOavi101 can you provide some end-to-end benchmark result? (vllm#30022)"
+    },
+    {
+      "name": "compare_against_correct_baseline",
+      "group": "evidence",
+      "definition": "Reviewer asks that measurements or tests use a stronger, fairer, or semantically correct baseline/comparator.",
+      "include": "Comparisons to main, BF16 vs FP8, torch.compile/static-shape baseline, DeepGEMM/reference implementation, best non-PR backend, or before/after tables.",
+      "exclude": "Generic requests for any benchmark, or requests for unrelated extra hardware/model coverage.",
+      "example": "the baseline should be torch.compile with static shape, matching the production code. Comparing against eager mode is misleading (vllm#52676)"
+    },
+    {
+      "name": "provide_reproduction_details",
+      "group": "evidence",
+      "definition": "Reviewer asks for enough run details to reproduce or interpret the result.",
+      "include": "Commands, environment variables, flags, model names, dataset parameters, hardware, software/library versions, full logs, or exact benchmark settings.",
+      "exclude": "Requests merely to update docs for users, or to add code-level comments.",
+      "example": "can you include your env vars for AITER, shuffle KV cache, etc. in the repro command above? (vllm#52849)"
+    },
+    {
+      "name": "provide_profile_or_trace",
+      "group": "evidence",
+      "definition": "Reviewer asks for profiling, traces, or evidence locating where time/overhead is spent.",
+      "include": "Nsight/profile screenshots, kernel time traces, before/after profiler output, profiling result tables, or requests to confirm overhead reduction with a profiler.",
+      "exclude": "Ordinary benchmark numbers without trace/profiling attribution, or code changes to reduce overhead without asking for a profile.",
+      "example": "Please attach a screenshot of the trace file, on how the kernel time changes before and after this PR (sglang#17205)"
+    },
+    {
+      "name": "provide_ablation_or_sensitivity",
+      "group": "evidence",
+      "definition": "Reviewer asks to isolate which change or workload dimension causes the effect.",
+      "include": "Per-change ablations, sensitivity to batch size/concurrency/page size/sequence length, AVG@N to reduce variance, or sweeps needed to attribute a claimed gain.",
+      "exclude": "A single benchmark request with no attribution/sensitivity concern, or other-hardware/model coverage coded separately.",
+      "example": "Could we provide per-change ablation results and clarify the GPU, AITER/ROCm versions (vllm#52878)"
+    },
+    {
+      "name": "explain_design_or_rationale",
+      "group": "code_quality",
+      "definition": "Reviewer asks the author to justify a design choice, explain confusing behavior, or answer a substantive rationale question before approval.",
+      "include": "Why a parameter/value/path was chosen, why an old path was removed, why a benchmark number changed, or how a proposed algorithm works.",
+      "exclude": "Pure curiosity that does not require response/change, requests for reproduction details, or requests to add comments/docstrings to code.",
+      "example": "What is the rationale for omitting `and chunk_m >= tp_world_size` here? (vllm#56944)"
+    },
+    {
+      "name": "test_other_hardware_architectures",
+      "group": "portability",
+      "definition": "Reviewer asks for testing or evaluation on another GPU/CPU generation, vendor, architecture, or accelerator backend.",
+      "include": "B200/Hopper/SM90/SM100/SM120, MI300/gfx942/gfx950/gfx11, ARM/AArch64/Power/s390x, NPU/ROCm/CUDA, or multi-vendor regression checks.",
+      "exclude": "Adding guards without testing, testing a different model on the same hardware, or TP/DP/multi-GPU modes coded separately.",
+      "example": "Have you tested this on any other arch's to ensure this doesn't cause regression (vllm#43389)"
+    },
+    {
+      "name": "add_hardware_backend_guard",
+      "group": "portability",
+      "definition": "Reviewer asks to restrict, gate, or branch the new path by hardware/backend/platform so common paths are not affected.",
+      "include": "CUDA/ROCm/current_platform checks, SM/gfx architecture guards, GPU arch macros, backend-specific paths, clear errors/warnings for unsupported hardware.",
+      "exclude": "Requests only to test on other hardware, or generic feature flags not tied to hardware/backend portability.",
+      "example": "should at least gate the changes if this is specific to rocm (vllm#46035)"
+    },
+    {
+      "name": "handle_unsupported_shapes_dtypes_layouts",
+      "group": "portability",
+      "definition": "Reviewer asks to support, guard, or explicitly handle unsupported tensor shapes, dtypes, layouts, page sizes, or special-case inputs.",
+      "include": "Shape/dtype/layout restrictions, power-of-two assumptions, page-size 16 vs 64, contiguous/non-contiguous tensors, FP8/BF16/INT4 formats, or fallback for unsupported cases.",
+      "exclude": "Hardware-only guards, tests on another model, or assertions that do not relate to supported input domains.",
+      "example": "Here needs to have the condition that half_rotary_lanes is power of 2. (sglang#15141)"
+    },
+    {
+      "name": "verify_parallelism_distributed_modes",
+      "group": "portability",
+      "definition": "Reviewer asks to verify or handle distributed/parallel execution modes affected by the optimization.",
+      "include": "TP/DP/EP/SP, multi-GPU or multi-node settings, tensor-parallel shape changes, distributed executor backends, MNNVL/allreduce modes, or guards for unsupported tp_size.",
+      "exclude": "Single-device architecture testing, generic e2e benchmarks, or feature interactions not specifically about parallel/distributed execution.",
+      "example": "If we can't support tp>1, we should also add a tp_size check here. (sglang#14422)"
+    },
+    {
+      "name": "test_affected_models_or_modes",
+      "group": "portability",
+      "definition": "Reviewer asks to test the optimized path on particular affected models, model families, or execution modes beyond the author's shown case.",
+      "include": "Specific Qwen/Kimi/DeepSeek/GLM/MiniMax/VLM/diffusion models, MTP/spec-decode/prefix-cache modes, page-size modes, or model-specific command/eval requests.",
+      "exclude": "Generic accuracy or e2e benchmarking with no named affected model/mode, and hardware-only coverage.",
+      "example": "BTW, could you also test kimi linear? It also uses gdn attn backend (vllm#44700)"
+    },
+    {
+      "name": "preserve_default_or_add_feature_gate",
+      "group": "integration",
+      "definition": "Reviewer asks to keep existing behavior as the default or make the optimized path optional/conditional until it is proven safe.",
+      "include": "Feature gates, opt-in/opt-out flags, disabling risky paths by default, making behavior conditional on an existing env/config, or not changing defaults for all users.",
+      "exclude": "Naming/config API design details, hardware-specific guards, or reviewer suggestions to enable a safe path by default.",
+      "example": "Make conditional on `envs.VLLM_MOE_SKIP_PADDING`? (vllm#46428)"
+    },
+    {
+      "name": "design_config_api_or_env_knob",
+      "group": "integration",
+      "definition": "Reviewer asks to change how a knob is exposed, named, documented, deprecated, or chosen between env vars, server args, and config fields.",
+      "include": "Env-var vs server-arg decisions, config-field placement, flag precedence, deprecation warnings, option naming, or automatic heuristics instead of feature-specific env vars.",
+      "exclude": "Hardware guards, simple variable renames not exposed to users, or requests merely to gate a path without discussing API surface.",
+      "example": "Rather than an enviornment variable, lets add this to the speculative decoding config (vllm#29957)"
+    },
+    {
+      "name": "ensure_cuda_graph_or_torch_compile_compatibility",
+      "group": "integration",
+      "definition": "Reviewer asks to preserve or demonstrate compatibility with CUDA graphs, piecewise/full CUDA graphs, torch.compile, or graph-capture paths.",
+      "include": "CUDA graph replay/capture, full decode graphs, breakable graphs, torch.compile boundaries, graph metadata, or avoiding changes that force eager mode.",
+      "exclude": "Generic performance tests or feature gates that do not mention graph/compile compatibility.",
+      "example": "LGTM as long as it works with torch.compile. (vllm#30885)"
+    },
+    {
+      "name": "avoid_hot_path_overhead_or_extra_copies",
+      "group": "integration",
+      "definition": "Reviewer asks to avoid adding runtime overhead on performance-critical paths.",
+      "include": "Avoid hot-path env queries, repeated allocations, per-call workspace allocation, Python dict/object churn, unnecessary contiguous/reshape/copy, synchronization, or slow imports/checks.",
+      "exclude": "Requests for performance evidence only, broad algorithm redesign, or memory-capacity concerns coded separately.",
+      "example": "we should avoid consulting envvars like this on the hot path (vllm#56944)"
+    },
+    {
+      "name": "report_or_mitigate_memory_impact",
+      "group": "integration",
+      "definition": "Reviewer asks to account for memory usage, OOM risk, buffer/workspace size, or capacity side effects of the optimization.",
+      "include": "KV-cache capacity, per-slot size inflation, double memory during weight loading, workspace buffers, peak memory, OOM concerns, or memory-savings claims.",
+      "exclude": "Performance-only benchmarks, generic buffer assertions, or code comments about memory layout without a memory impact concern.",
+      "example": "Convert all experts layout and stack may double the memory usage, which may cause oom when loading weights. (sglang#13798)"
+    },
+    {
+      "name": "avoid_cross_feature_regressions",
+      "group": "integration",
+      "definition": "Reviewer asks to check or fix interaction with another SGLang/vLLM feature path that might regress.",
+      "include": "MTP/spec decode, prefix caching, async scheduling, TBO, attention backends, radix/cache paths, multimodal paths, Mamba/GDN/hybrid modes, or existing feature behavior.",
+      "exclude": "Specific model/hardware tests without an interaction concern, or general bug fixes unrelated to feature interaction.",
+      "example": "Does the kernel support MTP use case? (vllm#43306)"
+    },
+    {
+      "name": "integrate_build_registration_dependencies",
+      "group": "integration",
+      "definition": "Reviewer asks to integrate the optimization correctly with build systems, custom-op registration, dependency versions, or library entry points.",
+      "include": "CMake/build-time compilation, CustomOp.register, _aiter_ops/FlashInfer registration, dependency version/commit compatibility, Dockerfile/library version checks, or avoiding ad-hoc JIT builds.",
+      "exclude": "Moving files for code organization only, or CI failures not about integration mechanics.",
+      "example": "All custom kernels should be compiled through build time. Not JIT build. (vllm#43306)"
+    },
+    {
+      "name": "add_defensive_validation_assertions",
+      "group": "integration",
+      "definition": "Reviewer asks to add runtime assertions, validation, or checks that make assumptions explicit and fail safely.",
+      "include": "Asserting tensor ranks, divisibility, buffer size/device, supported K/TopK, nullability, pointer alignment, or adding validation/TODO when assumptions are unchecked.",
+      "exclude": "Hardware/backend gates, tests that validate correctness, or user-facing config validation already coded as config API design.",
+      "example": "Should we assert that `N % 8 == 0` (and or `BLOCK_SIZE_N`) here? (vllm#43389)"
+    },
+    {
+      "name": "fix_functional_correctness_issue",
+      "group": "integration",
+      "definition": "Reviewer identifies a concrete runtime, semantic, or correctness bug in the changed implementation and expects it to be fixed.",
+      "include": "Wrong return values, undefined variables, signature mismatches, cache never hits, wrong tensor mutation, failing edge cases, or logic that breaks existing behavior.",
+      "exclude": "Requests only for tests/evals, stylistic suggestions, or speculative questions without a concrete bug claim.",
+      "example": "It looks like this cache is initialized as an empty dict on every call of this function (vllm#38061)"
+    },
+    {
+      "name": "reuse_existing_kernel_or_utility",
+      "group": "code_quality",
+      "definition": "Reviewer asks to reuse or extend an existing kernel, helper, wrapper, or utility instead of adding a duplicate or parallel implementation.",
+      "include": "Unifying duplicate kernels/tests, using existing helpers, reusing wrappers, centralizing shared functions, or avoiding copied code.",
+      "exclude": "Moving code to another module without reuse, or splitting a PR for process reasons.",
+      "example": "Can we reuse the JIT kernel implementation? (sglang#41294)"
+    },
+    {
+      "name": "move_code_to_proper_module",
+      "group": "code_quality",
+      "definition": "Reviewer asks to relocate code to the repository module/library where it belongs.",
+      "include": "Moving kernels to csrc/sgl-kernel/jit_kernel, model-specific code out of common paths, utilities to flashinfer.py/_aiter_ops, tests/benchmarks to proper directories, or backend-specific code under backend folders.",
+      "exclude": "Build registration without relocation, or test registration/runner updates coded separately.",
+      "example": "Move this file in to csrc, do not put source code here. (vllm#43306)"
+    },
+    {
+      "name": "simplify_refactor_api_structure",
+      "group": "code_quality",
+      "definition": "Reviewer asks to simplify, refactor, or redesign code/API structure for readability or maintainability.",
+      "include": "Guard clauses, helper methods, cleaner branching, API factoring, reducing dispatch complexity, splitting functions/classes, or restructuring data flow.",
+      "exclude": "Removing dead code, renaming only, moving files only, or broad requests to split the PR.",
+      "example": "Can we use guard clause here to avoid nested if else? (sglang#15141)"
+    },
+    {
+      "name": "remove_dead_redundant_debug_code",
+      "group": "code_quality",
+      "definition": "Reviewer asks to delete unused, redundant, leftover, debug, commented-out, or no-op code or tests.",
+      "include": "Unused variables/flags/files, redundant checks, extra tests, stale TODOs, commented logs, unnecessary format changes, no-op changes, or unreachable code.",
+      "exclude": "Renaming/style-only issues, reducing PR scope due to unrelated features, or fixing functional bugs in live code.",
+      "example": "`slot_mapping` is unused in this function. (vllm#58762)"
+    },
+    {
+      "name": "naming_style_consistency",
+      "group": "code_quality",
+      "definition": "Reviewer asks for naming, style, formatting, import, type-annotation, or coding-convention consistency.",
+      "include": "Renaming variables/classes/flags, lower-case key conventions, import placement, type annotations, formatting nits, style consistency across backends, or clearer names.",
+      "exclude": "User-facing config API design, comments/docstrings, or lint/pre-commit failures without a specific style request.",
+      "example": "Rename before merge to `SGLANG_OPT_QWEN_DEEPEP_SHARED_OVERLAP` or `SGLANG_ENABLE_QWEN_DEEPEP_SHARED_OVERLAP` (sglang#34938)"
+    },
+    {
+      "name": "add_explanatory_comments_docstrings",
+      "group": "code_quality",
+      "definition": "Reviewer asks to add or adjust code comments, docstrings, TODOs, or inline explanations for maintainers.",
+      "include": "Explaining nontrivial kernel algorithms, memory layouts, assumptions, class preconditions, TODO specificity, or why a workaround exists.",
+      "exclude": "Updating user-facing docs/README/PR description, or answering a reviewer rationale question without adding code text.",
+      "example": "can you say in the comments the format we're packing the weights to (vllm#30531)"
+    },
+    {
+      "name": "update_docs_readme_or_pr_description",
+      "group": "code_quality",
+      "definition": "Reviewer asks to update user-facing documentation, README files, docs pages, or the PR description.",
+      "include": "Environment variable docs, server-arguments docs, tuning README, PR description updates, usage notes, warnings in docs, or benchmark/eval results attached to the PR description.",
+      "exclude": "Code comments/docstrings, reproduction details requested only in a comment, or adding tests.",
+      "example": "Please also update https://github.com/sgl-project/sglang/blob/main/docs/advanced_features/server_arguments.md (sglang#12787)"
+    },
+    {
+      "name": "organize_test_or_benchmark_files",
+      "group": "code_quality",
+      "definition": "Reviewer asks to place, register, parametrize, or consolidate test/benchmark files so they fit the repository's test infrastructure.",
+      "include": "Adding tests to run_suite, moving tests between manual/registered/nightly directories, registering nightly tests, unifying duplicated test files, or putting benchmark scripts under the right folder.",
+      "exclude": "Adding the substantive test itself, running CI, or moving production code.",
+      "example": "When you add a new test file under `test/` folder, you should add it to the `run_suite.py` (sglang#12692)"
+    },
+    {
+      "name": "reduce_pr_scope_or_split",
+      "group": "process",
+      "definition": "Reviewer asks to narrow the PR, split it, shrink the diff, or remove unrelated changes before merge.",
+      "include": "Separate PRs for kernel/library changes, leaving unrelated build/requirement changes for later, shrinking LOC, or isolating independent optimizations.",
+      "exclude": "Refactoring within the same scope, resolving merge conflicts, or waiting for a dependency PR.",
+      "example": "This is not related to CPU MoE, let's leave it for another PR to make history tractable. (vllm#30531)"
+    },
+    {
+      "name": "fix_ci_lint_precommit_or_dco",
+      "group": "process",
+      "definition": "Reviewer asks to fix automated checks or repository compliance gates before merge.",
+      "include": "pre-commit, lint, formatting, CI failures, manually triggering CI, AMD/CUDA CI, DCO/Signed-off-by, or fixing failures the reviewer attributes to the PR/checks.",
+      "exclude": "Adding new correctness tests, rebase requests, or reviewer statements that failures are unrelated and merge can proceed.",
+      "example": "Can you fix the pre-commit error? (vllm#25945)"
+    },
+    {
+      "name": "rebase_or_resolve_conflicts",
+      "group": "process",
+      "definition": "Reviewer asks the author to rebase, merge main, pull recent changes, or resolve conflicts/drift.",
+      "include": "Rebase on latest main, update benchmarks after main changes, pull before working, resolve merge conflicts, or refresh stale branches.",
+      "exclude": "Waiting for a prerequisite PR or splitting a PR for scope reasons.",
+      "example": "Can you fix the pre-commit and rebase your PR from main? (vllm#27512)"
+    },
+    {
+      "name": "resolve_dependency_or_overlapping_pr",
+      "group": "process",
+      "definition": "Reviewer asks to coordinate with prerequisite, conflicting, duplicate, or overlapping work before merge.",
+      "include": "Do-not-merge-until another PR lands, wait for a dependency/library release, consolidate with another PR, close as superseded, or resolve conflicts with an overlapping implementation.",
+      "exclude": "Simple rebases, reviewer-cc-only messages, or follow-up PR suggestions that do not block the current PR.",
+      "example": "Do not merge until: https://github.com/vllm-project/vllm/pull/28430 (vllm#28406)"
+    }
+  ]
+}

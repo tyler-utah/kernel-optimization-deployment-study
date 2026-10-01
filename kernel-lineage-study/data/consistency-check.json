@@ -1,0 +1,187 @@
+{
+ "checked_at": "2026-10-01T21:41:31Z",
+ "checks": [
+  {
+   "check": "unique candidate_id",
+   "passed": true,
+   "n": 7962,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "unique event_id",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "unique edge_id",
+   "passed": true,
+   "n": 5366,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "edge endpoints exist",
+   "passed": true,
+   "n": 5366,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "parent_event_ids exist",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "event artifact_ids exist in registry",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "event optimization_move_ids exist",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "event candidate_id exists",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "every verified candidate has an event row",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "all candidates screened and adjudicated",
+   "passed": true,
+   "n": 7962,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "edges chronological (except retrospective)",
+   "passed": true,
+   "n": 5366,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "event URLs match repo/PR/SHA",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "candidate URLs match repo/PR",
+   "passed": true,
+   "n": 7962,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "every event has URL and evidence excerpt",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "event releases exist in release-map",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "release dates <= cutoff",
+   "passed": true,
+   "n": 156,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "first-containing release recomputes",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "no event after cutoff",
+   "passed": true,
+   "n": 3281,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "no candidate after cutoff",
+   "passed": true,
+   "n": 7962,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "biographies reference valid events and moves",
+   "passed": true,
+   "n": 21,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "failure histories reference valid events",
+   "passed": true,
+   "n": 12,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "SYNTHESIS.md: 'Five strongest defensible findings' numbers are claim-tagged",
+   "passed": true,
+   "n": 0,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "SYNTHESIS.md: 'Executive summary' numbers are claim-tagged",
+   "passed": true,
+   "n": 0,
+   "detail": "",
+   "fatal": true
+  },
+  {
+   "check": "report claim tags reproduce from CSVs",
+   "passed": true,
+   "n": 502,
+   "detail": "",
+   "fatal": true
+  }
+ ],
+ "warnings": [],
+ "fatal": 0,
+ "claims": {
+  "total": 502,
+  "passed": 502,
+  "failed": 0
+ },
+ "summary": {
+  "candidates": 7962,
+  "events": 3281,
+  "edges": 5366,
+  "moves": 39
+ },
+ "passed": true
+}
