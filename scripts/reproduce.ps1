@@ -16,8 +16,8 @@ try {
     if ($LASTEXITCODE -ne 0) { throw "Environment capture failed." }
 
     if ($Stage -eq "check") {
-        python scripts/talk_numbers.py
-        if ($LASTEXITCODE -ne 0) { throw "Talk-number reproduction failed." }
+        python scripts/headline_results.py
+        if ($LASTEXITCODE -ne 0) { throw "Headline-result reproduction failed." }
         python scripts/verify_consistency.py
         if ($LASTEXITCODE -ne 0) { throw "Preliminary consistency checks failed." }
         python deep-study/scripts/consistency.py

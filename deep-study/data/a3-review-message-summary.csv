@@ -1,0 +1,5 @@
+repo,group,reviewed_prs,median_substantive_reviewer_messages,definition
+vllm,performance,555,3,Median among corpus PRs with at least one substantive non-author human review message
+vllm,comparison,296,2.0,Median among corpus PRs with at least one substantive non-author human review message
+sglang,performance,425,3,Median among corpus PRs with at least one substantive non-author human review message
+sglang,comparison,181,2,Median among corpus PRs with at least one substantive non-author human review message

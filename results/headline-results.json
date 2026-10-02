@@ -1,0 +1,130 @@
+{
+  "configuration": {
+    "pr_start": "2025-09-29T00:00:00Z",
+    "failure_start": "2024-09-29T00:00:00Z",
+    "cutoff": "2026-09-28T23:59:59Z",
+    "seed": 20260929,
+    "heads": {
+      "vllm": "7230dfea501b232ce92d057f1c5ee9cb009c4cb4",
+      "sglang": "79cafec013d0a01c782d7a4bc902ef32a8941ba8"
+    }
+  },
+  "repositories": {
+    "vllm": {
+      "created": 25573,
+      "merged": 11980,
+      "closed_without_merge": 7804,
+      "still_open": 5789,
+      "created_per_day": 70.06301369863014,
+      "merged_per_day": 32.821917808219176,
+      "performance_prs": 3214,
+      "performance_merged": 1277,
+      "performance_median_merge_days": 5.22,
+      "other_median_merge_days": 1.485,
+      "performance_closed_share": 0.285,
+      "other_closed_share": 0.3069,
+      "performance_open_share": 0.3177,
+      "other_open_share": 0.2134,
+      "performance_merged_30d": 0.3752,
+      "other_merged_30d": 0.4597,
+      "performance_closed_30d": 0.1737,
+      "other_closed_30d": 0.1976,
+      "performance_median_lines": 223,
+      "other_median_lines": 62,
+      "performance_median_files": 4,
+      "other_median_files": 2,
+      "performance_median_commits": 3,
+      "other_median_commits": 2,
+      "performance_median_review_messages": 3.0,
+      "other_median_review_messages": 2.0,
+      "performance_revert_rate": 0.018,
+      "other_revert_rate": 0.0088,
+      "complete_open_queue": 5821,
+      "performance_open_queue": 1022
+    },
+    "sglang": {
+      "created": 26004,
+      "merged": 13871,
+      "closed_without_merge": 7696,
+      "still_open": 4437,
+      "created_per_day": 71.24383561643836,
+      "merged_per_day": 38.0027397260274,
+      "performance_prs": 3094,
+      "performance_merged": 1423,
+      "performance_median_merge_days": 4.01,
+      "other_median_merge_days": 0.74,
+      "performance_closed_share": 0.287,
+      "other_closed_share": 0.2972,
+      "performance_open_share": 0.2531,
+      "other_open_share": 0.1595,
+      "performance_merged_30d": 0.4288,
+      "other_merged_30d": 0.5297,
+      "performance_closed_30d": 0.1571,
+      "other_closed_30d": 0.1749,
+      "performance_median_lines": 274,
+      "other_median_lines": 78,
+      "performance_median_files": 4,
+      "other_median_files": 2,
+      "performance_median_commits": 4,
+      "other_median_commits": 3,
+      "performance_median_review_messages": 3.0,
+      "other_median_review_messages": 2.0,
+      "performance_revert_rate": 0.0239,
+      "other_revert_rate": 0.0113,
+      "complete_open_queue": 4470,
+      "performance_open_queue": 784
+    }
+  },
+  "combined": {
+    "created": 51577,
+    "merged": 25851,
+    "closed_without_merge": 15500,
+    "still_open": 10226,
+    "performance_prs": 6308,
+    "performance_merged": 2700,
+    "complete_open_queue": 10291,
+    "performance_open_queue": 1806,
+    "closed_without_merge_per_day": 42.465753424657535,
+    "other_open_queue": 8485,
+    "performance_open_queue_share": 0.1754931493538043,
+    "performance_share_of_merged": 0.10444470233259835
+  },
+  "description_language": {
+    "performance_language": {
+      "count": 5246,
+      "denominator": 6308,
+      "share": 0.832
+    },
+    "testing_language": {
+      "count": 3677,
+      "denominator": 6308,
+      "share": 0.583
+    },
+    "correctness_without_testing_language": {
+      "count": 796,
+      "denominator": 6308,
+      "share": 0.126
+    },
+    "explicit_maintenance_or_compatibility": {
+      "count": 83,
+      "denominator": 6308,
+      "share": 0.013
+    }
+  },
+  "performance_revert_reasons": {
+    "total": 102,
+    "performance_regression": 5,
+    "counts": {
+      "unstated": 24,
+      "correctness_or_accuracy": 20,
+      "ci_or_test_failure": 14,
+      "hardware_specific_breakage": 13,
+      "crash_or_hang": 9,
+      "other": 7,
+      "performance_regression": 5,
+      "build_or_dependency": 5,
+      "premature_or_process": 4,
+      "api_or_compat_break": 1
+    }
+  }
+}

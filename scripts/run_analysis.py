@@ -33,7 +33,7 @@ def deep() -> None:
     run(sys.executable, "deep-study/scripts/d_analysis.py", "final")
     run(sys.executable, "deep-study/scripts/reports.py", "all")
     run(sys.executable, "deep-study/scripts/consistency.py")
-    run(sys.executable, "scripts/talk_numbers.py")
+    run(sys.executable, "scripts/headline_results.py")
 
 
 def lineage() -> None:
