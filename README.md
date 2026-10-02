@@ -3,9 +3,9 @@
 > **This study and all of its code were generated entirely by AI agents under
 > human direction.**
 
-This is the standalone reproducibility repository for the Git and GitHub
-studies behind “The Kernel Is Faster. Can We Ship It?” It is intentionally
-separable from the talk repository and can be attached there as a Git submodule.
+This is a standalone reproducibility repository for empirical Git and GitHub
+studies of how performance optimizations are proposed, reviewed, integrated,
+released, and maintained.
 
 The related-work papers show the optimization gap using benchmarks. These
 studies examine it in the public repositories where optimizations are proposed,
@@ -22,8 +22,7 @@ reviewed, merged, reverted, released, and maintained.
   figures, reports, and consistency checks.
 - `scripts/capture_environment.py`: machine-readable tool and package versions
   for each reproduction environment.
-- `scripts/talk_numbers.py`: direct reproduction of the headline numbers used
-  in the talk.
+- `scripts/reproduce.ps1`: top-level verification and reproduction entry point.
 - `results/`, `deep-study/data/`, and `kernel-lineage-study/data/`: checked-in
   derived datasets.
 - `deep-study/coding/` and `kernel-lineage-study/staging/`: coded records,
@@ -62,12 +61,10 @@ python -m venv .venv
 For the checked-in artifact, the fastest verification path is:
 
 ```powershell
-python scripts\talk_numbers.py
+.\scripts\reproduce.ps1 -Stage check
 python deep-study\scripts\consistency.py
 python kernel-lineage-study\scripts\consistency.py
 ```
-
-See `SUBMODULE.md` for attaching this repository to the talk repository.
 
 ## Study status
 
@@ -78,12 +75,11 @@ are complete. Their persistent checkpoints document exact recovery state.
 
 SGLang is open source (Apache-2.0, `sgl-project/sglang`). All the candidates below are public on GitHub.
 
-| Tier | Role in the talk | Repos | Why |
+| Tier | Role in the study | Repos | Why |
 |---|---|---|---|
 | **1. Serving engines** (core) | Where optimizations are *deployed* | **vLLM**, **SGLang**, TensorRT-LLM, **llama.cpp** | vLLM and SGLang are the integration targets named in FlashInfer-Bench and SWE-Serve. llama.cpp ties directly to WarpDRF (3 races found there) and covers many backends (CUDA, Metal, Vulkan, SYCL, ...). |
 | **2. Kernel libraries** (supply) | Where optimizations are *discovered and packaged* | **FlashInfer**, FlashAttention, CUTLASS, DeepGEMM, AITER (AMD), Liger-Kernel, TileLang | Upstream suppliers to tier 1. They show the flow from supply to deployment and the duplication between projects. |
 | **3. Framework / compiler** | The baseline everyone compares against | PyTorch (Inductor, ATen CUDA), Triton | PyTorch is the "reference" in every benchmark paper. It's huge, so scope it to kernel directories. |
-| **Microsoft angle** (optional) | Internal relevance | ONNX Runtime, DeepSpeed | Talk is at MSR, and this offers a path to anonymized internal comparison. |
 
 **Recommended core set:** vLLM, SGLang, llama.cpp, FlashInfer (plus PyTorch where feasible). The two big serving engines, one portability-heavy engine, and one kernel supplier.
 
@@ -123,24 +119,24 @@ Script: [scripts/repo_probe.py](scripts/repo_probe.py). The keyword columns are 
 
 Each study has its own file in [studies/](studies/). Scores run from ★ (low) to ★★★ (high).
 
-| # | Study | Talk claim it supports | Punch | Effort | Priority |
+| # | Study | Research question | Punch | Effort | Priority |
 |---|---|---|---|---|---|
-| 1 | [The moving target](studies/01-moving-target.md): churn and the half-life of kernel code | *Sustain*: optimized code decays; maintainability | ★★★ | ★★ | **P1** |
-| 2 | [The delivery pipeline in the wild](studies/02-pr-lifecycle.md): life of an optimization PR | §1: the Optimization Gap is a real queue | ★★★ | ★★ | **P1** |
-| 3 | [What breaks](studies/03-what-breaks.md): kernel correctness bugs, reverts, regressions | §2 RESOLVE, §3 WarpDRF | ★★★ | ★★★ | **P1** |
-| 4 | [From paper to production](studies/04-paper-to-production.md): do published kernel optimizations get adopted? Scored with a deployment-evidence ladder; pilot on MLSys 2025 (61 papers); reverse trace from production to papers | §1: "We publish the top of the pipeline" | ★★★ | ★★★ | **P1** |
-| 5 | [Validation practices](studies/05-validation-practices.md): tolerances, tests, CI hardware | §2: today's checks are weak | ★★ | ★ | P2 |
-| 6 | [Portability load](studies/06-portability-load.md): cost of each new GPU and backend | Portability / intent open problem | ★★ | ★★ | P2 |
-| 7 | [Reinvention](studies/07-reinvention.md): the same kernel, N copies | Intent, composability, maintenance multiplier | ★★ | ★★ | P2 |
-| 8 | [Agents in the commit log](studies/08-agent-prs.md): AI-generated optimizations reaching upstream | §1 "candidates are abundant", §4 | ★★ | ★ | P3 |
+| 1 | [The moving target](studies/01-moving-target.md): churn and the half-life of kernel code | How quickly does optimized code decay? | ★★★ | ★★ | **P1** |
+| 2 | [The delivery pipeline in the wild](studies/02-pr-lifecycle.md): life of an optimization PR | How do performance changes move through review and integration? | ★★★ | ★★ | **P1** |
+| 3 | [What breaks](studies/03-what-breaks.md): kernel correctness bugs, reverts, regressions | Which failures cause deployed kernel changes to be repaired or reverted? | ★★★ | ★★★ | **P1** |
+| 4 | [From paper to production](studies/04-paper-to-production.md): do published kernel optimizations get adopted? Scored with a deployment-evidence ladder; pilot on MLSys 2025 (61 papers); reverse trace from production to papers | How often does published optimization work reach production repositories? | ★★★ | ★★★ | **P1** |
+| 5 | [Validation practices](studies/05-validation-practices.md): tolerances, tests, CI hardware | What evidence is used to validate performance changes? | ★★ | ★ | P2 |
+| 6 | [Portability load](studies/06-portability-load.md): cost of each new GPU and backend | What maintenance burden does hardware portability create? | ★★ | ★★ | P2 |
+| 7 | [Reinvention](studies/07-reinvention.md): the same kernel, N copies | How much implementation duplication accumulates across projects? | ★★ | ★★ | P2 |
+| 8 | [Agents in the commit log](studies/08-agent-prs.md): AI-generated optimizations reaching upstream | How often do AI-generated optimizations reach upstream repositories? | ★★ | ★ | P3 |
 
 **If we only do three:** Studies 2, 4, and 1. Study 2 measures the gap directly, Study 4 is the most provocative for an academic audience, and Study 1 is the easiest compelling Sustain number. Study 3 is the strongest bridge into RESOLVE, but it's the most labor-intensive; a scoped version (reverts only) is cheap.
 
-## What would make these findings land in the talk
+## Interpretation principles
 
-- **Use the audience's own tools.** Everyone in the room uses vLLM, SGLang, or PyTorch. Showing "your framework merged 48 commits yesterday" is visceral in a way benchmark numbers aren't.
-- **One number per slide, with a comparison.** For example, "a kernel PR takes X days to land vs. Y days for other PRs," or "Z% of 2024 kernel-optimization papers are available in vLLM or SGLang today."
-- **Connect every number to a talk section.** Studies 2 and 4 support §1, Study 3 supports §2/§3, Study 1 supports Sustain, and Studies 6 and 7 support the open problems.
+- **Use deployment repositories directly.** vLLM, SGLang, and PyTorch provide observable integration and maintenance histories that benchmark results do not.
+- **Report comparisons, not isolated counts.** For example, compare the time required to merge a kernel PR with other PRs or measure how often published kernel optimizations become available in deployment repositories.
+- **Keep claims tied to generated evidence.** Every reported number should trace to a versioned table, coded record, or consistency check.
 - **Be honest about noise.** Report classifier precision on a hand-labeled sample. A skeptical systems audience will ask.
 
 ## Shared methodology
@@ -148,14 +144,14 @@ Each study has its own file in [studies/](studies/). Scores run from ★ (low) t
 1. **Data collection**
    - GitHub GraphQL/REST via `gh` for PRs, issues, reviews, labels, linked issues, and timelines.
    - Local full clones for git history, `git blame` survival, and path analysis.
-   - Raw data goes in `experiments/data/` (not committed if large).
+   - Raw data goes in `data/` (not committed if large).
 2. **Kernel-change classification**, in layers:
    - **Path rules** (high precision): `csrc/`, `*.cu`, `*.cuh`, `*.hip`, Triton `@triton.jit` files, `sgl-kernel/`, `ggml-cuda/`, `ggml-metal/`, etc.
    - **Title conventions**: vLLM uses `[Kernel]`, `[Perf]`, `[Bugfix]`, `[Hardware][AMD]`. llama.cpp uses `CUDA:`, `metal:`, `vulkan:`.
    - **LLM classification with a written codebook** (perf-optimization, kernel-correctness-fix, portability, feature, refactor, ...).
    - **Human validation**: hand-label about 100 samples per repo and report precision and recall. *Agents propose, humans decide*, applied to our own methodology.
 3. **Time window**: the last 12 months for the headline numbers, and the full history for trends (for example, a kernel-PR share per quarter since 2023).
-4. **Reproducibility**: scripts in `experiments/scripts/`, one per study, parameterized by repo and window.
+4. **Reproducibility**: scripts in `scripts/`, parameterized by repository and window.
 
 ## Decisions to make
 
