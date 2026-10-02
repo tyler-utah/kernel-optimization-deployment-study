@@ -1,5 +1,8 @@
 # Optimization-Delivery Empirical Artifact
 
+> **This study and all of its code were generated entirely by AI agents under
+> human direction.**
+
 This is the standalone reproducibility repository for the Git and GitHub
 studies behind “The Kernel Is Faster. Can We Ship It?” It is intentionally
 separable from the talk repository and can be attached there as a Git submodule.
