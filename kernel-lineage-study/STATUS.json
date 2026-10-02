@@ -3,7 +3,7 @@
   "study": "kernel-lineage-study",
   "cutoff": "2026-09-28T23:59:59Z",
   "created_at": "2026-09-29T22:33:18Z",
-  "updated_at": "2026-10-01T21:41:32Z",
+  "updated_at": "2026-10-02T00:23:31Z",
   "current_phase": "complete: all work packages done; final consistency check passed",
   "repositories": {
     "sglang": {
@@ -409,7 +409,7 @@
   ],
   "rate_limits": [],
   "last_consistency_check": {
-    "at": "2026-10-01T21:41:31Z",
+    "at": "2026-10-02T00:23:29Z",
     "passed": true,
     "fatal": 0,
     "warnings": 0,

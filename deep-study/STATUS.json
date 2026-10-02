@@ -1052,7 +1052,7 @@
   "missing": [],
   "present": 88
  },
- "updated_at_utc": "2026-10-01T21:41:31Z",
+ "updated_at_utc": "2026-10-02T00:23:29Z",
  "coding_batches": {
   "b1_reverts": {
    "batches": 12,
@@ -1232,7 +1232,7 @@
  },
  "downstream_snapshot_note": "Shallow clones (depth 1, blob:limit=2m, LFS skipped) under experiments/deep-study/data/src/downstream/ taken 2026-09-29 for C3 adoption search; hits must be dated <= 2026-09-28 via PR/commit history.",
  "last_consistency_check": {
-  "checked_at_utc": "2026-10-01T21:41:31Z",
+  "checked_at_utc": "2026-10-02T00:23:29Z",
   "claims": 730,
   "passed": 730,
   "failed": 0
